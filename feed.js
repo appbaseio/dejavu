@@ -88,6 +88,25 @@ function simulateChange() {
               some_other_field: "something_else"
                 }
             });
+    
+    onChangeHandler("tweet", 'stock', {
+            _type: "tweet",
+            _id: "2",
+            _source: {
+              user: "sid",
+              message: "at the top",
+              some_other_field: "something_else"
+                }
+            });
+    onChangeHandler("tweet", 'stock', {
+            _type: "tweet",
+            _id: "2",
+            _source: {
+              user: "siddi",
+              message: "at the top",
+              some_other_field: "something_else"
+                }
+            });
 }
 
 function start(onChange) {

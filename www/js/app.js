@@ -25,7 +25,7 @@ var StockRow = React.createClass({
         var source = this.props.stock._source;
         var items = [];
         for(var each in source){
-            items.push(each);
+            items.push(source[each]);
         }
         var children = items.map(function(item){
             return <td key={item}>{item}</td>;
@@ -46,7 +46,7 @@ var StockTable = React.createClass({
         var items = [];
         for (var symbol in this.props.stocks) {
             var stock = this.props.stocks[symbol];
-            items.push(<StockRow key={stock._id} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
+            items.push(<StockRow key={String(stock._id)+stock._type} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
         }
         return (
             <div className="row-data">
@@ -116,10 +116,20 @@ var TypeTable = React.createClass({
 
 var HomePage = React.createClass({
     getInitialState: function() {
-        var stocks = {};
+        var stocks = [];
         feed.watch([".percolator", "_default_", "foo", "scalrtest", "tweet"]);
         feed.onChange(function(stock) {
-            stocks[stock._type] = stock;
+            var found = false;
+            for (var each in stocks){
+                if(stocks[each]._type == stock._type && stocks[each]._id == stock._id){
+                    found = true;
+                    stocks[each]._source = stock._source;
+                    break;
+                }
+            }
+            if(!found){
+                stocks.push(stock);
+            }
             this.setState({stocks: stocks, last: stock});
         }.bind(this));
         return {stocks: stocks};
