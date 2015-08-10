@@ -18,7 +18,7 @@ td:last-child {
 
 th, td {
     max-width: 740px;
-    width: 100px;
+    width: 150px;
     border: solid 1px #DDDDDD;
     padding: 5px;
     text-align: center;
@@ -74,4 +74,12 @@ th {
 
 .table-hover {
     display: inline;
+}
+
+.checkBox {
+    position: absolute;
+    left: 10px;
+}
+
+.checkboxLabel {
 }

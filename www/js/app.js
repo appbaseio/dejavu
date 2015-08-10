@@ -19,7 +19,6 @@ var WatchStock = React.createClass({
 
 var StockRow = React.createClass({
     unwatch: function() {
-        console.log("yeha pe h");
         this.props.unwatchStockHandler(this.props.stock._type);
     },
     render: function () {
@@ -84,7 +83,7 @@ var TypeRow = React.createClass({
         return(
             <tr>
                 <td>
-                <input type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true"> {this.props.type} </input>
+                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true" /> <div className="checkboxLabel">{this.props.type}</div>
                 </td>
             </tr>
         );
