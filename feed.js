@@ -1,7 +1,7 @@
 var interval,
     onChangeHandler;
 
-
+/*
 var stocks = [
     {symbol: "BT", open: 38.87},
     {symbol: "GE", open: 25.40},
@@ -14,38 +14,41 @@ var stocks = [
     {symbol: "BAC", open: 15.84},
     {symbol: "BA", open: 154.50}
 ];
+*/
 
 
-/*
 var stocks = [
             {
-            "_type": "tweet",
-            "_id": "3",
-            "_source": {
-              "user": "asdf",
-              "message": "at the Zbottom"
+            _type: "tweet",
+            _id: "3",
+            _source: {
+              user: "asdf",
+              message: "at the Zbottom"
                 }
             },
             {
-            "_type": "tweet",
-            "_id": "1",
-            "_source": {
-              "user": "sid",
-              "message": "at the top"
-              "some_other_fiels": "something_else"
+            _type: "tweet",
+            _id: "1",
+            _source: {
+              user: "sid",
+              message: "at the top",
+              some_other_field: "something_else"
                 }
             }
 ];
-*/
 
+
+/*
 stocks.forEach(function(stock) {
     stock.last = stock.open;
     stock.high = stock.open;
     stock.low = stock.open;
 });
+*/
 
 function simulateChange() {
 
+    /*
     var index = Math.floor(Math.random() * stocks.length),
         stock = stocks[index],
 
@@ -72,7 +75,19 @@ function simulateChange() {
     if (stock.last < stock.low) {
         stock.low = stock.last;
     }
-    onChangeHandler(stock.symbol, 'stock', stock);
+    */
+
+    // stocks.push({_id: "something"});
+    // console.log(stocks);
+    onChangeHandler("tweet", 'stock', {
+            _type: "tweet",
+            _id: "1",
+            _source: {
+              user: "sid",
+              message: "at the top",
+              some_other_field: "something_else"
+                }
+            });
 }
 
 function start(onChange) {

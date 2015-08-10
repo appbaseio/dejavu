@@ -1,7 +1,7 @@
 {
   "name": "ReactTrader",
   "version": "1.0.0",
-  "description": "Trader Desktop",
+  "description": "Awesome databrowser",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

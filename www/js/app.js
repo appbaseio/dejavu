@@ -34,8 +34,8 @@ var StockRow = React.createClass({
         }
         return (
             <tr>
-                <td>{this.props.stock.symbol}</td>
-                <td>{this.props.stock.open}</td>
+                <td>{this.props.stock._type}</td>
+                <td>{this.props.stock._id}</td>
                 <td className={lastClass}>{this.props.stock.last}</td>
                 <td className={changeClass}>{this.props.stock.change} <span className={iconClass} aria-hidden="true"></span></td>
             </tr>
@@ -48,7 +48,7 @@ var StockTable = React.createClass({
         var items = [];
         for (var symbol in this.props.stocks) {
             var stock = this.props.stocks[symbol];
-            items.push(<StockRow key={stock.symbol} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
+            items.push(<StockRow key={stock._id} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
         }
         return (
             <div className="row">
@@ -57,8 +57,7 @@ var StockTable = React.createClass({
                     <tr>
                         <th>Type</th>
                         <th>ID</th>
-                        <th>E1</th>
-                        <th>E2</th>
+                        <th>SOURCE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,9 +108,9 @@ var TypeTable = React.createClass({
 var HomePage = React.createClass({
     getInitialState: function() {
         var stocks = {};
-        feed.watch(['MCD', 'BA', 'BAC', 'LLY', 'BT', 'GE', 'UAL', 'WMT', 'AAL', 'JPM']);
+        feed.watch([".percolator", "_default_", "foo", "scalrtest", "tweet"]);
         feed.onChange(function(stock) {
-            stocks[stock.symbol] = stock;
+            stocks[stock._type] = stock;
             this.setState({stocks: stocks, last: stock});
         }.bind(this));
         return {stocks: stocks};
@@ -133,7 +132,7 @@ var HomePage = React.createClass({
             <div>
                 <TypeTable Types={types} />
                 <WatchStock watchStockHandler={this.watchStock}/>
-                <StockTable stocks={this.state.stocks} last={this.state.last} unwatchStockHandler={this.unwatchStock}/>
+                <StockTable stocks={this.state.stocks} last={this.state._source} unwatchStockHandler={this.unwatchStock}/>
             </div>
         );
     }
