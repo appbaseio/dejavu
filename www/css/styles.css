@@ -18,13 +18,19 @@ td:last-child {
 
 th, td {
     max-width: 740px;
-    width: 74px;
+    width: 100px;
     border: solid 1px #DDDDDD;
     padding: 5px;
+    text-align: left;
 }
 
 th {
     font-weight: bolder;
+}
+
+.input {
+    position: absolute;
+    left: 0px;
 }
 
 .last-positive {
@@ -45,10 +51,26 @@ th {
     color: red;
 }
 
-.row {
+.row-types {
     margin: 10px 0;
+    left: 100px;
+    top: 100px;
+    position: absolute;
+    display: inline;
+}
+
+.row-data {
+    margin: 10px 0;
+    left: 400px;
+    top: 100px;
+    position: absolute;
+    display: inline;
 }
 
 .container {
     width: 552px;
+}
+
+.table-hover {
+    display: inline;
 }

@@ -36,7 +36,7 @@ var StockRow = React.createClass({
             <tr>
                 <td>{this.props.stock._type}</td>
                 <td>{this.props.stock._id}</td>
-                <td className={lastClass}>{this.props.stock.last}</td>
+                <td className={lastClass}>{this.props.stock._source}</td>
                 <td className={changeClass}>{this.props.stock.change} <span className={iconClass} aria-hidden="true"></span></td>
             </tr>
         );
@@ -51,7 +51,7 @@ var StockTable = React.createClass({
             items.push(<StockRow key={stock._id} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
         }
         return (
-            <div className="row">
+            <div className="row-data">
             <table className="table-hover">
                 <thead>
                     <tr>
@@ -73,9 +73,9 @@ var TypeRow = React.createClass({
     render: function() {
         return(
             <tr>
-                <td><button type="button" className="btn btn-default btn-sm" onClick={this.unwatch}>
-                {this.props.type}
-                </button></td>
+                <td>
+                <input type="checkbox" name="vehicle" value="Bike"> {this.props.type} </input>
+                </td>
             </tr>
         );
     }
@@ -89,7 +89,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} />);
         }
         return (
-            <div className="row">
+            <div className="row-types">
             <table className="table-hover">
                 <thead>
                     <tr>
