@@ -142,8 +142,12 @@ var HomePage = React.createClass({
     unwatchStock: function(symbol) {
         feed.unwatch(symbol);
         var stocks = this.state.stocks;
-        delete stocks[symbol];
-        this.setState({stocks: stocks});
+        var newStocks = [];
+        for(var each in stocks) {
+            if(stocks[each]._type != symbol)
+                newStocks.push(stocks[each]);
+        }
+        this.setState({stocks: newStocks});
     },
     render: function () {
         var types = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
