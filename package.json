@@ -1,12 +1,12 @@
 {
-  "name": "ReactTrader",
+  "name": "dejaVu",
   "version": "1.0.0",
   "description": "Awesome databrowser",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Christophe Coenraets <ccoenraets@gmail.com> (http://coenraets.org/)",
+  "author": "Kaushik Varanasi <kaushik.varanasi1@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.12.3",
