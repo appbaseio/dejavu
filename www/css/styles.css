@@ -21,11 +21,12 @@ th, td {
     width: 100px;
     border: solid 1px #DDDDDD;
     padding: 5px;
-    text-align: left;
+    text-align: center;
 }
 
 th {
     font-weight: bolder;
+    text-align: center;
 }
 
 .input {

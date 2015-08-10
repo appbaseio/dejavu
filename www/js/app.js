@@ -19,25 +19,24 @@ var WatchStock = React.createClass({
 
 var StockRow = React.createClass({
     unwatch: function() {
-        this.props.unwatchStockHandler(this.props.stock.symbol);
+        console.log("yeha pe h");
+        this.props.unwatchStockHandler(this.props.stock._type);
     },
     render: function () {
-        var lastClass = '',
-            changeClass = 'change-positive',
-            iconClass = 'glyphicon glyphicon-triangle-top';
-        if (this.props.stock === this.props.last) {
-            lastClass = this.props.stock.change < 0 ? 'last-negative' : 'last-positive';
+        var source = this.props.stock._source;
+        var items = [];
+        for(var each in source){
+            items.push(each);
         }
-        if (this.props.stock.change < 0) {
-            changeClass = 'change-negative';
-            iconClass = 'glyphicon glyphicon-triangle-bottom';
-        }
+        var children = items.map(function(item){
+            return <td key={item}>{item}</td>;
+        });
+
         return (
             <tr>
                 <td>{this.props.stock._type}</td>
                 <td>{this.props.stock._id}</td>
-                <td className={lastClass}>{this.props.stock._source}</td>
-                <td className={changeClass}>{this.props.stock.change} <span className={iconClass} aria-hidden="true"></span></td>
+                {children}
             </tr>
         );
     }
@@ -70,11 +69,22 @@ var StockTable = React.createClass({
 });
 
 var TypeRow = React.createClass({
+    unwatch: function() {
+        elem = document.getElementById(this.props.type);
+        if(elem.check == "true"){
+            elem.check = "false";
+            this.props.unwatchTypeHandler(this.props.type);
+        }
+        else{
+            elem.check = "true";
+            this.props.watchTypeHandler(this.props.type);
+        }
+    },
     render: function() {
         return(
             <tr>
                 <td>
-                <input type="checkbox" name="vehicle" value="Bike"> {this.props.type} </input>
+                <input type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true"> {this.props.type} </input>
                 </td>
             </tr>
         );
@@ -86,7 +96,7 @@ var TypeTable = React.createClass({
         var types = this.props.Types;
         var rowObj = [];
         for(var type in types){
-            rowObj.push(<TypeRow key={type} type={types[type]} />);
+            rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
             <div className="row-types">
@@ -130,7 +140,7 @@ var HomePage = React.createClass({
         var types = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
         return (
             <div>
-                <TypeTable Types={types} />
+                <TypeTable Types={types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
                 <WatchStock watchStockHandler={this.watchStock}/>
                 <StockTable stocks={this.state.stocks} last={this.state._source} unwatchStockHandler={this.unwatchStock}/>
             </div>
