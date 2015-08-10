@@ -1,8 +1,9 @@
 var interval,
     onChangeHandler;
 
+
 var stocks = [
-    {symbol: "GM", open: 38.87},
+    {symbol: "BT", open: 38.87},
     {symbol: "GE", open: 25.40},
     {symbol: "MCD", open: 97.05},
     {symbol: "UAL", open: 69.45},
@@ -13,6 +14,29 @@ var stocks = [
     {symbol: "BAC", open: 15.84},
     {symbol: "BA", open: 154.50}
 ];
+
+
+/*
+var stocks = [
+            {
+            "_type": "tweet",
+            "_id": "3",
+            "_source": {
+              "user": "asdf",
+              "message": "at the Zbottom"
+                }
+            },
+            {
+            "_type": "tweet",
+            "_id": "1",
+            "_source": {
+              "user": "sid",
+              "message": "at the top"
+              "some_other_fiels": "something_else"
+                }
+            }
+];
+*/
 
 stocks.forEach(function(stock) {
     stock.last = stock.open;
