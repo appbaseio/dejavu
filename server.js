@@ -5,7 +5,7 @@ var express = require('express'),
     io = require('socket.io')(http),
     feed = require('./feed');
 
-app.use(express.static(path.join(__dirname, './www')));
+app.use(express.static(path.join(__dirname, './src')));
 
 io.on('connection', function (socket) {
     console.log('User connected. Socket id %s', socket.id);

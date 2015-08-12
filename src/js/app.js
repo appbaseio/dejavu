@@ -83,7 +83,7 @@ var TypeRow = React.createClass({
         return(
             <tr>
                 <td>
-                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true" /> <div className="checkboxLabel">{this.props.type}</div>
+                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="false" /> <div className="checkboxLabel">{this.props.type}</div>
                 </td>
             </tr>
         );
