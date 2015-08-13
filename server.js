@@ -35,6 +35,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         console.log('User disconnected. %s. Socket id %s', socket.id);
     });
+    
 });
 
 feed.start(function(room, type, message) {

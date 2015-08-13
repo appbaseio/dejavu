@@ -1,22 +1,3 @@
-var WatchStock = React.createClass({
-    getInitialState: function() {
-        return {symbol: ""};
-    },
-    watchStock: function() {
-        this.props.watchStockHandler(this.state.symbol);
-        this.setState({symbol: ''});
-    },
-    handleChange: function(event) {
-        this.setState({symbol: event.target.value});
-    },
-    render: function () {
-        return (
-            <div className="row">
-            </div>
-        );
-    }
-});
-
 var StockRow = React.createClass({
     unwatch: function() {
         this.props.unwatchStockHandler(this.props.stock._type);
@@ -154,7 +135,6 @@ var HomePage = React.createClass({
         return (
             <div>
                 <TypeTable Types={types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <WatchStock watchStockHandler={this.watchStock}/>
                 <StockTable stocks={this.state.stocks} last={this.state._source} unwatchStockHandler={this.unwatchStock}/>
             </div>
         );
