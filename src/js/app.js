@@ -97,23 +97,23 @@ var TypeTable = React.createClass({
 
 var HomePage = React.createClass({
     getInitialState: function() {
-        var stocks = [];
+        var data = [];
         feed.watch([".percolator", "_default_", "foo", "scalrtest", "tweet"]);
-        feed.onChange(function(stock) {
+        feed.onChange(function(update) {
             var found = false;
-            for (var each in stocks){
-                if(stocks[each]._type == stock._type && stocks[each]._id == stock._id){
+            for (var each in data){
+                if(data[each]._type == update._type && data[each]._id == update._id){
                     found = true;
-                    stocks[each]._source = stock._source;
+                    data[each]._source = update._source;
                     break;
                 }
             }
             if(!found){
-                stocks.push(stock);
+                data.push(update);
             }
-            this.setState({stocks: stocks, last: stock});
+            this.setState({stocks: data});
         }.bind(this));
-        return {stocks: stocks};
+        return {stocks: data};
     },
     watchStock: function(symbols) {
         symbols = symbols.replace(/ /g,'');
