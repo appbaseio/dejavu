@@ -22,6 +22,12 @@ var StockRow = React.createClass({
     }
 });
 
+/*
+var SourceTable = React.createClass({
+
+});
+*/
+
 var StockTable = React.createClass({
     render: function () {
         var items = [];
@@ -106,7 +112,7 @@ var HomePage = React.createClass({
         feed.watch();
         feed.onChange(function(update) {
             var hash = this.key(update);
-            if( hash in data){
+            if( hash in data ){
                 data[hash]._source = update._source;
             }
             else{
@@ -124,7 +130,7 @@ var HomePage = React.createClass({
     unwatchStock: function(symbol) {
         feed.unwatch(symbol);
         var stocks = this.state.stocks;
-        for(var each in stocks) {
+        for( var each in stocks ) {
             if(stocks[each]._type == symbol){
                 delete stocks[each];
             }

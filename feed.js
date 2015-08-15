@@ -17,7 +17,7 @@ var streamingData = [ {
     "message": "at the top"
     }
   }
-  ];
+];
 
 function updateData(sdata) {
     var lucky = Math.round(Math.random());
@@ -36,7 +36,7 @@ function updateData(sdata) {
 
 function getStreamingData(sdata) {
 
-    // Get streaming data from a url continously !
+  // Get streaming data from a url continously !
 
   console.log(sdata);
   for(var each in sdata) {

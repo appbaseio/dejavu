@@ -3,7 +3,7 @@ var express = require('express'),
     path = require('path'),
     http = require('http').Server(app),
     io = require('socket.io')(http),
-    feed = require('./feed');
+    feed = require('./appbase-feed');
 
 app.use(express.static(path.join(__dirname, './src')));
 
@@ -41,6 +41,8 @@ io.on('connection', function (socket) {
 feed.start(function(room, type, message) {
     io.to(room).emit(type, message);
 });
+
+feed.init();
 
 http.listen(3000, function () {
     console.log('listening on: 3000');
