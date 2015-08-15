@@ -19,6 +19,20 @@ var streamingData = [ {
   }
   ];
 
+function updateData(sdata) {
+    var lucky = Math.round(Math.random());
+    console.log(lucky);
+    sdata[lucky]._source.message = "dynamic message here";
+    sdata[lucky]._source.user = "dynamic user";
+    if (lucky === 0) {
+        sdata[1]._source.user = "sid";
+        sdata[1]._source.message = "at the top";
+    } else { 
+        sdata[0]._source.user = "asdf";
+        sdata[0]._source.message = "at the Zbottom";
+    }
+    return sdata;
+}
 
 function getStreamingData(sdata) {
 
@@ -33,7 +47,7 @@ function getStreamingData(sdata) {
 
 function start(onChange) {
     onChangeHandler = onChange;
-    interval = setInterval(function() { getStreamingData(streamingData); }, 200);
+    interval = setInterval(function() { getStreamingData(streamingData); updateData(streamingData)}, 200);
 }
 
 function stop() {
