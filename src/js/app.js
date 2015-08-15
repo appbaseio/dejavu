@@ -64,7 +64,7 @@ var TypeRow = React.createClass({
         return(
             <tr>
                 <td>
-                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="false" /> <div className="checkboxLabel">{this.props.type}</div>
+                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true" /> <div className="checkboxLabel">{this.props.type}</div>
                 </td>
             </tr>
         );
@@ -96,24 +96,25 @@ var TypeTable = React.createClass({
 });
 
 var HomePage = React.createClass({
+    key: function(obj){
+        // some unique object-dependent key
+        return obj._type + obj._id;
+    },
     getInitialState: function() {
-        var data = [];
-        feed.watch([".percolator", "_default_", "foo", "scalrtest", "tweet"]);
+        var data = {};
+        var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
+        feed.watch();
         feed.onChange(function(update) {
-            var found = false;
-            for (var each in data){
-                if(data[each]._type == update._type && data[each]._id == update._id){
-                    found = true;
-                    data[each]._source = update._source;
-                    break;
-                }
+            var hash = this.key(update);
+            if( hash in data){
+                data[hash]._source = update._source;
             }
-            if(!found){
-                data.push(update);
+            else{
+                data[hash] = update;
             }
-            this.setState({stocks: data});
+            this.setState({stocks: data, types: newtypes});
         }.bind(this));
-        return {stocks: data};
+        return {stocks: data, types: newtypes};
     },
     watchStock: function(symbols) {
         symbols = symbols.replace(/ /g,'');
@@ -123,18 +124,17 @@ var HomePage = React.createClass({
     unwatchStock: function(symbol) {
         feed.unwatch(symbol);
         var stocks = this.state.stocks;
-        var newStocks = [];
         for(var each in stocks) {
-            if(stocks[each]._type != symbol)
-                newStocks.push(stocks[each]);
+            if(stocks[each]._type == symbol){
+                delete stocks[each];
+            }
         }
-        this.setState({stocks: newStocks});
+        this.setState({stocks: stocks});
     },
     render: function () {
-        var types = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
         return (
             <div>
-                <TypeTable Types={types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
+                <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
                 <StockTable stocks={this.state.stocks} last={this.state._source} unwatchStockHandler={this.unwatchStock}/>
             </div>
         );
