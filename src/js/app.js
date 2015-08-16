@@ -114,14 +114,13 @@ var HomePage = React.createClass({
     getStreamingData: function(){
         // Logic to stream continous data
         feed.getData( function(update){
-            console.log(update.hits.hits[0]);
-            sdata.push(update.hits.hits[0]);
+            console.log(update);
+            sdata.push(update);
             this.setState({stocks: sdata});
         }.bind(this));
     },
     getStreamingTypes: function(){
         feed.getTypes( function(update){
-            console.log(update);
             this.setState({types: update});
         }.bind(this));
     },
