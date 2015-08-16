@@ -125,14 +125,20 @@ var HomePage = React.createClass({
     getStreamingData: function(){
         // Logic to stream continous data
         feed.getData( function(update){
-            data = [];
             console.log(update.hits.hits[0]);
-            data.push(update.hits.hits[0]);
-            this.setState({stocks: data, types: [".percolator", "_default_", "foo", "scalrtest", "tweet"]});
+            sdata.push(update.hits.hits[0]);
+            this.setState({stocks: sdata});
+        }.bind(this));
+    },
+    getStreamingTypes: function(){
+        feed.getTypes( function(update){
+            console.log(update);
+            this.setState({types: update});
         }.bind(this));
     },
     componentDidMount: function(){
-        setInterval( this.getStreamingData, 200);
+        setInterval(this.getStreamingData, 200);
+        setInterval(this.getStreamingTypes, 200);
     },
     watchStock: function(symbols) {
         symbols = symbols.replace(/ /g,'');

@@ -1,7 +1,3 @@
-// var appbase = require('appbase-js')
-//    elasticsearch = require('elasticsearch')
-//    esTypes = [];
-
 // app and authentication configurations
 const HOSTNAME = "scalr.api.appbase.io"
 const APPNAME = "createnewtestapp01"
@@ -9,11 +5,11 @@ const USERNAME = "RIvfxo1u1"
 const PASSWORD = "dee8ee52-8b75-4b5b-be4f-9df3c364f59f"
 
 // elasticsearch client. we use it for indexing, mappings, search settings, etc.
-/*
 var client = new elasticsearch.Client({
  host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
 });
-*/
+
+var sdata = [];
 
 var streamingClient = appbase.newClient({
     url: 'https://'+HOSTNAME,
@@ -54,7 +50,25 @@ feed = (function () {
             })
         },
         getTypes: function(callback){
-
+            console.log("here");
+            client.indices.getMapping({"index": APPNAME}).then(function(response) {
+                for (var index in response) {
+                    if (response.hasOwnProperty(index)) {
+                        var mapping = response[index].mappings;
+                        var types = [];
+                        for (var type in mapping) {
+                            if (mapping.hasOwnProperty(type)) {
+                                types.push(type);
+                            }
+                        }
+                        if (JSON.stringify(types)){
+                            callback(types);
+                        }
+                     }
+                }
+            }, function(error) {
+                console.log(error);
+            })
         }
     };
 
