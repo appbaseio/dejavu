@@ -21,25 +21,7 @@ var streamingClient = appbase.newClient({
     password: PASSWORD
 });
 
-var interval
-
-var streamingData = [ {
-    "_type": "tweet",
-    "_id": "3",
-    "_source": {
-    "user": "asdf",
-    "message": "at the Zbottom"
-    }
-  },
-  {
-    "_type": "tweet",
-  "_id": "1",
-  "_source": {
-    "user": "sid",
-    "message": "at the top"
-    }
-  }
-];
+streamingData = [];
 
 function init(){
     var client = new elasticsearch.Client({
@@ -57,19 +39,19 @@ function init(){
             stores: ['Walmart', 'Target']
         }
     }, function(err, res) {
-        if (!err)
-        console.log(res);
+        // if (!err)
+        // console.log(res);
     });
 }
 
 function updateData(sdata) {
     var lucky = Math.round(Math.random());
     console.log(lucky);
-    sdata[lucky]._source.message = "dynamic message here";
-    sdata[lucky]._source.user = "dynamic user";
+    // sdata[lucky]._source.message = "dynamic message here";
+    // sdata[lucky]._source.user = "dynamic user";
     if (lucky === 0) {
-        sdata[1]._source.user = "sid";
-        sdata[1]._source.message = "at the top";
+        sdata[0]._source.user = "sid";
+        sdata[0]._source.message = "at the top";
     } else { 
         sdata[0]._source.user = "asdf";
         sdata[0]._source.message = "at the Zbottom";
@@ -81,7 +63,8 @@ function syncTypes() {
     function updateTypes(types) {
         esTypes = types.slice();
         // call the update type function here.
-        console.log(types);
+        // console.log(types);
+        // this.setState({types: types});
     }
     // GET all the type names
     client.indices.getMapping({"index": APPNAME}).then(function(response) {
@@ -108,7 +91,7 @@ function syncDocuments() {
     function updateDocuments(types) {
         esTypes = types.slice();
         // call the update type function here.
-        console.log(types);
+        // console.log(types);
     }
 
     // GET all the type names
@@ -153,30 +136,16 @@ function updateData(sdata) {
     return sdata;
 }
 
-function getStreamingData(sdata) {
+function getStreamingData() {
 
-    // Get streaming data from a url continously !
-    streamingClient.streamDocument({
-      type: 'tweet',
-      id: '1'
-    }).on('data', function(res) {
-      // client would emit "data" event every time there is a document update.
-      console.log(res)
-      onChangeHandler(res._type, "stock", res);
-    }).on('error', function(err) {
-      console.log(err)
-      return
-    })
 }
 
 function start(onChange) {
     onChangeHandler = onChange;
-    interval = setInterval(function() { getStreamingData(streamingData) }, 200);
+    setInterval(function() { getStreamingData(streamingData) }, 200);
     setInterval(syncTypes, 200);
 }
 
-syncTypes();
- // every 1 minute
-
 exports.start = start;
 exports.init = init;
+exports.getStreamingData = getStreamingData;

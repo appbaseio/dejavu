@@ -122,6 +122,18 @@ var HomePage = React.createClass({
         }.bind(this));
         return {stocks: data, types: newtypes};
     },
+    getStreamingData: function(){
+        // Logic to stream continous data
+        feed.getData( function(update){
+            data = [];
+            console.log(update.hits.hits[0]);
+            data.push(update.hits.hits[0]);
+            this.setState({stocks: data, types: [".percolator", "_default_", "foo", "scalrtest", "tweet"]});
+        }.bind(this));
+    },
+    componentDidMount: function(){
+        setInterval( this.getStreamingData, 200);
+    },
     watchStock: function(symbols) {
         symbols = symbols.replace(/ /g,'');
         var arr = symbols.split(",");
