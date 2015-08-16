@@ -20,20 +20,9 @@ var streamingClient = appbase.newClient({
 
 feed = (function () {
 
-    var socket = io();
-
     return {
-        onChange: function(callback) {
-            socket.on('data', callback);
-        },
-        watch: function(symbols) {
-            socket.emit('join', symbols);
-        },
-        unwatch: function(symbol) {
-            socket.emit('leave', symbol);
-        },
         getData: function(callback){
-            // Get streaming data from a url continously !
+            // Get streaming data from a url continuously !
             streamingClient.streamSearch({
                 type: 'tweet',
                 body: {

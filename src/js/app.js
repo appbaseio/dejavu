@@ -109,17 +109,6 @@ var HomePage = React.createClass({
     getInitialState: function() {
         var data = {};
         var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
-        feed.watch();
-        feed.onChange(function(update) {
-            var hash = this.key(update);
-            if( hash in data ){
-                data[hash]._source = update._source;
-            }
-            else{
-                data[hash] = update;
-            }
-            this.setState({stocks: data, types: newtypes});
-        }.bind(this));
         return {stocks: data, types: newtypes};
     },
     getStreamingData: function(){
@@ -139,21 +128,6 @@ var HomePage = React.createClass({
     componentDidMount: function(){
         setInterval(this.getStreamingData, 200);
         setInterval(this.getStreamingTypes, 200);
-    },
-    watchStock: function(symbols) {
-        symbols = symbols.replace(/ /g,'');
-        var arr = symbols.split(",");
-        feed.watch(arr);
-    },
-    unwatchStock: function(symbol) {
-        feed.unwatch(symbol);
-        var stocks = this.state.stocks;
-        for( var each in stocks ) {
-            if(stocks[each]._type == symbol){
-                delete stocks[each];
-            }
-        }
-        this.setState({stocks: stocks});
     },
     render: function () {
         return (
