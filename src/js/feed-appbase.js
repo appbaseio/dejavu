@@ -10,6 +10,8 @@ var client = new elasticsearch.Client({
 });
 
 var sdata = [];
+var esTypes = [];
+var streamMap = {};  // a dictionary to keep updates of streaming on types
 
 var streamingClient = appbase.newClient({
     url: 'https://'+HOSTNAME,
@@ -20,26 +22,47 @@ var streamingClient = appbase.newClient({
 
 feed = (function () {
 
+    function processStreams(response, callback) {
+      if (response.hits) {
+        console.log("multi responses.")
+        for (var hit in response.hits.hits) {
+          console.log("r: ", response.hits.hits[hit]);
+          callback(response.hits.hits[hit]);
+        }
+      } else {
+        console.log("single response.")
+        console.log("r: ", response);
+        callback(response);
+      }
+      console.log("---")
+      return;
+    }
+
+    function applyStreamSearch(callback) {
+      for (type in esTypes) {
+        if (!streamMap[esTypes[type]] && esTypes[type][0] !== '.') {
+          streamingClient.streamSearch({
+            type: esTypes[type],
+            body: {
+              query: {
+                match_all: {}
+              }
+            }
+          }).on('data', function(res) {
+              processStreams(res, callback);
+          }).on('error', function(err) {
+              console.log("caught a stream error", err);
+          });
+          streamMap[esTypes[type]] = true;
+        }
+      }
+    }
+
     return {
-        getData: function(callback){
-            // Get streaming data from a url continuously !
-            streamingClient.streamSearch({
-                type: 'tweet',
-                body: {
-                query: {
-                    match_all: {}
-                    }
-                }
-            }).on('data', function(res) {
-              // client would emit "data" event every time there is a document update.
-              callback(res);
-            }).on('error', function(err) {
-              console.log(err)
-              return
-            })
+        getData: function(callback) {
+            applyStreamSearch(callback);
         },
         getTypes: function(callback){
-            console.log("here");
             client.indices.getMapping({"index": APPNAME}).then(function(response) {
                 for (var index in response) {
                     if (response.hasOwnProperty(index)) {
@@ -50,7 +73,8 @@ feed = (function () {
                                 types.push(type);
                             }
                         }
-                        if (JSON.stringify(types)){
+                        if (JSON.stringify(esTypes) !== JSON.stringify(types)){
+                            esTypes = types.slice();
                             callback(types);
                         }
                      }
