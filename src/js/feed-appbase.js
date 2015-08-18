@@ -10,6 +10,8 @@ var client = new elasticsearch.Client({
 });
 
 var sdata = [];
+var headers = ["_type", "_id"];
+var table = [];
 var esTypes = [];
 var streamMap = {};  // a dictionary to keep updates of streaming on types
 
@@ -26,12 +28,12 @@ feed = (function () {
       if (response.hits) {
         console.log("multi responses.")
         for (var hit in response.hits.hits) {
-          console.log("r: ", response.hits.hits[hit]);
+          // console.log("r: ", response.hits.hits[hit]);
           callback(response.hits.hits[hit]);
         }
       } else {
         console.log("single response.")
-        console.log("r: ", response);
+        //console.log("r: ", response);
         callback(response);
       }
       console.log("---")

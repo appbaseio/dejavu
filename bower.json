@@ -2,6 +2,7 @@
   "name": "dejaVu",
   "dependencies": {
     "appbase-js": "~0.1.0",
-    "elasticsearch": "~6.0.0"
+    "elasticsearch": "~6.0.0",
+    "handsontable": "~0.16.1"
   }
 }

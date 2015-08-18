@@ -31,6 +31,10 @@ var SourceTable = React.createClass({
 var StockTable = React.createClass({
     render: function () {
         var items = [];
+        return (
+            <Griddle results={this.props.stock} tableClassName="table" showFilter={true}
+ showSettings={true} columns={["name", "city", "state", "country"]} />
+        );
         for (var symbol in this.props.stocks) {
             var stock = this.props.stocks[symbol];
             items.push(<StockRow key={String(stock._id)+stock._type} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
@@ -101,6 +105,15 @@ var TypeTable = React.createClass({
     }
 });
 
+var JSONview = React.createClass({
+    render: function(){
+        return (
+            <div className="pureJSON">
+            </div>
+        );
+    }
+});
+
 var HomePage = React.createClass({
     key: function(obj){
         // some unique object-dependent key
@@ -111,10 +124,34 @@ var HomePage = React.createClass({
         var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
         return {stocks: data, types: newtypes};
     },
+    flatten: function(data) {
+    var result = {};
+    function recurse (cur, prop) {
+        if (Object(cur) !== cur) {
+            result[prop] = cur;
+        } else if (Array.isArray(cur)) {
+             for(var i=0, l=cur.length; i<l; i++)
+                 recurse(cur[i], prop + "[" + i + "]");
+            if (l == 0)
+                result[prop] = [];
+        } else {
+            var isEmpty = true;
+            for (var p in cur) {
+                isEmpty = false;
+                recurse(cur[p], prop ? prop+"."+p : p);
+            }
+            if (isEmpty && prop)
+                result[prop] = {};
+        }
+        }
+        recurse(data, "");
+        return result;
+    },
     getStreamingData: function(){
         // Logic to stream continous data
         feed.getData( function(update){
             console.log(update);
+            update = this.flatten(update);
             sdata.push(update);
             this.setState({stocks: sdata});
         }.bind(this));
@@ -132,7 +169,7 @@ var HomePage = React.createClass({
         return (
             <div>
                 <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <StockTable stocks={this.state.stocks} last={this.state._source} unwatchStockHandler={this.unwatchStock}/>
+                <Griddle results={this.state.stocks} tableClassName="table" showFilter={true} showSettings={true} columns={["_type", "_id"]} />
             </div>
         );
     }
