@@ -3,6 +3,7 @@
   "dependencies": {
     "appbase-js": "~0.1.0",
     "elasticsearch": "~6.0.0",
-    "handsontable": "~0.16.1"
+    "griddle-react": "~0.2.0",
+    "underscore": "~1.8.3"
   }
 }
