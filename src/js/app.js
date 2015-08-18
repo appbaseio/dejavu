@@ -1,9 +1,9 @@
 var StockRow = React.createClass({
     unwatch: function() {
-        this.props.unwatchStockHandler(this.props.stock._type);
+        this.props.unwatchStockHandler(this.props.data._type);
     },
     render: function () {
-        var source = this.props.stock._source;
+        var source = this.props.data;
         var items = [];
         for(var each in source){
             items.push(source[each]);
@@ -14,8 +14,6 @@ var StockRow = React.createClass({
 
         return (
             <tr>
-                <td>{this.props.stock._type}</td>
-                <td>{this.props.stock._id}</td>
                 {children}
             </tr>
         );
@@ -138,7 +136,7 @@ var HomePage = React.createClass({
             var isEmpty = true;
             for (var p in cur) {
                 isEmpty = false;
-                recurse(cur[p], prop ? prop+"."+p : p);
+                recurse(cur[p], prop ? p : p);
             }
             if (isEmpty && prop)
                 result[prop] = {};
@@ -165,11 +163,20 @@ var HomePage = React.createClass({
         setInterval(this.getStreamingData, 200);
         setInterval(this.getStreamingTypes, 200);
     },
+    handleWC: function(gridRow, event){
+        console.log(gridRow);
+    },
     render: function () {
         return (
             <div>
                 <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <Griddle results={this.state.stocks} tableClassName="table" showFilter={true} showSettings={true} columns={["_type", "_id"]} />
+                <Griddle 
+                results={this.state.stocks} 
+                tableClassName="table" 
+                showFilter={true}
+                showSettings={true} 
+                columns={["_type", "_id"]}
+                enableInfiniteScroll={true} />
             </div>
         );
     }
