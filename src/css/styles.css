@@ -131,7 +131,7 @@ th {
   width:20%;
 }
 .griddle table{
-  width:100%;table-layout:fixed;
+  width:100%;table-layout:auto;
 }
 
 .griddle th{
@@ -140,12 +140,15 @@ th {
   border-bottom:1px solid #DDD;
   color:#222;
   padding:5px;
+  word-wrap: break-word;
 }
 
 .griddle td{
   padding:5px;
   background-color:#FFF;
   border-top-color:#DDD;
+  word-wrap: break-word;
+  text-align: center;
   color:#222;
 }
 

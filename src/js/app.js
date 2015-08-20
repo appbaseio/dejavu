@@ -124,6 +124,7 @@ var HomePage = React.createClass({
     },
     flatten: function(data) {
     var result = {};
+    result['JSON'] = <button />
     function recurse (cur, prop) {
         if (Object(cur) !== cur) {
             result[prop] = cur;
@@ -175,7 +176,7 @@ var HomePage = React.createClass({
                 tableClassName="table" 
                 showFilter={true}
                 showSettings={true} 
-                columns={["_type", "_id"]}
+                columns={["JSON", "_type", "_id"]}
                 enableInfiniteScroll={true} />
             </div>
         );
