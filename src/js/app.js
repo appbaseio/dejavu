@@ -106,7 +106,7 @@ var TypeTable = React.createClass({
 var JSONview = React.createClass({
     render: function(){
         return (
-            <div className="pureJSON">
+            <div className="panel panel-default json-panel">
             </div>
         );
     }
@@ -122,9 +122,15 @@ var HomePage = React.createClass({
         var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
         return {stocks: data, types: newtypes};
     },
+    viewJSON: function(){
+        console.log(data);
+    },
+    hello: function(gridRow, event){
+        console.log(gridRow);
+    },
     flatten: function(data) {
     var result = {};
-    result['JSON'] = <button />
+    result['JSON'] = <button className="btn btn-circle btn-info">J</button>
     function recurse (cur, prop) {
         if (Object(cur) !== cur) {
             result[prop] = cur;
@@ -137,7 +143,7 @@ var HomePage = React.createClass({
             var isEmpty = true;
             for (var p in cur) {
                 isEmpty = false;
-                recurse(cur[p], prop ? p : p);
+                recurse(cur[p], p);
             }
             if (isEmpty && prop)
                 result[prop] = {};
@@ -164,8 +170,19 @@ var HomePage = React.createClass({
         setInterval(this.getStreamingData, 200);
         setInterval(this.getStreamingTypes, 200);
     },
-    handleWC: function(gridRow, event){
-        console.log(gridRow);
+    watchStock: function(typeName){
+        esTypes.push(typeName);
+        this.setState({types: esTypes}); 
+    },
+    unwatchStock: function(typeName){
+        var newTypes = [];
+        for(var each in esTypes){
+            if(each != typeName){
+                newtypes.push(each);
+            }
+        }
+        esTypes = newtypes;
+        this.setState({types: esTypes});
     },
     render: function () {
         return (
@@ -177,7 +194,9 @@ var HomePage = React.createClass({
                 showFilter={true}
                 showSettings={true} 
                 columns={["JSON", "_type", "_id"]}
+                settingsText={"settings"}
                 enableInfiniteScroll={true} />
+                <JSONview />
             </div>
         );
     }

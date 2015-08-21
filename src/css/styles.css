@@ -54,7 +54,7 @@ th {
 
 .row-types {
     margin: 10px 0;
-    left: 100px;
+    left: 10px;
     top: 100px;
     position: absolute;
     display: inline;
@@ -86,8 +86,15 @@ th {
 
 /* Griddle */
 
+.griddle {
+  right: 460px;
+  position: absolute;
+}
+
 .griddle-container{
   border:1px solid #DDD;
+  width: 640px;
+  margin: 10px !important;
 }
 
 .griddle .top-section{
@@ -97,17 +104,11 @@ th {
 }
 
 .griddle .griddle-filter{
-  float:left;
   width:50%;
   text-align:left;
   color:#222;
   min-height:1px;
-}
-
-.griddle .griddle-settings-toggle{
-  float:left;
-  width:50%;
-  text-align:right;
+  padding: 25px !important;
 }
 
 .griddle .griddle-settings{
@@ -115,7 +116,7 @@ th {
   border:1px solid #DDD;
   color:#222;
   padding:10px;
-  margin-bottom:10px;
+  margin:10px;
 }
 
 .griddle .griddle-settings .griddle-columns{
@@ -131,7 +132,7 @@ th {
   width:20%;
 }
 .griddle table{
-  width:100%;table-layout:auto;
+  table-layout:auto;
 }
 
 .griddle th{
@@ -150,6 +151,15 @@ th {
   word-wrap: break-word;
   text-align: center;
   color:#222;
+}
+
+.json-panel {
+  position: absolute;
+  top: 100px;
+  right: 50px;
+  width: 400px;
+  height: 500px;
+  display: inline;
 }
 
 .griddle .footer-container{
