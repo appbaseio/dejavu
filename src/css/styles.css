@@ -160,6 +160,7 @@ th {
   width: 400px;
   height: 500px;
   display: inline;
+  word-wrap: break-word;
 }
 
 .griddle .footer-container{

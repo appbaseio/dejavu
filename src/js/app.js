@@ -20,12 +20,6 @@ var StockRow = React.createClass({
     }
 });
 
-/*
-var SourceTable = React.createClass({
-
-});
-*/
-
 var StockTable = React.createClass({
     render: function () {
         var items = [];
@@ -106,7 +100,7 @@ var TypeTable = React.createClass({
 var JSONview = React.createClass({
     render: function(){
         return (
-            <div className="panel panel-default json-panel">
+            <div id="json-view" className="panel panel-default json-panel">
             </div>
         );
     }
@@ -122,15 +116,14 @@ var HomePage = React.createClass({
         var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
         return {stocks: data, types: newtypes};
     },
-    viewJSON: function(){
+    viewJSON: function(data, event){
         console.log(data);
-    },
-    hello: function(gridRow, event){
-        console.log(gridRow);
+        var view = document.getElementById("json-view");
+        view.innerHTML = JSON.stringify(data);
     },
     flatten: function(data) {
     var result = {};
-    result['JSON'] = <button className="btn btn-circle btn-info">J</button>
+    result['JSON'] = <button className="btn btn-circle btn-info" onClick={this.viewJSON.bind(null, data)}>J</button>
     function recurse (cur, prop) {
         if (Object(cur) !== cur) {
             result[prop] = cur;
