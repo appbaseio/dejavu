@@ -81,19 +81,16 @@ th {
     left: 10px;
 }
 
-.checkboxLabel {
-}
-
 /* Griddle */
 
 .griddle {
-  right: 460px;
+  right: 20px;
   position: absolute;
 }
 
 .griddle-container{
   border:1px solid #DDD;
-  width: 640px;
+  width: 1000px;
   margin: 10px !important;
 }
 
@@ -151,16 +148,6 @@ th {
   word-wrap: break-word;
   text-align: center;
   color:#222;
-}
-
-.json-panel {
-  position: absolute;
-  top: 100px;
-  right: 50px;
-  width: 400px;
-  height: 500px;
-  display: inline;
-  word-wrap: break-word;
 }
 
 .griddle .footer-container{

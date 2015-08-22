@@ -97,15 +97,6 @@ var TypeTable = React.createClass({
     }
 });
 
-var JSONview = React.createClass({
-    render: function(){
-        return (
-            <div id="json-view" className="panel panel-default json-panel">
-            </div>
-        );
-    }
-});
-
 var HomePage = React.createClass({
     key: function(obj){
         // some unique object-dependent key
@@ -121,9 +112,9 @@ var HomePage = React.createClass({
         var view = document.getElementById("json-view");
         view.innerHTML = JSON.stringify(data);
     },
-    flatten: function(data) {
+    flatten: function(data, callback) {
     var result = {};
-    result['JSON'] = <button className="btn btn-circle btn-info" onClick={this.viewJSON.bind(null, data)}>J</button>
+    // result['JSON'] = <button className="btn btn-circle btn-info" onClick={this.viewJSON.bind(null, data)}>J</button>
     function recurse (cur, prop) {
         if (Object(cur) !== cur) {
             result[prop] = cur;
@@ -143,13 +134,18 @@ var HomePage = React.createClass({
         }
         }
         recurse(data, "");
-        return result;
+        return callback(result);
+    },
+    injectLink: function(data) {
+        var ID = data['_id'];
+        data['_id'] = <a href="#" target="_blank">{ID} <i className="fa fa-external-link"></i></a>;
+        return data;
     },
     getStreamingData: function(){
         // Logic to stream continous data
         feed.getData( function(update){
             console.log(update);
-            update = this.flatten(update);
+            update = this.flatten(update, this.injectLink);
             sdata.push(update);
             this.setState({stocks: sdata});
         }.bind(this));
@@ -186,10 +182,9 @@ var HomePage = React.createClass({
                 tableClassName="table" 
                 showFilter={true}
                 showSettings={true} 
-                columns={["JSON", "_type", "_id"]}
+                columns={["_type", "_id"]}
                 settingsText={"settings"}
                 enableInfiniteScroll={true} />
-                <JSONview />
             </div>
         );
     }
