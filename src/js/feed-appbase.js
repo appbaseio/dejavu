@@ -9,11 +9,11 @@ var client = new elasticsearch.Client({
  host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
 });
 
-var sdata = [];
+var sdata = [{}];
 var headers = ["_type", "_id"];
 var table = [];
 var esTypes = [];
-var streamMap = {};  // a dictionary to keep updates of streaming on types
+var subsetESTypes = [];
 
 var streamingClient = appbase.newClient({
     url: 'https://'+HOSTNAME,
@@ -26,43 +26,46 @@ feed = (function () {
 
     function processStreams(response, callback) {
       if (response.hits) {
-        console.log("multi responses.")
         for (var hit in response.hits.hits) {
-          // console.log("r: ", response.hits.hits[hit]);
           callback(response.hits.hits[hit]);
         }
       } else {
-        console.log("single response.")
-        //console.log("r: ", response);
         callback(response);
       }
-      console.log("---")
       return;
     }
 
-    function applyStreamSearch(callback) {
-      for (type in esTypes) {
-        if (!streamMap[esTypes[type]] && esTypes[type][0] !== '.') {
-          streamingClient.streamSearch({
-            type: esTypes[type],
-            body: {
-              query: {
-                match_all: {}
-              }
+    function applyStreamSearch(typeName, callback) {
+      if (typeName !== null) {
+        streamingClient.streamSearch({
+          type: typeName,
+          body: {
+            from: 0,
+            size: 20, // show max 20 objects initally
+            query: {
+              match_all: {}
             }
-          }).on('data', function(res) {
-              processStreams(res, callback);
-          }).on('error', function(err) {
-              console.log("caught a stream error", err);
-          });
-          streamMap[esTypes[type]] = true;
-        }
+          }
+        }).on('data', function(res) {
+            processStreams(res, callback);
+        }).on('error', function(err) {
+            console.log("caught a stream error", err);
+        });
       }
     }
 
     return {
-        getData: function(callback) {
-            applyStreamSearch(callback);
+        getData: function(typeName, callback) {
+            applyStreamSearch(typeName, callback);
+        },
+        deleteData: function(typeName, callback) {
+            localSdata = [];
+            for (data in sdata) {
+                if (sdata[data]._type !== typeName)
+                    localSdata.push(sdata[data]);
+            }
+            sdata = localSdata.slice();
+            callback(sdata);
         },
         getTypes: function(callback){
             client.indices.getMapping({"index": APPNAME}).then(function(response) {

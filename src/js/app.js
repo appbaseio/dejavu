@@ -112,9 +112,7 @@ var HomePage = React.createClass({
         return obj._type + obj._id;
     },
     getInitialState: function() {
-        var data = {};
-        var newtypes = [];
-        return {stocks: data, types: newtypes};
+        return {stocks: [{}], types: []};
     },
     viewJSON: function(data, event){
         console.log(data);
@@ -145,10 +143,9 @@ var HomePage = React.createClass({
         recurse(data, "");
         return result;
     },
-    getStreamingData: function(){
+    getStreamingData: function(typeName){
         // Logic to stream continuous data
-        feed.getData(function(update){
-            console.log(update);
+        feed.getData(typeName, function(update){
             update = this.flatten(update);
             sdata.push(update);
             this.setState({stocks: sdata});
@@ -157,26 +154,27 @@ var HomePage = React.createClass({
     getStreamingTypes: function(){
         feed.getTypes( function(update){    // only called on change.
             this.setState({types: update});
-            this.getStreamingData();
+        }.bind(this));
+    },
+    removeType: function(typeName) {
+        feed.deleteData(typeName, function() {
+            this.setState({stocks: sdata});
         }.bind(this));
     },
     componentDidMount: function(){
         this.getStreamingTypes();
-        setInterval(this.getStreamingTypes, 10000);  // call every 10s.
+        setInterval(this.getStreamingTypes, 5*60*1000);  // call every 5 min.
     },
     watchStock: function(typeName){
-        esTypes.push(typeName);
-        this.setState({types: esTypes});
+        subsetESTypes.push(typeName);
+        this.getStreamingData(typeName);
+        console.log("selections: ", subsetESTypes);
     },
     unwatchStock: function(typeName){
-        var newTypes = [];
-        for(var each in esTypes){
-            if(each != typeName){
-                newtypes.push(each);
-            }
-        }
-        esTypes = newtypes;
-        this.setState({types: esTypes});
+        subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
+        this.removeType(typeName);
+        this.getStreamingData(null);
+        console.log("selections: ", subsetESTypes);
     },
     render: function () {
         return (
