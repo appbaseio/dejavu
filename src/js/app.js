@@ -113,7 +113,7 @@ var HomePage = React.createClass({
     },
     getInitialState: function() {
         var data = {};
-        var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
+        var newtypes = [];
         return {stocks: data, types: newtypes};
     },
     viewJSON: function(data, event){
@@ -146,8 +146,8 @@ var HomePage = React.createClass({
         return result;
     },
     getStreamingData: function(){
-        // Logic to stream continous data
-        feed.getData( function(update){
+        // Logic to stream continuous data
+        feed.getData(function(update){
             console.log(update);
             update = this.flatten(update);
             sdata.push(update);
@@ -155,17 +155,18 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     getStreamingTypes: function(){
-        feed.getTypes( function(update){
+        feed.getTypes( function(update){    // only called on change.
             this.setState({types: update});
+            this.getStreamingData();
         }.bind(this));
     },
     componentDidMount: function(){
-        setInterval(this.getStreamingData, 200);
-        setInterval(this.getStreamingTypes, 200);
+        this.getStreamingTypes();
+        setInterval(this.getStreamingTypes, 10000);  // call every 10s.
     },
     watchStock: function(typeName){
         esTypes.push(typeName);
-        this.setState({types: esTypes}); 
+        this.setState({types: esTypes});
     },
     unwatchStock: function(typeName){
         var newTypes = [];
@@ -181,11 +182,11 @@ var HomePage = React.createClass({
         return (
             <div>
                 <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <Griddle 
-                results={this.state.stocks} 
-                tableClassName="table" 
+                <Griddle
+                results={this.state.stocks}
+                tableClassName="table"
                 showFilter={true}
-                showSettings={true} 
+                showSettings={true}
                 columns={["JSON", "_type", "_id"]}
                 settingsText={"settings"}
                 enableInfiniteScroll={true} />
