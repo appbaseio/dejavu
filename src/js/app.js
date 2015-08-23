@@ -20,32 +20,95 @@ var StockRow = React.createClass({
     }
 });
 
+var Dropdown = React.createClass({
+    remove: function(data, event){
+        console.log(data);
+    },
+    render: function(){
+        var DropdownButton = ReactBootstrap.DropdownButton;
+        var MenuItem = ReactBootstrap.MenuItem;
+        var columns = this.props.cols;
+        var ColumnsCheckbox =  columns.map(function(item){
+            return <TypeColumn type={item}/>;
+        });
+  return (
+    <DropdownButton title="Dropdown">
+      {ColumnsCheckbox}
+    </DropdownButton>
+  );
+}
+});
+
 var StockTable = React.createClass({
     render: function () {
-        var items = [];
-        return (
-            <Griddle results={this.props.stock} tableClassName="table" showFilter={true}
- showSettings={true} columns={["name", "city", "state", "country"]} />
-        );
-        for (var symbol in this.props.stocks) {
-            var stock = this.props.stocks[symbol];
-            items.push(<StockRow key={String(stock._id)+stock._type} stock={stock} last={this.props.last} unwatchStockHandler={this.props.unwatchStockHandler}/>);
+        data = this.props._data;
+        var columns = ['json'];
+        for(var each in data){
+            for(column in data[each]){
+                if(column != 'json'){
+                    if(columns.indexOf(column) <= -1){
+                        columns.push(column);
+                    }
+                }
+            }
         }
+        var rows = [];
+        for(var row in data){
+            var newRow = [];
+            newRow.push(data[row]['json']);
+            for(var each in columns){
+                if(columns[each] != 'json'){
+                if(data[row][columns[each]]){
+                    newRow.push(data[row][columns[each]]);
+                }
+                else{
+                    newRow.push('');
+                }
+                }
+            }
+            rows.push(newRow.map(
+                function(item){
+                    return <td>{item}</td>;
+                }));
+        }
+        console.log(columns);
+        // console.log(rows);
+        var renderColumns = columns.map(function(item){
+            return <th>{item}</th>;
+        });
+        var renderRows = rows.map(function(item)
+        {
+            return <tr>{item}</tr>
+        });
         return (
-            <div className="row-data">
-            <table className="table-hover">
+            <div>
+            <Dropdown cols={columns}/>
+            <div className="table-responsive dejavu-table">
+                <table className="table table-striped">
                 <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>ID</th>
-                        <th>SOURCE</th>
-                    </tr>
+                <tr>
+                {renderColumns}
+                </tr>
                 </thead>
                 <tbody>
-                    {items}
+                {renderRows}
                 </tbody>
-            </table>
+                </table>
             </div>
+            </div>
+        );
+    }
+});
+
+var TypeColumn = React.createClass({
+    check: function() {
+        console.log("unwatched");
+    },
+    render: function() {
+        var MenuItem = ReactBootstrap.MenuItem;
+        var Input = ReactBootstrap.Input;
+        return(
+            <Input type='checkbox' onClick={this.check} label={this.props.type} />
         );
     }
 });
@@ -97,6 +160,43 @@ var TypeTable = React.createClass({
     }
 });
 
+var Pretty = React.createClass({
+    render: function() {
+        return <div><pre>{JSON.stringify(this.props.json, null, 2) }</pre></div>;
+    }
+});
+
+var Modal = React.createClass({
+    hideModal: function(){
+        React.unmountComponentAtNode(document.querySelector('#modal'));
+    },
+    render: function(){
+        var Modal = ReactBootstrap.Modal;
+        var Button = ReactBootstrap.Button;
+        var showing = this.props.show;
+        delete showing['json'];
+        var prettyjson = JSON.stringify(showing);
+        return (
+            <Modal {...this.props} bsSize='small' onHide={this.hideModal}>
+        <Modal.Header closeButton>
+          <Modal.Title id='contained-modal-title-sm'>JSON</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>{this.props.show['_type']}</h4>
+          <h4>{this.props.show['_id']}</h4>
+          <p>
+            <Pretty json={showing} />
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={this.hideModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+        );
+    }
+});
+
+
 var HomePage = React.createClass({
     key: function(obj){
         // some unique object-dependent key
@@ -106,7 +206,7 @@ var HomePage = React.createClass({
         return {stocks: [{}], types: []};
     },
     viewJSON: function(data, event){
-        console.log(data);
+        // console.log(data);
         var view = document.getElementById("json-view");
         view.innerHTML = JSON.stringify(data);
     },
@@ -134,16 +234,31 @@ var HomePage = React.createClass({
         recurse(data, "");
         return callback(result);
     },
+    showJSON: function(data, event){
+        React.render(<Modal show={data}/>, document.getElementById('modal'));
+    },
     injectLink: function(data) {
         var ID = data['_id'];
-        data['_id'] = <a href="#" target="_blank">{ID} <i className="fa fa-external-link"></i></a>;
+        data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
         return data;
     },
     getStreamingData: function(typeName){
         // Logic to stream continuous data
         feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
-            sdata.push(update);
+            var got = false;
+            for(var each in sdata){
+                if(sdata[each]['_id'] === update['_id']){
+                    if(sdata[each]['_type'] === update['_type']){
+                        sdata[each] = update;
+                        console.log("overlap");
+                        got = true;
+                    }
+                }
+            }
+            if(!got){
+                sdata.push(update);
+            }
             this.setState({stocks: sdata});
         }.bind(this));
     },
@@ -175,15 +290,10 @@ var HomePage = React.createClass({
     render: function () {
         return (
             <div>
+                <div id='modal' />
+                <input type="text" className="form-control" placeholder="#" />
                 <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <Griddle
-                results={this.state.stocks}
-                tableClassName="table"
-                showFilter={true}
-                showSettings={true}
-                columns={["_type", "_id"]}
-                settingsText={"settings"}
-                enableInfiniteScroll={true} />
+                <StockTable _data={this.state.stocks} />
             </div>
         );
     }

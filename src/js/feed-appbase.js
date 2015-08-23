@@ -9,9 +9,10 @@ var client = new elasticsearch.Client({
  host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
 });
 
-var sdata = [{}];
+var sdata = [];
 var headers = ["_type", "_id"];
 var table = [];
+var columns = [];
 var esTypes = [];
 var subsetESTypes = [];
 
@@ -27,6 +28,7 @@ feed = (function () {
     function processStreams(response, callback) {
       if (response.hits) {
         for (var hit in response.hits.hits) {
+          // console.log(response.hits.hits[hit]);
           callback(response.hits.hits[hit]);
         }
       } else {

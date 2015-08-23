@@ -81,6 +81,11 @@ th {
     left: 10px;
 }
 
+.checkBoxLabel {
+  position: relative;
+  display: inline-block;
+}
+
 /* Griddle */
 
 .griddle {
@@ -170,4 +175,8 @@ th {
 
 .griddle .griddle-next{
   text-align:right;
+}
+
+.dejavu-table {
+  vertical-align: middle;
 }
