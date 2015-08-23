@@ -103,9 +103,7 @@ var HomePage = React.createClass({
         return obj._type + obj._id;
     },
     getInitialState: function() {
-        var data = {};
-        var newtypes = [".percolator", "_default_", "foo", "scalrtest", "tweet"];
-        return {stocks: data, types: newtypes};
+        return {stocks: [{}], types: []};
     },
     viewJSON: function(data, event){
         console.log(data);
@@ -141,47 +139,48 @@ var HomePage = React.createClass({
         data['_id'] = <a href="#" target="_blank">{ID} <i className="fa fa-external-link"></i></a>;
         return data;
     },
-    getStreamingData: function(){
-        // Logic to stream continous data
-        feed.getData( function(update){
-            console.log(update);
+    getStreamingData: function(typeName){
+        // Logic to stream continuous data
+        feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
             sdata.push(update);
             this.setState({stocks: sdata});
         }.bind(this));
     },
     getStreamingTypes: function(){
-        feed.getTypes( function(update){
+        feed.getTypes( function(update){    // only called on change.
             this.setState({types: update});
         }.bind(this));
     },
+    removeType: function(typeName) {
+        feed.deleteData(typeName, function() {
+            this.setState({stocks: sdata});
+        }.bind(this));
+    },
     componentDidMount: function(){
-        setInterval(this.getStreamingData, 200);
-        setInterval(this.getStreamingTypes, 200);
+        this.getStreamingTypes();
+        setInterval(this.getStreamingTypes, 5*60*1000);  // call every 5 min.
     },
     watchStock: function(typeName){
-        esTypes.push(typeName);
-        this.setState({types: esTypes}); 
+        subsetESTypes.push(typeName);
+        this.getStreamingData(typeName);
+        console.log("selections: ", subsetESTypes);
     },
     unwatchStock: function(typeName){
-        var newTypes = [];
-        for(var each in esTypes){
-            if(each != typeName){
-                newtypes.push(each);
-            }
-        }
-        esTypes = newtypes;
-        this.setState({types: esTypes});
+        subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
+        this.removeType(typeName);
+        this.getStreamingData(null);
+        console.log("selections: ", subsetESTypes);
     },
     render: function () {
         return (
             <div>
                 <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <Griddle 
-                results={this.state.stocks} 
-                tableClassName="table" 
+                <Griddle
+                results={this.state.stocks}
+                tableClassName="table"
                 showFilter={true}
-                showSettings={true} 
+                showSettings={true}
                 columns={["_type", "_id"]}
                 settingsText={"settings"}
                 enableInfiniteScroll={true} />
