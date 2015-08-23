@@ -21,15 +21,12 @@ var StockRow = React.createClass({
 });
 
 var Dropdown = React.createClass({
-    remove: function(data, event){
-        console.log(data);
-    },
     render: function(){
         var DropdownButton = ReactBootstrap.DropdownButton;
         var MenuItem = ReactBootstrap.MenuItem;
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
-            return <TypeColumn type={item}/>;
+            return <TypeColumn type={item} />;
         });
   return (
     <DropdownButton title="Dropdown">
@@ -37,6 +34,12 @@ var Dropdown = React.createClass({
     </DropdownButton>
   );
 }
+});
+
+var Column = React.createClass({
+    render: function(){
+        return <th id={this.props._item}>{this.props._item}</th>;
+    }
 });
 
 var StockTable = React.createClass({
@@ -74,11 +77,11 @@ var StockTable = React.createClass({
         console.log(columns);
         // console.log(rows);
         var renderColumns = columns.map(function(item){
-            return <th>{item}</th>;
+            return <Column _item={item} key={item} />;
         });
         var renderRows = rows.map(function(item)
         {
-            return <tr>{item}</tr>
+            return <tr>{item}</tr>;
         });
         return (
             <div>
@@ -101,8 +104,12 @@ var StockTable = React.createClass({
 });
 
 var TypeColumn = React.createClass({
-    check: function() {
-        console.log("unwatched");
+    check: function(){
+        if(document.getElementById(this.props.type).style.display == "none"){
+            document.getElementById(this.props.type).style.display = "table-cell";
+        }
+        else
+            document.getElementById(this.props.type).style.display = "none";
     },
     render: function() {
         var MenuItem = ReactBootstrap.MenuItem;
