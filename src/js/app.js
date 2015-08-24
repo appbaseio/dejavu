@@ -38,9 +38,27 @@ var Dropdown = React.createClass({
 
 var Column = React.createClass({
     render: function(){
-        return <th id={this.props._item}>{this.props._item}</th>;
+        return <th id={this.props._key}>{this.props._item}</th>;
     }
 });
+
+var Cell = React.createClass({
+    render: function(){
+        console.log(this.props.unique);
+        if(this.props.unique)
+            return <td id={this.props.unique}>{this.props.item}</td>;
+        else
+            return <td>{this.props.item}</td>
+    }
+});
+
+var keyGen = function(row, element){
+    if(typeof element === 'string')
+        return row['_type']+String(row['_id'])+element;
+    if(typeof element === 'number')
+        return row['_type']+String(row['_id'])+String(element);
+    return false;
+}
 
 var StockTable = React.createClass({
     render: function () {
@@ -62,7 +80,8 @@ var StockTable = React.createClass({
             for(var each in columns){
                 if(columns[each] != 'json'){
                 if(data[row][columns[each]]){
-                    newRow.push(data[row][columns[each]]);
+                    var cell = data[row][columns[each]];
+                    newRow.push(cell);
                 }
                 else{
                     newRow.push('');
@@ -71,10 +90,13 @@ var StockTable = React.createClass({
             }
             rows.push(newRow.map(
                 function(item){
-                    return <td>{item}</td>;
+                    var _key = keyGen(data[row], item);
+                    if(_key)
+                        return <Cell item={item} unique={_key} key={_key} />;
+                    return <Cell item={item} unique={_key} />
                 }));
         }
-        console.log(columns);
+        // console.log(columns);
         // console.log(rows);
         var renderColumns = columns.map(function(item){
             return <Column _item={item} key={item} />;
@@ -84,9 +106,8 @@ var StockTable = React.createClass({
             return <tr>{item}</tr>;
         });
         return (
-            <div>
-            <Dropdown cols={columns}/>
             <div className="table-responsive dejavu-table">
+            <Dropdown cols={columns}/>
                 <table className="table table-striped">
                 <thead>
                 <tr>
@@ -98,18 +119,17 @@ var StockTable = React.createClass({
                 </tbody>
                 </table>
             </div>
-            </div>
         );
     }
 });
 
 var TypeColumn = React.createClass({
     check: function(){
-        if(document.getElementById(this.props.type).style.display == "none"){
-            document.getElementById(this.props.type).style.display = "table-cell";
+        if(document.getElementById(this.props.type).visibility == "collapse"){
+            document.getElementById(this.props.type).visibility = "table-cell";
         }
         else
-            document.getElementById(this.props.type).style.display = "none";
+            document.getElementById(this.props.type).visibility = "collapse";
     },
     render: function() {
         var MenuItem = ReactBootstrap.MenuItem;
@@ -151,7 +171,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <div className="row-types">
+            <div className="table-responsive data-table row-types">
             <table className="table-hover">
                 <thead>
                     <tr>
@@ -218,48 +238,78 @@ var HomePage = React.createClass({
         view.innerHTML = JSON.stringify(data);
     },
     flatten: function(data, callback) {
-    var result = {};
-    // result['JSON'] = <button className="btn btn-circle btn-info" onClick={this.viewJSON.bind(null, data)}>J</button>
-    function recurse (cur, prop) {
-        if (Object(cur) !== cur) {
-            result[prop] = cur;
-        } else if (Array.isArray(cur)) {
-             for(var i=0, l=cur.length; i<l; i++)
-                 recurse(cur[i], prop + "[" + i + "]");
-            if (l == 0)
-                result[prop] = [];
-        } else {
-            var isEmpty = true;
-            for (var p in cur) {
-                isEmpty = false;
-                recurse(cur[p], p);
+        var fields = [];
+        for(var each in data){
+            if(typeof data[each] !== 'string'){
+                if(typeof data[each] !== 'number'){
+                    if(each !== '_source')
+                        fields.push(each);
+                }
             }
-            if (isEmpty && prop)
-                result[prop] = {};
         }
+        for(var each in data['_source']){
+            data[each] = data['_source'][each];
+            if(typeof data[each] !== 'string'){
+                if(typeof data[each] !== 'number'){
+                        fields.push(each);
+                }
+            }
         }
-        recurse(data, "");
-        return callback(result);
+        delete data['_source'];
+        return callback(data, fields);
     },
     showJSON: function(data, event){
         React.render(<Modal show={data}/>, document.getElementById('modal'));
     },
-    injectLink: function(data) {
+    injectLink: function(data, fields) {
         var ID = data['_id'];
         data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
+        for(var each in fields){
+            console.log(data[fields[each]]);
+            data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link"></i></a>;
+        }
         return data;
+    },
+    diff: function(row, update){
+        var fields = [];
+        for(var each in update){
+            if(row[each]){
+                if(typeof row[each] === 'number'){
+                    if(row[each] !== update[each])
+                        fields.push(each);
+                }
+                if(typeof row[each] === 'string'){
+                    if(row[each] !== update[each])
+                        fields.push(each);
+                }
+                else{
+                    if(JSON.stringify(row[each]) !== JSON.stringify(update[each]))
+                        fields.push(each);
+                }
+            }
+            else{
+                fields.push(each);
+            }
+        }
+        return fields;
+    },
+    transition: function(){
+
     },
     getStreamingData: function(typeName){
         // Logic to stream continuous data
         feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
             var got = false;
+            var changes = [];
             for(var each in sdata){
                 if(sdata[each]['_id'] === update['_id']){
                     if(sdata[each]['_type'] === update['_type']){
                         sdata[each] = update;
+                        changes = this.diff(sdata[each], update);
                         console.log("overlap");
                         got = true;
+                        break;
                     }
                 }
             }
@@ -267,6 +317,19 @@ var HomePage = React.createClass({
                 sdata.push(update);
             }
             this.setState({stocks: sdata});
+            if(got){
+                /*
+                var _key = keyGen(update, update['_id']);
+                console.log(_key);
+                var elem = document.getElementById(_key);
+                elem.style.background = 'blue';
+                */
+                var _key;
+                for(var each in changes){
+                    _key = keyGen(update, update[changes[each]])
+                    this.transition(_key);
+                }
+            }
         }.bind(this));
     },
     getStreamingTypes: function(){
@@ -298,8 +361,7 @@ var HomePage = React.createClass({
         return (
             <div>
                 <div id='modal' />
-                <input type="text" className="form-control" placeholder="#" />
-                <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
+                <TypeTable className="dejavu-table" Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
                 <StockTable _data={this.state.stocks} />
             </div>
         );
