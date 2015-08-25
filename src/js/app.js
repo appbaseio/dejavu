@@ -29,7 +29,8 @@ var Dropdown = React.createClass({
             return <TypeColumn type={item} />;
         });
   return (
-    <DropdownButton title="Dropdown">
+    <DropdownButton>
+    <i class="fa fa-cog fa-fw"></i>
       {ColumnsCheckbox}
     </DropdownButton>
   );
@@ -99,7 +100,7 @@ var StockTable = React.createClass({
         return (
             <div className="table-responsive dejavu-table">
             <Dropdown cols={columns}/>
-                <table className="table table-striped">
+                <table className="table table-striped table-bordered">
                 <thead>
                 <tr>
                 {renderColumns}
