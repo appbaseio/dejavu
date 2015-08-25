@@ -44,20 +44,12 @@ var Column = React.createClass({
 
 var Cell = React.createClass({
     render: function(){
-        console.log(this.props.unique);
-        if(this.props.unique)
-            return <td id={this.props.unique}>{this.props.item}</td>;
-        else
-            return <td>{this.props.item}</td>
+        return <td id={this.props.unique} key={this.props.unique}>{this.props.item}</td>;
     }
 });
 
 var keyGen = function(row, element){
-    if(typeof element === 'string')
-        return row['_type']+String(row['_id'])+element;
-    if(typeof element === 'number')
-        return row['_type']+String(row['_id'])+String(element);
-    return false;
+    return row['_type']+String(row['_id'])+String(element);
 }
 
 var StockTable = React.createClass({
@@ -75,26 +67,25 @@ var StockTable = React.createClass({
         }
         var rows = [];
         for(var row in data){
-            var newRow = [];
-            newRow.push(data[row]['json']);
+            var newRow = {};
+            newRow['json'] = data[row]['json'];
             for(var each in columns){
                 if(columns[each] != 'json'){
-                if(data[row][columns[each]]){
-                    var cell = data[row][columns[each]];
-                    newRow.push(cell);
-                }
-                else{
-                    newRow.push('');
-                }
+                    if(data[row][columns[each]]){
+                        var cell = data[row][columns[each]];
+                        newRow[columns[each]] = cell;
+                    }
+                    else{
+                        newRow[columns[each]] = '';
+                    }
                 }
             }
-            rows.push(newRow.map(
-                function(item){
-                    var _key = keyGen(data[row], item);
-                    if(_key)
-                        return <Cell item={item} unique={_key} key={_key} />;
-                    return <Cell item={item} unique={_key} />
-                }));
+            renderRow = [];
+            for(var each in newRow){
+                var _key = keyGen(data[row], each);
+                renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} />);
+            }
+            rows.push(renderRow);
         }
         // console.log(columns);
         // console.log(rows);
@@ -265,25 +256,28 @@ var HomePage = React.createClass({
         var ID = data['_id'];
         data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
         for(var each in fields){
-            console.log(data[fields[each]]);
+            // console.log(data[fields[each]]);
             data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link"></i></a>;
         }
         return data;
     },
     diff: function(row, update){
         var fields = [];
+        // console.log(row);
+        // console.log(update);
         for(var each in update){
+            console.log(typeof row[each], each);
             if(row[each]){
                 if(typeof row[each] === 'number'){
                     if(row[each] !== update[each])
                         fields.push(each);
                 }
                 if(typeof row[each] === 'string'){
+                    console.log(row[each], update[each])
                     if(row[each] !== update[each])
                         fields.push(each);
                 }
                 else{
-                    if(JSON.stringify(row[each]) !== JSON.stringify(update[each]))
                         fields.push(each);
                 }
             }
@@ -293,8 +287,16 @@ var HomePage = React.createClass({
         }
         return fields;
     },
-    transition: function(){
-
+    white: function(elem){
+        elem.style.background = 'white';
+    },
+    transition: function(_key){
+        var elem = document.getElementById(_key);
+        console.log(elem);
+        // 
+        // console.log(elem);
+        elem.style.background = '#3BC7F6';
+        setTimeout(this.white.bind(null, elem), 500);
     },
     getStreamingData: function(typeName){
         // Logic to stream continuous data
@@ -305,9 +307,11 @@ var HomePage = React.createClass({
             for(var each in sdata){
                 if(sdata[each]['_id'] === update['_id']){
                     if(sdata[each]['_type'] === update['_type']){
-                        sdata[each] = update;
                         changes = this.diff(sdata[each], update);
                         console.log("overlap");
+                        // console.log(changes);
+                        // console.log(update);
+                        sdata[each] = update;
                         got = true;
                         break;
                     }
@@ -326,7 +330,8 @@ var HomePage = React.createClass({
                 */
                 var _key;
                 for(var each in changes){
-                    _key = keyGen(update, update[changes[each]])
+                    _key = keyGen(update, changes[each]);
+                    // console.log(_key);
                     this.transition(_key);
                 }
             }
