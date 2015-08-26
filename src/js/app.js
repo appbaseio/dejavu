@@ -87,8 +87,6 @@ var StockTable = React.createClass({
             }
             rows.push(renderRow);
         }
-        // console.log(columns);
-        // console.log(rows);
         var renderColumns = columns.map(function(item){
             return <Column _item={item} key={item} />;
         });
@@ -224,7 +222,6 @@ var HomePage = React.createClass({
         return {stocks: [{}], types: []};
     },
     viewJSON: function(data, event){
-        // console.log(data);
         var view = document.getElementById("json-view");
         view.innerHTML = JSON.stringify(data);
     },
@@ -256,28 +253,23 @@ var HomePage = React.createClass({
         var ID = data['_id'];
         data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
         for(var each in fields){
-            // console.log(data[fields[each]]);
             data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link"></i></a>;
         }
         return data;
     },
     diff: function(row, update){
         var fields = {'update': [], 'new':[], 'delete': false};
-        // console.log(row);
-        console.log(update);
         if(update['_deleted']){
             fields['delete'] = true;
             return fields;
         }
         for(var each in update){
-            console.log(typeof row[each], each);
             if(row[each]){
                 if(typeof row[each] === 'number'){
                     if(row[each] !== update[each])
                         fields['update'].push(each);
                 }
                 if(typeof row[each] === 'string'){
-                    console.log(row[each], update[each])
                     if(row[each] !== update[each])
                         fields['update'].push(each);
                 }
@@ -356,6 +348,12 @@ var HomePage = React.createClass({
             }
             if(!_delete)
                 this.reset();
+            if(changes['new']){
+                for(var each in changes['new']){
+                    var key = keyGen(update, changes['new'][each]);
+                    this.newTransition(key);
+                }
+            }
         }.bind(this));
     },
     getStreamingTypes: function(){
