@@ -52,6 +52,17 @@ var keyGen = function(row, element){
     return row['_type']+String(row['_id'])+String(element);
 }
 
+var rowKeyGen = function(row){
+    return row['_id']+row['_type'];
+}
+
+var Row = React.createClass({
+    render: function(){
+        console.log(this.props._id);
+        return <tr id={this.props._id}>{this.props.row}</tr>;
+    }
+});
+
 var StockTable = React.createClass({
     render: function () {
         data = this.props._data;
@@ -85,14 +96,16 @@ var StockTable = React.createClass({
                 var _key = keyGen(data[row], each);
                 renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} />);
             }
-            rows.push(renderRow);
+            rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
         var renderColumns = columns.map(function(item){
             return <Column _item={item} key={item} />;
         });
         var renderRows = rows.map(function(item)
         {
-            return <tr>{item}</tr>;
+            var _key = item['_key'];
+            var row = item['row'];
+            return <Row key={_key} _id={_key} row={row} />;
         });
         return (
             <div className="table-responsive dejavu-table">
@@ -257,33 +270,6 @@ var HomePage = React.createClass({
         }
         return data;
     },
-    diff: function(row, update){
-        var fields = {'update': [], 'new':[], 'delete': false, 'newDoc': true};
-        if(update['_deleted']){
-            fields['delete'] = true;
-            return fields;
-        }
-        for(var each in update){
-            if(row[each]){
-                if(typeof row[each] === 'number'){
-                    if(row[each] !== update[each])
-                        fields['update'].push(each);
-                }
-                if(typeof row[each] === 'string'){
-                    if(row[each] !== update[each])
-                        fields['update'].push(each);
-                }
-                else{
-                        if(JSON.stringify(row[each]) !== JSON.stringify(update[each]))
-                            fields['update'].push(each);
-                }
-            }
-            else{
-                fields['new'].push(each);
-            }
-        }
-        return fields;
-    },
     revertTransition: function(elem){
         elem.style.background = 'white';
     },
@@ -292,15 +278,10 @@ var HomePage = React.createClass({
         elem.style.background = '#e6db74';
         setTimeout(this.revertTransition.bind(null, elem), 500);
     },
-    deleteTransition: function(update, index, callback){
-        for(var each in update){
-            if(each !== '_deleted' && each !== 'json'){
-                var key = keyGen(update, each);
-                var elem = document.getElementById(key);
-                elem.style.background = '#FF6F6F';
-                setTimeout(this.revertTransition.bind(null, elem), 500);
-            }
-        }
+    deleteTransition: function(key){
+        var elem = document.getElementById(key);
+        elem.style.background = '#FF6F6F';
+        setTimeout(this.revertTransition.bind(null, elem), 500);
     },
     newTransition: function(_key){
         var elem = document.getElementById(_key);
@@ -318,45 +299,50 @@ var HomePage = React.createClass({
         feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
             var got = false;
-            var _delete = false;
-            var changes = [];
+            var index = -1;
             for(var each in sdata){
-                if(sdata[each]['_id'] === update['_id']){
-                    if(sdata[each]['_type'] === update['_type']){
-                        changes = this.diff(sdata[each], update);
-                        if(changes['delete']){
-                            this.deleteTransition(update, each, this.deleteRow);
-                            setTimeout(function(each, callback){
-                                this.deleteRow(each);
-                                callback();
-                            }.bind(null, each, this.reset), 600);
-                        }
-                        else{
+                    if(sdata[each]['_id'] === update['_id']){
+                        if(sdata[each]['_type'] === update['_type']){
                             sdata[each] = update;
-                            for(var change in changes['update']){
-                                var key = keyGen(update, changes['update'][change]);
-                                this.updateTransition(key);
-                            }
+                            got = true;
+                            index = each;
+                            break;
                         }
-                        got = true;
-                        break;
+                    }
+            }
+            if(update['_deleted']){
+                for(var each in update){
+                    if(each !== '_deleted'){
+                        var key = keyGen(update, each);
+                        this.deleteTransition(key);
                     }
                 }
+                var key = rowKeyGen(update);
+                this.deleteTransition(key);
+                delete sdata[index];
+                setTimeout(
+                    function(callback){
+                        callback();
+                    }.bind(null, this.reset), 600);
             }
-            if(!got){
-                sdata.push(update);
-            }
-            if(!_delete)
-                this.reset();
-            if(changes['new']){
-                for(var each in changes['new']){
-                    var key = keyGen(update, changes['new'][each]);
+            else{
+                if(!got){
+                    sdata.push(update);
+                    this.reset();
+                    for(var each in update){
+                        var key = keyGen(update, each);
+                        this.updateTransition(key);
+                    }
+                    var key = rowKeyGen(update);
                     this.updateTransition(key);
                 }
-            }
-            if(!got){
-                for(var each in update){
-                    var key = keyGen(update, each);
+                else{
+                    this.reset();
+                    for(var each in update){
+                        var key = keyGen(update, each);
+                        this.newTransition(key);
+                    }
+                    var key = rowKeyGen(update);
                     this.newTransition(key);
                 }
             }
