@@ -258,7 +258,7 @@ var HomePage = React.createClass({
         return data;
     },
     diff: function(row, update){
-        var fields = {'update': [], 'new':[], 'delete': false};
+        var fields = {'update': [], 'new':[], 'delete': false, 'newDoc': true};
         if(update['_deleted']){
             fields['delete'] = true;
             return fields;
@@ -351,6 +351,12 @@ var HomePage = React.createClass({
             if(changes['new']){
                 for(var each in changes['new']){
                     var key = keyGen(update, changes['new'][each]);
+                    this.updateTransition(key);
+                }
+            }
+            if(!got){
+                for(var each in update){
+                    var key = keyGen(update, each);
                     this.newTransition(key);
                 }
             }
