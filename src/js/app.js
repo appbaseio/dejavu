@@ -275,17 +275,17 @@ var HomePage = React.createClass({
     },
     updateTransition: function(_key){
         var elem = document.getElementById(_key);
-        elem.style.background = '#e6db74';
+        elem.style.background = '#F4A460';
         setTimeout(this.revertTransition.bind(null, elem), 500);
     },
     deleteTransition: function(key){
         var elem = document.getElementById(key);
-        elem.style.background = '#FF6F6F';
+        elem.style.background = '#CC0033';
         setTimeout(this.revertTransition.bind(null, elem), 500);
     },
     newTransition: function(_key){
         var elem = document.getElementById(_key);
-        elem.style.background = '#428bca';
+        elem.style.background = '#33FF33';
         setTimeout(this.revertTransition.bind(null, elem), 500);
     },
     deleteRow: function(index){
@@ -331,19 +331,19 @@ var HomePage = React.createClass({
                     this.reset();
                     for(var each in update){
                         var key = keyGen(update, each);
-                        this.updateTransition(key);
+                        this.newTransition(key);
                     }
                     var key = rowKeyGen(update);
-                    this.updateTransition(key);
+                    this.newTransition(key);
                 }
                 else{
                     this.reset();
                     for(var each in update){
                         var key = keyGen(update, each);
-                        this.newTransition(key);
+                        this.updateTransition(key);
                     }
                     var key = rowKeyGen(update);
-                    this.newTransition(key);
+                    this.updateTransition(key);
                 }
             }
         }.bind(this));
