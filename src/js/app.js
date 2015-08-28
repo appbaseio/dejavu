@@ -26,19 +26,20 @@ var Dropdown = React.createClass({
         var MenuItem = ReactBootstrap.MenuItem;
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
-            return <TypeColumn type={item} />;
+            console.log("we are passing", item);
+            return <TypeColumn _type={item} />;
         });
-  return (
-    <DropdownButton title="">
-      {ColumnsCheckbox}
-    </DropdownButton>
+        return (
+            <DropdownButton className="">
+                {ColumnsCheckbox}
+            </DropdownButton>
   );
 }
 });
 
 var Column = React.createClass({
     render: function(){
-        return <th id={this.props._key}>{this.props._item}</th>;
+        return <th id={this.props._item}>{this.props._item}</th>;
     }
 });
 
@@ -99,6 +100,7 @@ var StockTable = React.createClass({
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
         var renderColumns = columns.map(function(item){
+            console.log(item);
             return <Column _item={item} key={item} />;
         });
         var renderRows = rows.map(function(item)
@@ -109,7 +111,7 @@ var StockTable = React.createClass({
         });
         return (
             <div className="table-responsive dejavu-table">
-            <Dropdown cols={columns}/>
+            <Dropdown cols={columns} />
                 <table className="table table-striped table-bordered">
                 <thead>
                 <tr>
@@ -126,18 +128,34 @@ var StockTable = React.createClass({
 });
 
 var TypeColumn = React.createClass({
-    check: function(){
-        if(document.getElementById(this.props.type).visibility == "collapse"){
-            document.getElementById(this.props.type).visibility = "table-cell";
+    check: function(elementId, event){
+        var hiddenStyle = {};
+        hiddenStyle.display = 'none';
+        var showStyle = {};
+        showStyle.display = '';
+        if(document.getElementById(elementId).style.visibility == "hidden"){
+            document.getElementById(elementId).style.visibility = "";
+
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                console.log(key);
+                document.getElementById(key).style.visibility = ""
+            }
         }
-        else
-            document.getElementById(this.props.type).visibility = "collapse";
+        else{
+            document.getElementById(elementId).style.visibility = "hidden";
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                console.log(document.getElementById(key).style);
+                document.getElementById(key).style.visibility = "hidden"
+            }
+        }
     },
     render: function() {
         var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            <Input type='checkbox' onClick={this.check} label={this.props.type} />
+            <Input type='checkbox' onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
         );
     }
 });
@@ -256,7 +274,10 @@ var HomePage = React.createClass({
                 }
             }
         }
-        delete data['_source'];
+        if(data['_source'])
+            delete data['_source'];
+        if(data['_index'])
+            delete data['_index'];
         return callback(data, fields);
     },
     showJSON: function(data, event){
