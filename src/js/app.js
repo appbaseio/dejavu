@@ -133,21 +133,21 @@ var TypeColumn = React.createClass({
         hiddenStyle.display = 'none';
         var showStyle = {};
         showStyle.display = '';
-        if(document.getElementById(elementId).style.visibility == "hidden"){
-            document.getElementById(elementId).style.visibility = "";
+        if(document.getElementById(elementId).style.display == "none"){
+            document.getElementById(elementId).style.display = "";
 
             for(var each in sdata){
                 var key = keyGen(sdata[each], elementId);
                 console.log(key);
-                document.getElementById(key).style.visibility = ""
+                document.getElementById(key).style.display = ""
             }
         }
         else{
-            document.getElementById(elementId).style.visibility = "hidden";
+            document.getElementById(elementId).style.display = "none";
             for(var each in sdata){
                 var key = keyGen(sdata[each], elementId);
                 console.log(document.getElementById(key).style);
-                document.getElementById(key).style.visibility = "hidden"
+                document.getElementById(key).style.display = "none"
             }
         }
     },
