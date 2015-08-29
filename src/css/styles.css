@@ -184,5 +184,5 @@ th {
   position: absolute;
 }
 
-.table-container { max-height: 450px; width: 100%; margin: 0; overflow-y: auto; }
+.table-container {width: 100%; margin: 0; }
 .table-scrollable { margin: 0; padding: 0; }

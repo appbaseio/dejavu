@@ -64,6 +64,29 @@ var Row = React.createClass({
     }
 });
 
+var Table = React.createClass({
+    componentDidMount: function() {
+        console.log("mounted");
+        window.addEventListener('scroll', this.props.scrollFunction);
+    },
+    render: function() {
+        return (
+            <div id="data-table-container" className="table-container">
+            <table id="data-table" className="table table-striped table-bordered table-responsive table-scrollable">
+                <thead>
+                    <tr>
+                        {this.props.renderColumns}
+                    </tr>
+                </thead>
+                <tbody>
+                        {this.props.renderRows}
+                </tbody>
+            </table>
+            </div>
+
+        );
+    }
+})
 var StockTable = React.createClass({
     render: function () {
         data = this.props._data;
@@ -116,18 +139,7 @@ var StockTable = React.createClass({
         return (
             <div className="dejavu-table">
             <Dropdown cols={columns} />
-            <div className="table-container">
-            <table className="table table-striped table-bordered table-responsive table-scrollable">
-                <thead>
-                    <tr>
-                        {renderColumns}
-                    </tr>
-                </thead>
-                    <tbody>
-                        {renderRows}
-                    </tbody>
-            </table>
-            </div>
+            <Table renderColumns={renderColumns} renderRows={renderRows} scrollFunction={this.props.scrollFunction} />
             </div>
         );
     }
@@ -195,7 +207,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <table className="table-hover table-responsive data-table row-types">
+            <table className="table-hover table-responsive row-types">
                 <thead>
                     <tr>
                         <th>Types</th>
@@ -396,12 +408,18 @@ var HomePage = React.createClass({
         this.getStreamingData(null);
         console.log("selections: ", subsetESTypes);
     },
+    handleScroll: function(event){
+        if(windowHeight === scroll+scrollLeft){
+            console.log('bottom');
+            // Load More data here;
+        }
+    },
     render: function () {
         return (
             <div>
                 <div id='modal' />
                 <TypeTable className="dejavu-table" Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <StockTable _data={this.state.stocks} />
+                <StockTable _data={this.state.stocks} scrollFunction={this.handleScroll}/>
             </div>
         );
     }
