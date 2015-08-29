@@ -183,3 +183,6 @@ th {
   left: 15%;
   position: absolute;
 }
+
+.table-container { max-height: 450px; width: 100%; margin: 0; overflow-y: auto; }
+.table-scrollable { margin: 0; padding: 0; }

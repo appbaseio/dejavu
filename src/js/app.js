@@ -26,7 +26,6 @@ var Dropdown = React.createClass({
         var MenuItem = ReactBootstrap.MenuItem;
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
-            console.log("we are passing", item);
             return <TypeColumn _type={item} />;
         });
         return (
@@ -45,7 +44,9 @@ var Column = React.createClass({
 
 var Cell = React.createClass({
     render: function(){
-        return <td id={this.props.unique} key={this.props.unique}>{this.props.item}</td>;
+        var vb = this.props.visibility;
+        var style = {display:vb};
+        return <td id={this.props.unique} key={this.props.unique} style={style}>{this.props.item}</td>;
     }
 });
 
@@ -59,7 +60,6 @@ var rowKeyGen = function(row){
 
 var Row = React.createClass({
     render: function(){
-        console.log(this.props._id);
         return <tr id={this.props._id}>{this.props.row}</tr>;
     }
 });
@@ -95,12 +95,16 @@ var StockTable = React.createClass({
             renderRow = [];
             for(var each in newRow){
                 var _key = keyGen(data[row], each);
-                renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} />);
+                var elem = document.getElementById(each);
+                var visibility = '';
+                if(elem){
+                    visibility = elem.style.display;
+                }
+                renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} visibility={visibility} />);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
         var renderColumns = columns.map(function(item){
-            console.log(item);
             return <Column _item={item} key={item} />;
         });
         var renderRows = rows.map(function(item)
@@ -110,18 +114,20 @@ var StockTable = React.createClass({
             return <Row key={_key} _id={_key} row={row} />;
         });
         return (
-            <div className="table-responsive dejavu-table">
+            <div className="dejavu-table">
             <Dropdown cols={columns} />
-                <table className="table table-striped table-bordered">
+            <div className="table-container">
+            <table className="table table-striped table-bordered table-responsive table-scrollable">
                 <thead>
-                <tr>
-                {renderColumns}
-                </tr>
+                    <tr>
+                        {renderColumns}
+                    </tr>
                 </thead>
-                <tbody>
-                {renderRows}
-                </tbody>
-                </table>
+                    <tbody>
+                        {renderRows}
+                    </tbody>
+            </table>
+            </div>
             </div>
         );
     }
@@ -138,7 +144,6 @@ var TypeColumn = React.createClass({
 
             for(var each in sdata){
                 var key = keyGen(sdata[each], elementId);
-                console.log(key);
                 document.getElementById(key).style.display = ""
             }
         }
@@ -146,7 +151,6 @@ var TypeColumn = React.createClass({
             document.getElementById(elementId).style.display = "none";
             for(var each in sdata){
                 var key = keyGen(sdata[each], elementId);
-                console.log(document.getElementById(key).style);
                 document.getElementById(key).style.display = "none"
             }
         }
@@ -191,8 +195,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <div className="table-responsive data-table row-types">
-            <table className="table-hover">
+            <table className="table-hover table-responsive data-table row-types">
                 <thead>
                     <tr>
                         <th>Types</th>
@@ -202,7 +205,6 @@ var TypeTable = React.createClass({
                     {rowObj}
                 </tbody>
             </table>
-            </div>
         );
     }
 });
