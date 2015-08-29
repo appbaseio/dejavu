@@ -409,9 +409,14 @@ var HomePage = React.createClass({
         console.log("selections: ", subsetESTypes);
     },
     handleScroll: function(event){
+        elem = document.body;
+        elemElem = document.documentElement;
+        var scroll = elemElem.clientHeight;
+            windowHeight = elem.scrollHeight;
+            scrollLeft = elem.scrollTop;
         if(windowHeight === scroll+scrollLeft){
             console.log('bottom');
-            // Load More data here;
+            // Load more data !!
         }
     },
     render: function () {
