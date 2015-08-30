@@ -13,11 +13,8 @@ var HomePage = React.createClass({
     getInitialState: function() {
         return {documents: [{}], types: []};
     },
-    viewJSON: function(data, event){
-        var view = document.getElementById("json-view");
-        view.innerHTML = JSON.stringify(data);
-    },
     flatten: function(data, callback) {
+        //console.log(window.localStorage.getItem("name"));
         var fields = [];
         for(var each in data){
             if(typeof data[each] !== 'string'){

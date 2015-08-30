@@ -108,22 +108,32 @@ var DataTable = React.createClass({
 });
 
 var TypeRow = React.createClass({
+    getInitialState: function(){
+        var value = window.localStorage.getItem(this.props.type);
+        var checked = false;
+        if(value){
+            checked = true;
+        }
+        return {isChecked: checked};
+    },
     unwatch: function() {
         elem = document.getElementById(this.props.type);
+        var checked = false;
         if(elem.check == "true"){
-            elem.check = "false";
             this.props.unwatchTypeHandler(this.props.type);
         }
         else{
-            elem.check = "true";
+            isChecked = true;
             this.props.watchTypeHandler(this.props.type);
         }
+        window.localStorage.setItem(this.props.type, isChecked);
+        this.setState({isChecked: checked});
     },
     render: function() {
         return(
             <tr>
                 <td>
-                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true" /> <div className="checkboxLabel">{this.props.type}</div>
+                    <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} checked={this.state.isChecked} /> <div className="checkboxLabel">{this.props.type}</div>
                 </td>
             </tr>
         );

@@ -16,7 +16,9 @@ var Dropdown = React.createClass({
 
 var FieldCheckbox = React.createClass({
     getInitialState: function(){
-        return {isChecked: true};
+        var value = window.localStorage.getItem(this.props._type);
+        var checked = true;
+        return {isChecked: checked};
     },
     check: function(elementId, event){
         var checked = true;
