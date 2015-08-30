@@ -44,7 +44,9 @@ var FieldCheckbox = React.createClass({
         var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            <Input type='checkbox' checked={this.state.isChecked} onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
+            <label>
+                <Input type='checkbox' checked={this.state.isChecked} onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
+            </label>
         );
     }
 });

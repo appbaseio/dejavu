@@ -49,7 +49,7 @@ var Table = React.createClass({
         );
     }
 })
-var StockTable = React.createClass({
+var DataTable = React.createClass({
     render: function () {
         data = this.props._data;
         var columns = ['json'];

@@ -1,7 +1,7 @@
 /*
     This is the file which commands the data update/delete/append.
-    Any react component that wishes to modify the state should do
-    so by flowing back the data and calling the `reset` function
+    Any react component that wishes to modify the data state should 
+    do so by flowing back the data and calling the `reset` function
     here. This is sort of like the Darth Vader - Dangerous and
     Commands everything !
 
@@ -11,7 +11,7 @@
 
 var HomePage = React.createClass({
     getInitialState: function() {
-        return {stocks: [{}], types: []};
+        return {documents: [{}], types: []};
     },
     viewJSON: function(data, event){
         var view = document.getElementById("json-view");
@@ -74,7 +74,7 @@ var HomePage = React.createClass({
         delete sdata[index];
     },
     reset: function(){
-        this.setState({stocks: sdata});
+        this.setState({documents: sdata});
     },
     getStreamingData: function(typeName){
         // Logic to stream continuous data
@@ -137,7 +137,7 @@ var HomePage = React.createClass({
     },
     removeType: function(typeName) {
         feed.deleteData(typeName, function() {
-            this.setState({stocks: sdata});
+            this.resetData();
         }.bind(this));
     },
     componentDidMount: function(){
@@ -171,7 +171,7 @@ var HomePage = React.createClass({
             <div>
                 <div id='modal' />
                 <TypeTable className="dejavu-table" Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <StockTable _data={this.state.stocks} scrollFunction={this.handleScroll}/>
+                <DataTable _data={this.state.documents} scrollFunction={this.handleScroll}/>
             </div>
         );
     }
