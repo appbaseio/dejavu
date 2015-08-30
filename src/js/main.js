@@ -1,8 +1,15 @@
+/*
+    This is the file which commands the data update/delete/append.
+    Any react component that wishes to modify the state should do
+    so by flowing back the data and calling the `reset` function
+    here. This is sort of like the Darth Vader - Dangerous and
+    Commands everything !
+
+    ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
+
+*/
+
 var HomePage = React.createClass({
-    key: function(obj){
-        // some unique object-dependent key
-        return obj._type + obj._id;
-    },
     getInitialState: function() {
         return {stocks: [{}], types: []};
     },

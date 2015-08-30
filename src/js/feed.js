@@ -1,3 +1,10 @@
+/*
+    This file contains all the logic for your app
+    authentication and streaming data from your
+    endpoint.
+
+*/
+
 // app and authentication configurations
 const HOSTNAME = "scalr.api.appbase.io"
 const APPNAME = "createnewtestapp01"

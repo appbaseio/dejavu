@@ -1,3 +1,11 @@
+/*
+    A bunch of row/column/manipulation functions.
+    Things din't work well with most of the existing
+    libraries especially on the frontend and
+    configuring with react.
+
+*/
+
 var Column = React.createClass({
     render: function(){
         return <th id={this.props._item}>{this.props._item}</th>;
