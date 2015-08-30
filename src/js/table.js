@@ -1,0 +1,176 @@
+var Column = React.createClass({
+    render: function(){
+        return <th id={this.props._item}>{this.props._item}</th>;
+    }
+});
+
+var Cell = React.createClass({
+    render: function(){
+        var vb = this.props.visibility;
+        var style = {display:vb};
+        return <td id={this.props.unique} key={this.props.unique} style={style}>{this.props.item}</td>;
+    }
+});
+
+var Row = React.createClass({
+    render: function(){
+        return <tr id={this.props._id}>{this.props.row}</tr>;
+    }
+});
+
+var Table = React.createClass({
+    componentDidMount: function() {
+        console.log("mounted");
+        window.addEventListener('scroll', this.props.scrollFunction);
+    },
+    render: function() {
+        return (
+            <div id="data-table-container" className="table-container">
+            <table id="data-table" className="table table-striped table-bordered table-responsive table-scrollable">
+                <thead>
+                    <tr>
+                        {this.props.renderColumns}
+                    </tr>
+                </thead>
+                <tbody>
+                        {this.props.renderRows}
+                </tbody>
+            </table>
+            </div>
+
+        );
+    }
+})
+var StockTable = React.createClass({
+    render: function () {
+        data = this.props._data;
+        var columns = ['json'];
+        for(var each in data){
+            for(column in data[each]){
+                if(column != 'json'){
+                    if(columns.indexOf(column) <= -1){
+                        columns.push(column);
+                    }
+                }
+            }
+        }
+        var rows = [];
+        for(var row in data){
+            var newRow = {};
+            newRow['json'] = data[row]['json'];
+            for(var each in columns){
+                if(columns[each] != 'json'){
+                    if(data[row][columns[each]]){
+                        var cell = data[row][columns[each]];
+                        newRow[columns[each]] = cell;
+                    }
+                    else{
+                        newRow[columns[each]] = '';
+                    }
+                }
+            }
+            renderRow = [];
+            for(var each in newRow){
+                var _key = keyGen(data[row], each);
+                var elem = document.getElementById(each);
+                var visibility = '';
+                if(elem){
+                    visibility = elem.style.display;
+                }
+                renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} visibility={visibility} />);
+            }
+            rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
+        }
+        var renderColumns = columns.map(function(item){
+            return <Column _item={item} key={item} />;
+        });
+        var renderRows = rows.map(function(item)
+        {
+            var _key = item['_key'];
+            var row = item['row'];
+            return <Row key={_key} _id={_key} row={row} />;
+        });
+        return (
+            <div className="dejavu-table">
+            <Dropdown cols={columns} />
+            <Table renderColumns={renderColumns} renderRows={renderRows} scrollFunction={this.props.scrollFunction} />
+            </div>
+        );
+    }
+});
+
+var TypeColumn = React.createClass({
+    check: function(elementId, event){
+        var hiddenStyle = {};
+        hiddenStyle.display = 'none';
+        var showStyle = {};
+        showStyle.display = '';
+        if(document.getElementById(elementId).style.display == "none"){
+            document.getElementById(elementId).style.display = "";
+
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                document.getElementById(key).style.display = ""
+            }
+        }
+        else{
+            document.getElementById(elementId).style.display = "none";
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                document.getElementById(key).style.display = "none"
+            }
+        }
+    },
+    render: function() {
+        var MenuItem = ReactBootstrap.MenuItem;
+        var Input = ReactBootstrap.Input;
+        return(
+            <Input type='checkbox' onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
+        );
+    }
+});
+
+var TypeRow = React.createClass({
+    unwatch: function() {
+        elem = document.getElementById(this.props.type);
+        if(elem.check == "true"){
+            elem.check = "false";
+            this.props.unwatchTypeHandler(this.props.type);
+        }
+        else{
+            elem.check = "true";
+            this.props.watchTypeHandler(this.props.type);
+        }
+    },
+    render: function() {
+        return(
+            <tr>
+                <td>
+                <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} check="true" /> <div className="checkboxLabel">{this.props.type}</div>
+                </td>
+            </tr>
+        );
+    }
+});
+
+var TypeTable = React.createClass({
+    render: function()  {
+        var types = this.props.Types;
+        var rowObj = [];
+        for(var type in types){
+            rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
+        }
+        return (
+            <table className="table-hover table-responsive row-types">
+                <thead>
+                    <tr>
+                        <th>Types</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rowObj}
+                </tbody>
+            </table>
+        );
+    }
+});
