@@ -16,12 +16,10 @@ var Modal = React.createClass({
         var prettyjson = JSON.stringify(showing);
         return (
             <Modal {...this.props} bsSize='small' onHide={this.hideModal}>
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title id='contained-modal-title-sm'>JSON</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>{this.props.show['_type']}</h4>
-          <h4>{this.props.show['_id']}</h4>
           <p>
             <Pretty json={showing} />
           </p>
