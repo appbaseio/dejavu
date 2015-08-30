@@ -107,37 +107,6 @@ var StockTable = React.createClass({
     }
 });
 
-var TypeColumn = React.createClass({
-    check: function(elementId, event){
-        var hiddenStyle = {};
-        hiddenStyle.display = 'none';
-        var showStyle = {};
-        showStyle.display = '';
-        if(document.getElementById(elementId).style.display == "none"){
-            document.getElementById(elementId).style.display = "";
-
-            for(var each in sdata){
-                var key = keyGen(sdata[each], elementId);
-                document.getElementById(key).style.display = ""
-            }
-        }
-        else{
-            document.getElementById(elementId).style.display = "none";
-            for(var each in sdata){
-                var key = keyGen(sdata[each], elementId);
-                document.getElementById(key).style.display = "none"
-            }
-        }
-    },
-    render: function() {
-        var MenuItem = ReactBootstrap.MenuItem;
-        var Input = ReactBootstrap.Input;
-        return(
-            <Input type='checkbox' onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
-        );
-    }
-});
-
 var TypeRow = React.createClass({
     unwatch: function() {
         elem = document.getElementById(this.props.type);
