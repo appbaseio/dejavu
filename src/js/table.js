@@ -110,23 +110,24 @@ var DataTable = React.createClass({
 var TypeRow = React.createClass({
     getInitialState: function(){
         var value = window.localStorage.getItem(this.props.type);
+        console.log(this.props.type, value)
         var checked = false;
-        if(value){
+        if(value == "true"){
             checked = true;
+            this.props.watchTypeHandler(this.props.type);
         }
         return {isChecked: checked};
     },
     unwatch: function() {
-        elem = document.getElementById(this.props.type);
         var checked = false;
-        if(elem.check == "true"){
+        if(this.state.isChecked){
             this.props.unwatchTypeHandler(this.props.type);
         }
         else{
-            isChecked = true;
+            checked = true;
             this.props.watchTypeHandler(this.props.type);
         }
-        window.localStorage.setItem(this.props.type, isChecked);
+        window.localStorage.setItem(this.props.type, checked);
         this.setState({isChecked: checked});
     },
     render: function() {

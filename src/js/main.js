@@ -1,7 +1,7 @@
 /*
     This is the file which commands the data update/delete/append.
     Any react component that wishes to modify the data state should 
-    do so by flowing back the data and calling the `reset` function
+    do so by flowing back the data and calling the `resetData` function
     here. This is sort of like the Darth Vader - Dangerous and
     Commands everything !
 
@@ -70,7 +70,7 @@ var HomePage = React.createClass({
     deleteRow: function(index){
         delete sdata[index];
     },
-    reset: function(){
+    resetData: function(){
         this.setState({documents: sdata});
     },
     getStreamingData: function(typeName){
@@ -102,12 +102,12 @@ var HomePage = React.createClass({
                 setTimeout(
                     function(callback){
                         callback();
-                    }.bind(null, this.reset), 600);
+                    }.bind(null, this.resetData), 600);
             }
             else{
                 if(!got){
                     sdata.push(update);
-                    this.reset();
+                    this.resetData();
                     for(var each in update){
                         var key = keyGen(update, each);
                         this.newTransition(key);
@@ -116,7 +116,7 @@ var HomePage = React.createClass({
                     this.newTransition(key);
                 }
                 else{
-                    this.reset();
+                    this.resetData();
                     for(var each in update){
                         var key = keyGen(update, each);
                         this.updateTransition(key);
