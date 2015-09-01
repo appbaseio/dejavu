@@ -11,3 +11,7 @@ var keyGen = function(row, element){
 var rowKeyGen = function(row){
     return row['_id']+row['_type'];
 }
+
+var dropdownKeyGen = function(selection){
+	return 'dropdown-'+selection;
+}

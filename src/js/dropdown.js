@@ -1,13 +1,13 @@
 var Dropdown = React.createClass({
     render: function(){
         var DropdownButton = ReactBootstrap.DropdownButton;
-        var MenuItem = ReactBootstrap.MenuItem;
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
+            var key = dropdownKeyGen(item);
             return <FieldCheckbox _type={item} />;
         });
         return (
-            <DropdownButton className="">
+            <DropdownButton>
                 {ColumnsCheckbox}
             </DropdownButton>
   );
@@ -16,39 +16,39 @@ var Dropdown = React.createClass({
 
 var FieldCheckbox = React.createClass({
     getInitialState: function(){
-        var value = window.localStorage.getItem(this.props._type);
-        var checked = true;
-        return {isChecked: checked};
+        return {isChecked: true};
     },
-    check: function(elementId, event){
+    check: function(elementId){
         var checked = true;
-        if(document.getElementById(elementId).style.display == "none"){
-            document.getElementById(elementId).style.display = "";
+        var elem = document.getElementById(elementId);
+        var display = "";
+        
+        if(elem.style.display === "none"){
+            elem.style.display = display;
             checked = true;
-
-            for(var each in sdata){
-                var key = keyGen(sdata[each], elementId);
-                document.getElementById(key).style.display = ""
-            }
         }
         else{
-            document.getElementById(elementId).style.display = "none";
+            display = "none";
+            elem.style.display = display;
             checked = false;
-
-            for(var each in sdata){
-                var key = keyGen(sdata[each], elementId);
-                document.getElementById(key).style.display = "none"
-            }
         }
+
+        for(var each in sdata){
+            var key = keyGen(sdata[each], elementId);
+            document.getElementById(key).style.display = display;
+        }
+        
+        var key = dropdownKeyGen(elementId);
+        document.getElementById(key).checked = checked;
         this.setState({isChecked: checked});
     },
     render: function() {
         var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            <label>
-                <Input type='checkbox' checked={this.state.isChecked} onClick={this.check.bind(null, this.props._type)} label={this.props._type} />
-            </label>
+            <MenuItem>
+                <Input type='checkbox' checked={this.state.isChecked} onClick={this.check.bind(null, this.props._type)} label={this.props._type} id={this.props.key} />
+            </MenuItem>
         );
     }
 });
