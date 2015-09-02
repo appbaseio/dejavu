@@ -12,7 +12,11 @@ var Modal = React.createClass({
         var Modal = ReactBootstrap.Modal;
         var Button = ReactBootstrap.Button;
         var showing = this.props.show;
+        var _id = showing['_id'];
+        var _type = showing['_type'];
         delete showing['json'];
+        delete showing['_id'];
+        delete showing['_type'];
         var prettyjson = JSON.stringify(showing);
         return (
             <Modal 
@@ -24,9 +28,14 @@ var Modal = React.createClass({
                   <Modal.Title id='contained-modal-title-sm'>JSON</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <p>
-                    <Pretty json={showing} />
-                  </p>
+                    <h4>
+                        _type: {_type}
+                        <br/>
+                        _id: {_id}
+                    </h4>
+                    <p>
+                        <Pretty json={showing} />
+                    </p>
                 </Modal.Body>
                 <Modal.Footer>
                   <Button onClick={this.hideModal}>Close</Button>
