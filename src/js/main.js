@@ -54,18 +54,18 @@ var HomePage = React.createClass({
     },
     updateTransition: function(_key){
         var elem = document.getElementById(_key);
-        elem.style.background = '#F4A460';
-        setTimeout(this.revertTransition.bind(null, elem), 500);
+        elem.style.background = '#86DDF8';
+        setTimeout(this.revertTransition.bind(null, elem), 1000);
     },
     deleteTransition: function(key){
         var elem = document.getElementById(key);
-        elem.style.background = '#CC0033';
-        setTimeout(this.revertTransition.bind(null, elem), 500);
+        elem.style.background = '#FF5B5B';
+        setTimeout(this.revertTransition.bind(null, elem), 1000);
     },
     newTransition: function(_key){
         var elem = document.getElementById(_key);
-        elem.style.background = '#33FF33';
-        setTimeout(this.revertTransition.bind(null, elem), 500);
+        elem.style.background = '#B6EF7E';
+        setTimeout(this.revertTransition.bind(null, elem), 1000);
     },
     deleteRow: function(index){
         delete sdata[index];
@@ -102,7 +102,7 @@ var HomePage = React.createClass({
                 setTimeout(
                     function(callback){
                         callback();
-                    }.bind(null, this.resetData), 600);
+                    }.bind(null, this.resetData), 1100);
             }
             else{
                 if(!got){
