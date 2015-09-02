@@ -100,3 +100,8 @@ th {
   overflow: scroll;
   height: 20em;
 }
+
+.custom-json-body {
+  height: 20em;
+  overflow: auto;
+}
