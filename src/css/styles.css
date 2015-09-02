@@ -94,6 +94,10 @@ th {
   height: 35em;
   width: 50em;
   overflow: auto;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  border-left: 1px solid #eee;
+
 }
 
 .dropdown-menu {
