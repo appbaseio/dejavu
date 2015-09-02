@@ -83,7 +83,7 @@ feed = (function () {
                         var mapping = response[index].mappings;
                         var types = [];
                         for (var type in mapping) {
-                            if (mapping.hasOwnProperty(type)) {
+                            if (mapping.hasOwnProperty(type) && type[0] !== "_" && type !== ".percolator") {
                                 types.push(type);
                             }
                         }
