@@ -91,7 +91,12 @@ th {
 }
 
 .table-container {
-  height: 700px;
-  width: 90%;
+  height: 35em;
+  width: 50em;
   overflow: auto;
+}
+
+.dropdown-menu {
+  overflow: scroll;
+  height: 20em;
 }

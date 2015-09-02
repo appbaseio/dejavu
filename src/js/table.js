@@ -29,11 +29,12 @@ var Row = React.createClass({
 var Table = React.createClass({
     componentDidMount: function() {
         console.log("mounted");
-        // window.addEventListener('scroll', this.props.scrollFunction);
+        var elem = document.getElementById('table-container');
+        elem.addEventListener('scroll', this.props.scrollFunction);
     },
     render: function() {
         return (
-            <div className="table-container">
+            <div id='table-container' className="table-container">
                 <table id="data-table" className="table table-striped table-bordered table-scrollable">
                     <thead>
                         <tr>

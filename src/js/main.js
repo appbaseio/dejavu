@@ -153,14 +153,13 @@ var HomePage = React.createClass({
         console.log("selections: ", subsetESTypes);
     },
     handleScroll: function(event){
-        elem = document.body;
-        elemElem = document.documentElement;
-        var scroll = elemElem.clientHeight;
-            windowHeight = elem.scrollHeight;
-            scrollLeft = elem.scrollTop;
-        if(windowHeight === scroll+scrollLeft){
-            console.log('bottom');
-            // Load more data !!
+        elem = document.getElementById('table-container');
+        elemElem = document.getElementById('data-table');
+        var upar = elem.scrollTop;
+            scroll = elem.offsetHeight;
+            niche = elem.scrollHeight;
+        if(upar + scroll >= niche){
+            console.log("bottom");
         }
     },
     render: function () {
