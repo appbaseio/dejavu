@@ -13,5 +13,5 @@ var rowKeyGen = function(row){
 }
 
 var dropdownKeyGen = function(selection){
-	return 'dropdown-'+selection;
+	return 'dropdown'+selection;
 }
