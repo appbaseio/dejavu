@@ -153,8 +153,8 @@ var HomePage = React.createClass({
         console.log("selections: ", subsetESTypes);
     },
     handleScroll: function(event){
-        elem = document.getElementById('table-container');
-        elemElem = document.getElementById('data-table');
+        var elem = document.getElementById('table-container');
+            elemElem = document.getElementById('data-table');
         var upar = elem.scrollTop;
             scroll = elem.offsetHeight;
             niche = elem.scrollHeight;

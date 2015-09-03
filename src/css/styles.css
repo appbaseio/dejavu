@@ -1,5 +1,5 @@
 table {
-    border-collapse: collapse;
+    border: 1px solid #B6EF7E;
 }
 
 th:first-child {
@@ -92,8 +92,9 @@ th {
 
 .table-container {
   height: 35em;
-  width: 50em;
+  width: 60em;
   overflow: auto;
+  border: 2px solid #B6EF7E;
 }
 
 .dropdown-menu {
@@ -104,4 +105,10 @@ th {
 .custom-json-body {
   height: 20em;
   overflow: auto;
+}
+
+.dejavu-dropdown {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border: #B6EF7E;
 }
