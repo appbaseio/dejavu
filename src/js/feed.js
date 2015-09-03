@@ -16,7 +16,7 @@ var client = new elasticsearch.Client({
  host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
 });
 
-var sdata = [];
+var sdata = {};
 var headers = ["_type", "_id"];
 var table = [];
 var columns = [];

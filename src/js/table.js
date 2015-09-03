@@ -48,7 +48,7 @@ var Table = React.createClass({
     },
     render: function() {
         return (
-            <div id='table-container' className="table-container panel panel-default">
+            <div id='table-container' className="table-container">
                 <table id="data-table" className="table table-striped table-bordered table-scrollable">
                     <thead id='columns'>
                         <tr>
@@ -113,9 +113,9 @@ var DataTable = React.createClass({
             return <Row key={_key} _id={_key} row={row} />;
         });
         return (
-            <div>
+            <div className="dejavu-table">
             <Dropdown cols={columns} />
-            <Table className="dejavu-table" renderColumns={renderColumns} renderRows={renderRows} scrollFunction={this.props.scrollFunction} />
+            <Table renderColumns={renderColumns} renderRows={renderRows} scrollFunction={this.props.scrollFunction} />
             </div>
         );
     }
@@ -163,7 +163,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <table className="table-hover table-responsive row-types">
+            <table className="table-hover table-responsive types-table table-scrollable">
                 <thead>
                     <tr>
                         <th>Types</th>

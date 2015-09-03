@@ -29,51 +29,13 @@ th {
     text-align: center;
 }
 
-.input {
-    position: absolute;
-    left: 0px;
-}
-
-.last-positive {
-    background: green;
-    color: #FFFFFF;
-}
-
-.last-negative {
-    background: red;
-    color: #FFFFFF;
-}
-
-.change-positive {
-    color: green;
-}
-
-.change-negative {
-    color: red;
-}
-
-.row-types {
-    margin: 10px 0;
-    left: 10px;
+.types-table {
+    margin: 1em 2em;
     top: 100px;
     position: absolute;
+    left: 1em;
     display: inline;
-}
-
-.row-data {
-    margin: 10px 0;
-    left: 400px;
-    top: 100px;
-    position: absolute;
-    display: inline;
-}
-
-.container {
-    width: 552px;
-}
-
-.table-hover {
-    display: inline;
+    max-height: 20em;
 }
 
 .checkBox {
@@ -91,9 +53,11 @@ th {
 }
 
 .table-container {
+  left: 20em;
   height: 35em;
   width: 60em;
   overflow: auto;
+  position: absolute;
   border: 2px solid #B6EF7E;
 }
 
@@ -108,7 +72,19 @@ th {
 }
 
 .dejavu-dropdown {
-    padding-top: 1em;
-    padding-bottom: 1em;
-    border: #B6EF7E;
+  padding-top: 2em;
+  padding-bottom: 1em;
+  padding-left: 15em;
+}
+
+.row-updated {
+    background: '#86DDF8';
+}
+
+.row-new {
+    background: '#B6EF7E';
+}
+
+.dejavu-table {
+  left: 5em;
 }
