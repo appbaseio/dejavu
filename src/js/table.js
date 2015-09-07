@@ -66,10 +66,11 @@ var Table = React.createClass({
 var DataTable = React.createClass({
     render: function () {
         data = this.props._data;
-        var columns = ['json'];
+        var fixed = ['json', '_id', '_type'];
+        var columns = ['json', '_type', '_id'];
         for(var each in data){
             for(column in data[each]){
-                if(column != 'json'){
+                if(fixed.indexOf(column) <= -1){
                     if(columns.indexOf(column) <= -1){
                         columns.push(column);
                     }
@@ -80,8 +81,10 @@ var DataTable = React.createClass({
         for(var row in data){
             var newRow = {};
             newRow['json'] = data[row]['json'];
+            newRow['_type'] = data[row]['_type'];
+            newRow['_id'] = data[row]['_id'];
             for(var each in columns){
-                if(columns[each] != 'json'){
+                if(fixed.indexOf(columns[each]) <= -1){
                     if(data[row][columns[each]]){
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
