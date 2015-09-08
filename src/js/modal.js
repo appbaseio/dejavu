@@ -1,6 +1,11 @@
 var Pretty = React.createClass({
+    componentDidMount: function(){
+        hljs.initHighlightingOnLoad();
+        var current = React.findDOMNode(this);
+        hljs.highlightBlock(current);
+    },
     render: function() {
-        return <div><pre className="custom-json-body">{JSON.stringify(this.props.json, null, 2) }</pre></div>;
+        return <pre className="custom-json-body"><code className="json">{JSON.stringify(this.props.json, null, 2)}</code></pre>;
     }
 });
 
@@ -17,7 +22,7 @@ var Modal = React.createClass({
         delete showing['json'];
         delete showing['_id'];
         delete showing['_type'];
-        var prettyjson = JSON.stringify(showing);
+        var prettyjson = JSON.parse(JSON.stringify(showing));
         return (
             <Modal 
             {...this.props}

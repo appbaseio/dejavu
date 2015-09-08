@@ -4,7 +4,7 @@ var Dropdown = React.createClass({
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
             var key = dropdownKeyGen(item);
-            console.log(key);
+            // console.log(key);
             return <FieldCheckbox _type={item} key={key}/>;
         });
         return (
@@ -40,7 +40,7 @@ var FieldCheckbox = React.createClass({
         }
         
         var key = dropdownKeyGen(elementId);
-        console.log(document.getElementById(key).style.checked);
+        // console.log(document.getElementById(key).style.checked);
         //  = checked;
         this.setState({isChecked: checked});
     },
