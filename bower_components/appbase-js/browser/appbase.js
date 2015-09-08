@@ -107,7 +107,7 @@ var streamSearchService = function streamSearchService(client, args) {
 	delete args.type
 	delete args.body
 
-	return client.performStreamingRequest({
+	return client.performWsRequest({
 		method: 'POST',
 		path: type + '/_search',
 		params: args,
@@ -204,8 +204,15 @@ var betterWs = function betterWs(url) {
 	var ee = new EventEmitter()
 
 	ee.send = function(dataObj) {
-		conn.send(JSON.stringify(dataObj))
-		return this
+		if(conn.readyState !== 1) {
+			ee.on('open', function sender() {
+				conn.send(JSON.stringify(dataObj))
+				ee.removeListener('open', sender)
+			})
+		} else {
+			conn.send(JSON.stringify(dataObj))
+			return this
+		}
 	}
 
 	conn.onopen = function() {
@@ -11919,7 +11926,7 @@ streamingRequest.prototype.init = function init() {
 	})
 
 	this.requestStream.on('error', function(err) {
-		that.stop()
+		that.stop.apply(that)
 		process.nextTick(function() {
 			resultStream.emit('error', err)
 		})
@@ -12007,46 +12014,19 @@ wsRequest.prototype.init = function init() {
 	this.resultStream.writable = false
 
 	this.client.ws.on('close', function() {
-		that.resultStream.push(null)
+		that.wsClosed.apply(that)
 	})
-
+	this.client.ws.on('error', function(err) {
+		that.processError.apply(that, [err])
+	})
 	this.client.ws.on('message', function(dataObj) {
-		if(!dataObj.id && dataObj.message) {
-			that.resultStream.emit('error', dataObj)
-			return
-		}
-
-		if(dataObj.id === that.id) {
-			if(dataObj.message) {
-				delete dataObj.id
-				that.resultStream.emit('error', dataObj)
-				return
-			}
-
-			if(dataObj.query_id) {
-				that.query_id = query_id
-			}
-
-			if(dataObj.channel)  {
-				that.channel = dataObj.channel
-			}
-
-			if(dataObj.body && dataObj.body !== "") {
-				that.resultStream.push(dataObj.body)
-			}
-
-			return
-		}
-
-		if(!dataObj.id && dataObj.channel && dataObj.channel === that.channel) {
-			that.resultStream.push(dataObj.event)
-			return
-		}
+		that.processMessage.apply(that, [dataObj])
 	})
 
 	this.client.ws.send(this.request)
 
 	this.resultStream.on('end', function() {
+		that.resultStream.readable = false
 		that.stop.apply(that)
 	})
 
@@ -12063,14 +12043,57 @@ wsRequest.prototype.init = function init() {
 	return this.resultStream
 }
 
+wsRequest.prototype.wsClosed = function wsClosed() {
+	this.resultStream.push(null)
+}
+
+wsRequest.prototype.processError = function processError(err) {
+	this.resultStream.emit('error', err)
+}
+
+wsRequest.prototype.processMessage = function processMessage(dataObj) {
+	if(!dataObj.id && dataObj.message) {
+		this.resultStream.emit('error', dataObj)
+		return
+	}
+
+	if(dataObj.id === this.id) {
+		if(dataObj.message) {
+			delete dataObj.id
+			this.resultStream.emit('error', dataObj)
+			return
+		}
+
+		if(dataObj.query_id) {
+			this.query_id = dataObj.query_id
+		}
+
+		if(dataObj.channel)  {
+			this.channel = dataObj.channel
+		}
+
+		if(dataObj.body && dataObj.body !== "") {
+			this.resultStream.push(dataObj.body)
+		}
+
+		return
+	}
+
+	if(!dataObj.id && dataObj.channel && dataObj.channel === this.channel) {
+		this.resultStream.push(dataObj.event)
+		return
+	}
+}
+
 wsRequest.prototype.getId = function getId(callback) {
 	if(this.query_id) {
 		callback(this.query_id)
 	} else {
-		this.client.ws.on('message', function(data) {
+		this.client.ws.on('message', function gid(data) {
 			var dataObj = JSON.parse(data)
 			if(dataObj.id === that.id) {
 				if(dataObj.query_id) {
+					this.client.ws.removeListener('message', gid)
 					callback(query_id)
 				}
 			}
@@ -12079,7 +12102,12 @@ wsRequest.prototype.getId = function getId(callback) {
 }
 
 wsRequest.prototype.stop = function stop() {
-	this.resultStream.push(null)
+	this.client.ws.removeListener('close', this.wsClosed)
+	this.client.ws.removeListener('error', this.processError)
+	this.client.ws.removeListener('message', this.processMessage)
+	if(this.resultStream.readable) {
+		this.resultStream.push(null)
+	}
 	var unsubRequest = {}
 	for(var key in this.request) {
 		unsubRequest[key] = this.request[key]
