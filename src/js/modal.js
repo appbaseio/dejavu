@@ -1,6 +1,5 @@
 var Pretty = React.createClass({
     componentDidMount: function(){
-        hljs.initHighlightingOnLoad();
         var current = React.findDOMNode(this);
         hljs.highlightBlock(current);
     },

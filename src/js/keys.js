@@ -1,5 +1,5 @@
 /*
-	KeyGen is to give unique key to `Cell`s
+	keyGen is to give unique key to `Cell`s
 	rowKeyGen is the same for rows
 
 */

@@ -23,7 +23,7 @@ var columns = [];
 var esTypes = [];
 var subsetESTypes = [];
 
-var streamingClient = new appbase({
+var streamingClient = appbase.newClient({
     url: 'https://'+HOSTNAME,
     appname: APPNAME,
     username: USERNAME,

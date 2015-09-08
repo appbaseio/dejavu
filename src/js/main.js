@@ -1,20 +1,18 @@
-/*
-    This is the file which commands the data update/delete/append.
-    Any react component that wishes to modify the data state should 
-    do so by flowing back the data and calling the `resetData` function
-    here. This is sort of like the Darth Vader - Dangerous and
-    Commands everything !
+/**
+ * This is the file which commands the data update/delete/append.
+ * Any react component that wishes to modify the data state should 
+ * do so by flowing back the data and calling the `resetData` function
+ * here. This is sort of like the Darth Vader - Dangerous and
+ * Commands everything !
 
-    ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
-
-*/
+ * ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
+ */
 
 var HomePage = React.createClass({
     getInitialState: function() {
         return {documents: [{}], types: []};
     },
     flatten: function(data, callback) {
-        //console.log(window.localStorage.getItem("name"));
         var fields = [];
         for(var each in data){
             if(typeof data[each] !== 'string'){
@@ -45,7 +43,7 @@ var HomePage = React.createClass({
         var ID = data['_id'];
         data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
         for(var each in fields){
-            data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link"></i></a>;
+            data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link" /></a>;
         }
         return data;
     },
@@ -66,18 +64,17 @@ var HomePage = React.createClass({
             var key = rowKeyGen(update);
             if(sdata[key]){
                 if(update['_deleted']){
-                    for(var each in update){
-                        if(each !== '_deleted'){
-                            var key = keyGen(update, each);
-                            deleteTransition(key);
-                        }
+                    for(var each in sdata[key]){
+                            var _key = keyGen(sdata[key], each);
+                            deleteTransition(_key);
                     }
                     deleteTransition(key);
                     this.deleteRow(key);
                     setTimeout(
                         function(callback){
                             callback();
-                        }.bind(null, this.resetData), 1100);
+                        }.bind(null, this.resetData)
+                    , 1100);
                 }
                 else{
                     sdata[key] = update;
@@ -94,16 +91,17 @@ var HomePage = React.createClass({
                     sdata[key] = update;
                     this.resetData();
                     for(var each in update){
-                        var key = keyGen(update, each);
-                        newTransition(key);
+                        var _key = keyGen(update, each);
+                        newTransition(_key);
                     }
-                    var key = rowKeyGen(update);
-                    newTransition(key);
+                    var _key = rowKeyGen(update);
+                    newTransition(_key);
             }
         }.bind(this));
     },
     getStreamingTypes: function(){
-        feed.getTypes( function(update){    // only called on change.
+        // only called on change.
+        feed.getTypes( function(update){
             this.setState({types: update});
         }.bind(this));
     },
@@ -114,7 +112,8 @@ var HomePage = React.createClass({
     },
     componentDidMount: function(){
         this.getStreamingTypes();
-        setInterval(this.getStreamingTypes, 5*60*1000);  // call every 5 min.
+        // call every 5 min.
+        setInterval(this.getStreamingTypes, 5*60*1000);
     },
     watchStock: function(typeName){
         subsetESTypes.push(typeName);
@@ -141,8 +140,16 @@ var HomePage = React.createClass({
         return (
             <div>
                 <div id='modal' />
-                <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
-                <DataTable _data={this.state.documents} scrollFunction={this.handleScroll}/>
+                
+                <TypeTable 
+                Types={this.state.types}
+                watchTypeHandler={this.watchStock}
+                unwatchTypeHandler={this.unwatchStock} />
+                
+                <DataTable
+                _data={this.state.documents}
+                scrollFunction={this.handleScroll}/>
+            
             </div>
         );
     }
