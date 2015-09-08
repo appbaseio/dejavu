@@ -19,10 +19,10 @@ var HomePage = React.createClass({
         return {documents: [{}], types: []};
     },
     /*
-     * The record might have nested json objects. The can't be shown
-     * since it looks cumbersome in the table. What we do in the case
-     * of a nested json object is, we replace it with a font-icon( in
-     * injectLink) which upon clicking shows a Modal with the json
+     * The record might have nested json objects. They can't be shown
+     * as is since it looks cumbersome in the table. What we do in the
+     * case of a nested json object is, we replace it with a font-icon
+     * (in injectLink) which upon clicking shows a Modal with the json
      * object it contains.
      */
     flatten: function(data, callback) {
@@ -74,7 +74,7 @@ var HomePage = React.createClass({
     /*
      * We cannot render a hashmap of documents on the table,
      * hence we convert that to a list of documents every time
-     * there is a delete/update/chaange. This can be more optimised
+     * there is a delete/update/change. This can be more optimised
      * later but it is not that expensive right now, read writes to 
      * DOM are much more expensive.
      */
@@ -86,8 +86,8 @@ var HomePage = React.createClass({
         this.setState({documents: sdata_values});
     },
 
-    /* Logic to stream continuous data
-     * We call the getData function in feed.js
+    /* Logic to stream continuous data.
+     * We call the 'getData' function in feed.js
      * which returns an update which is a single
      * json document(record).
      */
@@ -194,7 +194,7 @@ var HomePage = React.createClass({
     /*
      * The homepage is built on two children components(which may
      * have other children components). TypeTable renders the 
-     * streaming types and DataTable renders the streaming types.
+     * streaming types and DataTable renders the streaming documents.
      * main.js ties them together.
      */
     render: function () {
