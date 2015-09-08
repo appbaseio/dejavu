@@ -9,19 +9,25 @@ var Pretty = React.createClass({
 });
 
 var Modal = React.createClass({
+    getInitialState: function(){
+        var showing = {};
+        var _id = this.props.show['_id'];
+        var _type = this.props.show['_type'];
+        for(var each in this.props.show){
+            if(['json', '_id', '_type'].indexOf(each) > -1){
+                showing[each] = this.props.show[each]; 
+            }
+        }
+        return {showing: showing,
+                _type: _type,
+                _id: _id};
+    },
     hideModal: function(){
-        React.unmountComponentAtNode(document.querySelector('#modal'));
+        React.unmountComponentAtNode(document.getElementById('modal'));
     },
     render: function(){
         var Modal = ReactBootstrap.Modal;
         var Button = ReactBootstrap.Button;
-        var showing = this.props.show;
-        var _id = showing['_id'];
-        var _type = showing['_type'];
-        delete showing['json'];
-        delete showing['_id'];
-        delete showing['_type'];
-        var prettyjson = JSON.parse(JSON.stringify(showing));
         return (
             <Modal 
             {...this.props}
@@ -33,12 +39,12 @@ var Modal = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <h4>
-                        {_type}
+                        {this.state._type}
                         <br/>
-                        {_id}
+                        {this.state._id}
                     </h4>
                     <p>
-                        <Pretty json={showing} />
+                        <Pretty json={this.state.showing} />
                     </p>
                 </Modal.Body>
                 <Modal.Footer>
