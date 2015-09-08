@@ -12013,15 +12013,19 @@ wsRequest.prototype.init = function init() {
 	this.resultStream = through2.obj()
 	this.resultStream.writable = false
 
-	this.client.ws.on('close', function() {
+	this.closeHandler = function() {
 		that.wsClosed.apply(that)
-	})
-	this.client.ws.on('error', function(err) {
+	}
+	this.errorHandler = function(err) {
 		that.processError.apply(that, [err])
-	})
-	this.client.ws.on('message', function(dataObj) {
+	}
+	this.messageHandler = function(dataObj) {
 		that.processMessage.apply(that, [dataObj])
-	})
+	}
+
+	this.client.ws.on('close', this.closeHandler)
+	this.client.ws.on('error', this.errorHandler)
+	this.client.ws.on('message', this.messageHandler)
 
 	this.client.ws.send(this.request)
 
@@ -12102,9 +12106,9 @@ wsRequest.prototype.getId = function getId(callback) {
 }
 
 wsRequest.prototype.stop = function stop() {
-	this.client.ws.removeListener('close', this.wsClosed)
-	this.client.ws.removeListener('error', this.processError)
-	this.client.ws.removeListener('message', this.processMessage)
+	this.client.ws.removeListener('close', this.closeHandler)
+	this.client.ws.removeListener('error', this.errorHandler)
+	this.client.ws.removeListener('message', this.messageHandler)
 	if(this.resultStream.readable) {
 		this.resultStream.push(null)
 	}
