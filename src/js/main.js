@@ -41,9 +41,15 @@ var HomePage = React.createClass({
     },
     injectLink: function(data, fields) {
         var ID = data['_id'];
-        data['json'] = <a href="#" onClick={this.showJSON.bind(null, data)}><i className="fa fa-external-link"></i></a>;
+        data['json'] = <a href="#"
+                        onClick={this.showJSON.bind(null, data)}>
+                        <i className="fa fa-external-link" />
+                        </a>;
         for(var each in fields){
-            data[fields[each]] = <a href="#" onClick={this.showJSON.bind(null, data[fields[each]])}><i className="fa fa-external-link" /></a>;
+            data[fields[each]] = <a href="#"
+                                    onClick={this.showJSON.bind(null, data[fields[each]])}>
+                                    <i className="fa fa-external-link" />
+                                </a>;
         }
         return data;
     },
