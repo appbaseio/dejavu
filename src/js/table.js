@@ -1,10 +1,9 @@
-/*
-    A bunch of row/column/manipulation functions.
-    Things din't work well with most of the existing
-    libraries especially on the frontend and
-    configuring with react.
-
-*/
+/**
+ * A bunch of row/column/manipulation functions.
+ * Things din't work well with most of the existing
+ * libraries especially on the frontend and
+ * configuring with react.
+ */
 
 var Column = React.createClass({
     render: function(){
@@ -22,7 +21,12 @@ var Cell = React.createClass({
     render: function(){
         var vb = this.props.visibility;
         var style = {display:vb};
-        return <td id={this.props.unique} key={this.props.unique} style={style}>{this.props.item}</td>;
+        return <td
+                id={this.props.unique}
+                key={this.props.unique}
+                style={style}>
+                    {this.props.item}
+                </td>;
     }
 });
 
@@ -49,7 +53,8 @@ var Table = React.createClass({
     render: function() {
         return (
             <div id='table-container' className="table-container">
-                <table id="data-table" className="table table-striped table-bordered table-scrollable">
+                <table id="data-table"
+                className="table table-striped table-bordered table-scrollable">
                     <thead id='columns'>
                         <tr>
                             {this.props.renderColumns}
@@ -102,7 +107,11 @@ var DataTable = React.createClass({
                 if(elem){
                     visibility = elem.style.display;
                 }
-                renderRow.push(<Cell item={newRow[each]} unique={_key} key={_key} visibility={visibility} />);
+                renderRow.push(<Cell
+                                item={newRow[each]}
+                                unique={_key}
+                                key={_key}
+                                visibility={visibility} />);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
@@ -118,7 +127,10 @@ var DataTable = React.createClass({
         return (
             <div className="dejavu-table">
             <Dropdown cols={columns} />
-            <Table renderColumns={renderColumns} renderRows={renderRows} scrollFunction={this.props.scrollFunction} />
+            <Table
+             renderColumns={renderColumns}
+             renderRows={renderRows}
+             scrollFunction={this.props.scrollFunction} />
             </div>
         );
     }
@@ -127,7 +139,6 @@ var DataTable = React.createClass({
 var TypeRow = React.createClass({
     getInitialState: function(){
         var value = window.localStorage.getItem(this.props.type);
-        // console.log(this.props.type, value)
         var checked = false;
         if(value == "true"){
             checked = true;
@@ -151,7 +162,16 @@ var TypeRow = React.createClass({
         return(
             <tr>
                 <td>
-                    <input className="checkBox" type="checkbox" id={this.props.type} type="checkbox" onChange={this.unwatch} checked={this.state.isChecked} /> <div className="checkboxLabel">{this.props.type}</div>
+                    <input
+                    className="checkBox"
+                    type="checkbox" 
+                    id={this.props.type}
+                    type="checkbox"
+                    onChange={this.unwatch}
+                    checked={this.state.isChecked} /> 
+                    <div className="checkboxLabel">
+                        {this.props.type}
+                    </div>
                 </td>
             </tr>
         );
@@ -163,10 +183,15 @@ var TypeTable = React.createClass({
         var types = this.props.Types;
         var rowObj = [];
         for(var type in types){
-            rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
+            rowObj.push(<TypeRow
+                         key={type}
+                         type={types[type]}
+                         unwatchTypeHandler={this.props.unwatchTypeHandler}
+                         watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <table className="table-hover table-responsive types-table table-scrollable">
+            <table 
+            className="table-hover table-responsive types-table table-scrollable">
                 <thead>
                     <tr>
                         <th>Types</th>
