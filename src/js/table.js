@@ -12,6 +12,12 @@ var Column = React.createClass({
     }
 });
 
+var ColumnHeader = React.createClass({
+    render: function(){
+        return 
+    }
+})
+
 var Cell = React.createClass({
     render: function(){
         var vb = this.props.visibility;
@@ -31,12 +37,20 @@ var Table = React.createClass({
         console.log("mounted");
         var elem = document.getElementById('table-container');
         elem.addEventListener('scroll', this.props.scrollFunction);
+        elem.addEventListener('scroll', this.fixHeaders);
+    },
+    fixHeaders: function() {
+        var elem = document.getElementById('table-container');
+            top = elem.scrollTop;
+        if(scroll > 0){
+            console.log(document.getElementById('columns').scrollHeight);
+        }
     },
     render: function() {
         return (
             <div id='table-container' className="table-container">
                 <table id="data-table" className="table table-striped table-bordered table-scrollable">
-                    <thead>
+                    <thead id='columns'>
                         <tr>
                             {this.props.renderColumns}
                         </tr>
@@ -110,7 +124,7 @@ var DataTable = React.createClass({
 var TypeRow = React.createClass({
     getInitialState: function(){
         var value = window.localStorage.getItem(this.props.type);
-        console.log(this.props.type, value)
+        // console.log(this.props.type, value)
         var checked = false;
         if(value == "true"){
             checked = true;
@@ -149,7 +163,7 @@ var TypeTable = React.createClass({
             rowObj.push(<TypeRow key={type} type={types[type]} unwatchTypeHandler={this.props.unwatchTypeHandler} watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <table className="table-hover table-responsive row-types">
+            <table className="table-hover table-responsive types-table table-scrollable">
                 <thead>
                     <tr>
                         <th>Types</th>

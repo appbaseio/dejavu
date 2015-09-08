@@ -29,9 +29,9 @@ var Modal = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <h4>
-                        _type: {_type}
+                        {_type}
                         <br/>
-                        _id: {_id}
+                        {_id}
                     </h4>
                     <p>
                         <Pretty json={showing} />

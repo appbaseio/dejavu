@@ -8,7 +8,7 @@ var Dropdown = React.createClass({
             return <FieldCheckbox _type={item} key={key}/>;
         });
         return (
-            <DropdownButton>
+            <DropdownButton className="dejavu-dropdown">
                 {ColumnsCheckbox}
             </DropdownButton>
   );

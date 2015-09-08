@@ -49,81 +49,56 @@ var HomePage = React.createClass({
         }
         return data;
     },
-    revertTransition: function(elem){
-        elem.style.background = 'white';
-    },
-    updateTransition: function(_key){
-        var elem = document.getElementById(_key);
-        elem.style.background = '#86DDF8';
-        setTimeout(this.revertTransition.bind(null, elem), 1000);
-    },
-    deleteTransition: function(key){
-        var elem = document.getElementById(key);
-        elem.style.background = '#FF5B5B';
-        setTimeout(this.revertTransition.bind(null, elem), 1000);
-    },
-    newTransition: function(_key){
-        var elem = document.getElementById(_key);
-        elem.style.background = '#B6EF7E';
-        setTimeout(this.revertTransition.bind(null, elem), 1000);
-    },
     deleteRow: function(index){
         delete sdata[index];
     },
     resetData: function(){
-        this.setState({documents: sdata});
+        sdata_values = [];
+        for(each in sdata){
+            sdata_values.push(sdata[each]);
+        }
+        this.setState({documents: sdata_values});
     },
     getStreamingData: function(typeName){
         // Logic to stream continuous data
         feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
-            var got = false;
-            var index = -1;
-            for(var each in sdata){
-                    if(sdata[each]['_id'] === update['_id']){
-                        if(sdata[each]['_type'] === update['_type']){
-                            sdata[each] = update;
-                            got = true;
-                            index = each;
-                            break;
+            var key = rowKeyGen(update);
+            if(sdata[key]){
+                if(update['_deleted']){
+                    for(var each in update){
+                        if(each !== '_deleted'){
+                            var key = keyGen(update, each);
+                            deleteTransition(key);
                         }
                     }
-            }
-            if(update['_deleted']){
-                for(var each in update){
-                    if(each !== '_deleted'){
-                        var key = keyGen(update, each);
-                        this.deleteTransition(key);
-                    }
-                }
-                var key = rowKeyGen(update);
-                this.deleteTransition(key);
-                delete sdata[index];
-                setTimeout(
-                    function(callback){
-                        callback();
-                    }.bind(null, this.resetData), 1100);
-            }
-            else{
-                if(!got){
-                    sdata.push(update);
-                    this.resetData();
-                    for(var each in update){
-                        var key = keyGen(update, each);
-                        this.newTransition(key);
-                    }
-                    var key = rowKeyGen(update);
-                    this.newTransition(key);
+                    deleteTransition(key);
+                    this.deleteRow(key);
+                    setTimeout(
+                        function(callback){
+                            callback();
+                        }.bind(null, this.resetData), 1100);
                 }
                 else{
+                    sdata[key] = update;
                     this.resetData();
                     for(var each in update){
                         var key = keyGen(update, each);
-                        this.updateTransition(key);
+                        updateTransition(key);
                     }
                     var key = rowKeyGen(update);
-                    this.updateTransition(key);
+                    updateTransition(key);
                 }
+            }
+            else{
+                    sdata[key] = update;
+                    this.resetData();
+                    for(var each in update){
+                        var key = keyGen(update, each);
+                        newTransition(key);
+                    }
+                    var key = rowKeyGen(update);
+                    newTransition(key);
             }
         }.bind(this));
     },
@@ -153,8 +128,8 @@ var HomePage = React.createClass({
         console.log("selections: ", subsetESTypes);
     },
     handleScroll: function(event){
-        elem = document.getElementById('table-container');
-        elemElem = document.getElementById('data-table');
+        var elem = document.getElementById('table-container');
+            elemElem = document.getElementById('data-table');
         var upar = elem.scrollTop;
             scroll = elem.offsetHeight;
             niche = elem.scrollHeight;
@@ -166,7 +141,7 @@ var HomePage = React.createClass({
         return (
             <div>
                 <div id='modal' />
-                <TypeTable className="dejavu-table" Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
+                <TypeTable Types={this.state.types} watchTypeHandler={this.watchStock} unwatchTypeHandler={this.unwatchStock} />
                 <DataTable _data={this.state.documents} scrollFunction={this.handleScroll}/>
             </div>
         );

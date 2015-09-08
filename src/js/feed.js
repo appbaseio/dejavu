@@ -16,14 +16,14 @@ var client = new elasticsearch.Client({
  host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
 });
 
-var sdata = [];
+var sdata = {};
 var headers = ["_type", "_id"];
 var table = [];
 var columns = [];
 var esTypes = [];
 var subsetESTypes = [];
 
-var streamingClient = appbase.newClient({
+var streamingClient = new appbase({
     url: 'https://'+HOSTNAME,
     appname: APPNAME,
     username: USERNAME,
@@ -47,6 +47,7 @@ feed = (function () {
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
         streamingClient.streamSearch({
+          stream: true,
           type: typeName,
           body: {
             from: 0,
