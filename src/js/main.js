@@ -11,7 +11,7 @@
 var HomePage = React.createClass({
     /*
      * The underlying data structure that holds the documents/records
-     * is a hashmap with keys as '_id + _type'(refer to keys.js). Its
+     * is a hashmap with keys as `_id + _type`(refer to keys.js). Its
      * because no two records can have the same _type _id pair, so its
      * easy to check if a record already exists.
      */
@@ -87,7 +87,7 @@ var HomePage = React.createClass({
     },
 
     /* Logic to stream continuous data.
-     * We call the 'getData' function in feed.js
+     * We call the `getData` function in feed.js
      * which returns an update which is a single
      * json document(record).
      */
@@ -102,7 +102,7 @@ var HomePage = React.createClass({
              */
             if(sdata[key]){
                 /*
-                 * If the update has a '_deleted' field, apply
+                 * If the update has a `_deleted` field, apply
                  * a 'delete transition' and then delete
                  * the record from sdata.
                  */
@@ -121,8 +121,8 @@ var HomePage = React.createClass({
                 }
                 /*
                  * If it isn't a delete, we should find a record
-                 * with the same _type and _id and apply an 'update
-                 * transition' and then update the record in sdata.
+                 * with the same _type and _id and apply an `update
+                 * transition` and then update the record in sdata.
                  * Since sdata is modeled as a hashmap, this is 
                  * trivial.
                  */
@@ -139,7 +139,7 @@ var HomePage = React.createClass({
             }
             /*
              * If its a new record, we add it to sdata and then
-             * apply the 'new transition'.
+             * apply the `new transition`.
              */
             else{
                     sdata[key] = update;
