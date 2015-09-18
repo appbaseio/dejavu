@@ -14,7 +14,7 @@ var Modal = React.createClass({
         var _id = this.props.show['_id'];
         var _type = this.props.show['_type'];
         for(var each in this.props.show){
-            if(['json', '_id', '_type'].indexOf(each) > -1){
+            if(['json', '_id', '_type'].indexOf(each) <= -1){
                 showing[each] = this.props.show[each]; 
             }
         }
@@ -31,7 +31,7 @@ var Modal = React.createClass({
         return (
             <Modal 
             {...this.props}
-            bsSize='small'
+            bsSize='medium'
             onHide={this.hideModal}
             >
                 <Modal.Header>

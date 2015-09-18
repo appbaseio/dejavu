@@ -56,6 +56,8 @@ var HomePage = React.createClass({
     },
     injectLink: function(data, fields) {
         var ID = data['_id'];
+        if(data['_score'])
+            delete data['_score'];
         data['json'] = <a href="#"
                         onClick={this.showJSON.bind(null, data)}>
                         <i className="fa fa-external-link" />
