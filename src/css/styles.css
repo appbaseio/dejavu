@@ -29,6 +29,22 @@ th {
     text-align: center;
 }
 
+.app-desc {
+  margin: 1em 2em;
+  position: absolute;
+  left: 1em;
+  display: inline;
+  max-height: 20em;
+  font-weight: 400;
+  color: #696969;
+}
+
+.app-name {
+  font-size: 1.2em;
+  font-weight: 800;
+  color: #696969;
+}
+
 .types-table {
     margin: 1em 2em;
     top: 100px;

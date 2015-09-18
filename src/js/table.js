@@ -13,7 +13,7 @@ var Column = React.createClass({
 
 var ColumnHeader = React.createClass({
     render: function(){
-        return 
+        return
     }
 })
 
@@ -164,11 +164,11 @@ var TypeRow = React.createClass({
                 <td>
                     <input
                     className="checkBox"
-                    type="checkbox" 
+                    type="checkbox"
                     id={this.props.type}
                     type="checkbox"
                     onChange={this.unwatch}
-                    checked={this.state.isChecked} /> 
+                    checked={this.state.isChecked} />
                     <div className="checkboxLabel">
                         {this.props.type}
                     </div>
@@ -182,6 +182,7 @@ var TypeTable = React.createClass({
     render: function()  {
         var types = this.props.Types;
         var rowObj = [];
+        var appname = APPNAME;
         for(var type in types){
             rowObj.push(<TypeRow
                          key={type}
@@ -190,7 +191,9 @@ var TypeTable = React.createClass({
                          watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <table 
+            <div>
+            <div className="app-desc">App: <span className="app-name">{appname}</span></div>
+            <table
             className="table-hover table-responsive types-table table-scrollable">
                 <thead>
                     <tr>
@@ -201,6 +204,7 @@ var TypeTable = React.createClass({
                     {rowObj}
                 </tbody>
             </table>
+            </div>
         );
     }
 });
