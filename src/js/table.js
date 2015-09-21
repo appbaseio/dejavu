@@ -54,13 +54,13 @@ var Table = React.createClass({
         return (
             <div id='table-container' className="table-container">
                 <table id="data-table"
-                className="table table-striped table-bordered table-scrollable">
+                className="table table-striped table-bordered">
                     <thead id='columns'>
                         <tr>
                             {this.props.renderColumns}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='exp-scrollable'>
                             {this.props.renderRows}
                     </tbody>
                 </table>

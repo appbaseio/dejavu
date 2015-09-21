@@ -47,8 +47,8 @@ var HomePage = React.createClass({
             delete data['_source'];
         if(data['_index'])
             delete data['_index'];
-        if(data['score'])
-            delete data['score'];
+        if(data['_score'])
+            delete data['_score'];
         return callback(data, fields);
     },
     showJSON: function(data, event){
@@ -56,8 +56,6 @@ var HomePage = React.createClass({
     },
     injectLink: function(data, fields) {
         var ID = data['_id'];
-        if(data['_score'])
-            delete data['_score'];
         data['json'] = <a href="#"
                         onClick={this.showJSON.bind(null, data)}>
                         <i className="fa fa-external-link" />

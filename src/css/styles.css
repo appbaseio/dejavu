@@ -91,3 +91,7 @@ th {
 .dejavu-table {
   left: 5em;
 }
+
+.exp-scrollable {
+  overflow-y:scroll;
+}

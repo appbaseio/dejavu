@@ -5,7 +5,7 @@ var Dropdown = React.createClass({
         var ColumnsCheckbox =  columns.map(function(item){
             var key = dropdownKeyGen(item);
             // console.log(key);
-            return <FieldCheckbox _type={item} key={key}/>;
+            return <FieldCheckbox _type={item} />;
         });
         return (
             <DropdownButton className="dejavu-dropdown">
@@ -19,38 +19,39 @@ var FieldCheckbox = React.createClass({
     getInitialState: function(){
         return {isChecked: true};
     },
-    check: function(elementId){
+    check: function(elementId, event){
         var checked = true;
-        var elem = document.getElementById(elementId);
-        var display = "";
-        
-        if(elem.style.display === "none"){
-            elem.style.display = display;
+        if(document.getElementById(elementId).style.display == "none"){
+            document.getElementById(elementId).style.display = "";
             checked = true;
+
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                document.getElementById(key).style.display = ""
+            }
         }
         else{
-            display = "none";
-            elem.style.display = display;
+            document.getElementById(elementId).style.display = "none";
             checked = false;
-        }
 
-        for(var each in sdata){
-            var key = keyGen(sdata[each], elementId);
-            document.getElementById(key).style.display = display;
+            for(var each in sdata){
+                var key = keyGen(sdata[each], elementId);
+                document.getElementById(key).style.display = "none"
+            }
         }
-        
-        var key = dropdownKeyGen(elementId);
-        // console.log(document.getElementById(key).style.checked);
-        //  = checked;
         this.setState({isChecked: checked});
     },
     render: function() {
         var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            <MenuItem>
-                <Input type='checkbox' checked={this.state.isChecked} onClick={this.check.bind(null, this.props._type)} label={this.props._type} id={this.props.key} />
-            </MenuItem>
+            
+                <Input 
+                type='checkbox'
+                checked={this.state.isChecked} 
+                onClick={this.check.bind(null, this.props._type)} 
+                label={this.props._type} 
+                id={this.props.key} />
         );
     }
 });
