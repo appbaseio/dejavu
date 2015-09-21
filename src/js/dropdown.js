@@ -1,14 +1,14 @@
 var Dropdown = React.createClass({
     render: function(){
         var DropdownButton = ReactBootstrap.DropdownButton;
+        var Menu = ReactBootstrap.Dropdown.Menu;
         var columns = this.props.cols;
         var ColumnsCheckbox =  columns.map(function(item){
             var key = dropdownKeyGen(item);
-            // console.log(key);
-            return <FieldCheckbox _type={item} />;
+            return <FieldCheckbox _type={item} className="ab-checkbox" />;
         });
         return (
-            <DropdownButton className="dejavu-dropdown">
+            <DropdownButton className="dejavu-dropdown" pullRight={true}>
                 {ColumnsCheckbox}
             </DropdownButton>
   );
@@ -45,13 +45,14 @@ var FieldCheckbox = React.createClass({
         var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            
+            <MenuItem onSelect={this.check.bind(null, this.props._type)}>
                 <Input 
                 type='checkbox'
-                checked={this.state.isChecked} 
-                onClick={this.check.bind(null, this.props._type)} 
-                label={this.props._type} 
+                checked={this.state.isChecked}
+                label={this.props._type}
+                onSelect={this.check.bind(null, this.props._type)}
                 id={this.props.key} />
+            </MenuItem>
         );
     }
 });
