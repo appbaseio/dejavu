@@ -1,9 +1,12 @@
+
 table {
-    border: 1px solid #B6EF7E;
+    border: 1px solid #ddd;
+    background-color: #fffeee;
 }
 
 th:first-child {
     text-align: center;
+    white-space: nowrap;
 }
 
 th:not(:first-child),
@@ -77,7 +80,6 @@ th {
   border-right: 1px solid #eee;
   border-left: 1px solid #eee;
   position: absolute;
-  border: 2px solid #B6EF7E;
 }
 
 .dropdown-menu {
