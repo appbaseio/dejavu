@@ -8,14 +8,13 @@ var Dropdown = React.createClass({
             return <FieldCheckbox _type={item} _key={this.key}/>;
         });
         return (
-            <DropdownButton 
+            <DropdownButton
             className="dejavu-dropdown fa fa-cog"
             pullRight={true}
             id='ab-dropdown'>
-                <MenuItem header className='centered-text'>Data Fields</MenuItem>
+                <MenuItem header className='centered-text'>Displayed Attributes</MenuItem>
                 <MenuItem divider/>
                 {ColumnsCheckbox}
-                <MenuItem divider/>
             </DropdownButton>
   );
 }
@@ -59,7 +58,7 @@ var FieldCheckbox = React.createClass({
         var Input = ReactBootstrap.Input;
         return(
             <div className='ab-menu-item'>
-                <Input 
+                <Input
                 type='checkbox'
                 checked={this.state.isChecked}
                 label={this.props._type}
