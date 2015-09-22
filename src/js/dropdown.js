@@ -11,6 +11,7 @@ var Dropdown = React.createClass({
             <DropdownButton 
             className="dejavu-dropdown fa fa-cog"
             pullRight={true}
+            noCaret
             id='ab-dropdown'>
                 <MenuItem header className='centered-text'>Data Fields</MenuItem>
                 <MenuItem divider/>

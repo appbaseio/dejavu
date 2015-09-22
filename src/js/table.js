@@ -5,27 +5,36 @@
  * configuring with react.
  */
 
+var showJSON = function(data){
+        React.render(<Modal show={data}/>, document.getElementById('modal'));
+};
+
 var Column = React.createClass({
     render: function(){
         return <th id={this.props._item}>{this.props._item}</th>;
     }
 });
 
-var ColumnHeader = React.createClass({
-    render: function(){
-        return
-    }
-})
-
 var Cell = React.createClass({
     render: function(){
         var vb = this.props.visibility;
         var style = {display:vb};
+        var data = this.props.item;
+        var to_display = data;
+        if(typeof data !== 'string'){
+            if(typeof data !== 'number'){
+                to_display = <a href="#"
+                                onClick={showJSON.bind(null, data)}>
+                                <i className="fa fa-external-link" />
+                            </a>;
+            }
+        }
+        console.log(to_display);
         return <td
                 id={this.props.unique}
                 key={this.props.unique}
                 style={style}>
-                    {this.props.item}
+                    {to_display}
                 </td>;
     }
 });

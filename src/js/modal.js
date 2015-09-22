@@ -4,13 +4,19 @@ var Pretty = React.createClass({
         hljs.highlightBlock(current);
     },
     render: function() {
-        return <pre className="custom-json-body"><code className="json">{JSON.stringify(this.props.json, null, 2)}</code></pre>;
+        return  ( <pre className="custom-json-body">
+                    <code className="json">
+                        {JSON.stringify(this.props.json, null, 2)}
+                    </code>
+                  </pre>
+                );
     }
 });
 
 var Modal = React.createClass({
     getInitialState: function(){
         var showing = {};
+        console.log(this.props.show);
         var _id = this.props.show['_id'];
         var _type = this.props.show['_type'];
         for(var each in this.props.show){
@@ -34,9 +40,6 @@ var Modal = React.createClass({
             bsSize='medium'
             onHide={this.hideModal}
             >
-                <Modal.Header>
-                  <Modal.Title id='contained-modal-title-sm'>JSON</Modal.Title>
-                </Modal.Header>
                 <Modal.Body>
                     <h4>
                         {this.state._type}

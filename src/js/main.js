@@ -27,22 +27,7 @@ var HomePage = React.createClass({
      */
     flatten: function(data, callback) {
         var fields = [];
-        for(var each in data){
-            if(typeof data[each] !== 'string'){
-                if(typeof data[each] !== 'number'){
-                    if(each !== '_source')
-                        fields.push(each);
-                }
-            }
-        }
-        for(var each in data['_source']){
-            data[each] = data['_source'][each];
-            if(typeof data[each] !== 'string'){
-                if(typeof data[each] !== 'number'){
-                        fields.push(each);
-                }
-            }
-        }
+        data['json'] = data['_source'];
         if(data['_source'])
             delete data['_source'];
         if(data['_index'])
@@ -51,21 +36,7 @@ var HomePage = React.createClass({
             delete data['_score'];
         return callback(data, fields);
     },
-    showJSON: function(data, event){
-        React.render(<Modal show={data}/>, document.getElementById('modal'));
-    },
     injectLink: function(data, fields) {
-        var ID = data['_id'];
-        data['json'] = <a href="#"
-                        onClick={this.showJSON.bind(null, data)}>
-                        <i className="fa fa-external-link" />
-                        </a>;
-        for(var each in fields){
-            data[fields[each]] = <a href="#"
-                                    onClick={this.showJSON.bind(null, data[fields[each]])}>
-                                    <i className="fa fa-external-link" />
-                                </a>;
-        }
         return data;
     },
     deleteRow: function(index){
@@ -200,7 +171,7 @@ var HomePage = React.createClass({
     render: function () {
         return (
             <div>
-                <div id='modal' />
+                <div id='modal' />   
                 
                 <TypeTable 
                 Types={this.state.types}
@@ -209,7 +180,7 @@ var HomePage = React.createClass({
                 
                 <DataTable
                 _data={this.state.documents}
-                scrollFunction={this.handleScroll}/>
+                scrollFunction={this.handleScroll} />
             
             </div>
         );
