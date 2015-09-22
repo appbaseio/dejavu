@@ -57,6 +57,14 @@ th {
     max-height: 20em;
 }
 
+.dropdown-menu .divider {
+    margin: 0px;
+}
+
+.dropdown-menu .form-group {
+    padding-right: 10px;
+}
+
 .checkBox {
     position: absolute;
     left: 10px;
