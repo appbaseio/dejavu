@@ -1,15 +1,21 @@
 var Dropdown = React.createClass({
     render: function(){
         var DropdownButton = ReactBootstrap.DropdownButton;
-        var Menu = ReactBootstrap.Dropdown.Menu;
         var columns = this.props.cols;
+        var MenuItem = ReactBootstrap.MenuItem;
         var ColumnsCheckbox =  columns.map(function(item){
             var key = dropdownKeyGen(item);
-            return <FieldCheckbox _type={item} className="ab-checkbox" />;
+            return <FieldCheckbox _type={item} _key={this.key}/>;
         });
         return (
-            <DropdownButton className="dejavu-dropdown" pullRight={true}>
+            <DropdownButton 
+            className="dejavu-dropdown fa fa-cog"
+            pullRight={true}
+            id='ab-dropdown'>
+                <MenuItem header className='centered-text'>Data Fields</MenuItem>
+                <MenuItem divider/>
                 {ColumnsCheckbox}
+                <MenuItem divider/>
             </DropdownButton>
   );
 }
@@ -17,11 +23,19 @@ var Dropdown = React.createClass({
 
 var FieldCheckbox = React.createClass({
     getInitialState: function(){
-        return {isChecked: true};
+        var elemID = this.props._type;
+        var checked = true;
+        var elem = document.getElementById(elemID);
+        if(!elem)
+            return {isChecked: checked};
+        if(elem.style.display === "none"){
+            checked = false;
+        }
+        return {isChecked: checked};
     },
     check: function(elementId, event){
         var checked = true;
-        if(document.getElementById(elementId).style.display == "none"){
+        if(document.getElementById(elementId).style.display === "none"){
             document.getElementById(elementId).style.display = "";
             checked = true;
 
@@ -42,17 +56,17 @@ var FieldCheckbox = React.createClass({
         this.setState({isChecked: checked});
     },
     render: function() {
-        var MenuItem = ReactBootstrap.MenuItem;
         var Input = ReactBootstrap.Input;
         return(
-            <MenuItem onSelect={this.check.bind(null, this.props._type)}>
+            <div className='ab-menu-item'>
                 <Input 
                 type='checkbox'
                 checked={this.state.isChecked}
                 label={this.props._type}
-                onSelect={this.check.bind(null, this.props._type)}
-                id={this.props.key} />
-            </MenuItem>
+                onClick={this.check.bind(null, this.props._type)}
+                key={this.props._key}
+                id={this.props._key}/>
+            </div>
         );
     }
 });

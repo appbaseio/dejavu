@@ -91,9 +91,9 @@ th {
 }
 
 .dejavu-dropdown {
-  padding-top: 2em;
-  padding-bottom: 1em;
-  padding-left: 15em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  margin-left: 15em;
 }
 
 .row-updated {
@@ -110,4 +110,12 @@ th {
 
 .exp-scrollable {
   overflow-y:scroll;
+}
+
+.ab-menu-item {
+  margin-left: 10px;
+}
+
+.centered-text {
+  text-align: center;
 }
