@@ -5,8 +5,8 @@
  * configuring with react.
  */
 
-var showJSON = function(data){
-        React.render(<Modal show={data}/>, document.getElementById('modal'));
+var showJSON = function(data, _type, _id){
+        React.render(<Modal show={data} _type={_type} _id={_id}/>, document.getElementById('modal'));
 };
 
 var Column = React.createClass({
@@ -18,18 +18,20 @@ var Column = React.createClass({
 var Cell = React.createClass({
     render: function(){
         var vb = this.props.visibility;
-        var style = {display:vb};
-        var data = this.props.item;
-        var to_display = data;
+            style = {display:vb};
+            data = this.props.item;
+            _id = this.props._id;
+            _type = this.props._type;
+            to_display = data;
+
         if(typeof data !== 'string'){
             if(typeof data !== 'number'){
                 to_display = <a href="#"
-                                onClick={showJSON.bind(null, data)}>
+                                onClick={showJSON.bind(null, data, _type, _id)}>
                                 <i className="fa fa-external-link" />
                             </a>;
             }
         }
-        console.log(to_display);
         return <td
                 id={this.props.unique}
                 key={this.props.unique}
@@ -79,9 +81,10 @@ var Table = React.createClass({
 })
 var DataTable = React.createClass({
     render: function () {
-        data = this.props._data;
-        var fixed = ['json', '_id', '_type'];
-        var columns = ['json', '_type', '_id'];
+        var data = this.props._data;
+            fixed = ['json', '_id', '_type'];
+            columns = ['json', '_type', '_id'];
+        
         for(var each in data){
             for(column in data[each]){
                 if(fixed.indexOf(column) <= -1){
@@ -111,8 +114,9 @@ var DataTable = React.createClass({
             renderRow = [];
             for(var each in newRow){
                 var _key = keyGen(data[row], each);
-                var elem = document.getElementById(each);
-                var visibility = '';
+                    elem = document.getElementById(each);
+                    visibility = '';
+                
                 if(elem){
                     visibility = elem.style.display;
                 }
@@ -120,6 +124,8 @@ var DataTable = React.createClass({
                                 item={newRow[each]}
                                 unique={_key}
                                 key={_key}
+                                _id={newRow['_id']}
+                                _type={newRow['_type']}
                                 visibility={visibility} />);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
@@ -148,7 +154,7 @@ var DataTable = React.createClass({
 var TypeRow = React.createClass({
     getInitialState: function(){
         var value = window.localStorage.getItem(this.props.type);
-        var checked = false;
+            checked = false;
         if(value == "true"){
             checked = true;
             this.props.watchTypeHandler(this.props.type);
@@ -190,8 +196,9 @@ var TypeRow = React.createClass({
 var TypeTable = React.createClass({
     render: function()  {
         var types = this.props.Types;
-        var rowObj = [];
-        var appname = APPNAME;
+            rowObj = [];
+            appname = APPNAME;
+        
         for(var type in types){
             rowObj.push(<TypeRow
                          key={type}

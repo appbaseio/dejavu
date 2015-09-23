@@ -27,6 +27,14 @@ var HomePage = React.createClass({
      */
     flatten: function(data, callback) {
         var fields = [];
+        for(var each in data['_source']){
+            data[each] = data['_source'][each];
+            if(typeof data[each] !== 'string'){
+                if(typeof data[each] !== 'number'){
+                        fields.push(each);
+                }
+            }
+        }
         data['json'] = data['_source'];
         if(data['_source'])
             delete data['_source'];
