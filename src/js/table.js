@@ -175,20 +175,16 @@ var TypeRow = React.createClass({
     },
     render: function() {
         return(
-            <tr>
-                <td>
-                    <input
-                    className="checkBox"
-                    type="checkbox"
-                    id={this.props.type}
-                    type="checkbox"
-                    onChange={this.unwatch}
-                    checked={this.state.isChecked} />
-                    <div className="checkboxLabel">
-                        {this.props.type}
-                    </div>
-                </td>
-            </tr>
+                <li>
+                    <input 
+                     id={this.props.type} 
+                     type="checkbox" 
+                     key={this.props.type} 
+                     defaultChecked={this.state.isChecked} 
+                     onChange={this.unwatch} 
+                     readOnly={false}/>
+                    <label htmlFor={this.props.type}>{this.props.type}</label>
+                </li>
         );
     }
 });
@@ -207,19 +203,11 @@ var TypeTable = React.createClass({
                          watchTypeHandler={this.props.watchTypeHandler} />);
         }
         return (
-            <div>
-            <div className="app-desc">App: <span className="app-name">{appname}</span></div>
-            <table
-            className="table-hover table-responsive types-table table-scrollable">
-                <thead>
-                    <tr>
-                        <th>Types</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rowObj}
-                </tbody>
-            </table>
+            <div className='left-tab'>
+            <div className="app-desc"><span className="app-name">{appname}</span></div>
+            <ul className='fa-ul types-list'>
+                {rowObj}
+            </ul>
             </div>
         );
     }

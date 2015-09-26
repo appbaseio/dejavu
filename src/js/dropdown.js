@@ -1,6 +1,6 @@
 var Dropdown = React.createClass({
     render: function(){
-        var DropdownButton = ReactBootstrap.DropdownButton;
+        var Dropdown = ReactBootstrap.Dropdown;
         var columns = this.props.cols;
         var MenuItem = ReactBootstrap.MenuItem;
         var ColumnsCheckbox =  columns.map(function(item){
@@ -8,15 +8,18 @@ var Dropdown = React.createClass({
             return <FieldCheckbox _type={item} _key={this.key}/>;
         });
         return (
-            <DropdownButton
-            className="dejavu-dropdown fa fa-cog"
+            <Dropdown
+            className="dejavu-dropdown"
             pullRight={true}
             noCaret
             id='ab-dropdown'>
+            <Dropdown.Toggle className='fa fa-cog' noCaret/>
+            <Dropdown.Menu>
                 <MenuItem header className='centered-text'>Displayed Attributes</MenuItem>
                 <MenuItem divider/>
                 {ColumnsCheckbox}
-            </DropdownButton>
+            </Dropdown.Menu>
+            </Dropdown>
   );
 }
 });
@@ -57,15 +60,15 @@ var FieldCheckbox = React.createClass({
     },
     render: function() {
         var Input = ReactBootstrap.Input;
+        var key = dropdownKeyGen(this.props._type);
         return(
             <div className='ab-menu-item'>
-                <Input
-                type='checkbox'
-                checked={this.state.isChecked}
-                label={this.props._type}
-                onClick={this.check.bind(null, this.props._type)}
-                key={this.props._key}
-                id={this.props._key}/>
+                <input 
+                id={key} 
+                type="checkbox" key={key}
+                defaultChecked={this.state.isChecked} 
+                onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
+                <label htmlFor={key}> {this.props._type} </label>
             </div>
         );
     }

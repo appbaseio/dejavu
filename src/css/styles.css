@@ -1,7 +1,6 @@
 
 table {
     border: 1px solid #ddd;
-    background-color: #fffeee;
 }
 
 th:first-child {
@@ -33,13 +32,14 @@ th {
 }
 
 .app-desc {
-  margin: 1em 2em;
-  position: absolute;
-  left: 1em;
-  display: inline;
+  min-height: 4em;
   max-height: 20em;
   font-weight: 400;
   color: #696969;
+  width: 100%;
+  margin-top: 1em;
+  text-align: center;
+  border-bottom: 1px solid black;
 }
 
 .app-name {
@@ -48,13 +48,25 @@ th {
   color: #696969;
 }
 
-.types-table {
-    margin: 1em 2em;
+.left-tab {
+  width: 20%;
+  left:0px;
+  display: inline;
+  position: absolute;
+  height: 100%;
+  border-right: 1px solid black;
+}
+
+.types-list {
     top: 100px;
+    width: 100%;
     position: absolute;
-    left: 1em;
     display: inline;
-    max-height: 20em;
+    left: 2px;
+}
+
+.responsive-cell {
+  width: 100%;
 }
 
 .dropdown-menu .divider {
@@ -66,8 +78,9 @@ th {
 }
 
 .checkBox {
-    position: absolute;
-    left: 10px;
+  padding: 1px;
+  display: inline;
+  position: absolute;
 }
 
 .checkBoxLabel {
@@ -80,9 +93,10 @@ th {
 }
 
 .table-container {
-  left: 20em;
-  height: 35em;
-  width: 60em;
+  left: 20%;
+  height: 40em;
+  width: 78%;
+  margin: 0.5em;
   overflow: auto;
   border-bottom: 1px solid #eee;
   border-right: 1px solid #eee;
@@ -93,6 +107,7 @@ th {
 .dropdown-menu {
   overflow: scroll;
   height: 20em;
+  width: 15em;
 }
 
 .custom-json-body {
@@ -101,9 +116,10 @@ th {
 }
 
 .dejavu-dropdown {
-  margin-top: 2em;
-  margin-bottom: 1em;
-  margin-left: 15em;
+  margin-top: 6em;
+  left: 16%;
+  display: inline;
+  position: absolute;
 }
 
 .row-updated {
@@ -116,6 +132,7 @@ th {
 
 .dejavu-table {
   left: 5em;
+  display: inline;
 }
 
 .exp-scrollable {
@@ -129,3 +146,17 @@ th {
 .centered-text {
   text-align: center;
 }
+
+
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  display: inline-block;
+  font-size: 1.3em;
+}
+
+input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow space for check mark */
