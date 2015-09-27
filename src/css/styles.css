@@ -94,7 +94,7 @@ th {
 
 .table-container {
   left: 20%;
-  height: 40em;
+  max-height: 40em;
   width: 78%;
   margin: 0.5em;
   overflow: auto;
@@ -161,15 +161,8 @@ input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between c
 input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
 input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow space for check mark */
 
-.json-copy-alert {
-  padding: 0.5em;
-  width: 100%;
-  text-align: center;
-  height: 2em;
-  background-color: #c3f295;
-}
-
-.alert-message {
-  margin-top: 0.4em;
-  width: 100%;
+.waiting {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }

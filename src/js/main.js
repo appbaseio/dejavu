@@ -200,7 +200,8 @@ var HomePage = React.createClass({
                 
                 <DataTable
                 _data={this.state.documents}
-                scrollFunction={this.handleScroll} />
+                scrollFunction={this.handleScroll} 
+                selectedTypes={subsetESTypes}/>
             
             </div>
         );

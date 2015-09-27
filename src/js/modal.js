@@ -3,23 +3,27 @@ var Expire = React.createClass({
     return {delay: 1000};
   },
   getInitialState: function(){
-    return {visible: false};
+    return {visible: true};
   },
   componentWillReceiveProps: function(nextProps){
     // reset the timer if children are changed
     if (nextProps.children !== this.props.children) {
       this.setTimer();
-      this.setState({visible: false});
+      this.setState({visible: true});
     }
   },
-  componentDidMount: function(){
-      this.setTimer();
+  handleClick: function(){
+    this.setTimer();
+    var apply = document.getElementById('for-copy');
+    execCommandOnElement(apply, "copy");
+
   },
   setTimer: function(){
     // clear any existing timer
     this._timer != null ? clearTimeout(this._timer) : null;
 
-    // hide after `delay` milliseconds
+    // hide for `delay` milliseconds
+    this.setState({visible: false});
     this._timer = setTimeout(function(){
       this.setState({visible: true});
       this._timer = null;
@@ -27,8 +31,17 @@ var Expire = React.createClass({
   },
   render: function(){
     return this.state.visible 
-           ? <div className='json-copy-alert'><span className='alert-message'>{this.props.content}</span></div>
-           : <span/>;
+           ? <div>
+                <a>
+                    <i 
+                    onClick={this.handleClick}
+                    className='fa copy-board text-center fa-clipboard' 
+                    id='normal-clipboard-before'/>
+                </a>
+             </div>
+           : <i 
+              className='fa fa-check' 
+              id='normal-clipboard-after'/>;
   }
 });
 
@@ -78,11 +91,6 @@ var execCommandOnElement = function(el, commandName, value) {
     }
 }
 
-var copytext = function () {
-        var apply = document.getElementById('for-copy');
-        execCommandOnElement(apply, "copy");
-}
-
 var Pretty = React.createClass({
     componentDidMount: function(){
         var current = React.findDOMNode(this);
@@ -106,14 +114,10 @@ var Modal = React.createClass({
                 showing[each] = this.props.show[each]; 
             }
         }
-        return {showing: showing, alertSuccess: ''};
+        return {showing: showing};
     },
     hideModal: function(){
         React.unmountComponentAtNode(document.getElementById('modal'));
-    },
-    copy: function(){
-        copytext();
-        this.setState({alertSuccess: 'the json has been successfully copied to your clipboard !'});
     },
     render: function(){
         var Modal = ReactBootstrap.Modal;
@@ -130,8 +134,7 @@ var Modal = React.createClass({
                         <br/>
                         {this.props._id}
                     </h4>
-                    <Button onClick={this.copy} className="fa fa-files-o"/>
-                    <Expire delay={3000} content={this.state.alertSuccess} id='copy-json'/>
+                    <Expire delay={2000} onClick={this.copytext} id='copy-json'/>
                     <p id='modal-body'>
                         <Pretty json={this.state.showing} />
                     </p>

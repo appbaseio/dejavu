@@ -62,6 +62,22 @@ var Table = React.createClass({
         }
     },
     render: function() {
+        if(this.props.renderRows.length <= 1){
+            if(this.props.selectedTypes.length <= 0){
+                return (
+                    <div id='table-container' className="waiting">
+                        <i className="fa fa-refresh fa-spin fa-5x centered"></i>
+                    </div>
+                )
+            }
+            else{
+                return(
+                    <div id='table-container' className="waiting">
+                        <i className="fa fa-spinner fa-pulse fa-5x centered"></i>
+                    </div>
+                )
+            }
+        }
         return (
             <div id='table-container' className="table-container">
                 <table id="data-table"
@@ -84,7 +100,8 @@ var DataTable = React.createClass({
         var data = this.props._data;
             fixed = ['json', '_id', '_type'];
             columns = ['json', '_type', '_id'];
-        
+        if(!data)
+            console.log('no data');
         for(var each in data){
             for(column in data[each]){
                 if(fixed.indexOf(column) <= -1){
@@ -145,7 +162,8 @@ var DataTable = React.createClass({
             <Table
              renderColumns={renderColumns}
              renderRows={renderRows}
-             scrollFunction={this.props.scrollFunction} />
+             scrollFunction={this.props.scrollFunction} 
+             selectedTypes={this.props.selectedTypes}/>
             </div>
         );
     }
