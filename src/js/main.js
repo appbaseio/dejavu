@@ -8,6 +8,8 @@
  * ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
  */
 
+var offsets = {}; // helps us for pagination
+
 var HomePage = React.createClass({
     /*
      * The underlying data structure that holds the documents/records
@@ -129,6 +131,16 @@ var HomePage = React.createClass({
                     }
                     var _key = rowKeyGen(update);
                     newTransition(_key);
+                    var checkType = update['_type'];
+                    console.log(checkType)
+                    if(checkType){
+                        if(offsets[checkType]){
+                            offsets[checkType] += 1;   
+                        }
+                        else{
+                            offsets[checkType] = 1;
+                        }
+                    }
             }
         }.bind(this));
     },
@@ -167,7 +179,7 @@ var HomePage = React.createClass({
             niche = elem.scrollHeight;
         // Plug in a handler which takes care of infinite scrolling
         if(upar + scroll >= niche){
-            console.log("bottom");
+            console.log(offsets);
         }
     },
     /*
