@@ -1,7 +1,7 @@
 /*
-	keyGen is to give unique key to `Cell`s
-	rowKeyGen is the same for rows
-
+	keyGen is to give unique key to `Cell`s in the data table
+	rowKeyGen is the same for rows in the datatable
+	dropdownKeyGen is for the dropwown in the settings button.
 */
 
 var keyGen = function(row, element){

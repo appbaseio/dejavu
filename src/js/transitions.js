@@ -3,7 +3,8 @@
     so we do it this way, the ugly way !
 */
 var revertTransition = function(elem){
-        elem.style.background = 'white';
+        if(elem)
+            elem.style.background = 'white';
 }
 
 var updateTransition = function(_key){

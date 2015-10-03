@@ -1,3 +1,4 @@
+// This is for the copy-to-clipboard
 var Expire = React.createClass({
   getDefaultProps: function(){
     return {delay: 1000};
@@ -45,6 +46,70 @@ var Expire = React.createClass({
   }
 });
 
+// Prettify the json body i.e. embed that into
+// a code block so that highlightjs recognises it.
+var Pretty = React.createClass({
+    componentDidMount: function(){
+        var current = React.findDOMNode(this);
+        hljs.highlightBlock(current);    
+    },
+    render: function() {
+        return  ( <pre className="custom-json-body">
+                    <code className="json">
+                        <div id='for-copy'>{JSON.stringify(this.props.json, null, 1)}</div>
+                    </code>
+                  </pre>
+                );
+    }
+});
+
+var Modal = React.createClass({
+    getInitialState: function(){
+        var showing = {};
+        for(var each in this.props.show){
+            // we don't show _id, _type in the JSON body
+            // we show in the header.
+            if(['json', '_id', '_type'].indexOf(each) <= -1){
+                showing[each] = this.props.show[each]; 
+            }
+        }
+        return {showing: showing};
+    },
+    hideModal: function(){
+        React.unmountComponentAtNode(document.getElementById('modal'));
+    },
+    render: function(){
+        var Modal = ReactBootstrap.Modal;
+            Button = ReactBootstrap.Button;
+        return (
+            <Modal 
+            {...this.props}
+            bsSize='medium'
+            onHide={this.hideModal}
+            >
+                <Modal.Body>
+                    <h4>
+                        {this.props._type}
+                        <br/>
+                        {this.props._id}
+                    </h4>
+                    <Expire delay={2000} onClick={this.copytext} id='copy-json'/>
+                    <p id='modal-body'>
+                        <Pretty json={this.state.showing} />
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button onClick={this.hideModal}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+});
+
+// This stuff is for knowing the kind of browser and applying the
+// copy-to-clipboard functionality accordingly.
+// I had to write so much of stupid code because we have just too many browsers.
+// Cmon'n guys it wasn't just the IE's fault. Okay fine, it was just that.
 var execCommandOnElement = function(el, commandName, value) {
     if (typeof value == "undefined") {
         value = null;
@@ -90,59 +155,3 @@ var execCommandOnElement = function(el, commandName, value) {
         textRange.execCommand(commandName, false, value);
     }
 }
-
-var Pretty = React.createClass({
-    componentDidMount: function(){
-        var current = React.findDOMNode(this);
-        hljs.highlightBlock(current);    
-    },
-    render: function() {
-        return  ( <pre className="custom-json-body">
-                    <code className="json">
-                        <div id='for-copy'>{JSON.stringify(this.props.json, null, 1)}</div>
-                    </code>
-                  </pre>
-                );
-    }
-});
-
-var Modal = React.createClass({
-    getInitialState: function(){
-        var showing = {};
-        for(var each in this.props.show){
-            if(['json', '_id', '_type'].indexOf(each) <= -1){
-                showing[each] = this.props.show[each]; 
-            }
-        }
-        return {showing: showing};
-    },
-    hideModal: function(){
-        React.unmountComponentAtNode(document.getElementById('modal'));
-    },
-    render: function(){
-        var Modal = ReactBootstrap.Modal;
-            Button = ReactBootstrap.Button;
-        return (
-            <Modal 
-            {...this.props}
-            bsSize='medium'
-            onHide={this.hideModal}
-            >
-                <Modal.Body>
-                    <h4>
-                        {this.props._type}
-                        <br/>
-                        {this.props._id}
-                    </h4>
-                    <Expire delay={2000} onClick={this.copytext} id='copy-json'/>
-                    <p id='modal-body'>
-                        <Pretty json={this.state.showing} />
-                    </p>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button onClick={this.hideModal}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        );
-    }
-});

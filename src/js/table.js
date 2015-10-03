@@ -15,15 +15,26 @@ var Column = React.createClass({
     }
 });
 
+/**
+ * Cell defined the properties of each cell in the 
+ * data table.
+ */
 var Cell = React.createClass({
     render: function(){
+        // Some times the cell should not be visible
+        // if we want to hide a column etc.
         var vb = this.props.visibility;
             style = {display:vb};
             data = this.props.item;
+            // The id of the html element will be generated
+            // in keys.js.
             _id = this.props._id;
             _type = this.props._type;
             to_display = data;
 
+        // If the data type is a nested JSON field/ array
+        // we simply represent it with a fon-icon symbol.
+        // upon clicking will open a Modal showing the data.
         if(typeof data !== 'string'){
             if(typeof data !== 'number'){
                 to_display = <a href="#"
@@ -41,25 +52,23 @@ var Cell = React.createClass({
     }
 });
 
+// This is just to give  unique id to the rows so that we can add
+// CSS transitions upon updates/deletes
 var Row = React.createClass({
     render: function(){
         return <tr id={this.props._id}>{this.props.row}</tr>;
     }
 });
 
+// This is another wrapper around the data table to implement
+// pagination, throbbers, styling etc.
 var Table = React.createClass({
     componentDidMount: function() {
         console.log("mounted");
         var elem = document.getElementById('table-container');
+        // WE are listning for scroll even so we get notified 
+        // when the scroll hits the bottom. For pagination.
         elem.addEventListener('scroll', this.props.scrollFunction);
-        elem.addEventListener('scroll', this.fixHeaders);
-    },
-    fixHeaders: function() {
-        var elem = document.getElementById('table-container');
-            top = elem.scrollTop;
-        if(scroll > 0){
-            console.log(document.getElementById('columns').scrollHeight);
-        }
     },
     render: function() {
         if(this.props.renderRows.length <= 1){
@@ -95,13 +104,14 @@ var Table = React.createClass({
         );
     }
 })
+
+// This has the main properties that define the main data table
+// i.e. the right side.
 var DataTable = React.createClass({
     render: function () {
         var data = this.props._data;
             fixed = ['json', '_id', '_type'];
             columns = ['json', '_type', '_id'];
-        if(!data)
-            console.log('no data');
         for(var each in data){
             for(column in data[each]){
                 if(fixed.indexOf(column) <= -1){
@@ -118,12 +128,17 @@ var DataTable = React.createClass({
             newRow['_type'] = data[row]['_type'];
             newRow['_id'] = data[row]['_id'];
             for(var each in columns){
+                // We check if every column of the new document
+                // is present already, if not we appen to the
+                // right.
                 if(fixed.indexOf(columns[each]) <= -1){
                     if(data[row][columns[each]]){
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
                     }
                     else{
+                        // Just to make sure it doesn't display
+                        // a null.
                         newRow[columns[each]] = '';
                     }
                 }
@@ -134,6 +149,9 @@ var DataTable = React.createClass({
                     elem = document.getElementById(each);
                     visibility = '';
                 
+                // We see if the column is already closed of open
+                // using the html key attribute and render their
+                // visibility correspondingly.
                 if(elem){
                     visibility = elem.style.display;
                 }
@@ -169,8 +187,11 @@ var DataTable = React.createClass({
     }
 });
 
+// Each row in the types table on the left side.
 var TypeRow = React.createClass({
     getInitialState: function(){
+        // we store the state(checked/unchecked) for every type
+        // so that when we reload, the state restores.
         var value = window.localStorage.getItem(this.props.type);
             checked = false;
         if(value == "true"){
@@ -188,6 +209,7 @@ var TypeRow = React.createClass({
             checked = true;
             this.props.watchTypeHandler(this.props.type);
         }
+        // every time its checked we update the local storage.
         window.localStorage.setItem(this.props.type, checked);
         this.setState({isChecked: checked});
     },
@@ -207,6 +229,8 @@ var TypeRow = React.createClass({
     }
 });
 
+// This is for the table holding the types on the 
+// left tab.
 var TypeTable = React.createClass({
     render: function()  {
         var types = this.props.Types;
