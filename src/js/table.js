@@ -72,20 +72,11 @@ var Table = React.createClass({
     },
     render: function() {
         if(this.props.renderRows.length <= 1){
-            if(this.props.selectedTypes.length <= 0){
-                return (
-                    <div id='table-container' className="waiting">
-                        <i className="fa fa-refresh fa-spin fa-5x centered"></i>
-                    </div>
-                )
-            }
-            else{
-                return(
+            return(
                     <div id='table-container' className="waiting">
                         <i className="fa fa-spinner fa-pulse fa-5x centered"></i>
                     </div>
                 )
-            }
         }
         return (
             <div id='table-container' className="table-container">
@@ -243,6 +234,14 @@ var TypeTable = React.createClass({
                          type={types[type]}
                          unwatchTypeHandler={this.props.unwatchTypeHandler}
                          watchTypeHandler={this.props.watchTypeHandler} />);
+        }
+        if(types.length <= 0){
+            return (
+            <div className='left-tab'>
+            <div className="app-desc"><span className="app-name">{appname}</span></div>
+            <div className="waiting"><i className="fa fa-spinner fa-pulse fa-3x centered" /></div>
+            </div>
+            );   
         }
         return (
             <div className='left-tab'>
