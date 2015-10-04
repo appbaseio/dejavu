@@ -1,9 +1,7 @@
-/**
- * A bunch of row/column/manipulation functions.
- * Things din't work well with most of the existing
- * libraries especially on the frontend and
- * configuring with react.
- */
+// row/column manipulation functions.
+// We decided to roll our own as existing
+// libs with React.JS were missing critical
+// features.
 
 var showJSON = function(data, _type, _id){
         React.render(<Modal show={data} _type={_type} _id={_id}/>, document.getElementById('modal'));
@@ -15,26 +13,24 @@ var Column = React.createClass({
     }
 });
 
-/**
- * Cell defined the properties of each cell in the 
- * data table.
- */
+
+// **Cell** defines the properties of each cell in the
+// data table.
 var Cell = React.createClass({
     render: function(){
-        // Some times the cell should not be visible
-        // if we want to hide a column etc.
+        // exposing visibility property allows us to show / hide
+        // individual cells
         var vb = this.props.visibility;
             style = {display:vb};
             data = this.props.item;
-            // The id of the html element will be generated
+            // The id of the html element is generated
             // in keys.js.
             _id = this.props._id;
             _type = this.props._type;
             to_display = data;
 
-        // If the data type is a nested JSON field/ array
-        // we simply represent it with a fon-icon symbol.
-        // upon clicking will open a Modal showing the data.
+        // cell-data of format ``string`` and ``number`` is rendered inline.
+        // If a field is a JSON object instead, it's displayed as a modal pop-up.
         if(typeof data !== 'string'){
             if(typeof data !== 'number'){
                 to_display = <a href="#"
@@ -66,7 +62,7 @@ var Table = React.createClass({
     componentDidMount: function() {
         console.log("mounted");
         var elem = document.getElementById('table-container');
-        // WE are listning for scroll even so we get notified 
+        // WE are listning for scroll even so we get notified
         // when the scroll hits the bottom. For pagination.
         elem.addEventListener('scroll', this.props.scrollFunction);
     },
@@ -148,7 +144,7 @@ var DataTable = React.createClass({
                 var _key = keyGen(data[row], each);
                     elem = document.getElementById(each);
                     visibility = '';
-                
+
                 // We see if the column is already closed of open
                 // using the html key attribute and render their
                 // visibility correspondingly.
@@ -180,7 +176,7 @@ var DataTable = React.createClass({
             <Table
              renderColumns={renderColumns}
              renderRows={renderRows}
-             scrollFunction={this.props.scrollFunction} 
+             scrollFunction={this.props.scrollFunction}
              selectedTypes={this.props.selectedTypes}/>
             </div>
         );
@@ -216,12 +212,12 @@ var TypeRow = React.createClass({
     render: function() {
         return(
                 <li>
-                    <input 
-                     id={this.props.type} 
-                     type="checkbox" 
-                     key={this.props.type} 
-                     defaultChecked={this.state.isChecked} 
-                     onChange={this.unwatch} 
+                    <input
+                     id={this.props.type}
+                     type="checkbox"
+                     key={this.props.type}
+                     defaultChecked={this.state.isChecked}
+                     onChange={this.unwatch}
                      readOnly={false}/>
                     <label htmlFor={this.props.type}>{this.props.type}</label>
                 </li>
@@ -229,14 +225,14 @@ var TypeRow = React.createClass({
     }
 });
 
-// This is for the table holding the types on the 
+// This is for the table holding the types on the
 // left tab.
 var TypeTable = React.createClass({
     render: function()  {
         var types = this.props.Types;
             rowObj = [];
             appname = APPNAME;
-        
+
         for(var type in types){
             rowObj.push(<TypeRow
                          key={type}
