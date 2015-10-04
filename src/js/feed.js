@@ -3,11 +3,12 @@
 // authentication and streaming data from your
 // endpoint.
 
+
 // **Configs:** Appname and Credentials
-const HOSTNAME = "scalr.api.appbase.io"
-const APPNAME = "createnewtestapp01"
-const USERNAME = "RIvfxo1u1"
-const PASSWORD = "dee8ee52-8b75-4b5b-be4f-9df3c364f59f"
+const HOSTNAME = config["HOSTNAME"]
+const APPNAME = config["APPNAME"]
+const USERNAME = config["USERNAME"]
+const PASSWORD = config["PASSWORD"]
 
 // Instantiating elasticsearch client
 var client = new elasticsearch.Client({
