@@ -1,7 +1,7 @@
 {
   "name": "dejaVu",
   "dependencies": {
-    "appbase-js": "~0.1.0",
+    "appbase-js": "latest",
     "elasticsearch": "~6.0.0",
     "react-bootstrap": "~0.25.1",
     "underscore": "~1.8.3"

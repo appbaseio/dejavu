@@ -1,7 +1,5 @@
-/*
-    React doesn't allow you to mutate the component styles
-    so we do it this way, the ugly way !
-*/
+//    React doesn't allow you to mutate the component styles
+//    so we do it this way, the ugly way !
 var revertTransition = function(elem){
         if(elem)
             elem.style.background = 'white';
