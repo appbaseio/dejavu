@@ -92,13 +92,11 @@ th {
 .table-container {
   top: 50px;
   left: 20%;
-  max-height: 40em;
+  max-height: 35em;
   width: 78%;
   margin: 0.5em;
   overflow: auto;
-  border-bottom: 1px solid #eee;
-  border-right: 1px solid #eee;
-  border-left: 1px solid #eee;
+  border: 1px solid #eee;
   position: absolute;
 }
 
