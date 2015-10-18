@@ -5,15 +5,26 @@
 
 
 // **Configs:** Appname and Credentials
-const HOSTNAME = config["HOSTNAME"]
-const APPNAME = config["APPNAME"]
-const USERNAME = config["USERNAME"]
-const PASSWORD = config["PASSWORD"]
+const HOSTNAME = "scalr.api.appbase.io"
+var APPNAME, USERNAME, PASSWORD;
+var appbaseRef;
 
-// Instantiating elasticsearch client
-var client = new elasticsearch.Client({
- host: 'https://'+USERNAME+":"+PASSWORD+"@"+HOSTNAME,
+parent.globalAppData(function(res) {
+  APPNAME = res.appname;
+  USERNAME = res.username;
+  PASSWORD = res.password;
+  init();
 });
+
+function init() {
+  // Instantiating appbase ref with the global configs defined above.
+  appbaseRef = new Appbase({
+      url: 'https://'+HOSTNAME,
+      appname: APPNAME,
+      username: USERNAME,
+      password: PASSWORD
+  });
+}
 
 // vars for tracking current data and types
 var sdata = {};         // data to be displayed in table
@@ -21,15 +32,9 @@ var headers = ["_type", "_id"];
 var esTypes = [];       // all the types in current 'app'
 var subsetESTypes = []; // currently 'selected' types
 
-// Instantiating appbase client with the global configs defined above.
-var streamingClient = new Appbase({
-    url: 'https://'+HOSTNAME,
-    appname: APPNAME,
-    username: USERNAME,
-    password: PASSWORD
-});
 
-feed = (function () {
+
+var feed = (function () {
 
     // processStreams() takes the continuous responses
     // and passes it to it's caller -> UI view.
@@ -48,8 +53,7 @@ feed = (function () {
     // to establish a continuous query connection.
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
-        console.log("type to be streamed: ", typeName);
-        streamingClient.streamSearch({
+        appbaseRef.searchStream({
           stream: true,
           type: typeName,
           body: {
@@ -84,27 +88,16 @@ feed = (function () {
             callback(sdata);
         },
         // gets all the types of the current app;
-        // this involves a surprisingly non-trivial parsing -
-        // wish ES had a direct endpoint to show types in an app.
         getTypes: function(callback){
-            client.indices.getMapping({"index": APPNAME}).then(function(response) {
-                for (var index in response) {
-                    if (response.hasOwnProperty(index)) {
-                        var mapping = response[index].mappings;
-                        var types = [];
-                        for (var type in mapping) {
-                            if (mapping.hasOwnProperty(type) && type[0] !== "_" && type !== ".percolator") {
-                                types.push(type);
-                            }
-                        }
-                        if (JSON.stringify(esTypes) !== JSON.stringify(types)){
-                            esTypes = types.slice();
-                            callback(types);
-                        }
-                     }
+            appbaseRef.getTypes().on('data', function(res) {
+                var types = res.filter(function(val){return val[0]!=='.'});
+                console.log(types);
+                if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
+                  esTypes = types.slice();
+                  callback(types);
                 }
-            }, function(error) {
-                console.log(error);
+            }).on('error', function(err) {
+                console.log('error in retrieving types: ', err)
             })
         }
     };

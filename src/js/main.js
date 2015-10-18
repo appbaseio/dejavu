@@ -144,8 +144,8 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     // only called on change in types.
-    getStreamingTypes: function(){
-        feed.getTypes( function(update){
+    getStreamingTypes: function() {
+        feed.getTypes(function(update) {
             this.setState({types: update});
         }.bind(this));
     },
@@ -155,7 +155,9 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     componentDidMount: function(){
-        this.getStreamingTypes();
+        // add a safe delay as app details are fetched from this
+        // iframe's parent function.
+        setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
     },
