@@ -6,9 +6,7 @@
 // Commands everything !
 //
 // ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
-///
 
-var offsets = {}; // helps us for pagination
 
 var HomePage = React.createClass({
 

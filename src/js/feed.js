@@ -31,8 +31,7 @@ var sdata = {};         // data to be displayed in table
 var headers = ["_type", "_id"];
 var esTypes = [];       // all the types in current 'app'
 var subsetESTypes = []; // currently 'selected' types
-
-
+var offsets = {}; // helps us for pagination
 
 var feed = (function () {
 
@@ -54,7 +53,6 @@ var feed = (function () {
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
         appbaseRef.searchStream({
-          stream: true,
           type: typeName,
           body: {
             from: 0,  // start from zero: no pagination
