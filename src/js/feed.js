@@ -69,6 +69,24 @@ var feed = (function () {
       }
     }
 
+    // paginate and show new results when user scrolls
+    // to the bottom of the existing results.
+    function paginationSearch(typeName, from, callback) {
+      if (typeName !== null)
+        appbaseRef.search({
+          type: typeName,
+          body: {
+            from: from,
+            size: 20,
+            query: {
+              match_all: {}
+            }
+          }
+        }).on('data', function(res) {
+            processStreams(res, callback);
+        })
+    }
+
     return {
         // exposes ``applyStreamSearch()`` as ``getData()``
         getData: function(typeName, callback) {
@@ -84,6 +102,14 @@ var feed = (function () {
             }
             sdata = localSdata.slice();
             callback(sdata);
+        },
+        // ``paginateData()`` finds the type offsets in
+        // multiples of 20 and finds new results using the offset.
+        paginateData: function(offsets, callback) {
+            for (type in offsets) {
+                if (offsets[type] >= 20 && offsets[type] % 20 === 0)
+                    paginationSearch(type, offsets[type], callback)
+            }
         },
         // gets all the types of the current app;
         getTypes: function(callback){
