@@ -18,7 +18,7 @@ var HomePage = React.createClass({
     // easy to check if a record already exists.
 
     getInitialState: function() {
-        return {documents: [{}], types: []};
+        return {documents: [], types: []};
     },
     //The record might have nested json objects. They can't be shown
     //as is since it looks cumbersome in the table. What we do in the
