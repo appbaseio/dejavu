@@ -156,8 +156,8 @@ var HomePage = React.createClass({
     },
     componentDidMount: function(){
         this.getStreamingTypes();
-        // call every 5 min.
-        setInterval(this.getStreamingTypes, 5*60*1000);
+        // call every 1 min.
+        setInterval(this.getStreamingTypes, 60*1000);
     },
     watchStock: function(typeName){
         subsetESTypes.push(typeName);
