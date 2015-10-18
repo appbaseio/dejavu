@@ -66,11 +66,9 @@ var HomePage = React.createClass({
         this.setState({documents: sdata_values});
     },
 
-    //Logic to stream continuous data.
-    //We call the ``getData()`` function in feed.js
-    //which returns an update which is a single
-    //json document(record).
-
+    // Logic to stream continuous data.
+    // We call the ``getData()`` function in feed.js
+    // which returns a single json document(record).
     getStreamingData: function(typeName){
         feed.getData(typeName, function(update){
             update = this.flatten(update, this.injectLink);
@@ -79,39 +77,32 @@ var HomePage = React.createClass({
             //If the record already exists in sdata, it should
             //either be a delete request or a change to an
             //existing record.
-
-            if(sdata[key]){
-
-                //If the update has a `_deleted` field, apply
-                //a 'delete transition' and then delete
-                //the record from sdata.
-
-                if(update['_deleted']){
-                    for(var each in sdata[key]){
-                            var _key = keyGen(sdata[key], each);
-                            deleteTransition(_key);
+            if(sdata[key]) {
+                // If the update has a ``_deleted`` field, apply
+                // a 'delete transition' and then delete
+                // the record from sdata.
+                if(update['_deleted']) {
+                    for(var each in sdata[key]) {
+                        var _key = keyGen(sdata[key], each);
+                        deleteTransition(_key);
                     }
                     deleteTransition(key);
                     this.deleteRow(key);
-                    setTimeout(
-                        function(callback){
+                    setTimeout(function(callback) {
                             callback();
-                        }.bind(null, this.resetData)
-                    , 1100);
+                        }.bind(null, this.resetData), 1100);
                 }
 
-                //If it isn't a delete, we should find a record
-                //with the same _type and _id and apply an `update
-                //transition` and then update the record in sdata.
+                // If it isn't a delete, we should find a record
+                // with the same _type and _id and apply an ``update
+                // transition`` and then update the record in sdata.
                 //Since sdata is modeled as a hashmap, this is
                 //trivial.
-
-                else{
+                else {
                     sdata[key] = update;
                     this.resetData();
                     for(var each in update){
-                        var key = keyGen(update, each);
-                        updateTransition(key);
+                        updateTransition(keyGen(update, each));
                     }
                     var key = rowKeyGen(update);
                     updateTransition(key);
@@ -121,25 +112,19 @@ var HomePage = React.createClass({
             //If its a new record, we add it to sdata and then
             //apply the `new transition`.
 
-            else{
-                    sdata[key] = update;
-                    this.resetData();
-                    for(var each in update){
-                        var _key = keyGen(update, each);
-                        newTransition(_key);
-                    }
-                    var _key = rowKeyGen(update);
+            else {
+                sdata[key] = update;
+                this.resetData();
+                for(var each in update) {
+                    var _key = keyGen(update, each);
                     newTransition(_key);
-                    var checkType = update['_type'];
-                    console.log(checkType)
-                    if(checkType){
-                        if(offsets[checkType]){
-                            offsets[checkType] += 1;
-                        }
-                        else{
-                            offsets[checkType] = 1;
-                        }
-                    }
+                }
+                var _key = rowKeyGen(update);
+                newTransition(_key);
+                var checkType = update['_type'];
+                if(checkType && offsets[checkType]) {
+                    offsets[checkType] += 1;
+                } else offsets[checkType] = 1;
             }
         }.bind(this));
     },

@@ -91,7 +91,6 @@ var feed = (function () {
         getTypes: function(callback){
             appbaseRef.getTypes().on('data', function(res) {
                 var types = res.filter(function(val){return val[0]!=='.'});
-                console.log(types);
                 if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
                   esTypes = types.slice();
                   callback(types);
