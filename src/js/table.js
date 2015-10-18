@@ -67,13 +67,6 @@ var Table = React.createClass({
         elem.addEventListener('scroll', this.props.scrollFunction);
     },
     render: function() {
-        if(this.props.renderRows.length <= 1){
-            return(
-                    <div id='table-container' className="waiting">
-                        <i className="fa fa-spinner fa-pulse fa-5x centered"></i>
-                    </div>
-                )
-        }
         return (
             <div id='table-container' className="table-container">
                 <table id="data-table"
@@ -231,17 +224,19 @@ var TypeTable = React.createClass({
                          unwatchTypeHandler={this.props.unwatchTypeHandler}
                          watchTypeHandler={this.props.watchTypeHandler} />);
         }
-        if(types.length <= 0){
+        if(types.length < 1) {
             return (
             <div className='left-tab'>
-            <div className="app-desc"><span className="app-name">{appname}</span></div>
-            <div className="waiting"><i className="fa fa-spinner fa-pulse fa-3x centered" /></div>
+              <div className="highlight-tip left-tip">
+                  <strong>No data to view!</strong> Insert data by following this
+                  tutorial <a href="http://docs.appbase.io/scalr/rest/intro.html" target="_blank">here</a>.
+              </div>
             </div>
-            );   
+            );
         }
         return (
             <div className='left-tab'>
-            <div className="app-desc"><span className="app-name">{appname}</span></div>
+            <span className='types-header'>Types</span>
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>

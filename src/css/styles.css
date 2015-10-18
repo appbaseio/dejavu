@@ -31,17 +31,6 @@ th {
     text-align: center;
 }
 
-.app-desc {
-  min-height: 4em;
-  max-height: 20em;
-  font-weight: 400;
-  color: #696969;
-  width: 100%;
-  margin-top: 1em;
-  text-align: center;
-  border-bottom: 1px solid black;
-}
-
 .app-name {
   font-size: 1.2em;
   font-weight: 800;
@@ -54,7 +43,15 @@ th {
   display: inline;
   position: absolute;
   height: 100%;
-  border-right: 1px solid black;
+  border-right: 1px solid #ddd;
+}
+
+.types-header {
+  top: 50px;
+  position: absolute;
+  left: 1em;
+  font-weight: bolder;
+  font-size: 1.5em;
 }
 
 .types-list {
@@ -93,6 +90,7 @@ th {
 }
 
 .table-container {
+  top: 50px;
   left: 20%;
   max-height: 40em;
   width: 78%;
@@ -102,6 +100,18 @@ th {
   border-right: 1px solid #eee;
   border-left: 1px solid #eee;
   position: absolute;
+}
+
+.highlight-tip {
+  background: #f5e79e;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.left-tip {
+  top: 50%;
+  position: absolute;
+  display: inline;
 }
 
 .dropdown-menu {
