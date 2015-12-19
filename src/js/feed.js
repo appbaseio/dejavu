@@ -44,12 +44,12 @@ feed = (function () {
       return;
     }
 
-    // applies a streamSearch() query on a particular ``type``
+    // applies a searchStream() query on a particular ``type``
     // to establish a continuous query connection.
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
         console.log("type to be streamed: ", typeName);
-        streamingClient.streamSearch({
+        streamingClient.searchStream({
           stream: true,
           type: typeName,
           body: {
