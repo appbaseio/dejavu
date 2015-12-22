@@ -52,7 +52,7 @@ var feed = (function () {
     // to establish a continuous query connection.
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
-        appbaseRef.searchStream({
+        appbaseRef.streamSearch({
           type: typeName,
           body: {
             from: 0,  // start from zero: no pagination

@@ -9,7 +9,7 @@ var showJSON = function(data, _type, _id){
 
 var Column = React.createClass({
     render: function(){
-        return <th id={this.props._item}>{this.props._item}</th>;
+        return <th id={this.props._item}><span className="table-fixed-head">{this.props._item}</span></th>;
     }
 });
 
@@ -61,7 +61,7 @@ var Row = React.createClass({
 var Table = React.createClass({
     componentDidMount: function() {
         console.log("mounted");
-        var elem = document.getElementById('table-container');
+        var elem = document.getElementById('table-scroller');
         // WE are listning for scroll even so we get notified
         // when the scroll hits the bottom. For pagination.
         elem.addEventListener('scroll', this.props.scrollFunction);
@@ -69,17 +69,19 @@ var Table = React.createClass({
     render: function() {
         return (
             <div id='table-container' className="table-container">
-                <table id="data-table"
-                className="table table-striped table-bordered">
-                    <thead id='columns'>
-                        <tr>
-                            {this.props.renderColumns}
-                        </tr>
-                    </thead>
-                    <tbody className='exp-scrollable'>
-                            {this.props.renderRows}
-                    </tbody>
-                </table>
+                <div id="table-scroller" className="table-scroller">
+                    <table id="data-table"
+                    className="table table-fixedheader">
+                        <thead id='columns'>
+                            <tr>
+                                {this.props.renderColumns}
+                            </tr>
+                        </thead>
+                        <tbody className='exp-scrollable'>
+                                {this.props.renderRows}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
@@ -242,5 +244,19 @@ var TypeTable = React.createClass({
             </ul>
             </div>
         );
+    }
+});
+
+//Signal to indicate stream
+var SignalCircle = React.createClass({
+    render: function(){
+        var signalColor = "signal-circle "+this.props.signalColor;
+        var signalActive = "spinner "+this.props.signalActive;
+        return (
+                <a href="javascript:void(0);"
+                  className={signalColor}>
+                    <span className={signalActive}></span>
+                </a>
+    );
     }
 });

@@ -1,7 +1,4 @@
 
-table {
-    border: 1px solid #ddd;
-}
 
 th:first-child {
     text-align: center;
@@ -90,14 +87,48 @@ th {
 }
 
 .table-container {
-  top: 50px;
-  left: 20%;
-  max-height: 35em;
-  width: 78%;
-  margin: 0.5em;
-  overflow: auto;
-  border: 1px solid #eee;
+ top: 50px;
+    left: 15%;
+    max-height: 35em;
+    width: 95%;
+    margin: 0.5em;
+    overflow: auto;
+    border: 1px solid #eee;
+    position: absolute;
+    padding: 35px 0 0 0;
+    box-sizing: border-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    position: relative;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+.table-scroller{
+  width: 1000px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.table-fixed-head{
   position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+.dejavu-table .table>tbody>tr>td, 
+.dejavu-table .table>tbody>tr>th, 
+.dejavu-table .table>tfoot>tr>td, 
+.dejavu-table .table>tfoot>tr>th, 
+.dejavu-table .table>thead>tr>td, 
+.dejavu-table .table>thead>tr>th{
+  border: 0 !important
 }
 
 .highlight-tip {
@@ -155,6 +186,7 @@ th {
   text-align: center;
 }
 
+
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
 input[type=checkbox] { display:none; } /* to hide the checkbox itself */
 input[type=checkbox] + label:before {
@@ -173,4 +205,59 @@ input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow s
   position: absolute;
   top: 50%;
   left: 50%;
+}
+
+.signal-circle{
+    width: 3rem;
+      height: 3rem;
+      display: inline-block;
+      border-radius: 50%;
+      border: 2px solid #888;
+      position: fixed;
+      bottom: 70px;
+      left: 10px;
+   }
+
+.signal-circle:before{
+  content: " ";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+  .spinner {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: rgba(0,0,0,0.20);
+    border-radius: 100%;  
+  }
+  .spinner.active{
+    background-color: #333;
+    -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+    animation: sk-scaleout 1.0s infinite ease-in-out;
+  } 
+
+  @-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
 }
