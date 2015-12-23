@@ -35,34 +35,34 @@ var offsets = {}; // helps us for pagination
 
 var feed = (function () {
 
-    // processStreams() takes the continuous responses
-    // and passes it to it's caller -> UI view.
-    function processStreams(response, callback) {
-      if (response.hits) {
-        for (var hit in response.hits.hits) {
-          callback(response.hits.hits[hit]);
-        }
-      } else {
-        callback(response);
-      }
-      return;
-    }
-
-    // applies a streamSearch() query on a particular ``type``
+    // applies a searchStream() query on a particular ``type``
     // to establish a continuous query connection.
     function applyStreamSearch(typeName, callback) {
       if (typeName !== null) {
+        var queryBody = {
+          query: {
+            match_all: {}
+          }
+        }
+        // get historical data
+        appbaseRef.search({
+          type: typeName,
+          from: 0,
+          size: 20,
+          body: queryBody
+        }).on('data', function(res) {
+            for (var hit in res.hits.hits) {
+              callback(res.hits.hits[hit]);
+            }
+        }).on('error', function(err) {
+            console.log("caught a retrieval error", err);
+        })
+        // get new data updates
         appbaseRef.searchStream({
           type: typeName,
-          body: {
-            from: 0,  // start from zero: no pagination
-            size: 20, // show up to 20 results initally
-            query: {
-              match_all: {}
-            }
-          }
+          body: queryBody,
         }).on('data', function(res) {
-            processStreams(res, callback);
+            callback(res);
         }).on('error', function(err) {
             console.log("caught a stream error", err);
         });
@@ -83,7 +83,9 @@ var feed = (function () {
             }
           }
         }).on('data', function(res) {
-            processStreams(res, callback);
+            for (var hit in res.hits.hits) {
+              callback(res.hits.hits[hit]);
+            }
         })
     }
 
