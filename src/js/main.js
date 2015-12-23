@@ -7,7 +7,6 @@
 //
 // ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
 
-
 var HomePage = React.createClass({
 
     // The underlying data structure that holds the documents/records
@@ -16,7 +15,7 @@ var HomePage = React.createClass({
     // easy to check if a record already exists.
 
     getInitialState: function() {
-        return {documents: [], types: []};
+        return {documents: [], types: [], signalColor:'', signalActive:''};
     },
     //The record might have nested json objects. They can't be shown
     //as is since it looks cumbersome in the table. What we do in the
@@ -104,6 +103,8 @@ var HomePage = React.createClass({
                 var key = rowKeyGen(update);
                 updateTransition(key);
             }
+            this.setState({signalColor:'btn-warning'});
+        
         }
         //If its a new record, we add it to sdata and then
         //apply the `new transition`.
@@ -120,11 +121,13 @@ var HomePage = React.createClass({
             if(checkType && offsets[checkType]) {
                 offsets[checkType] += 1;
             } else offsets[checkType] = 1;
+            this.setState({signalColor:'btn-success'});
         }
+        this.setState({signalActive:'active'});
     },
     getStreamingData: function(typeName){
         feed.getData(typeName, function(update){
-          this.updateDataOnView(update);
+            this.updateDataOnView(update);
         }.bind(this));
     },
     // infinite scroll implementation
@@ -193,6 +196,11 @@ var HomePage = React.createClass({
                 _data={this.state.documents}
                 scrollFunction={this.handleScroll}
                 selectedTypes={subsetESTypes}/>
+
+                <SignalCircle 
+                signalColor={this.state.signalColor}
+                signalActive={this.state.signalActive}
+                ></SignalCircle>
 
             </div>
         );
