@@ -181,27 +181,30 @@ var HomePage = React.createClass({
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
+    
+    // <SignalCircle 
+    //             signalColor={this.state.signalColor}
+    //             signalActive={this.state.signalActive}
+    //             ></SignalCircle>
 
     render: function () {
         return (
             <div>
                 <div id='modal' />
-
-                <TypeTable
-                Types={this.state.types}
-                watchTypeHandler={this.watchStock}
-                unwatchTypeHandler={this.unwatchStock} />
-
-                <DataTable
-                _data={this.state.documents}
-                scrollFunction={this.handleScroll}
-                selectedTypes={subsetESTypes}/>
-
-                <SignalCircle 
-                signalColor={this.state.signalColor}
-                signalActive={this.state.signalActive}
-                ></SignalCircle>
-
+                <div className="row dejavuContainer">
+                    <div className="typeContainer">
+                        <TypeTable
+                            Types={this.state.types}
+                            watchTypeHandler={this.watchStock}
+                            unwatchTypeHandler={this.unwatchStock} />
+                    </div>
+                    <div className="col-xs-12 dataContainer">
+                        <DataTable
+                            _data={this.state.documents}
+                            scrollFunction={this.handleScroll}
+                            selectedTypes={subsetESTypes}/>
+                    </div>
+                </div>
             </div>
         );
     }

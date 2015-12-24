@@ -71,7 +71,7 @@ var Table = React.createClass({
             <div id='table-container' className="table-container">
                 <div id="table-scroller" className="table-scroller">
                     <table id="data-table"
-                    className="table table-fixedheader">
+                    className="table table-fixedheader table-bordered">
                         <thead id='columns'>
                             <tr>
                                 {this.props.renderColumns}
@@ -238,7 +238,7 @@ var TypeTable = React.createClass({
         }
         return (
             <div className='left-tab'>
-            <span className='types-header'>Types</span>
+            <h4 className='types-header'>Types</h4>
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>

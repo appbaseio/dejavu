@@ -1,192 +1,3 @@
-
-
-th:first-child {
-    text-align: center;
-    white-space: nowrap;
-}
-
-th:not(:first-child),
-td:not(:first-child) {
-    text-align: center;
-}
-
-th:last-child,
-td:last-child {
-    text-align: center;
-}
-
-th, td {
-    max-width: 740px;
-    width: 150px;
-    border: solid 1px #DDDDDD;
-    padding: 5px;
-    text-align: center;
-}
-
-th {
-    font-weight: bolder;
-    text-align: center;
-}
-
-.app-name {
-  font-size: 1.2em;
-  font-weight: 800;
-  color: #696969;
-}
-
-.left-tab {
-  width: 20%;
-  left:0px;
-  display: inline;
-  position: absolute;
-  height: 100%;
-  border-right: 1px solid #ddd;
-}
-
-.types-header {
-  top: 50px;
-  position: absolute;
-  left: 1em;
-  font-weight: bolder;
-  font-size: 1.5em;
-}
-
-.types-list {
-    top: 100px;
-    width: 100%;
-    position: absolute;
-    display: inline;
-    left: 2px;
-}
-
-.responsive-cell {
-  width: 100%;
-}
-
-.dropdown-menu .divider {
-    margin: 0px;
-}
-
-.dropdown-menu .form-group {
-    padding-right: 10px;
-}
-
-.checkBox {
-  padding: 1px;
-  display: inline;
-  position: absolute;
-}
-
-.checkBoxLabel {
-  position: relative;
-  display: inline-block;
-}
-
-.columnsDropdown {
-  overflow-y: scroll;
-}
-
-.table-container {
- top: 50px;
-    left: 15%;
-    max-height: 35em;
-    width: 95%;
-    margin: 0.5em;
-    overflow: auto;
-    border: 1px solid #eee;
-    position: absolute;
-    padding: 35px 0 0 0;
-    box-sizing: border-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    flex-direction: column;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    position: relative;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    overflow: auto;
-}
-.table-scroller{
-  width: 1000px;
-  min-width: -webkit-fit-content;
-  min-width: -moz-fit-content;
-  min-width: fit-content;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.table-fixed-head{
-  position: absolute;
-  top: 0;
-  white-space: nowrap;
-}
-.dejavu-table .table>tbody>tr>td, 
-.dejavu-table .table>tbody>tr>th, 
-.dejavu-table .table>tfoot>tr>td, 
-.dejavu-table .table>tfoot>tr>th, 
-.dejavu-table .table>thead>tr>td, 
-.dejavu-table .table>thead>tr>th{
-  border: 0 !important
-}
-
-.highlight-tip {
-  background: #f5e79e;
-  border-radius: 10px;
-  padding: 8px;
-}
-
-.left-tip {
-  top: 50%;
-  position: absolute;
-  display: inline;
-}
-
-.dropdown-menu {
-  overflow: scroll;
-  height: 20em;
-  width: 15em;
-}
-
-.custom-json-body {
-  height: 20em;
-  overflow: auto;
-}
-
-.dejavu-dropdown {
-  margin-top: 6em;
-  left: 16%;
-  display: inline;
-  position: absolute;
-}
-
-.row-updated {
-    background: '#86DDF8';
-}
-
-.row-new {
-    background: '#B6EF7E';
-}
-
-.dejavu-table {
-  left: 5em;
-  display: inline;
-}
-
-.exp-scrollable {
-  overflow-y:scroll;
-}
-
-.ab-menu-item {
-  margin-left: 10px;
-}
-
-.centered-text {
-  text-align: center;
-}
-
-
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
 input[type=checkbox] { display:none; } /* to hide the checkbox itself */
 input[type=checkbox] + label:before {
@@ -260,4 +71,104 @@ input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow s
     transform: scale(1.0);
     opacity: 0;
   }
+}
+
+
+/*Style changes according to intercom*/
+body{
+  background: transparent;
+}
+.dejavuContainer{
+  border: 1px solid #ddd;  
+}
+.dejavuContainer,
+.typeContainer{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+.typeContainer{
+  width: 270px;
+  border-right: 1px solid #ddd;
+  padding: 15px;
+  background: #fff;
+  z-index: 2;
+}
+.dataContainer{
+  padding-left: 285px;
+  padding-right: 0;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+}
+.highlight-tip {
+  background: #f5e79e;
+  border-radius: 10px;
+  padding: 8px;
+  margin-top: 30px;
+}
+.dejavu-table{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    overflow: auto;
+}
+.dejavu-dropdown{
+  position: absolute;
+  left: -65px;
+  z-index: 3;
+}
+.dejavu-dropdown .ab-menu-item{
+  padding-left: 15px;
+}
+.table-container {
+    width: 100%;
+    padding: 35px 0 0 0;
+    box-sizing: border-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow: auto;
+    max-height: 100%;
+    position: relative;
+}
+.table-scroller{
+  width: 1000px;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 7px 0 0 10px;
+}
+.table-fixed-head{
+  position: absolute;
+  top: 0;
+  padding-left: 15px;
+  white-space: nowrap;
+}
+.dejavu-table .table>thead>tr>td, 
+.dejavu-table .table>thead>tr>th,
+#data-table{
+  border: 0 !important
+}
+.table>thead>tr>th{
+  padding: 0;
+}
+.dejavu-table .table>tbody>tr>td, 
+.dejavu-table .table>tbody>tr>th, 
+.dejavu-table .table>tfoot>tr>td, 
+.dejavu-table .table>tfoot>tr>th{
+  border-color: #eee;
 }
