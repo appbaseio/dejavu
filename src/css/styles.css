@@ -119,9 +119,10 @@ body{
     overflow: auto;
 }
 .dejavu-dropdown{
-  position: absolute;
-  left: -65px;
-  z-index: 3;
+  position: fixed;
+  left: 215px;
+  top: 15px;
+  z-index: 4;
 }
 .dejavu-dropdown .ab-menu-item{
   padding-left: 15px;
@@ -150,12 +151,11 @@ body{
   min-width: fit-content;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 7px 0 0 10px;
 }
 .table-fixed-head{
   position: absolute;
   top: 0;
-  padding-left: 15px;
+  padding: 7px 0 0 10px;
   white-space: nowrap;
 }
 .dejavu-table .table>thead>tr>td, 
