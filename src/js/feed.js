@@ -62,7 +62,7 @@ var feed = (function () {
           type: typeName,
           body: queryBody,
         }).on('data', function(res) {
-            callback(res);
+            callback(res, true);
         }).on('error', function(err) {
             console.log("caught a stream error", err);
         });

@@ -249,12 +249,19 @@ var TypeTable = React.createClass({
 
 //Signal to indicate stream
 var SignalCircle = React.createClass({
+    componentDidMount:function(){
+       
+    },
     render: function(){
         var signalColor = "signal-circle "+this.props.signalColor;
         var signalActive = "spinner "+this.props.signalActive;
         return (
                 <a href="javascript:void(0);"
-                  className={signalColor}>
+                  className={signalColor}
+                    data-toggle="popover" data-trigger="hover"
+                    data-title={this.props.signalText}
+                    data-placement="top"
+                  >
                     <span className={signalActive}></span>
                 </a>
     );
