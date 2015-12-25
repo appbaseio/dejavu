@@ -173,3 +173,13 @@ body{
 .dejavu-table .table>tfoot>tr>th{
   border-color: #eee;
 }
+.nestedJson .custom-json-body.hljs{
+  margin: 0;
+  border: 0;
+}
+.nestedJson .popover-content{
+  padding: 0;
+}
+.nestedJson.popover.left>.arrow:after{
+  border-left-color: #f0f0f0;
+}

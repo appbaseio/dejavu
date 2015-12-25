@@ -18,6 +18,9 @@ var Column = React.createClass({
 // data table.
 var Cell = React.createClass({
     render: function(){
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
@@ -31,12 +34,19 @@ var Cell = React.createClass({
 
         // cell-data of format ``string`` and ``number`` is rendered inline.
         // If a field is a JSON object instead, it's displayed as a modal pop-up.
+        // <a href="#"
+        //                         onClick={showJSON.bind(null, data, _type, _id)}>
+        //                         <i className="fa fa-external-link" />
+        //                     </a>;
+
         if(typeof data !== 'string'){
             if(typeof data !== 'number'){
-                to_display = <a href="#"
-                                onClick={showJSON.bind(null, data, _type, _id)}>
-                                <i className="fa fa-external-link" />
-                            </a>;
+                prettyData =  <Pretty json={data} />
+                to_display = <OverlayTrigger trigger="hover" placement="left" overlay={<Popover className="nestedJson">{prettyData}</Popover>}>
+                                <a href="javascript:void(0);">
+                                    <i className="fa fa-external-link" />
+                                </a>
+                            </OverlayTrigger>
             }
         }
         return <td
