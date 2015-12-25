@@ -255,15 +255,14 @@ var SignalCircle = React.createClass({
     render: function(){
         var signalColor = "signal-circle "+this.props.signalColor;
         var signalActive = "spinner "+this.props.signalActive;
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
         return (
-                <a href="javascript:void(0);"
-                  className={signalColor}
-                    data-toggle="popover" data-trigger="hover"
-                    data-title={this.props.signalText}
-                    data-placement="top"
-                  >
+                <OverlayTrigger trigger="hover" placement="right" overlay={<Popover>{this.props.signalText}</Popover>}>
+                  <a className={signalColor}>
                     <span className={signalActive}></span>
-                </a>
+                  </a>
+                </OverlayTrigger>
     );
     }
 });
