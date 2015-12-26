@@ -42,7 +42,7 @@ var Cell = React.createClass({
         if(typeof data !== 'string'){
             if(typeof data !== 'number'){
                 prettyData =  <Pretty json={data} />
-                to_display = <OverlayTrigger trigger="hover" placement="left" overlay={<Popover className="nestedJson">{prettyData}</Popover>}>
+                to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);">
                                     <i className="fa fa-external-link" />
                                 </a>

@@ -53,8 +53,17 @@ var Pretty = React.createClass({
         var current = React.findDOMNode(this);
         hljs.highlightBlock(current);    
     },
+    selectText:function() {
+      var range = document.createRange();
+      var selection = window.getSelection();
+      var ele = document.getElementById('for-copy');
+      range.selectNodeContents(ele);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    },
     render: function() {
-        return  ( <pre className="custom-json-body">
+
+        return  ( <pre className="custom-json-body" onClick={this.selectText}>
                     <code className="json">
                         <div id='for-copy'>{JSON.stringify(this.props.json, null, 1)}</div>
                     </code>
