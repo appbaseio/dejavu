@@ -9,7 +9,7 @@ var showJSON = function(data, _type, _id){
 
 var Column = React.createClass({
     render: function(){
-        return <th id={this.props._item}><span className="table-fixed-head">{this.props._item}</span></th>;
+        return <th id={this.props._item} className="column_width"><span className="table-fixed-head">{this.props._item}</span></th>;
     }
 });
 
@@ -77,6 +77,11 @@ var Table = React.createClass({
         elem.addEventListener('scroll', this.props.scrollFunction);
     },
     render: function() {
+        var column_width = 250;
+        var elem = document.getElementById('table-scroller');
+        if(elem != null){
+            elem.style.width = this.props.renderColumns.length*column_width+'px';
+        }
         return (
             <div id='table-container' className="table-container">
                 <div id="table-scroller" className="table-scroller">

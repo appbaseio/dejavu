@@ -183,3 +183,6 @@ body{
 .nestedJson.popover.left>.arrow:after{
   border-left-color: #f0f0f0;
 }
+.column_width{
+  width: 250px;
+}
