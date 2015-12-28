@@ -174,7 +174,7 @@ var HomePage = React.createClass({
         console.log("selections: ", subsetESTypes);
     },
     handleScroll: function(event){
-        var elem = document.getElementById('table-container');
+        var elem = document.getElementById('table-scroller');
             elemElem = document.getElementById('data-table');
         var upar = elem.scrollTop;
             scroll = elem.offsetHeight;
