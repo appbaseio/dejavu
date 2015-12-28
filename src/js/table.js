@@ -273,7 +273,7 @@ var SignalCircle = React.createClass({
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
         return (
-                <OverlayTrigger trigger="hover" placement="right" overlay={<Popover>{this.props.signalText}</Popover>}>
+                <OverlayTrigger trigger="focus" placement="right" overlay={<Popover>{this.props.signalText}</Popover>}>
                   <a className={signalColor}>
                     <span className={signalActive}></span>
                   </a>
