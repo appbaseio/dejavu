@@ -162,6 +162,21 @@ body{
   top: 0;
   padding: 7px 0 0 10px;
   white-space: nowrap;
+  height: 35px;
+}
+.table-fixed-head .fa{
+  display: none;
+  float: right;
+  margin: 0 10px;
+}
+.table-fixed-head.sortActive{
+  background: #dfdfdf;
+}
+.table-fixed-head.sortActive.true .desc-icon{
+  display: inline-block;
+}
+.table-fixed-head.sortActive.false .asc-icon{
+  display: inline-block;
 }
 .dejavu-table .table>thead>tr>td,
 .dejavu-table .table>thead>tr>th,

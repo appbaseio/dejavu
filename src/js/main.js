@@ -15,7 +15,11 @@ var HomePage = React.createClass({
     // easy to check if a record already exists.
 
     getInitialState: function() {
-        return {documents: [], types: [], signalColor:'', signalActive:'', signalText:''};
+        return {documents: [], types: [], signalColor:'', signalActive:'', signalText:'',
+                    sortInfo:{
+                        active:false
+                    }
+                };
     },
     //The record might have nested json objects. They can't be shown
     //as is since it looks cumbersome in the table. What we do in the
@@ -60,7 +64,13 @@ var HomePage = React.createClass({
         for(each in sdata){
             sdata_values.push(sdata[each]);
         }
-        this.setState({documents: sdata_values});
+        if(this.state.sortInfo.active){
+            //if sort is already applied
+            var sortedArray = this.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
+            this.setState({documents: sortedArray});
+        }  
+        else
+         this.setState({documents: sdata_values});
     },
 
     // Logic to stream continuous data.
@@ -123,7 +133,6 @@ var HomePage = React.createClass({
     },
     getStreamingData: function(typeName){
         feed.getData(typeName, function(update, fromStream){
-            console.log(update);
             this.updateDataOnView(update);
             this.setSignal(fromStream);
         }.bind(this));
@@ -163,11 +172,13 @@ var HomePage = React.createClass({
         setInterval(this.getStreamingTypes, 60*1000);
     },
     watchStock: function(typeName){
+        this.setState({sortInfo:{active:false}});
         subsetESTypes.push(typeName);
         this.getStreamingData(typeName);
         console.log("selections: ", subsetESTypes);
     },
     unwatchStock: function(typeName){
+        this.setState({sortInfo:{active:false}});
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(null);
@@ -184,7 +195,53 @@ var HomePage = React.createClass({
             this.paginateData(offsets);
         }
     },
+    getOrder:function(itemIn){
+        var finalVal = false;
+        if(itemIn == this.currentItem){
+            if(!this.currentOrder)
+                finalVal = true;
+        }
+        else{
+            this.currentItem = itemIn;
+        }
+        this.currentOrder = finalVal;
+        return finalVal;  
+    },
+    handleSort:function(item, type, eve){
+        order = this.getOrder(item);
+        this.setState({
+            sortInfo:{
+                active:true,
+                column:item,
+                reverse:order
+            }
+        });
+        var docs = this.state.documents;
+        var sortedArray = this.sortIt(docs, item, order);
+        this.setState({documents: sortedArray});
+    },
+    sortIt:function(arr, prop, reverse) {
+        console.log(prop);
+        var $this = this;
+        var existsOnly = _.filter(arr, function(elm){ return typeof elm[prop] != 'undefined' });
+        var nonExistsOnly = _.filter(arr, function(elm){ return typeof elm[prop] == 'undefined' });
+        var a2 = _.sortBy(existsOnly, function(ele){
+            if($this.getProp(ele, prop))
+                return $this.getProp(ele, prop);
+        });
+        if(reverse)
+            a2.reverse();
 
+        var a2 = $.merge(a2, nonExistsOnly);
+        return a2;
+    },
+    getProp:function(obj, propName){
+        var parts = propName.split('.');
+        for (var i=0; i < parts.length; i++) {
+           obj = obj[parts[i]];
+        }
+        return obj;
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -209,8 +266,10 @@ var HomePage = React.createClass({
                     <div className="col-xs-12 dataContainer">
                         <DataTable
                             _data={this.state.documents}
+                            sortInfo={this.state.sortInfo}
                             scrollFunction={this.handleScroll}
-                            selectedTypes={subsetESTypes}/>
+                            selectedTypes={subsetESTypes}
+                            handleSort={this.handleSort}/>
                     </div>
                     <SignalCircle 
                         signalColor={this.state.signalColor}

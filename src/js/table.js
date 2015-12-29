@@ -8,8 +8,22 @@ var showJSON = function(data, _type, _id){
 };
 
 var Column = React.createClass({
+    sortingInit:function(){
+        this.props.handleSort(this.props._item, this.props._type, this);
+    },
     render: function(){
-        return <th id={this.props._item} className="column_width"><span className="table-fixed-head">{this.props._item}</span></th>;
+        var item = this.props._item;
+        var sortInfo = this.props._sortInfo;
+        var extraClass = sortInfo.column == item ? 'sortActive '+sortInfo.reverse : '';
+        var fixedHead = 'table-fixed-head column_width '+extraClass;
+        //var handleSort = this.sortingInit;
+        return (<th id={item} className="column_width">
+                    <span className={fixedHead} onClick={this.sortingInit}>
+                        {item}
+                        <i className ="fa fa-chevron-up asc-icon" />
+                        <i className ="fa fa-chevron-down desc-icon" />
+                    </span>
+                </th>);
     }
 });
 
@@ -52,7 +66,8 @@ var Cell = React.createClass({
         return <td
                 id={this.props.unique}
                 key={this.props.unique}
-                style={style}>
+                style={style}
+                className="column_width">
                     {to_display}
                 </td>;
     }
@@ -106,14 +121,24 @@ var Table = React.createClass({
 // i.e. the right side.
 var DataTable = React.createClass({
     render: function () {
+        var $this = this;
         var data = this.props._data;
+        
+        //If render from sort, dont change the order of columns
+        if(!$this.props.sortInfo.active){
             fixed = ['json', '_id', '_type'];
             columns = ['json', '_type', '_id'];
-        for(var each in data){
-            for(column in data[each]){
-                if(fixed.indexOf(column) <= -1){
-                    if(columns.indexOf(column) <= -1){
-                        columns.push(column);
+            fullColumns = {
+                type:'',
+                columns:columns
+            }
+            for(var each in data){
+                fullColumns.type = data[each]['_type'];
+                for(column in data[each]){
+                    if(fixed.indexOf(column) <= -1){
+                        if(fullColumns.columns.indexOf(column) <= -1){
+                            fullColumns.columns.push(column);
+                        }
                     }
                 }
             }
@@ -162,9 +187,11 @@ var DataTable = React.createClass({
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
-        var renderColumns = columns.map(function(item){
-            return <Column _item={item} key={item} />;
+        var renderColumns = fullColumns.columns.map(function(item){
+            return <Column _item={item} key={item} _type={fullColumns.type} _sortInfo={$this.props.sortInfo} handleSort={$this.props.handleSort} />;
         });
+
+        //If render from sort, dont render the coumns
         var renderRows = rows.map(function(item)
         {
             var _key = item['_key'];
