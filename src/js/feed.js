@@ -124,6 +124,23 @@ var feed = (function () {
             }).on('error', function(err) {
                 console.log('error in retrieving types: ', err)
             })
+        },        
+        indexData: function(recordObject, callback) {
+          console.log(recordObject);
+          appbaseRef.index(recordObject).on('data', function(res) {
+            if(callback)
+              callback();
+          });
+        },
+        getSingleDoc:function(type, callback){
+          appbaseRef.search({
+            type:type,
+            from:0,
+            size:1,
+            body:{query:{match_all:{}}}
+          }).on('data',function(data){
+            callback(data);
+          });
         }
     };
 

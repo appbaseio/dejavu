@@ -164,3 +164,105 @@ var execCommandOnElement = function(el, commandName, value) {
         textRange.execCommand(commandName, false, value);
     }
 }
+
+var AddDocument = React.createClass({
+
+  getInitialState:function() {
+    return { 
+              showModal: false,
+              validate:{
+                touch:false,
+                type:false,
+                body:false
+              }
+           };
+  },
+
+  close:function() {
+    this.setState({ showModal: false });
+  },
+
+  open:function() {
+    this.setState({ showModal: true });
+  },
+  getType :function(){
+    var typeList = this.props.types.map(function(type){
+      return <option value={type}>{type}</option>
+    });
+  },
+  validateInput:function(){
+    var validateClass = this.state.validate;
+    validateClass.touch = true;
+    validateClass.type = document.getElementById('setType').value == '' ? false:true;
+    validateClass.body = document.getElementById('setBody').value == '' ? false:true;
+    this.setState({validate:validateClass});
+
+    if(validateClass.type && validateClass.body)
+      this.props.addRecord();
+  
+  },
+  render:function() {
+    var Modal = ReactBootstrap.Modal;
+    var Button = ReactBootstrap.Button;
+    var typeList = this.props.types.map(function(type){
+      return <option value={type}>{type}</option>
+    });
+    if(this.state.validate.touch){
+      var validateClass = {};
+      validateClass.body = this.state.validate.body ? 'form-group' : 'form-group has-error' ;
+      validateClass.type = this.state.validate.type ? 'form-group' : 'form-group has-error' ;
+    }
+    else{
+      var validateClass = {
+        type:'form-group',
+        body:'form-group'
+      };
+    }
+    return (
+      <div>
+        <a className="add-record-btn btn btn-primary fa fa-plus" onClick={this.open} >
+        </a>
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Document</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="form-horizontal" id="addObjectForm">
+              <div className={validateClass.type}>
+                <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
+                <div className="col-sm-10">
+                    <select id="setType" className="form-control" name="type" onChange={this.props.getTypeDoc} placeholder="choose type">
+                      <option value="">Select type</option>
+                      {typeList}
+                    </select>
+                    <span className="help-block">
+                      Type is required.
+                    </span>
+                </div>
+              </div>
+              <div className="form-group">
+                <label for="inputPassword3" className="col-sm-2 control-label">Id</label>
+                <div className="col-sm-10">
+                  <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
+                </div>
+              </div>
+              <div className={validateClass.body}>
+                <label for="inputPassword3" className="col-sm-2 control-label">Object</label>
+                <div className="col-sm-10">
+                  <textarea id="setBody" className="form-control" rows="3" name="body"></textarea>
+                   <span className="help-block">
+                      Body is required.
+                    </span>
+                </div>
+              </div>              
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
+            <Button id="close-modal" onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    );
+  }
+});

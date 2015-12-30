@@ -205,3 +205,14 @@ body{
 .column_width{
   width: 250px;
 }
+.add-record-btn{
+  position: absolute;
+  top: 14px;
+  right: 60px;
+}
+.form-group.has-error .help-block{
+  display: block;
+}
+.form-group .help-block{
+  display: none;
+}

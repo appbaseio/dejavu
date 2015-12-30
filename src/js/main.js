@@ -130,6 +130,7 @@ var HomePage = React.createClass({
                 offsets[checkType] += 1;
             } else offsets[checkType] = 1;
         }
+        this.setSampleData(update);
     },
     getStreamingData: function(typeName){
         feed.getData(typeName, function(update, fromStream){
@@ -242,6 +243,45 @@ var HomePage = React.createClass({
         }
         return obj;
     },
+    addRecord:function(){
+        var form = $('#addObjectForm').serializeArray();
+        var recordObject = {};
+        $.each(form,function(k2,v2){
+            if(v2.value != '')
+                recordObject[v2.name] = v2.value;
+        });
+
+        recordObject.body = JSON.parse(recordObject.body);
+        feed.indexData(recordObject,function(){
+            $('#close-modal').click();
+        });
+
+    },
+    getTypeDoc:function(){
+        var selectedType = $('#setType').val();
+        var typeDocSample = this.state.typeDocSample;
+        var $this = this;
+        if(selectedType != '' && !typeDocSample.hasOwnProperty(selectedType)){
+
+            feed.getSingleDoc(selectedType,function(data){
+                typeDocSample[selectedType] = data.hits.hits[0]._source;
+                $this.setState({typeDocSample:typeDocSample});
+                $this.showSample(typeDocSample[selectedType]);
+            });
+
+        }
+        else this.showSample(typeDocSample[selectedType]);
+    },
+    showSample:function(obj){
+        $('#setBody').val(JSON.stringify(obj, null, 2));
+    },
+    setSampleData:function(update){
+        var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
+        typeDocSample[update['_type']] = $.extend({}, update);
+        delete typeDocSample[update['_type']]._id;
+        delete typeDocSample[update['_type']]._type;
+        this.setState({typeDocSample:typeDocSample});
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -261,7 +301,9 @@ var HomePage = React.createClass({
                         <TypeTable
                             Types={this.state.types}
                             watchTypeHandler={this.watchStock}
-                            unwatchTypeHandler={this.unwatchStock} />
+                            unwatchTypeHandler={this.unwatchStock} 
+                            addRecord = {this.addRecord}
+                            getTypeDoc={this.getTypeDoc}/>
                     </div>
                     <div className="col-xs-12 dataContainer">
                         <DataTable

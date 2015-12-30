@@ -280,7 +280,13 @@ var TypeTable = React.createClass({
         }
         return (
             <div className='left-tab'>
-            <h4 className='types-header'>Types</h4>
+            <h4 className='types-header'>
+                Types
+            </h4>
+            <AddDocument 
+            types={this.props.Types} 
+            addRecord ={this.props.addRecord}
+            getTypeDoc={this.props.getTypeDoc} />
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>
@@ -308,3 +314,4 @@ var SignalCircle = React.createClass({
     );
     }
 });
+
