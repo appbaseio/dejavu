@@ -226,22 +226,17 @@ var HomePage = React.createClass({
         var $this = this;
         var existsOnly = _.filter(arr, function(elm){ return typeof elm[prop] != 'undefined' });
         var nonExistsOnly = _.filter(arr, function(elm){ return typeof elm[prop] == 'undefined' });
-        var a2 = _.sortBy(existsOnly, function(ele){
-            if($this.getProp(ele, prop))
-                return $this.getProp(ele, prop);
-        });
-        if(reverse)
-            a2.reverse();
-
+        
+        var a2 = existsOnly.sort($this.dynamicSort(prop, reverse));
         var a2 = $.merge(a2, nonExistsOnly);
         return a2;
     },
-    getProp:function(obj, propName){
-        var parts = propName.split('.');
-        for (var i=0; i < parts.length; i++) {
-           obj = obj[parts[i]];
+    dynamicSort:function (property, reverse) {
+        return function (a,b) {
+            sortOrder = reverse ? -1 : 1;
+            var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
+            return result * sortOrder;
         }
-        return obj;
     },
     addRecord:function(){
         var form = $('#addObjectForm').serializeArray();
