@@ -234,7 +234,10 @@ var HomePage = React.createClass({
     dynamicSort:function (property, reverse) {
         return function (a,b) {
             sortOrder = reverse ? -1 : 1;
-            var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
+            if(isNaN(a[property]))
+                var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
+            else
+                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
             return result * sortOrder;
         }
     },
