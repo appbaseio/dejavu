@@ -2,7 +2,7 @@
 // We decided to roll our own as existing
 // libs with React.JS were missing critical
 // features.
-
+var cellWidth = '250px';
 var showJSON = function(data, _type, _id){
         React.render(<Modal show={data} _type={_type} _id={_id}/>, document.getElementById('modal'));
 };
@@ -17,7 +17,7 @@ var Column = React.createClass({
         var extraClass = sortInfo.column == item ? 'sortActive '+sortInfo.reverse : '';
         var fixedHead = 'table-fixed-head column_width '+extraClass;
         //var handleSort = this.sortingInit;
-        return (<th id={item} className="column_width">
+        return (<th id={item} width={cellWidth} className="column_width">
                     <span className={fixedHead} onClick={this.sortingInit}>
                         {item}
                         <i className ="fa fa-chevron-up asc-icon" />
@@ -64,6 +64,7 @@ var Cell = React.createClass({
             }
         }
         return <td
+                 width={cellWidth} 
                 id={this.props.unique}
                 key={this.props.unique}
                 style={style}
