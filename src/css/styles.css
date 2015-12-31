@@ -204,6 +204,7 @@ body{
 }
 .column_width{
   width: 250px;
+  max-width: 250px;
 }
 .add-record-btn{
   position: absolute;
