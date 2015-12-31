@@ -281,7 +281,7 @@ var AddDocument = React.createClass({
               <div className={validateClass.body}>
                 <label for="inputPassword3" className="col-sm-2 control-label">Object</label>
                 <div className="col-sm-10">
-                  <textarea id="setBody" className="form-control" rows="3" name="body"></textarea>
+                  <textarea id="setBody" className="form-control" rows="10" name="body"></textarea>
                    <span className="help-block">
                       Body is required and should be valid JSON.
                     </span>
