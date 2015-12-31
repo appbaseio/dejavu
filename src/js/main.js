@@ -259,19 +259,23 @@ var HomePage = React.createClass({
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if(selectedType != '' && !typeDocSample.hasOwnProperty(selectedType)){
+        if(selectedType != '' && selectedType != null){
+            if(!typeDocSample.hasOwnProperty(selectedType)){
 
-            feed.getSingleDoc(selectedType,function(data){
-                typeDocSample[selectedType] = data.hits.hits[0]._source;
-                $this.setState({typeDocSample:typeDocSample});
-                $this.showSample(typeDocSample[selectedType]);
-            });
+                feed.getSingleDoc(selectedType,function(data){
+                    typeDocSample[selectedType] = data.hits.hits[0]._source;
+                    $this.setState({typeDocSample:typeDocSample});
+                    $this.showSample(typeDocSample[selectedType]);
+                });
 
+            }
+            else this.showSample(typeDocSample[selectedType]);
         }
-        else this.showSample(typeDocSample[selectedType]);
     },
     showSample:function(obj){
-        $('#setBody').val(JSON.stringify(obj, null, 2));
+        var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
+        var objJson = JSON.stringify(convertJson, null, 2);
+        $('#setBody').val(objJson);
     },
     setSampleData:function(update){
         var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};

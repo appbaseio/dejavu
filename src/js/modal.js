@@ -177,9 +177,36 @@ var AddDocument = React.createClass({
               }
            };
   },
-
+  componentDidUpdate:function(){
+    //apply select2 for auto complete
+    if(!this.state.validate.type)
+      this.applySelect();
+  },
+  applySelect:function(){
+    var $this = this;
+    var $eventSelect = $(".tags-select");
+    var typeList = this.getType();
+    $eventSelect.select2({
+      tags: true,
+      maximumSelectionLength: 1,
+      data:typeList
+    });
+    $eventSelect.on("change", function (e) { 
+      var validateClass = $this.state.validate;
+      validateClass.type = true;
+      $this.setState({validate:validateClass});
+      $this.props.getTypeDoc();
+    });
+  },
   close:function() {
-    this.setState({ showModal: false });
+    this.setState({ 
+              showModal: false,
+              validate:{
+                touch:false,
+                type:false,
+                body:false
+              }
+          });
   },
 
   open:function() {
@@ -187,19 +214,26 @@ var AddDocument = React.createClass({
   },
   getType :function(){
     var typeList = this.props.types.map(function(type){
-      return <option value={type}>{type}</option>
+      return {id:type, text:type};
     });
+    return typeList;
   },
   validateInput:function(){
     var validateClass = this.state.validate;
     validateClass.touch = true;
     validateClass.type = document.getElementById('setType').value == '' ? false:true;
-    validateClass.body = document.getElementById('setBody').value == '' ? false:true;
+    validateClass.body = this.IsJsonString(document.getElementById('setBody').value);
     this.setState({validate:validateClass});
-
     if(validateClass.type && validateClass.body)
       this.props.addRecord();
-  
+  },
+  IsJsonString:function(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
   },
   render:function() {
     var Modal = ReactBootstrap.Modal;
@@ -231,10 +265,8 @@ var AddDocument = React.createClass({
               <div className={validateClass.type}>
                 <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
                 <div className="col-sm-10">
-                    <select id="setType" className="form-control" name="type" onChange={this.props.getTypeDoc} placeholder="choose type">
-                      <option value="">Select type</option>
-                      {typeList}
-                    </select>
+                  <select id="setType" className="tags-select form-control" multiple="multiple" name="type">
+                  </select>
                     <span className="help-block">
                       Type is required.
                     </span>
@@ -251,7 +283,7 @@ var AddDocument = React.createClass({
                 <div className="col-sm-10">
                   <textarea id="setBody" className="form-control" rows="3" name="body"></textarea>
                    <span className="help-block">
-                      Body is required.
+                      Body is required and should be valid JSON.
                     </span>
                 </div>
               </div>              
