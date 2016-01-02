@@ -284,10 +284,19 @@ var TypeTable = React.createClass({
             <h4 className='types-header'>
                 Types
             </h4>
-            <AddDocument 
+           
+
+            <ImportData />
+
+            <ExportData 
+            types={this.props.Types} 
+            ExportData ={this.props.ExportData}/>
+
+             <AddDocument 
             types={this.props.Types} 
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc} />
+
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>

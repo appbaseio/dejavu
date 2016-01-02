@@ -284,6 +284,43 @@ var HomePage = React.createClass({
         delete typeDocSample[update['_type']]._type;
         this.setState({typeDocSample:typeDocSample});
     },
+    exportData:function(){
+        var form = $('#addObjectForm_export').serializeArray();
+        var exportObject = {
+            type:[]
+        };
+        form.forEach(function(val){
+            if(val.name == 'type'){
+                exportObject.type.push(val.value);
+            }
+            else if(val.name == 'body'){
+                exportObject.queryBody = val.value;
+            }
+        });
+
+        var lamda = 'https://luway34py8.execute-api.us-east-1.amazonaws.com/prod/appbaseexport';
+        var createdUrl = 'https://'+USERNAME+':'+PASSWORD+'@scalr.api.appbase.io/'+APPNAME+'/'+exportObject.type.join(',')+'/_search?scroll=10m';
+        var queryBody = exportObject.queryBody ? exportObject.queryBody : {};
+        data = {
+            url:createdUrl,
+            body:queryBody,
+            email:EMAIL
+        };
+
+        $.ajax({
+          type: "POST",
+          url: lamda,
+          xhrFields: {
+               withCredentials: true
+            },
+          contentType: 'text/plain;charset=UTF-8',
+          dataType: 'json',
+          data: JSON.stringify(data),
+          success: function(data){
+          }
+        });
+    
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -305,7 +342,8 @@ var HomePage = React.createClass({
                             watchTypeHandler={this.watchStock}
                             unwatchTypeHandler={this.unwatchStock} 
                             addRecord = {this.addRecord}
-                            getTypeDoc={this.getTypeDoc}/>
+                            getTypeDoc={this.getTypeDoc}
+                            ExportData={this.exportData} />
                     </div>
                     <div className="col-xs-12 dataContainer">
                         <DataTable

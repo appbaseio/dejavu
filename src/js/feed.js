@@ -13,6 +13,7 @@ parent.globalAppData(function(res) {
   APPNAME = res.appname;
   USERNAME = res.username;
   PASSWORD = res.password;
+  EMAIL = res.email
   init();
 });
 

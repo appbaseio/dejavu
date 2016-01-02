@@ -206,14 +206,54 @@ body{
   width: 250px;
   max-width: 250px;
 }
-.add-record-btn{
+.add-record-btn,
+.export-record-btn,
+.import-record-btn{
   position: absolute;
   top: 14px;
   right: 60px;
+}
+.export-record-btn{
+  right: 102px;
+}
+.import-record-btn{
+  right: 144px;
 }
 .form-group.has-error .help-block{
   display: block;
 }
 .form-group .help-block{
   display: none;
+}
+
+/*Import Export*/
+.switchContainer{
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 0;
+  margin-bottom: 15px;
+}
+.switchContainer .switch{
+  border: 0;
+  border-right: 1px solid #aaa;
+  border-radius: 0;
+}
+.switchContainer .switch:first-child{
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+}
+.switchContainer .switch:last-child{
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
+  border: 0;
+}
+.ieContainer{
+  padding:15px 15px 0 285px;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+}
+.ieContainer .well{
+  background: #fff;
 }
