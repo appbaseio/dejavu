@@ -205,6 +205,7 @@ body{
 .column_width{
   width: 250px;
   max-width: 250px;
+  overflow: hidden;
 }
 .add-record-btn,
 .export-record-btn,
