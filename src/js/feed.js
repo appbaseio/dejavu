@@ -8,6 +8,7 @@
 const HOSTNAME = "scalr.api.appbase.io"
 var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
+var getMapFlag = false;
 
 parent.globalAppData(function(res) {
   APPNAME = res.appname;
@@ -15,6 +16,7 @@ parent.globalAppData(function(res) {
   PASSWORD = res.password;
   EMAIL = res.email
   init();
+  APPURL = 'https://'+USERNAME+':'+PASSWORD+'@scalr.api.appbase.io/'+APPNAME;         
 });
 
 function init() {
@@ -38,13 +40,15 @@ var feed = (function () {
 
     // applies a searchStream() query on a particular ``type``
     // to establish a continuous query connection.
-    function applyStreamSearch(typeName, callback) {
+    function applyStreamSearch(typeName, callback, queryBody) {
       if (typeName !== null) {
-        var queryBody = {
+        var defaultQueryBody = {
           query: {
             match_all: {}
           }
         }
+
+        var queryBody = queryBody ? queryBody : defaultQueryBody;
         // get historical data
         appbaseRef.search({
           type: typeName,
@@ -54,6 +58,9 @@ var feed = (function () {
         }).on('data', function(res) {
             for (var hit in res.hits.hits) {
               callback(res.hits.hits[hit]);
+            }
+            if(res.hits.hits.length == 0){
+              callback(null);
             }
         }).on('error', function(err) {
             console.log("caught a retrieval error", err);
@@ -72,17 +79,21 @@ var feed = (function () {
 
     // paginate and show new results when user scrolls
     // to the bottom of the existing results.
-    function paginationSearch(typeName, from, callback) {
+    function paginationSearch(typeName, from, callback, queryBody) {
       if (typeName !== null)
+        
+        var defaultQueryBody = {
+          query: {
+            match_all: {}
+          }
+        }
+        var queryBody = queryBody ? queryBody : defaultQueryBody;
+
         appbaseRef.search({
           type: typeName,
-          body: {
-            from: from,
-            size: 20,
-            query: {
-              match_all: {}
-            }
-          }
+          from: from,
+          size: 20,
+          body:queryBody
         }).on('data', function(res) {
             for (var hit in res.hits.hits) {
               callback(res.hits.hits[hit]);
@@ -108,10 +119,14 @@ var feed = (function () {
         },
         // ``paginateData()`` finds the type offsets in
         // multiples of 20 and finds new results using the offset.
-        paginateData: function(offsets, callback) {
+        paginateData: function(offsets, callback, queryBody) {
             for (type in offsets) {
-                if (offsets[type] >= 20 && offsets[type] % 20 === 0)
-                    paginationSearch(type, offsets[type], callback)
+                if (offsets[type] >= 20 && offsets[type] % 20 === 0){
+                    if(queryBody != null)
+                      paginationSearch(type, offsets[type], callback, queryBody)
+                    else
+                      paginationSearch(type, offsets[type], callback)
+                }
             }
         },
         // gets all the types of the current app;
@@ -142,7 +157,105 @@ var feed = (function () {
           }).on('data',function(data){
             callback(data);
           });
+        },
+        getMapping:function(){
+          var APPURL = 'https://'+USERNAME+':'+PASSWORD+'@scalr.api.appbase.io/'+APPNAME;
+          var createUrl = APPURL+'/_mapping';
+          return $.ajax({
+            type:'GET',
+            beforeSend: function(request) {
+              request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME+':'+PASSWORD));
+            },
+            url:createUrl,
+            xhrFields: {
+               withCredentials: true
+            }
+          });
+        },
+
+        filterQuery:function(method, columnName, value, typeName, callback){
+          var queryBody = this.createFilterQuery(method, columnName, value, typeName);
+          applyStreamSearch(typeName, callback, queryBody);
+        },
+        createFilterQuery:function(method, columnName, value, typeName){
+          var queryBody = {};
+          switch(method){
+            case 'has':              
+              var queryMaker = [];
+              value.forEach(function(val){
+                var termObj = {};
+                termObj[columnName] = val.trim();
+                var obj = {
+                  'term':termObj
+                };
+                queryMaker.push(obj);
+              });
+              queryBody = {
+                "query":{
+                  "bool":{
+                    "should":queryMaker,
+                    "minimum_should_match":1
+                  }
+                }
+              }
+            break;
+
+            case 'has not':              
+              var queryMaker = [];
+              value.forEach(function(val){
+                var termObj = {};
+                termObj[columnName] = val.trim();
+                var obj = {
+                  'term':termObj
+                };
+                queryMaker.push(obj);
+              });
+              queryBody = {
+                "query":{
+                  "bool":{
+                    "must_not":queryMaker,
+                    "minimum_should_match":1
+                  }
+                }
+              }
+            break;
+
+            case 'search':              
+              var queryMaker = [];
+              var termObj = {};
+              termObj[columnName] = value[0].trim();
+              queryBody = {
+                "query":{
+                  "term":termObj
+                }
+              }
+            break;
+
+             case 'greater than':              
+              var queryMaker = [];
+              value.forEach(function(val){
+                var termObj = {};
+                termObj[columnName] = val.trim();
+                var obj = {
+                  'term':termObj
+                };
+                queryMaker.push(obj);
+              });
+              queryBody = {
+                "query":{
+                  "bool":{
+                    "should":queryMaker,
+                    "minimum_should_match":1
+                  }
+                }
+              }
+            break;
+          }
+          return queryBody;
         }
     };
+
+
+  
 
 }());

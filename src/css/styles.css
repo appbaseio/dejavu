@@ -146,7 +146,7 @@ body{
     -ms-flex: 1;
     flex: 1;
     overflow: auto;
-    max-height: 100%;
+    height: 100%;
     position: relative;
 }
 .table-scroller{
@@ -163,14 +163,19 @@ body{
   padding: 7px 0 0 10px;
   white-space: nowrap;
   height: 35px;
+  overflow: inherit !important;
 }
-.table-fixed-head .fa{
-  display: none;
-  float: right;
-  margin: 0 10px;
-}
-.table-fixed-head.sortActive{
+.table-fixed-head.sortActive,
+.table-fixed-head.filterActive{
   background: #dfdfdf;
+}
+.table-fixed-head.filterActive .filterBtn,
+.table-fixed-head.sortActive .sortIcon{
+  opacity: 1;
+}
+.table-fixed-head .asc-icon,
+.table-fixed-head.sortActive.false .desc-icon{
+  display: none;
 }
 .table-fixed-head.sortActive.true .desc-icon{
   display: inline-block;
@@ -257,4 +262,62 @@ body{
 }
 .ieContainer .well{
   background: #fff;
+}
+.headText{
+  position: relative;
+}
+.headText .thtextShow{
+  padding-right: 40px;
+}
+.headText .iconList{
+  position: absolute;
+  right: 5px;
+  top:0;
+  float: right;
+}
+
+.headText .iconList .sortIcon,
+.headText .iconList .filterIcon{
+  display: inline-block;
+  float: right;
+}
+.sortIcon, .filterBtn{
+  opacity: 0.2;
+}
+.headText:hover .sortIcon,
+.headText:hover .filterBtn,
+.headText.active .sortIcon,
+.headText.active .filterBtn{
+  opacity: 1;
+}
+.headText .iconList .filterIcon{
+  z-index: 99999;
+  margin-right: 10px;
+}
+.filterDropdown:hover .filterDropdownContainer,
+.filterDropdown.active .filterDropdownContainer{
+  display: block;
+}
+
+.filterDropdown .filterBtn{
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.filterBtn:hover{
+  box-shadow: none;
+}
+.filterDropdown .filterBtn .caret{
+  display: none;
+}
+.singleItem{
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+.singleItem .searchElement{
+  display: none;
+}
+.singleItem.active .searchElement{
+  display: block;
 }

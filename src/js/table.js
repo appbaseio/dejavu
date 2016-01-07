@@ -4,8 +4,120 @@
 // features.
 var cellWidth = '250px';
 var showJSON = function(data, _type, _id){
-        React.render(<Modal show={data} _type={_type} _id={_id}/>, document.getElementById('modal'));
+        //React.render(<Modal show={data} _type={_type} _id={_id}/>, document.getElementById('modal'));
 };
+
+var SingleMenuItem = React.createClass({
+    getInitialState:function(){
+        return {
+            filterField:'',
+            filterValue:''
+        };
+    },
+    changeFilter:function(e){
+        var filterField = e.currentTarget.value;
+        this.props.changeFilter(filterField, this.state.filterValue);
+        //this.setState({filterField:filterField});
+    },
+    valChange:function(e){
+        var filterValue = e.currentTarget.value;
+        this.setState({filterValue:filterValue});
+        this.props.getFilterVal(filterValue);
+    },
+    render: function(){
+        var singleItemClass = this.props.filterField == this.props.val ? 'radio singleItem active':'radio singleItem';
+        return (<div className={singleItemClass}>
+                  <label>
+                    <input onChange={this.changeFilter} type="radio" name="optionsRadios"
+                     value={this.props.val} />
+                    {this.props.val}
+                  </label>
+                  <div className="searchElement">
+                    <input type="text" placeholder="Search here.." onKeyUp={this.valChange} />
+                  </div>
+                </div>);
+    }
+});
+
+var FilterDropdown = React.createClass({
+    getInitialState:function(){
+        return {
+                    filterField:null,
+                    filterValue:''
+                };
+    },
+    changeFilter : function(field, value){
+       this.setState({
+                        filterField:field,
+                        filterValue:value
+                    });
+    },
+    getFilterVal:function(val){
+        this.setState({filterValue:val});
+    },
+    applyFilter:function(){
+        this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
+    },
+    render:function(){
+            var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+            var DropdownButton = ReactBootstrap.DropdownButton;
+            var MenuItem = ReactBootstrap.MenuItem;
+            var Dropdown = ReactBootstrap.Dropdown;
+            var datatype = this.props.datatype;
+            var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
+            var stringFilter = (
+                                <Dropdown.Menu className="menuItems pull-right">
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
+                                    <div className="singleItem">
+                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                    </div>
+                                </Dropdown.Menu>
+                              );
+
+            var numberFilter = (
+                                <Dropdown.Menu className="menuItems pull-right">
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="greater than" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="less than" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="has" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="has not" />
+                                </Dropdown.Menu>
+                              );
+            
+            var FilterMenuItems = '';
+
+            switch(datatype){
+                case 'string':
+                    FilterMenuItems = stringFilter;
+                break;
+                case 'long':
+                case 'integer':
+                case 'short':
+                case 'byte':
+                case 'double':
+                case 'float':
+                    FilterMenuItems = numberFilter;
+                break;
+            }
+
+            if(datatype == null){
+                return (<span></span>);
+            }
+            else{
+                return (<div className="filterDropdown">
+                    <ButtonToolbar>
+                        <Dropdown className="filterDropdownContainer">
+                          <Dropdown.Toggle className="filterBtn">
+                            <i className="fa fa-filter"></i>
+                          </Dropdown.Toggle>
+                            {FilterMenuItems}
+                        </Dropdown>
+                    </ButtonToolbar>
+                </div>);
+            }
+    }
+});
 
 var Column = React.createClass({
     sortingInit:function(){
@@ -13,16 +125,37 @@ var Column = React.createClass({
     },
     render: function(){
         var item = this.props._item;
+        var type = this.props._type;
         var sortInfo = this.props._sortInfo;
+        var filterInfo = this.props.filterInfo;
+
+        var filterClass = filterInfo.active && filterInfo.columnName == item ? 'filterActive' : '';
         var extraClass = sortInfo.column == item ? 'sortActive '+sortInfo.reverse : '';
-        var fixedHead = 'table-fixed-head column_width '+extraClass;
+        var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
+        var filterId = 'filter-'+item;
+        var datatype = null;
+        if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
+            datatype = this.props.mappingObj[type]['properties'][item].type;
+        }
         //var handleSort = this.sortingInit;
-        return (<th id={item} width={cellWidth} className="column_width">
-                    <span className={fixedHead} onClick={this.sortingInit}>
-                        {item}
-                        <i className ="fa fa-chevron-up asc-icon" />
-                        <i className ="fa fa-chevron-down desc-icon" />
-                    </span>
+        
+        return (<th id={item} width={cellWidth} className="">
+                    <div className={fixedHead}>
+                        <div className="headText">
+                            <div className="thtextShow" onClick={this.sortingInit}>
+                                {item}
+                            </div>
+                            <div className="iconList">
+                                <span className="sortIcon">
+                                    <i className ="fa fa-chevron-up asc-icon" />
+                                    <i className ="fa fa-chevron-down desc-icon" />
+                                </span>
+                                <span className="filterIcon">
+                                    <FilterDropdown columnField={item} type={type} datatype = {datatype} filterInfo={this.props.filterInfo} />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </th>);
     }
 });
@@ -189,7 +322,12 @@ var DataTable = React.createClass({
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
         var renderColumns = fullColumns.columns.map(function(item){
-            return <Column _item={item} key={item} _type={fullColumns.type} _sortInfo={$this.props.sortInfo} handleSort={$this.props.handleSort} />;
+            return (<Column _item={item} key={item} 
+                        _type={fullColumns.type}
+                        _sortInfo={$this.props.sortInfo} 
+                        handleSort={$this.props.handleSort}
+                        mappingObj={$this.props.mappingObj}
+                        filterInfo={$this.props.filterInfo} />);
         });
 
         //If render from sort, dont render the coumns
@@ -206,7 +344,8 @@ var DataTable = React.createClass({
              renderColumns={renderColumns}
              renderRows={renderRows}
              scrollFunction={this.props.scrollFunction}
-             selectedTypes={this.props.selectedTypes}/>
+             selectedTypes={this.props.selectedTypes}
+             filterInfo={this.props.filterInfo}/>
             </div>
         );
     }

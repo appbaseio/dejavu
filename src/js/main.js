@@ -18,7 +18,12 @@ var HomePage = React.createClass({
         return {documents: [], types: [], signalColor:'', signalActive:'', signalText:'',
                     sortInfo:{
                         active:false
-                    }
+                    },
+                    filterInfo:{
+                        active:false,
+                        applyFilter:this.applyFilter
+                    },
+                    mappingObj:{}
                 };
     },
     //The record might have nested json objects. They can't be shown
@@ -150,9 +155,15 @@ var HomePage = React.createClass({
     },
     // infinite scroll implementation
     paginateData: function(offsets) {
+        var filterInfo = this.state.filterInfo;
+        var queryBody = null;
+        
+        if(filterInfo.active)
+            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
+        
         feed.paginateData(offsets, function(update) {
             this.updateDataOnView(update);
-        }.bind(this));
+        }.bind(this), queryBody);
     },
     // only called on change in types.
     getStreamingTypes: function() {
@@ -171,6 +182,7 @@ var HomePage = React.createClass({
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
+        setInterval(this.setMap, 2000);
     },
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
@@ -184,6 +196,17 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         this.getStreamingData(null);
         console.log("selections: ", subsetESTypes);
+    },
+    setMap:function(){
+        var $this = this;
+        if(!getMapFlag && APPNAME){
+            var mappingObj = feed.getMapping();
+            mappingObj.done(function(data){
+                mappingObjData = data;
+                getMapFlag = true;
+                $this.setState({'mappingObj':mappingObjData[APPNAME]['mappings']});
+            });
+        }
     },
     handleScroll: function(event){
         var elem = document.getElementById('table-scroller');
@@ -318,8 +341,27 @@ var HomePage = React.createClass({
           data: JSON.stringify(data),
           success: function(data){
           }
-        });
-    
+        }); 
+    },
+    applyFilter:function(typeName, columnName, method, value){
+        filterVal = value.split(',');
+        var $this = this;
+        var filterObj = this.state.filterInfo;
+        filterObj['type'] = typeName;
+        filterObj['columnName'] = columnName;
+        filterObj['method'] = method;
+        filterObj['value'] = filterVal;
+        filterObj['active'] = true;
+        this.setState({filterInfo:filterObj});
+
+        feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
+            sdata = [];
+            $this.resetData();
+            setTimeout(function(){
+                $this.updateDataOnView(update);
+                $this.setSignal(fromStream);
+            },500);
+        }.bind(this));
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -349,9 +391,11 @@ var HomePage = React.createClass({
                         <DataTable
                             _data={this.state.documents}
                             sortInfo={this.state.sortInfo}
+                            filterInfo={this.state.filterInfo}
                             scrollFunction={this.handleScroll}
                             selectedTypes={subsetESTypes}
-                            handleSort={this.handleSort}/>
+                            handleSort={this.handleSort}
+                            mappingObj={this.state.mappingObj}/>
                     </div>
                     <SignalCircle 
                         signalColor={this.state.signalColor}
