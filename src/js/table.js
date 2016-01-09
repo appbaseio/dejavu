@@ -26,6 +26,7 @@ var SingleMenuItem = React.createClass({
     },
     render: function(){
         var singleItemClass = this.props.filterField == this.props.val ? 'radio singleItem active':'radio singleItem';
+        var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple':'Type here...';
         return (<div className={singleItemClass}>
                   <label>
                     <input onChange={this.changeFilter} type="radio" name="optionsRadios"
@@ -33,7 +34,7 @@ var SingleMenuItem = React.createClass({
                     {this.props.val}
                   </label>
                   <div className="searchElement">
-                    <input type="text" placeholder="Search here.." onKeyUp={this.valChange} />
+                    <input type="text" placeholder={placeholder} onKeyUp={this.valChange} />
                   </div>
                 </div>);
     }
@@ -78,10 +79,22 @@ var FilterDropdown = React.createClass({
 
             var numberFilter = (
                                 <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="greater than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="less than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="has" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} val="has not" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
+                                    <div className="singleItem">
+                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                    </div>
+                                </Dropdown.Menu>
+                              );
+
+
+            var dateFilter = (
+                                <Dropdown.Menu className="menuItems pull-right">
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
+                                    <div className="singleItem">
+                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                    </div>
                                 </Dropdown.Menu>
                               );
             
@@ -98,6 +111,9 @@ var FilterDropdown = React.createClass({
                 case 'double':
                 case 'float':
                     FilterMenuItems = numberFilter;
+                break;
+                case 'date':
+                    FilterMenuItems = dateFilter;
                 break;
             }
 
@@ -139,14 +155,14 @@ var Column = React.createClass({
         }
         //var handleSort = this.sortingInit;
         
-        return (<th id={item} width={cellWidth} className="">
+        return (<th id={item} width={cellWidth} className="tableHead">
                     <div className={fixedHead}>
                         <div className="headText">
                             <div className="thtextShow" onClick={this.sortingInit}>
                                 {item}
                             </div>
                             <div className="iconList">
-                                <span className="sortIcon">
+                                <span className="sortIcon"  onClick={this.sortingInit}>
                                     <i className ="fa fa-chevron-up asc-icon" />
                                     <i className ="fa fa-chevron-down desc-icon" />
                                 </span>
@@ -458,6 +474,27 @@ var SignalCircle = React.createClass({
                 <OverlayTrigger trigger="focus" placement="right" overlay={<Popover>{this.props.signalText}</Popover>}>
                   <a className={signalColor}>
                     <span className={signalActive}></span>
+                  </a>
+                </OverlayTrigger>
+    );
+    }
+});
+
+
+//Remove filter
+var RemoveFilterButton = React.createClass({
+    componentDidMount:function(){
+       
+    },
+    render: function(){
+        var filterInfoText = JSON.stringify(this.props.filterInfo);
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        var removeclass = this.props.filterInfo.active ? "removeFilterbtn" : "hide";
+        return (
+                <OverlayTrigger trigger="focus" placement="right" overlay={<Popover>{filterInfoText}</Popover>}>
+                  <a className={removeclass} onClick={this.props.removeFilter}>
+                    <i className="fa fa-times"></i>
                   </a>
                 </OverlayTrigger>
     );

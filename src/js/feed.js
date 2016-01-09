@@ -224,31 +224,29 @@ var feed = (function () {
               var queryMaker = [];
               var termObj = {};
               termObj[columnName] = value[0].trim();
-              queryBody = {
-                "query":{
-                  "term":termObj
-                }
-              }
+              queryBody = {"query":{"match":termObj}};
             break;
 
              case 'greater than':              
-              var queryMaker = [];
-              value.forEach(function(val){
-                var termObj = {};
-                termObj[columnName] = val.trim();
-                var obj = {
-                  'term':termObj
-                };
-                queryMaker.push(obj);
-              });
+              termObj = {};
+              termObj[columnName] = {};
+              termObj[columnName] = {"gte":value[0]};
               queryBody = {
                 "query":{
-                  "bool":{
-                    "should":queryMaker,
-                    "minimum_should_match":1
-                  }
+                  "range":termObj
                 }
-              }
+              };
+            break;
+
+            case 'less than':              
+              termObj = {};
+              termObj[columnName] = {};
+              termObj[columnName] = {"lte":value[0]};
+              queryBody = {
+                "query":{
+                  "range":termObj
+                }
+              };
             break;
           }
           return queryBody;

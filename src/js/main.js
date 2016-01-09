@@ -330,18 +330,18 @@ var HomePage = React.createClass({
             email:EMAIL
         };
 
-        $.ajax({
-          type: "POST",
-          url: lamda,
-          xhrFields: {
-               withCredentials: true
-            },
-          contentType: 'text/plain;charset=UTF-8',
-          dataType: 'json',
-          data: JSON.stringify(data),
-          success: function(data){
-          }
-        }); 
+        var xhr = new XMLHttpRequest();
+        var url = 'https://luway34py8.execute-api.us-east-1.amazonaws.com/prod/appbaseexport';
+        xhr.open("POST", url, true);
+        xhr.withCredentials=true;
+        xhr.setRequestHeader("Content-type", "text/plain;charset=UTF-8");
+        xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4 && xhr.status == 200) {
+        alert(xhr.responseText);
+        }
+        }
+        xhr.send();
+
     },
     applyFilter:function(typeName, columnName, method, value){
         filterVal = value.split(',');
@@ -363,16 +363,27 @@ var HomePage = React.createClass({
             },500);
         }.bind(this));
     },
+    removeFilter:function(){
+        var $this = this;
+        var obj = {
+                        active:false,
+                        applyFilter:this.applyFilter
+                    };
+        this.setState({filterInfo:obj});
+        sdata = [];
+        $this.resetData();     
+        setTimeout(function(){
+            subsetESTypes.forEach(function(typeName){
+                $this.getStreamingData(typeName);
+            })
+        },500);      
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
     
-    // <SignalCircle 
-    //             signalColor={this.state.signalColor}
-    //             signalActive={this.state.signalActive}
-    //             ></SignalCircle>
-
+  
     render: function () {
         return (
             <div>
@@ -402,6 +413,10 @@ var HomePage = React.createClass({
                         signalActive={this.state.signalActive}
                         signalText={this.state.signalText}
                         ></SignalCircle>
+                    <RemoveFilterButton 
+                        removeFilter={this.removeFilter}
+                        filterInfo={this.state.filterInfo}
+                        ></RemoveFilterButton>    
                 </div>
             </div>
         );
