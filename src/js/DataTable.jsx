@@ -8,6 +8,7 @@ var Pretty = require('./FeatureComponent.jsx').Pretty;
 // features.
 var cellWidth = '250px';
 
+//Radio button with appropriate search input field
 var SingleMenuItem = React.createClass({
     getInitialState:function(){
         return {
@@ -41,6 +42,8 @@ var SingleMenuItem = React.createClass({
     }
 });
 
+
+//Filter dropdown for each column header
 var FilterDropdown = React.createClass({
     getInitialState:function(){
         return {

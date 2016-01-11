@@ -172,11 +172,11 @@ var feed = (function () {
             }
           });
         },
-
         filterQuery:function(method, columnName, value, typeName, callback){
           var queryBody = this.createFilterQuery(method, columnName, value, typeName);
           applyStreamSearch(typeName, callback, queryBody);
         },
+        //Create Filter Query by passing attributes
         createFilterQuery:function(method, columnName, value, typeName){
           var queryBody = {};
           switch(method){

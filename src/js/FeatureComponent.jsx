@@ -1,3 +1,6 @@
+//This contains the extra features like 
+//Import data, Export Data, Add document, Pretty Json
+
 var React = require('react');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
