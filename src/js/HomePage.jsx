@@ -1,4 +1,6 @@
-
+var React = require('react');
+var TypeTable = require('./TypeTable.jsx');
+var DataTable = require('./DataTable.jsx');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
 // do so by flowing back the data and calling the `resetData` function
@@ -398,7 +400,7 @@ var HomePage = React.createClass({
                             getTypeDoc={this.getTypeDoc}
                             ExportData={this.exportData} />
                     </div>
-                    <div className="col-xs-12 dataContainer">
+                     <div className="col-xs-12 dataContainer">
                         <DataTable
                             _data={this.state.documents}
                             sortInfo={this.state.sortInfo}
@@ -408,17 +410,11 @@ var HomePage = React.createClass({
                             handleSort={this.handleSort}
                             mappingObj={this.state.mappingObj}/>
                     </div>
-                    <SignalCircle 
-                        signalColor={this.state.signalColor}
-                        signalActive={this.state.signalActive}
-                        signalText={this.state.signalText}
-                        ></SignalCircle>
-                    <RemoveFilterButton 
-                        removeFilter={this.removeFilter}
-                        filterInfo={this.state.filterInfo}
-                        ></RemoveFilterButton>    
+                    
                 </div>
             </div>
         );
     }
 });
+
+module.exports = HomePage;

@@ -1,3 +1,5 @@
+var React = require('react');
+var ReactBootstrap = require('react-bootstrap');
 /*
  * This file contains the utility components, mainly the dropdown menu for
  * selecting which fields to apphear in the table, also the checkboxes component
@@ -11,9 +13,9 @@ var Dropdown = React.createClass({
         var MenuItem = ReactBootstrap.MenuItem;
         // We'll get the dropdown menu items i.e. checkboxes
         // as a list of react components i.e FieldCheckbox.
-        var ColumnsCheckbox =  columns.map(function(item){
+        var ColumnsCheckbox =  columns.map(function(item, i){
             var key = dropdownKeyGen(item);
-            return <FieldCheckbox _type={item} _key={this.key}/>;
+            return <FieldCheckbox key={i} _type={item} _key={this.key}/>;
         });
         return (
             <Dropdown
@@ -94,3 +96,5 @@ var FieldCheckbox = React.createClass({
         );
     }
 });
+
+module.exports = Dropdown;
