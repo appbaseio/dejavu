@@ -185,7 +185,7 @@ var HomePage = React.createClass({
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
-        setInterval(this.setMap, 2000);
+        setInterval(this.setMap, 15000);
     },
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});

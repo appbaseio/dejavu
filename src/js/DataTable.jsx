@@ -199,6 +199,7 @@ var Cell = React.createClass({
             _type = this.props._type;
             to_display = data;
 
+        var columnName = this.props.columnName;
         // cell-data of format ``string`` and ``number`` is rendered inline.
         // If a field is a JSON object instead, it's displayed as a modal pop-up.
         // <a href="#"
@@ -216,6 +217,19 @@ var Cell = React.createClass({
                             </OverlayTrigger>
             }
         }
+        if(columnName == 'json'){
+            to_display = <div className="appId">
+                            <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                                <a href="javascript:void(0);" className="appId_icon">
+                                    <i className="fa fa-external-link" />
+                                </a>
+                            </OverlayTrigger>
+                            <span className="appId_name">
+                                <span className="appId_appname" title={_type}>{_type} / </span>
+                                <span className="appId_id" title={_id}>{_id}</span>
+                            </span>
+                        </div>
+        }    
         return <td
                  width={cellWidth} 
                 id={this.props.unique}
@@ -280,16 +294,16 @@ var DataTable = React.createClass({
         
         //If render from sort, dont change the order of columns
         if(!$this.props.sortInfo.active){
-            fixed = ['json', '_id', '_type'];
-            columns = ['json', '_type', '_id'];
+            fixed = ['json'];
+            columns = ['json'];
             fullColumns = {
                 type:'',
                 columns:columns
             }
             for(var each in data){
-                fullColumns.type = data[each]['_type'];
+                //fullColumns.type = data[each]['_type'];
                 for(column in data[each]){
-                    if(fixed.indexOf(column) <= -1){
+                    if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
                         if(fullColumns.columns.indexOf(column) <= -1){
                             fullColumns.columns.push(column);
                         }
@@ -301,8 +315,8 @@ var DataTable = React.createClass({
         for(var row in data){
             var newRow = {};
             newRow['json'] = data[row]['json'];
-            newRow['_type'] = data[row]['_type'];
-            newRow['_id'] = data[row]['_id'];
+            // newRow['_type'] = data[row]['_type'];
+            // newRow['_id'] = data[row]['_id'];
             for(var each in columns){
                 // We check if every column of the new document
                 // is present already, if not we appen to the
@@ -311,6 +325,7 @@ var DataTable = React.createClass({
                     if(data[row][columns[each]]){
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
+                        newRow['columnName'] = columns[each];
                     }
                     else{
                         // Just to make sure it doesn't display
@@ -319,6 +334,7 @@ var DataTable = React.createClass({
                     }
                 }
             }
+            //console.log(data[row]);
             renderRow = [];
             for(var each in newRow){
                 var _key = keyGen(data[row], each);
@@ -335,8 +351,9 @@ var DataTable = React.createClass({
                                 item={newRow[each]}
                                 unique={_key}
                                 key={_key}
-                                _id={newRow['_id']}
-                                _type={newRow['_type']}
+                                columnName={each}
+                                _id={data[row]['_id']}
+                                _type={data[row]['_type']}
                                 visibility={visibility} />);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
