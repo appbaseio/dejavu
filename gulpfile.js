@@ -6,7 +6,7 @@ var reactify = require('reactify');
 gulp.task('browserify', function() {
 	var b = browserify({
 		entries: ['src/js/app.js'],
-		debug: true
+		debug: false
 	});
 	b.transform(reactify); // use the reactify transform
 	return b.bundle()
@@ -19,4 +19,4 @@ gulp.task('watch', function() {
 	gulp.watch('src/js/*.jsx', ['browserify']);
 });
 
-gulp.task('default', ['watch', 'browserify']);
+gulp.task('default', ['browserify']);
