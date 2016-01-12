@@ -4,6 +4,7 @@
 var React = require('react');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
+var ReactBootstrap = require('react-bootstrap');
 
 var AddDocument = React.createClass({
 
@@ -328,12 +329,55 @@ var Pretty = React.createClass({
     }
 });
 
+//Signal to indicate stream
+var SignalCircle = React.createClass({
+    componentDidMount:function(){
+       
+    },
+    render: function(){
+        var signalColor = "signal-circle "+this.props.signalColor;
+        var signalActive = "spinner "+this.props.signalActive;
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        return (
+                <OverlayTrigger trigger="focus" placement="right" overlay={<Popover id="signal-pop">{this.props.signalText}</Popover>}>
+                  <a className={signalColor}>
+                    <span className={signalActive}></span>
+                  </a>
+                </OverlayTrigger>
+    );
+    }
+});
+
+
+//Remove filter
+var RemoveFilterButton = React.createClass({
+    componentDidMount:function(){
+       
+    },
+    render: function(){
+        var filterInfoText = JSON.stringify(this.props.filterInfo);
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        var removeclass = this.props.filterInfo.active ? "removeFilterbtn" : "hide";
+        return (
+                <OverlayTrigger trigger="focus" placement="right" overlay={<Popover id="remove-pop">{filterInfoText}</Popover>}>
+                  <a className={removeclass} onClick={this.props.removeFilter}>
+                    <i className="fa fa-times"></i>
+                  </a>
+                </OverlayTrigger>
+    );
+    }
+});
+
 
 var FeatureComponent = {
 	AddDocument:AddDocument,
 	ImportData:ImportData,
 	ExportData:ExportData,
-  Pretty:Pretty
+  Pretty:Pretty,
+  SignalCircle:SignalCircle,
+  RemoveFilterButton:RemoveFilterButton
 };
 
 module.exports = FeatureComponent;

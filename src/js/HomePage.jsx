@@ -1,6 +1,7 @@
 var React = require('react');
 var TypeTable = require('./TypeTable.jsx');
 var DataTable = require('./DataTable.jsx');
+var FeatureComponent = require('./FeatureComponent.jsx')
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
 // do so by flowing back the data and calling the `resetData` function
@@ -410,6 +411,13 @@ var HomePage = React.createClass({
                             handleSort={this.handleSort}
                             mappingObj={this.state.mappingObj}/>
                     </div>
+                     <FeatureComponent.SignalCircle 
+                        signalColor={this.state.signalColor}
+                        signalActive={this.state.signalActive}
+                        signalText={this.state.signalText} />
+                    <FeatureComponent.RemoveFilterButton 
+                        removeFilter={this.removeFilter}
+                        filterInfo={this.state.filterInfo} />  
                     
                 </div>
             </div>
