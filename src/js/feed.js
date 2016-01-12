@@ -40,7 +40,7 @@ var feed = (function () {
 
     // applies a searchStream() query on a particular ``type``
     // to establish a continuous query connection.
-    function applyStreamSearch(typeName, callback, queryBody) {
+    function applyStreamSearch(typeName, callback, queryBody, setTotal) {
       if (typeName !== null) {
         var defaultQueryBody = {
           query: {
@@ -56,11 +56,12 @@ var feed = (function () {
           size: 20,
           body: queryBody
         }).on('data', function(res) {
+            setTotal(res.hits.total);
             for (var hit in res.hits.hits) {
               callback(res.hits.hits[hit]);
             }
             if(res.hits.hits.length == 0){
-              callback(null);
+              callback(null, 0);
             }
         }).on('error', function(err) {
             console.log("caught a retrieval error", err);
@@ -103,8 +104,8 @@ var feed = (function () {
 
     return {
         // exposes ``applyStreamSearch()`` as ``getData()``
-        getData: function(typeName, callback) {
-            applyStreamSearch(typeName, callback);
+        getData: function(typeName, callback, setTotal) {
+            applyStreamSearch(typeName, callback, false, setTotal);
         },
         // ``deleteData()`` deletes the data records when
         // a type is unchecked by the user.
@@ -180,9 +181,9 @@ var feed = (function () {
             }
           });
         },
-        filterQuery:function(method, columnName, value, typeName, callback){
+        filterQuery:function(method, columnName, value, typeName, callback, setTotal){
           var queryBody = this.createFilterQuery(method, columnName, value, typeName);
-          applyStreamSearch(typeName, callback, queryBody);
+          applyStreamSearch(typeName, callback, queryBody, setTotal);
         },
         //Create Filter Query by passing attributes
         createFilterQuery:function(method, columnName, value, typeName){

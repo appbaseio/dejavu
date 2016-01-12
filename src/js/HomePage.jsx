@@ -26,6 +26,9 @@ var HomePage = React.createClass({
                         active:false,
                         applyFilter:this.applyFilter
                     },
+                    infoObj:{
+                        total:0
+                    },
                     mappingObj:{}
                 };
     },
@@ -144,6 +147,9 @@ var HomePage = React.createClass({
         feed.getData(typeName, function(update, fromStream){
             this.updateDataOnView(update);
             this.setSignal(fromStream);
+        }.bind(this), function(total){
+            console.log(total);
+            this.setState({infoObj:{'total':total}});
         }.bind(this));
     },
     setSignal:function(fromStream){
@@ -182,10 +188,10 @@ var HomePage = React.createClass({
     componentDidMount: function(){
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
+        setInterval(this.setMap, 2000);
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
-        setInterval(this.setMap, 15000);
     },
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
@@ -206,6 +212,7 @@ var HomePage = React.createClass({
             var mappingObj = feed.getMapping();
             mappingObj.done(function(data){
                 mappingObjData = data;
+                console.log(mappingObjData);
                 getMapFlag = true;
                 $this.setState({'mappingObj':mappingObjData[APPNAME]['mappings']});
             });
@@ -364,6 +371,9 @@ var HomePage = React.createClass({
                 $this.updateDataOnView(update);
                 $this.setSignal(fromStream);
             },500);
+        }.bind(this), function(total){
+            console.log(total);
+            this.setState({infoObj:{'total':total}});
         }.bind(this));
     },
     removeFilter:function(){
@@ -406,19 +416,18 @@ var HomePage = React.createClass({
                             _data={this.state.documents}
                             sortInfo={this.state.sortInfo}
                             filterInfo={this.state.filterInfo}
+                            infoObj={this.state.infoObj}
                             scrollFunction={this.handleScroll}
                             selectedTypes={subsetESTypes}
                             handleSort={this.handleSort}
-                            mappingObj={this.state.mappingObj}/>
+                            mappingObj={this.state.mappingObj}
+                            removeFilter ={this.removeFilter}/>
                     </div>
                      <FeatureComponent.SignalCircle 
                         signalColor={this.state.signalColor}
                         signalActive={this.state.signalActive}
                         signalText={this.state.signalText} />
-                    <FeatureComponent.RemoveFilterButton 
-                        removeFilter={this.removeFilter}
-                        filterInfo={this.state.filterInfo} />  
-                    
+                     
                 </div>
             </div>
         );

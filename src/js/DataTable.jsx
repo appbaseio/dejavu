@@ -154,6 +154,7 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
+
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -288,6 +289,33 @@ var Table = React.createClass({
     }
 })
 
+var Info = React.createClass({
+    render:function(){
+        var infoObj = this.props.infoObj;
+        var filterInfo = this.props.filterInfo;
+        var filterClass = filterInfo.active ? 'col-xs-6 pull-right text-right pd-r0':'hide'
+        return (
+                <div className="infoRow container">
+                <div className=" row">
+                    <div className="col-xs-6 pull-left text-left pd-l0">
+                        <label><strong>Total :</strong> </label>{infoObj.total}
+                    </div>
+
+                    <div className={filterClass}>
+                        <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
+                            <span className="inside-info">
+                                {filterInfo.method} : {filterInfo.columnName}
+                            </span> 
+                            <span className="close-btn">
+                                <i className="fa fa-times"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                </div>
+                )
+    }
+});
 // This has the main properties that define the main data table
 // i.e. the right side.
 var DataTable = React.createClass({
@@ -304,7 +332,7 @@ var DataTable = React.createClass({
                 columns:columns
             }
             for(var each in data){
-                //fullColumns.type = data[each]['_type'];
+                fullColumns.type = data[each]['_type'];
                 for(column in data[each]){
                     if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
                         if(fullColumns.columns.indexOf(column) <= -1){
@@ -336,7 +364,6 @@ var DataTable = React.createClass({
                     }
                 }
             }
-            console.log(data[row], newRow);
             renderRow = [];
             for(var each in newRow){
                 var _key = keyGen(data[row], each);
@@ -380,12 +407,17 @@ var DataTable = React.createClass({
         return (
             <div className="dejavu-table">
             <Dropdown cols={columns} />
-            <Table
-             renderColumns={renderColumns}
-             renderRows={renderRows}
-             scrollFunction={this.props.scrollFunction}
-             selectedTypes={this.props.selectedTypes}
-             filterInfo={this.props.filterInfo}/>
+            <Info infoObj={this.props.infoObj} 
+            filterInfo = {this.props.filterInfo} 
+            removeFilter={this.props.removeFilter}/>
+            <div className="outsideTable">
+                <Table
+                 renderColumns={renderColumns}
+                 renderRows={renderRows}
+                 scrollFunction={this.props.scrollFunction}
+                 selectedTypes={this.props.selectedTypes}
+                 filterInfo={this.props.filterInfo}/>
+             </div>
             </div>
         );
     }
