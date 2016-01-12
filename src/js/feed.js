@@ -131,15 +131,23 @@ var feed = (function () {
         },
         // gets all the types of the current app;
         getTypes: function(callback){
-            appbaseRef.getTypes().on('data', function(res) {
-                var types = res.filter(function(val){return val[0]!=='.'});
-                if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
-                  esTypes = types.slice();
-                  callback(types);
-                }
-            }).on('error', function(err) {
-                console.log('error in retrieving types: ', err)
-            })
+            if(typeof APPNAME != 'undefined'){
+              appbaseRef.getTypes().on('data', function(res) {
+                  var types = res.filter(function(val){return val[0]!=='.'});
+                  if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
+                    esTypes = types.slice();
+                    callback(types);
+                  }
+              }).on('error', function(err) {
+                  console.log('error in retrieving types: ', err)
+              })
+            }
+            else{
+              var $this = this;
+              setTimeout(function(){
+                  $this.getTypes(callback);
+              },1000);
+            }
         },        
         indexData: function(recordObject, callback) {
           console.log(recordObject);
