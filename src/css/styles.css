@@ -219,6 +219,7 @@ body{
 .column_width{
   width: 250px;
   max-width: 250px;
+  min-width: 250px;
   overflow: hidden;
 }
 .add-record-btn,

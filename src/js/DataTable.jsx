@@ -207,17 +207,8 @@ var Cell = React.createClass({
         //                         <i className="fa fa-external-link" />
         //                     </a>;
 
-        if(typeof data !== 'string'){
-            if(typeof data !== 'number'){
-                prettyData =  <Pretty json={data} />
-                to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-                                <a href="javascript:void(0);">
-                                    <i className="fa fa-external-link" />
-                                </a>
-                            </OverlayTrigger>
-            }
-        }
         if(columnName == 'json'){
+            prettyData =  <Pretty json={data} />
             to_display = <div className="appId">
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon">
@@ -229,7 +220,19 @@ var Cell = React.createClass({
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
                         </div>
-        }    
+        }   
+        else{
+            if(typeof data !== 'string'){
+                if(typeof data !== 'number'){
+                    prettyData =  <Pretty json={data} />
+                    to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                                    <a href="javascript:void(0);">
+                                        <i className="fa fa-external-link" />
+                                    </a>
+                                </OverlayTrigger>
+                }
+            }
+        } 
         return <td
                  width={cellWidth} 
                 id={this.props.unique}
@@ -325,7 +328,6 @@ var DataTable = React.createClass({
                     if(data[row][columns[each]]){
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
-                        newRow['columnName'] = columns[each];
                     }
                     else{
                         // Just to make sure it doesn't display
@@ -334,7 +336,7 @@ var DataTable = React.createClass({
                     }
                 }
             }
-            //console.log(data[row]);
+            console.log(data[row], newRow);
             renderRow = [];
             for(var each in newRow){
                 var _key = keyGen(data[row], each);
