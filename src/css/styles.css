@@ -404,6 +404,7 @@ body{
 }
 .appId .appId_id{
   max-width: 70px;
+  height: 28px;
   display: inline-block;
   float: left;
   overflow: hidden;
