@@ -299,13 +299,13 @@ var Info = React.createClass({
                 <div className="infoRow container">
                 <div className=" row">
                     <div className="col-xs-6 pull-left text-left pd-l0">
-                        <label><strong>Total :</strong> </label>{infoObj.total}
+                        <label><strong>Total:&nbsp;</strong> </label>{infoObj.total}
                     </div>
 
                     <div className={filterClass}>
                         <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
                             <span className="inside-info">
-                                {filterInfo.method} : {filterInfo.columnName}
+                                {filterInfo.method}:&nbsp;{filterInfo.columnName}
                             </span> 
                             <span className="close-btn">
                                 <i className="fa fa-times"></i>
