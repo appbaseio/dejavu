@@ -140,12 +140,18 @@ var FilterDropdown = React.createClass({
 });
 
 var Column = React.createClass({
+    getInitialState:function(){
+        return {type:null};
+    },
     sortingInit:function(){
         this.props.handleSort(this.props._item, this.props._type, this);
     },
+    componentDidMount:function(){
+        this.setState({type:this.props._type});
+    },
     render: function(){
         var item = this.props._item;
-        var type = this.props._type;
+        var type = this.state.type == null ? this.props._type : this.state.type;
         var sortInfo = this.props._sortInfo;
         var filterInfo = this.props.filterInfo;
 
@@ -155,7 +161,6 @@ var Column = React.createClass({
         var filterId = 'filter-'+item;
         var datatype = null;
         var itemText = item == 'json' ? 'type / id' : item;
-
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
