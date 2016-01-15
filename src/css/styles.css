@@ -381,7 +381,7 @@ body{
   display: inline-block;
   text-align: center;
   border-radius: 50%;
-  border: 1px solid #3BC7F6;
+  border: 1px solid #eee;
   line-height: 30px;
   float: left;
   background: #3BC7F6;
@@ -390,7 +390,7 @@ body{
 .appId .appId_name{
     display: inline-block;
     float: left;
-    border: 1px solid #3BC7F6;
+    border: 1px solid #eee;
     border-left: 0;
     padding-left: 20px;
     margin-left: -15px;

@@ -154,6 +154,7 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
+        var itemText = item == 'json' ? 'type / id' : item;
 
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
@@ -164,7 +165,7 @@ var Column = React.createClass({
                     <div className={fixedHead}>
                         <div className="headText">
                             <div className="thtextShow" onClick={this.sortingInit}>
-                                {item}
+                                {itemText}
                             </div>
                             <div className="iconList">
                                 <span className="sortIcon"  onClick={this.sortingInit}>
@@ -213,11 +214,11 @@ var Cell = React.createClass({
             to_display = <div className="appId">
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon">
-                                    <i className="fa fa-external-link" />
+                                    <i className="fa fa-table" />
                                 </a>
                             </OverlayTrigger>
                             <span className="appId_name">
-                                <span className="appId_appname" title={_type}>{_type} / </span>
+                                <span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
                         </div>
