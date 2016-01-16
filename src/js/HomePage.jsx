@@ -79,7 +79,7 @@ var HomePage = React.createClass({
             //if sort is already applied
             var sortedArray = this.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
             this.setState({documents: sortedArray});
-        }  
+        }
         else
          this.setState({documents: sdata_values});
     },
@@ -91,6 +91,7 @@ var HomePage = React.createClass({
         update = this.flatten(update, this.injectLink);
         var key = rowKeyGen(update);
 
+        if (!Array.isArray(update)) {
         //If the record already exists in sdata, it should
         //either be a delete request or a change to an
         //existing record.
@@ -141,6 +142,24 @@ var HomePage = React.createClass({
                 offsets[checkType] += 1;
             } else offsets[checkType] = 1;
         }
+      }
+      else { // when update is an array
+          for (var each = 0; each < update.length; each++) {
+            update[each] = this.flatten(update[each], this.injectLink);
+            var key = rowKeyGen(update[each]);
+            sdata[key] = update[each];
+            if (!offsets[update[each]._type])
+              offsets[update[each]._type] = 1;
+            else
+              offsets[update[each]._type] += 1;
+          }
+          this.resetData();
+          for (var each = 0; each < update.length; each++) {
+            update[each] = this.flatten(update[each], this.injectLink);
+            var key = rowKeyGen(update[each]);
+            newTransition(key);
+          }
+      }
         this.setSampleData(update);
     },
     getStreamingData: function(typeName){
@@ -156,7 +175,7 @@ var HomePage = React.createClass({
         this.setState({
             'signalColor':'btn-warning',
             'signalActive':'active',
-            'signalText':'Stream is waiting for data updates.' 
+            'signalText':'Stream is waiting for data updates.'
         });
         if(fromStream){
             this.setState({'signalColor':'btn-success'});
@@ -166,10 +185,10 @@ var HomePage = React.createClass({
     paginateData: function(offsets) {
         var filterInfo = this.state.filterInfo;
         var queryBody = null;
-        
+
         if(filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
-        
+
         feed.paginateData(offsets, function(update) {
             this.updateDataOnView(update);
         }.bind(this), queryBody);
@@ -239,7 +258,7 @@ var HomePage = React.createClass({
             this.currentItem = itemIn;
         }
         this.currentOrder = finalVal;
-        return finalVal;  
+        return finalVal;
     },
     handleSort:function(item, type, eve){
         order = this.getOrder(item);
@@ -259,7 +278,7 @@ var HomePage = React.createClass({
         var $this = this;
         var existsOnly = _.filter(arr, function(elm){ return typeof elm[prop] != 'undefined' });
         var nonExistsOnly = _.filter(arr, function(elm){ return typeof elm[prop] == 'undefined' });
-        
+
         var a2 = existsOnly.sort($this.dynamicSort(prop, reverse));
         var a2 = $.merge(a2, nonExistsOnly);
         return a2;
@@ -384,19 +403,19 @@ var HomePage = React.createClass({
                     };
         this.setState({filterInfo:obj});
         sdata = [];
-        $this.resetData();     
+        $this.resetData();
         setTimeout(function(){
             subsetESTypes.forEach(function(typeName){
                 $this.getStreamingData(typeName);
             })
-        },500);      
+        },500);
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
-    
-  
+
+
     render: function () {
         return (
             <div>
@@ -406,7 +425,7 @@ var HomePage = React.createClass({
                         <TypeTable
                             Types={this.state.types}
                             watchTypeHandler={this.watchStock}
-                            unwatchTypeHandler={this.unwatchStock} 
+                            unwatchTypeHandler={this.unwatchStock}
                             addRecord = {this.addRecord}
                             getTypeDoc={this.getTypeDoc}
                             ExportData={this.exportData} />
@@ -423,11 +442,11 @@ var HomePage = React.createClass({
                             mappingObj={this.state.mappingObj}
                             removeFilter ={this.removeFilter}/>
                     </div>
-                     <FeatureComponent.SignalCircle 
+                     <FeatureComponent.SignalCircle
                         signalColor={this.state.signalColor}
                         signalActive={this.state.signalActive}
                         signalText={this.state.signalText} />
-                     
+
                 </div>
             </div>
         );
