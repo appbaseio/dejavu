@@ -119,6 +119,9 @@ var FilterDropdown = React.createClass({
                 case 'date':
                     FilterMenuItems = dateFilter;
                 break;
+                default:
+                    datatype = null;
+                break;
             }
 
             if(datatype == null){
@@ -164,6 +167,7 @@ var Column = React.createClass({
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
+        //console.log(datatype, item);
         //var handleSort = this.sortingInit;
         
         return (<th id={item} width={cellWidth} className="tableHead">
