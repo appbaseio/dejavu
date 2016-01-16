@@ -148,7 +148,6 @@ var HomePage = React.createClass({
             this.updateDataOnView(update);
             this.setSignal(fromStream);
         }.bind(this), function(total){
-            console.log(total);
             this.setState({infoObj:{'total':total}});
         }.bind(this));
     },
@@ -212,7 +211,6 @@ var HomePage = React.createClass({
             var mappingObj = feed.getMapping();
             mappingObj.done(function(data){
                 mappingObjData = data;
-                console.log(mappingObjData);
                 getMapFlag = true;
                 $this.setState({'mappingObj':mappingObjData[APPNAME]['mappings']});
             });
@@ -255,7 +253,6 @@ var HomePage = React.createClass({
         this.setState({documents: sortedArray});
     },
     sortIt:function(arr, prop, reverse) {
-        console.log(prop);
         var $this = this;
         var existsOnly = _.filter(arr, function(elm){ return typeof elm[prop] != 'undefined' });
         var nonExistsOnly = _.filter(arr, function(elm){ return typeof elm[prop] == 'undefined' });
@@ -372,7 +369,6 @@ var HomePage = React.createClass({
                 $this.setSignal(fromStream);
             },500);
         }.bind(this), function(total){
-            console.log(total);
             this.setState({infoObj:{'total':total}});
         }.bind(this));
     },
