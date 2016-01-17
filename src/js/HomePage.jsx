@@ -137,10 +137,6 @@ var HomePage = React.createClass({
             }
             var _key = rowKeyGen(update);
             newTransition(_key);
-            var checkType = update['_type'];
-            if(checkType && offsets[checkType]) {
-                offsets[checkType] += 1;
-            } else offsets[checkType] = 1;
         }
       }
       else { // when update is an array
@@ -148,22 +144,17 @@ var HomePage = React.createClass({
             update[each] = this.flatten(update[each], this.injectLink);
             var key = rowKeyGen(update[each]);
             sdata[key] = update[each];
-            if (!offsets[update[each]._type])
-              offsets[update[each]._type] = 1;
-            else
-              offsets[update[each]._type] += 1;
           }
           this.resetData();
           for (var each = 0; each < update.length; each++) {
-            update[each] = this.flatten(update[each], this.injectLink);
             var key = rowKeyGen(update[each]);
             newTransition(key);
           }
       }
         this.setSampleData(update);
     },
-    getStreamingData: function(typeName){
-        feed.getData(typeName, function(update, fromStream){
+    getStreamingData: function(types){
+        feed.getData(types, function(update, fromStream){
             this.updateDataOnView(update);
             this.setSignal(fromStream);
         }.bind(this), function(total){
@@ -181,14 +172,13 @@ var HomePage = React.createClass({
         }
     },
     // infinite scroll implementation
-    paginateData: function(offsets) {
+    paginateData: function() {
         var filterInfo = this.state.filterInfo;
         var queryBody = null;
 
         if(filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
-
-        feed.paginateData(offsets, function(update) {
+        feed.paginateData(function(update) {
             this.updateDataOnView(update);
         }.bind(this), queryBody);
     },
@@ -214,14 +204,14 @@ var HomePage = React.createClass({
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
         subsetESTypes.push(typeName);
-        this.getStreamingData(typeName);
+        this.getStreamingData(subsetESTypes);
         console.log("selections: ", subsetESTypes);
     },
     unwatchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
-        this.getStreamingData(null);
+        this.getStreamingData(subsetESTypes);
         console.log("selections: ", subsetESTypes);
     },
     setMap:function(){
@@ -243,7 +233,7 @@ var HomePage = React.createClass({
             niche = elem.scrollHeight;
         // Plug in a handler which takes care of infinite scrolling
         if(upar + scroll >= niche) {
-            this.paginateData(offsets);
+            this.paginateData();
         }
     },
     getOrder:function(itemIn){
@@ -401,9 +391,7 @@ var HomePage = React.createClass({
         sdata = [];
         $this.resetData();
         setTimeout(function(){
-            subsetESTypes.forEach(function(typeName){
-                $this.getStreamingData(typeName);
-            })
+            $this.getStreamingData(subsetESTypes);
         },500);
     },
     //The homepage is built on two children components(which may

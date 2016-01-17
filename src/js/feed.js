@@ -5,6 +5,7 @@
 
 // **Configs:** Appname and Credentials
 const HOSTNAME = "scalr.api.appbase.io"
+const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
@@ -33,14 +34,14 @@ var sdata = {}; // data to be displayed in table
 var headers = ["_type", "_id"];
 var esTypes = []; // all the types in current 'app'
 var subsetESTypes = []; // currently 'selected' types
-var offsets = {}; // helps us for pagination
+var dataOffset = 0; // pagination offset
 
 var feed = (function() {
 
     // applies a searchStream() query on a particular ``type``
     // to establish a continuous query connection.
-    function applyStreamSearch(typeName, callback, queryBody, setTotal) {
-        if (typeName !== null) {
+    function applyStreamSearch(types, callback, queryBody, setTotal) {
+        if (types !== null) {
             var defaultQueryBody = {
                 query: {
                     match_all: {}
@@ -50,22 +51,24 @@ var feed = (function() {
             var queryBody = queryBody ? queryBody : defaultQueryBody;
             // get historical data
             appbaseRef.search({
-                    type: typeName,
+                    type: types,
                     from: 0,
-                    size: 20,
+                    size: DATA_SIZE,
                     body: queryBody
                 }).on('data', function(res) {
                     setTotal(res.hits.total);
-                    callback(res.hits.hits);
+                    dataOffset += DATA_SIZE;
                     if (res.hits.hits.length == 0) {
                         callback(null, 0);
+                    } else {
+                        callback(res.hits.hits);
                     }
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
                 })
                 // get new data updates
             appbaseRef.searchStream({
-                type: typeName,
+                type: types,
                 body: queryBody,
             }).on('data', function(res) {
                 callback(res, true);
@@ -79,28 +82,27 @@ var feed = (function() {
     // to the bottom of the existing results.
     function paginationSearch(typeName, from, callback, queryBody) {
         if (typeName !== null)
-
             var defaultQueryBody = {
-            query: {
-                match_all: {}
+                query: {
+                    match_all: {}
+                }
             }
-        }
         var queryBody = queryBody ? queryBody : defaultQueryBody;
-        console.log("calling appbase search, ", typeName, from);
         appbaseRef.search({
             type: typeName,
             from: from,
-            size: 20,
+            size: DATA_SIZE,
             body: queryBody
         }).on('data', function(res) {
+            dataOffset += DATA_SIZE;
             callback(res.hits.hits);
         })
     }
 
     return {
         // exposes ``applyStreamSearch()`` as ``getData()``
-        getData: function(typeName, callback, setTotal) {
-            applyStreamSearch(typeName, callback, false, setTotal);
+        getData: function(types, callback, setTotal) {
+            applyStreamSearch(types, callback, false, setTotal);
         },
         // ``deleteData()`` deletes the data records when
         // a type is unchecked by the user.
@@ -113,16 +115,13 @@ var feed = (function() {
             sdata = localSdata.slice();
             callback(sdata);
         },
-        // ``paginateData()`` finds the type offsets in
-        // multiples of 20 and finds new results using the offset.
-        paginateData: function(offsets, callback, queryBody) {
-            for (type in offsets) {
-                if (offsets[type] >= 20 && offsets[type] % 20 === 0) {
-                    if (queryBody != null)
-                        paginationSearch(type, offsets[type], callback, queryBody)
-                    else
-                        paginationSearch(type, offsets[type], callback)
-                }
+        // ``paginateData()`` finds new results from the data offset.
+        paginateData: function(callback, queryBody) {
+            if (dataOffset >= DATA_SIZE && dataOffset % DATA_SIZE === 0) {
+                if (queryBody != null)
+                    paginationSearch(subsetESTypes, dataOffset, callback, queryBody)
+                else
+                    paginationSearch(subsetESTypes, dataOffset, callback)
             }
         },
         // gets all the types of the current app;
