@@ -21,12 +21,17 @@ label {
   top: 50%;
   left: 50%;
 }
-
+.pd-0{
+  padding: 0;
+}
 .pd-r0{
-  padding-right: 0
+  padding-right: 0;
 }
 .pd-l0{
-  padding-left: 0
+  padding-left: 0;
+}
+.pd-r10{
+  padding-right: 10px;
 }
 .removeFilter{
   background: #3BC7F6;
@@ -262,12 +267,17 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
-.add-record-btn,
 .export-record-btn,
 .import-record-btn{
   position: absolute;
   top: 14px;
   right: 60px;
+}
+.add-record-btn{
+  position: relative;
+  top: auto;
+  right: auto;
+  float: right;
 }
 .export-record-btn{
   right: 102px;

@@ -414,8 +414,6 @@ var HomePage = React.createClass({
                             Types={this.state.types}
                             watchTypeHandler={this.watchStock}
                             unwatchTypeHandler={this.unwatchStock}
-                            addRecord = {this.addRecord}
-                            getTypeDoc={this.getTypeDoc}
                             ExportData={this.exportData} />
                     </div>
                      <div className="col-xs-12 dataContainer">
@@ -428,7 +426,11 @@ var HomePage = React.createClass({
                             selectedTypes={subsetESTypes}
                             handleSort={this.handleSort}
                             mappingObj={this.state.mappingObj}
-                            removeFilter ={this.removeFilter}/>
+                            removeFilter ={this.removeFilter}
+                            addRecord = {this.addRecord}
+                            getTypeDoc={this.getTypeDoc}
+                            Types={this.state.types}
+                          />
                     </div>
                      <FeatureComponent.SignalCircle
                         signalColor={this.state.signalColor}

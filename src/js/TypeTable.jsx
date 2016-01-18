@@ -84,12 +84,6 @@ var TypeTable = React.createClass({
             types={this.props.Types} 
             ExportData ={this.props.ExportData}/>
 
-             <FeatureComponent.AddDocument 
-            types={this.props.Types} 
-            addRecord ={this.props.addRecord}
-            getTypeDoc={this.props.getTypeDoc} />
-
-
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>

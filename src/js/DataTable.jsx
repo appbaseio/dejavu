@@ -1,7 +1,9 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
 var Dropdown = require('./dropdown.jsx');
-var Pretty = require('./FeatureComponent.jsx').Pretty;
+var FeatureComponent = require('./FeatureComponent.jsx');
+var Pretty = FeatureComponent.Pretty;
+
 // row/column manipulation functions.
 // We decided to roll our own as existing
 // libs with React.JS were missing critical
@@ -300,23 +302,28 @@ var Info = React.createClass({
     render:function(){
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
-        var filterClass = filterInfo.active ? 'col-xs-6 pull-right text-right pd-r0':'hide'
+        var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide'
         return (
                 <div className="infoRow container">
                 <div className=" row">
                     <div className="col-xs-6 pull-left text-left pd-l0">
                         <label><strong>Total:&nbsp;</strong> </label>{infoObj.total}
                     </div>
-
-                    <div className={filterClass}>
-                        <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
-                            <span className="inside-info">
-                                {filterInfo.method}:&nbsp;{filterInfo.columnName}
-                            </span> 
-                            <span className="close-btn">
-                                <i className="fa fa-times"></i>
-                            </span>
-                        </a>
+                    <div className="col-xs-6 pull-right pd-r0">
+                        <FeatureComponent.AddDocument 
+                            types={this.props.types} 
+                            addRecord ={this.props.addRecord}
+                            getTypeDoc={this.props.getTypeDoc} />
+                        <div className={filterClass}>
+                            <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
+                                <span className="inside-info">
+                                    {filterInfo.method}:&nbsp;{filterInfo.columnName}
+                                </span> 
+                                <span className="close-btn">
+                                    <i className="fa fa-times"></i>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -414,16 +421,21 @@ var DataTable = React.createClass({
         return (
             <div className="dejavu-table">
             <Dropdown cols={columns} />
+            
             <Info infoObj={this.props.infoObj} 
             filterInfo = {this.props.filterInfo} 
-            removeFilter={this.props.removeFilter}/>
+            removeFilter={this.props.removeFilter}
+            types={this.props.Types} 
+            addRecord ={this.props.addRecord}
+            getTypeDoc={this.props.getTypeDoc} />
+
             <div className="outsideTable">
                 <Table
                  renderColumns={renderColumns}
                  renderRows={renderRows}
                  scrollFunction={this.props.scrollFunction}
                  selectedTypes={this.props.selectedTypes}
-                 filterInfo={this.props.filterInfo}/>
+                 filterInfo={this.props.filterInfo} />
              </div>
             </div>
         );

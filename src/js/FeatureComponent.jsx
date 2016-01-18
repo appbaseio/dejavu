@@ -77,9 +77,13 @@ var AddDocument = React.createClass({
     return true;
   },
   render:function() {
-    var typeList = this.props.types.map(function(type){
-      return <option value={type}>{type}</option>
-    });
+    var typeList = '';
+    if(typeof this.props.types != 'undefined')
+    { 
+      typeList = this.props.types.map(function(type){
+        return <option value={type}>{type}</option>
+      });
+    }
     if(this.state.validate.touch){
       var validateClass = {};
       validateClass.body = this.state.validate.body ? 'form-group' : 'form-group has-error' ;
