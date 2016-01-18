@@ -401,18 +401,13 @@ body{
     padding-left: 20px;
     margin-left: -15px;
     line-height: 28px;
-    max-width: 200px;
+    max-width: 215px;
     overflow: hidden;
+    height: 28px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .appId .appId_appname{
      display: inline-block;
     float: left;
-}
-.appId .appId_id{
-  max-width: 70px;
-  height: 28px;
-  display: inline-block;
-  float: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
