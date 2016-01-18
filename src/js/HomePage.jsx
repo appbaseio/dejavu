@@ -185,6 +185,10 @@ var HomePage = React.createClass({
     // only called on change in types.
     getStreamingTypes: function() {
         feed.getTypes(function(update) {
+            update = update.sort(function (a, b) {
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
+            console.log(update);
             this.setState({types: update});
         }.bind(this));
     },
