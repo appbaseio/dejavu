@@ -302,7 +302,10 @@ var Info = React.createClass({
     render:function(){
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
-        var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide'
+        var sortInfo = this.props.sortInfo;
+        console.log(sortInfo);
+        var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
+        var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
         return (
                 <div className="infoRow container">
                 <div className=" row">
@@ -318,6 +321,16 @@ var Info = React.createClass({
                             <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
                                 <span className="inside-info">
                                     {filterInfo.method}:&nbsp;{filterInfo.columnName}
+                                </span> 
+                                <span className="close-btn">
+                                    <i className="fa fa-times"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div className={sortClass}>
+                            <a href="javascript:void(0)" onClick={this.props.removeSort} className="removeFilter">
+                                <span className="inside-info">
+                                    {sortInfo.column}
                                 </span> 
                                 <span className="close-btn">
                                     <i className="fa fa-times"></i>
@@ -425,9 +438,11 @@ var DataTable = React.createClass({
             <Info infoObj={this.props.infoObj} 
             filterInfo = {this.props.filterInfo} 
             removeFilter={this.props.removeFilter}
+            removeSort = {this.props.removeSort}
             types={this.props.Types} 
             addRecord ={this.props.addRecord}
-            getTypeDoc={this.props.getTypeDoc} />
+            getTypeDoc={this.props.getTypeDoc}
+            sortInfo ={this.props.sortInfo} />
 
             <div className="outsideTable">
                 <Table

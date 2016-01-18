@@ -405,6 +405,12 @@ var HomePage = React.createClass({
             $this.getStreamingData(subsetESTypes);
         },500);
     },
+    removeSort:function(){
+        var docs = this.state.documents;
+        var sortedArray = this.sortIt(docs, '_type', false);
+        this.setState({documents: sortedArray});
+        this.setState({sortInfo:{active:false}});
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -437,6 +443,7 @@ var HomePage = React.createClass({
                             addRecord = {this.addRecord}
                             getTypeDoc={this.getTypeDoc}
                             Types={this.state.types}
+                            removeSort = {this.removeSort}
                           />
                     </div>
                      <FeatureComponent.SignalCircle
