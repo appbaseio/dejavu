@@ -107,12 +107,13 @@ var feed = (function() {
         // ``deleteData()`` deletes the data records when
         // a type is unchecked by the user.
         deleteData: function(typeName, callback) {
-            localSdata = [];
+            localSdata = {};
             for (data in sdata) {
-                if (sdata[data]._type !== typeName)
-                    localSdata.push(sdata[data]);
+                if (sdata[data]._type !== typeName){
+                    localSdata[data] = sdata[data];
+                }
             }
-            sdata = localSdata.slice();
+            sdata = localSdata;
             callback(sdata);
         },
         // ``paginateData()`` finds new results from the data offset.

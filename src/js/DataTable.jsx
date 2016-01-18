@@ -303,7 +303,6 @@ var Info = React.createClass({
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
-        console.log(sortInfo);
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
         return (

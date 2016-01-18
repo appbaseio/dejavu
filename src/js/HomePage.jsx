@@ -73,7 +73,6 @@ var HomePage = React.createClass({
 
     resetData: function(){
         sdata_values = [];
-        
         for(each in sdata){
             sdata_values.push(sdata[each]);
         }
@@ -161,12 +160,14 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        feed.getData(types, function(update, fromStream){
-            this.updateDataOnView(update);
-            this.setSignal(fromStream);
-        }.bind(this), function(total){
-            this.setState({infoObj:{'total':total}});
-        }.bind(this));
+        if(types.length){
+            feed.getData(types, function(update, fromStream){
+                this.updateDataOnView(update);
+                this.setSignal(fromStream);
+            }.bind(this), function(total){
+                this.setState({infoObj:{'total':total}});
+            }.bind(this));
+        }
     },
     setSignal:function(fromStream){
         this.setState({
@@ -195,7 +196,6 @@ var HomePage = React.createClass({
             update = update.sort(function (a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
-            console.log(update);
             this.setState({types: update});
         }.bind(this));
     },
