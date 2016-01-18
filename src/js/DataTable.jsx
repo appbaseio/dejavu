@@ -307,7 +307,7 @@ var Info = React.createClass({
                 <div className="infoRow container">
                 <div className=" row">
                     <div className="col-xs-6 pull-left text-left pd-l0">
-                        <label><strong>Total:&nbsp;</strong> </label>{infoObj.total}
+                        <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">
                         <FeatureComponent.AddDocument 

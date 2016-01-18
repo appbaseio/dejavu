@@ -413,7 +413,7 @@ body{
     line-height: 28px;
     max-width: 215px;
     overflow: hidden;
-    height: 28px;
+    height: 30px;
     white-space: nowrap;
     text-overflow: ellipsis;
 }

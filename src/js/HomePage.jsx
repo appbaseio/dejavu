@@ -27,6 +27,7 @@ var HomePage = React.createClass({
                         applyFilter:this.applyFilter
                     },
                     infoObj:{
+                        showing:0,
                         total:0
                     },
                     mappingObj:{}
@@ -72,6 +73,7 @@ var HomePage = React.createClass({
 
     resetData: function(){
         sdata_values = [];
+        
         for(each in sdata){
             sdata_values.push(sdata[each]);
         }
@@ -82,6 +84,11 @@ var HomePage = React.createClass({
         }
         else
          this.setState({documents: sdata_values});
+
+        var showing = this.state.documents.length;
+        var infoObj = this.state.infoObj;
+        infoObj.showing = showing;
+        this.setState({infoObj:infoObj});
     },
 
     // Logic to stream continuous data.
