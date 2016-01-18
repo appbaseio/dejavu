@@ -382,10 +382,13 @@ body{
   text-align: center;
   border-radius: 50%;
   border: 1px solid #eee;
-  line-height: 30px;
+  line-height: 26px;
   float: left;
   background: #3BC7F6;
   color: #fff;
+}
+.appId .appId_icon:before{
+  content: "{}"
 }
 .appId .appId_name{
     display: inline-block;
