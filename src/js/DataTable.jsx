@@ -222,7 +222,7 @@ var Cell = React.createClass({
             prettyData =  <Pretty json={data} />
             to_display = <div className="appId">
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-                                <a href="javascript:void(0);" className="appId_icon"></a>
+                                <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
                             <span className="appId_name">
                                 <span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
@@ -235,8 +235,7 @@ var Cell = React.createClass({
                 if(typeof data !== 'number'){
                     prettyData =  <Pretty json={data} />
                     to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-                                    <a href="javascript:void(0);">
-                                        <i className="fa fa-external-link" />
+                                    <a href="javascript:void(0);"  className="bracketIcon">
                                     </a>
                                 </OverlayTrigger>
                 }

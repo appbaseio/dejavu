@@ -387,7 +387,10 @@ body{
   background: #3BC7F6;
   color: #fff;
 }
-.appId .appId_icon:before{
+.bracketIcon:hover{
+  text-decoration: none;
+}
+.bracketIcon:before{
   content: "{}"
 }
 .appId .appId_name{
