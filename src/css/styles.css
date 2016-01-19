@@ -44,7 +44,7 @@ label {
 .outsideTable{
   position: relative;
   height: 100%;
-  padding-top: 34px;
+  padding-top: 40px;
 }
 .infoRow{
   position: absolute;
@@ -53,7 +53,8 @@ label {
   top: 0;
   z-index: 5555;
   padding: 5px 22px;
-  background: #ddd;
+  background: #f8fafb;
+  border-bottom: 1px solid #eee;
 }
 .removeFilter .inside-info{
   padding: 5px 10px;
@@ -151,9 +152,9 @@ body{
 }
 .typeContainer{
   width: 270px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid #eee;
   padding: 15px;
-  background: #fff;
+  background: #f8fafb;
   z-index: 2;
 }
 .dataContainer{
