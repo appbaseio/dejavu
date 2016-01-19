@@ -269,6 +269,7 @@ var HomePage = React.createClass({
             }
         });
         var docs = this.state.documents;
+        alert(item);
         var sortedArray = this.sortIt(docs, item, order);
         this.setState({documents: sortedArray});
     },
@@ -337,38 +338,34 @@ var HomePage = React.createClass({
     exportData:function(){
         var form = $('#addObjectForm_export').serializeArray();
         var exportObject = {
-            type:[]
+            type:[],
+            username:PROFILE.name
         };
         form.forEach(function(val){
             if(val.name == 'type'){
                 exportObject.type.push(val.value);
             }
             else if(val.name == 'body'){
-                exportObject.queryBody = val.value;
+                exportObject.query = JSON.parse(val.value);
             }
         });
 
-        var lamda = 'https://luway34py8.execute-api.us-east-1.amazonaws.com/prod/appbaseexport';
-        var createdUrl = 'https://'+USERNAME+':'+PASSWORD+'@scalr.api.appbase.io/'+APPNAME+'/'+exportObject.type.join(',')+'/_search?scroll=10m';
-        var queryBody = exportObject.queryBody ? exportObject.queryBody : {};
-        data = {
-            url:createdUrl,
-            body:queryBody,
-            email:EMAIL
-        };
+        var url = 'https://accapi.appbase.io/app/'+APPID+'/export';
 
-        var xhr = new XMLHttpRequest();
-        var url = 'https://luway34py8.execute-api.us-east-1.amazonaws.com/prod/appbaseexport';
-        xhr.open("POST", url, true);
-        xhr.withCredentials=true;
-        xhr.setRequestHeader("Content-type", "text/plain;charset=UTF-8");
-        xhr.onreadystatechange = function() {
-        if(xhr.readyState == 4 && xhr.status == 200) {
-        alert(xhr.responseText);
-        }
-        }
-        xhr.send();
-
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: JSON.stringify(exportObject),
+          contentType: "application/text",
+          datatype:'json',
+          xhrFields: {
+              withCredentials: true
+           },
+          success: function(data){
+            toastr.success('Data is exported, please check your email : '+PROFILE.email+'.');
+            $('#close-export-modal').click();
+          }
+        });
     },
     applyFilter:function(typeName, columnName, method, value){
         filterVal = value.split(',');

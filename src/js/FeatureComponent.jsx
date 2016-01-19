@@ -227,6 +227,7 @@ var ExportData = React.createClass({
         body:'form-group'
       };
     }
+    var querySample = '{"query":{"match_all":{}}}';
     return (
       <div>
         <a className="export-record-btn btn btn-primary fa fa-download"  title="Export" onClick={this.open} >
@@ -250,7 +251,7 @@ var ExportData = React.createClass({
               <div className={validateClass.body}>
                 <label for="inputPassword3" className="col-sm-2 control-label">Query</label>
                 <div className="col-sm-10">
-                  <textarea id="setBody_export" className="form-control" rows="10" name="body"></textarea>
+                  <textarea id="setBody_export" className="form-control" rows="10" name="body" defaultValue={querySample}></textarea>
                    <span className="help-block">
                       Query should be valid JSON.
                     </span>
@@ -260,7 +261,7 @@ var ExportData = React.createClass({
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
-            <Button id="close-modal" onClick={this.close}>Close</Button>
+            <Button id="close-export-modal" onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
       </div>

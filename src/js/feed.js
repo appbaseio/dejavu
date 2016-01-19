@@ -12,9 +12,12 @@ var getMapFlag = false;
 
 parent.globalAppData(function(res) {
     APPNAME = res.appname;
+    APPID = res.appid;
     USERNAME = res.username;
     PASSWORD = res.password;
-    EMAIL = res.email
+    EMAIL = res.email;
+    PROFILE = res.profile;
+    console.log(PROFILE);
     init();
     APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
 });
