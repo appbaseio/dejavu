@@ -430,6 +430,19 @@ var DataTable = React.createClass({
             var row = item['row'];
             return <Row key={_key} _id={_key} row={row} />;
         });
+
+        //Extra add btn
+        var extraAddBtn = '';
+        if(this.props.infoObj.total < 5){
+            extraAddBtn = <div className="AddExtraBtn">
+                            <FeatureComponent.AddDocument 
+                            types={this.props.types} 
+                            addRecord ={this.props.addRecord}
+                            getTypeDoc={this.props.getTypeDoc} 
+                            text="&nbsp;&nbsp;Add more document"/>
+                          </div>  
+        }
+
         return (
             <div className="dejavu-table">
             <Dropdown cols={columns} />
@@ -443,6 +456,8 @@ var DataTable = React.createClass({
             getTypeDoc={this.props.getTypeDoc}
             sortInfo ={this.props.sortInfo} />
 
+            {extraAddBtn}
+            
             <div className="outsideTable">
                 <Table
                  renderColumns={renderColumns}
@@ -451,6 +466,7 @@ var DataTable = React.createClass({
                  selectedTypes={this.props.selectedTypes}
                  filterInfo={this.props.filterInfo} />
              </div>
+
             </div>
         );
     }

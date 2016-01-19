@@ -279,6 +279,18 @@ body{
   right: auto;
   float: right;
 }
+.AddExtraBtn{
+  position: absolute;
+  bottom: 50px;
+  text-align: center;
+  width: 100%;
+  z-index: 2;
+}
+.AddExtraBtn .add-record-btn{
+  float: none;
+  font-size: 26px;
+  line-height: 40px;
+}
 .export-record-btn{
   right: 102px;
 }

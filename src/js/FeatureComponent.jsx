@@ -20,7 +20,7 @@ var AddDocument = React.createClass({
   },
   componentDidUpdate:function(){
     //apply select2 for auto complete
-    if(!this.state.validate.type)
+    if(!this.state.validate.type && typeof this.props.types != 'undefined')
       this.applySelect();
   },
   applySelect:function(){
@@ -78,6 +78,7 @@ var AddDocument = React.createClass({
   },
   render:function() {
     var typeList = '';
+    var btnText = this.props.text ? this.props.text : '';
     if(typeof this.props.types != 'undefined')
     { 
       typeList = this.props.types.map(function(type){
@@ -97,8 +98,7 @@ var AddDocument = React.createClass({
     }
     return (
       <div>
-        <a className="add-record-btn btn btn-primary fa fa-plus"  title="Add" onClick={this.open} >
-        </a>
+        <a className="add-record-btn btn btn-primary fa fa-plus"  title="Add" onClick={this.open} >{btnText}</a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Add Document</Modal.Title>

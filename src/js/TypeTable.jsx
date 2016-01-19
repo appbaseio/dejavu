@@ -28,7 +28,7 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         // every time its checked we update the local storage.
-        //window.localStorage.setItem(this.props.type, checked);
+        window.localStorage.setItem(this.props.type, checked);
         this.setState({isChecked: checked});
     },
     render: function() {
