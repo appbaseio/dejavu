@@ -8,7 +8,7 @@ var revertTransition = function(elem){
 var updateTransition = function(_key){
         var elem = document.getElementById(_key);
         if(elem)
-            elem.style.background = '#86DDF8';
+            elem.style.background = '#F5E79E';
         setTimeout(this.revertTransition.bind(null, elem), 1000);
 }
 

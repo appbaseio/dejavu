@@ -1,0 +1,37 @@
+{
+  "name": "browser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appbaseio/dejaVu.git"
+  },
+  "dependencies": {
+    "babel-preset-react": "^6.3.13",
+    "react": "^0.14.6",
+    "react-bootstrap": "^0.28.2",
+    "react-dom": "^0.14.6"
+  },
+  "devDependencies": {
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "gulp": "^3.9.0",
+    "gulp-react": "^3.1.0",
+    "gulp-util": "^3.0.7",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appbaseio/dejaVu/issues"
+  },
+  "homepage": "https://github.com/appbaseio/dejaVu#readme"
+}
