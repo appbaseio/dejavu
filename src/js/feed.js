@@ -52,6 +52,7 @@ var feed = (function() {
             }
 
             var queryBody = queryBody ? queryBody : defaultQueryBody;
+            
             // get historical data
             appbaseRef.search({
                     type: types,
@@ -80,7 +81,6 @@ var feed = (function() {
             });
         }
     }
-
     // paginate and show new results when user scrolls
     // to the bottom of the existing results.
     function paginationSearch(typeName, from, callback, queryBody) {
@@ -183,6 +183,15 @@ var feed = (function() {
                     withCredentials: true
                 }
             });
+        },
+        testQuery:function(types, queryBody){
+            // get historical data
+            return appbaseRef.search({
+                    type: types,
+                    from: 0,
+                    size: 0,
+                    body: queryBody
+                });
         },
         filterQuery: function(method, columnName, value, typeName, callback, setTotal) {
             var queryBody = this.createFilterQuery(method, columnName, value, typeName);

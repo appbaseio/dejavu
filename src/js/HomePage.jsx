@@ -337,6 +337,7 @@ var HomePage = React.createClass({
     },
     exportData:function(){
         var form = $('#addObjectForm_export').serializeArray();
+        var $this = this;
         var exportObject = {
             type:[],
             username:PROFILE.name
@@ -350,6 +351,17 @@ var HomePage = React.createClass({
             }
         });
 
+        var testQuery = feed.testQuery(exportObject.type, exportObject.query);
+        testQuery.on('data',function(res){
+            if(!res.hasOwnProperty('error'))
+                $this.exportQuery(exportObject);
+            else
+              toastr.error(res.error, 'ES Error : '+res.status, {timeOut: 5000})  
+        }).on('error',function(err){
+            toastr.error(err, 'ES Error', {timeOut: 5000})
+        });
+    },
+    exportQuery:function(exportObject){
         var url = 'https://accapi.appbase.io/app/'+APPID+'/export';
 
         $.ajax({
