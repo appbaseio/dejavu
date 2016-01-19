@@ -76,14 +76,6 @@ var TypeTable = React.createClass({
             <h4 className='types-header'>
                 Types
             </h4>
-           
-
-             <FeatureComponent.ImportData />
-
-            <FeatureComponent.ExportData 
-            types={this.props.Types} 
-            ExportData ={this.props.ExportData}/>
-
             <ul className='fa-ul types-list'>
                 {rowObj}
             </ul>

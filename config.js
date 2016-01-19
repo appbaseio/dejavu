@@ -1,6 +1,7 @@
 var config = {
-				"HOSTNAME": "scalr.api.appbase.io",
-				"APPNAME": "App2",
-				"USERNAME": "pW2DT42Cw",
-				"PASSWORD": "a4fae72b-014d-4600-bb6e-544be036db40"
+				"hostname": "scalr.api.appbase.io",
+				"appname": "App2",
+				"username": "pW2DT42Cw",
+				"password": "a4fae72b-014d-4600-bb6e-544be036db40",
+				"email":"farhan687@gmail.com"
 			}

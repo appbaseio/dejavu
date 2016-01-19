@@ -269,7 +269,6 @@ var HomePage = React.createClass({
             }
         });
         var docs = this.state.documents;
-        alert(item);
         var sortedArray = this.sortIt(docs, item, order);
         this.setState({documents: sortedArray});
     },
@@ -455,11 +454,6 @@ var HomePage = React.createClass({
                             removeSort = {this.removeSort}
                           />
                     </div>
-                     <FeatureComponent.SignalCircle
-                        signalColor={this.state.signalColor}
-                        signalActive={this.state.signalActive}
-                        signalText={this.state.signalText} />
-
                 </div>
             </div>
         );

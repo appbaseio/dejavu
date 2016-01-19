@@ -10,17 +10,12 @@ var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
 
-parent.globalAppData(function(res) {
-    APPNAME = res.appname;
-    APPID = res.appid;
-    USERNAME = res.username;
-    PASSWORD = res.password;
-    EMAIL = res.email;
-    PROFILE = res.profile;
-    console.log(PROFILE);
-    init();
-    APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
-});
+APPNAME = config.appname;
+USERNAME = config.username;
+PASSWORD = config.password;
+EMAIL = config.email;
+init();
+APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
 
 function init() {
     // Instantiating appbase ref with the global configs defined above.
@@ -70,15 +65,6 @@ var feed = (function() {
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
                 })
-                // get new data updates
-            appbaseRef.searchStream({
-                type: types,
-                body: queryBody,
-            }).on('data', function(res) {
-                callback(res, true);
-            }).on('error', function(err) {
-                console.log("caught a stream error", err);
-            });
         }
     }
     // paginate and show new results when user scrolls
