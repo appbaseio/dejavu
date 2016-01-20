@@ -28,7 +28,9 @@ var HomePage = React.createClass({
                     },
                     infoObj:{
                         showing:0,
-                        total:0
+                        total:0,
+                        getOnce:false,
+                        availableTotal:0
                     },
                     mappingObj:{}
                 };
@@ -217,6 +219,24 @@ var HomePage = React.createClass({
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
+        this.getTotalRecord();
+    },
+    getTotalRecord:function(){
+        var $this = this;
+        if(!this.state.infoObj.getOnce){
+            if(typeof APPNAME != 'undefined'){
+                feed.getTotalRecord().on('data',function(data){
+                    var infoObj = $this.state.infoObj;
+                    infoObj.getOnce = true;
+                    infoObj.availableTotal = data.hits.total;
+                    $this.setState({infoObj:infoObj});
+
+                    console.log(infoObj);
+                });
+            }
+            else
+                setTimeout(this.getTotalRecord, 1000);      
+        }
     },
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});

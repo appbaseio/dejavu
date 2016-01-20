@@ -434,7 +434,7 @@ var DataTable = React.createClass({
 
         //Extra add btn
         var extraAddBtn = '';
-        if(this.props.infoObj.total < 5){
+        if(this.props.infoObj.availableTotal <= 5){
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument 
                             types={this.props.types} 
