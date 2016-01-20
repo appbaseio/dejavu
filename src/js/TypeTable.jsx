@@ -73,37 +73,14 @@ var TypeTable = React.createClass({
         }
         return (
             <div className='left-tab'>
-                <h4 className='types-header'>
-                    Types
-                </h4>
-                <ul className='fa-ul types-list'>
-                    {rowObj}
-                </ul>
                 <div className="row typesList">
                     <h4 className='types-header pull-left col-xs-12'>
                         <span className="pull-left">Types</span>
-                         <FeatureComponent.SignalCircle
-                                signalColor={this.props.signalColor}
-                                signalActive={this.props.signalActive}
-                                signalText={this.props.signalText} />
                     </h4>
                     <ul className='fa-ul types-list clearfix'>
                         {rowObj}
                     </ul>
                 </div>
-                <div className="ieButton">
-                    <ul className="feature-list">
-                        <li>
-                            <FeatureComponent.ImportData />
-                        </li>
-                        <li>
-                            <FeatureComponent.ExportData 
-                            types={this.props.Types} 
-                            ExportData ={this.props.ExportData}/>
-                        </li>
-                    </ul>
-                </div>
->>>>>>> refs/remotes/origin/appbase
             </div>
         );
     }
