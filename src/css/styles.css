@@ -398,23 +398,27 @@ body{
   float: left;
   width: 250px
 }
-.appId .appId_icon{
-   width: 30px;
-  height: 30px;
+.bracketIcon{
+  width: 34px;
+  height: 34px;
   display: inline-block;
   text-align: center;
   border-radius: 50%;
   border: 1px solid #eee;
-  line-height: 26px;
+  line-height: 30px;
   float: left;
-  background: #3BC7F6;
-  color: #fff;
+  color: #3BC7F6;
+  position: relative;
 }
-.bracketIcon:hover{
-  text-decoration: none;
+.bracketIcon:hover,
+.bracketIcon:focus,
+.bracketIcon:active{
+  text-decoration: inherit;
+  outline: none;
+  border-color: #ddd;
 }
 .bracketIcon:before{
-  content: "{}"
+  content: "{...}"
 }
 .appId .appId_name{
     display: inline-block;
@@ -422,13 +426,16 @@ body{
     border: 1px solid #eee;
     border-left: 0;
     padding-left: 20px;
+    padding-right: 5px;
     margin-left: -15px;
-    line-height: 28px;
+    line-height: 30px;
     max-width: 215px;
     overflow: hidden;
-    height: 30px;
+    height: 34px;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 .appId .appId_appname{
      display: inline-block;
