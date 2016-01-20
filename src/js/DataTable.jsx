@@ -305,10 +305,11 @@ var Info = React.createClass({
         var sortInfo = this.props.sortInfo;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
+        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0"; 
         return (
                 <div className="infoRow container">
                 <div className=" row">
-                    <div className="col-xs-6 pull-left text-left pd-l0">
+                    <div className={infoObjClass}>
                         <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">

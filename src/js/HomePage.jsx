@@ -168,6 +168,12 @@ var HomePage = React.createClass({
                 this.setState({infoObj:{'total':total}});
             }.bind(this));
         }
+        else{
+            var infoObj = this.state.infoObj;
+            infoObj.showing = 0;
+            infoObj.total = 0;
+            this.setState({infoObj:infoObj});
+        }
     },
     setSignal:function(fromStream){
         this.setState({
