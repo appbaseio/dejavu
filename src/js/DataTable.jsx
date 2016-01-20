@@ -165,7 +165,7 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
-        var itemText = item == 'json' ? 'type / id' : item;
+        var itemText = item == 'json' ? <span><a href="javascript:void(0);"  className="bracketIcon"></a>&nbsp;type / id</span> : item;
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }

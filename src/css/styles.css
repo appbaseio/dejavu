@@ -189,7 +189,7 @@ body{
 }
 .table-container {
     width: 100%;
-    padding: 35px 0 0 0;
+    padding: 42px 0 0 0;
     box-sizing: border-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -217,8 +217,12 @@ body{
   top: 0;
   padding: 7px 0 0 10px;
   white-space: nowrap;
-  height: 35px;
+  height: 42px;
   overflow: inherit !important;
+  background: #fff;
+}
+.table-fixed-head .bracketIcon{
+  margin-top: -3px;
 }
 .table-fixed-head.sortActive,
 .table-fixed-head.filterActive{
@@ -341,6 +345,7 @@ body{
 }
 .headText .thtextShow{
   padding-right: 40px;
+  line-height: 30px;
 }
 .headText .iconList{
   position: absolute;
@@ -353,6 +358,7 @@ body{
 .headText .iconList .filterIcon{
   display: inline-block;
   float: right;
+  margin-top: 5px;
 }
 .sortIcon, .filterBtn{
   opacity: 0.2;
