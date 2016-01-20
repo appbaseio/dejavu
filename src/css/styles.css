@@ -393,6 +393,16 @@ body{
 .singleItem{
   padding: 5px;
   border-bottom: 1px solid #eee;
+  margin: 0 !important;
+}
+.singleItem .btn{
+  float: none;
+}
+.singleItem input[type="text"]{
+  font-weight: lighter;
+  font-weight: lighter;
+  margin: 5px 0;
+  padding: 0 5px;
 }
 .singleItem .searchElement{
   display: none;
