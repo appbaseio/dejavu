@@ -21,7 +21,7 @@ var Dropdown = React.createClass({
         });
         return (
             <Dropdown
-            className="dejavu-dropdown"
+            className="dejavu-dropdown pull-right "
             pullRight={true}
             noCaret
             id='ab-dropdown'>

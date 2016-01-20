@@ -33,6 +33,9 @@ label {
 .pd-r10{
   padding-right: 10px;
 }
+.clearfix{
+  clear: both;
+}
 .removeFilter{
   background: #3BC7F6;
   color: #fff;
@@ -51,10 +54,10 @@ label {
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 5555;
   padding: 5px 22px;
   background: #f8fafb;
   border-bottom: 1px solid #eee;
+  z-index: 5;
 }
 .removeFilter .inside-info{
   padding: 5px 10px;
@@ -74,11 +77,9 @@ label {
     display: inline-block;
     border-radius: 50%;
     border: 2px solid #888;
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    z-index: 5;
     cursor: pointer;
+    float: right;
+    position: relative;
 }
 .signal-circle:before{
   content: " ";
@@ -178,12 +179,6 @@ body{
     left: 0;
     overflow: auto;
 }
-.dejavu-dropdown{
-  position: fixed;
-  left: 215px;
-  top: 15px;
-  z-index: 4;
-}
 .dejavu-dropdown .ab-menu-item{
   padding-left: 15px;
 }
@@ -272,11 +267,15 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
-.export-record-btn,
+/*.export-record-btn,
 .import-record-btn{
   position: absolute;
   top: 14px;
   right: 60px;
+}*/
+.add-record-container{
+  display: inline-block;
+  float: right;
 }
 .add-record-btn{
   position: relative;
@@ -456,4 +455,44 @@ body{
 .appId .appId_appname{
      display: inline-block;
     float: left;
+}
+.left-tab{
+  height: 100%;
+}
+.typesList{
+  height: 100%;
+  padding-bottom: 80px;
+}
+.ieButton{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.feature-list{
+  list-style: none;
+  list-style-position: outside;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #e1e1e1;
+}
+
+.feature-list li{
+    
+}
+.feature-list li a{
+  width: 100%;
+  background: #eee;
+  display: inline-block;
+  padding: 5px 10px;
+  border-bottom: 1px solid #e1e1e1;
+  cursor: pointer;
+  color: #000;
+}
+.feature-list li:last-child a{
+    border-bottom: 0;
+}
+.feature-list li a:hover{
+  background: #e1e1e1;
+  text-decoration: none;
 }

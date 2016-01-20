@@ -167,7 +167,9 @@ var HomePage = React.createClass({
                 this.updateDataOnView(update);
                 this.setSignal(fromStream);
             }.bind(this), function(total){
-                this.setState({infoObj:{'total':total}});
+                var infoObj = this.state.infoObj;
+                infoObj.total = total;
+                this.setState({infoObj:infoObj});
             }.bind(this));
         }
         else{
@@ -423,7 +425,9 @@ var HomePage = React.createClass({
                 $this.setSignal(fromStream);
             },500);
         }.bind(this), function(total){
-            this.setState({infoObj:{'total':total}});
+            var infoObj = this.state.infoObj;
+            infoObj.total = total;
+            this.setState({infoObj:infoObj});
         }.bind(this));
     },
     removeFilter:function(){
@@ -461,7 +465,10 @@ var HomePage = React.createClass({
                             Types={this.state.types}
                             watchTypeHandler={this.watchStock}
                             unwatchTypeHandler={this.unwatchStock}
-                            ExportData={this.exportData} />
+                            ExportData={this.exportData}
+                            signalColor={this.state.signalColor}
+                            signalActive={this.state.signalActive}
+                            signalText={this.state.signalText} />
                     </div>
                      <div className="col-xs-12 dataContainer">
                         <DataTable
@@ -480,10 +487,7 @@ var HomePage = React.createClass({
                             removeSort = {this.removeSort}
                           />
                     </div>
-                     <FeatureComponent.SignalCircle
-                        signalColor={this.state.signalColor}
-                        signalActive={this.state.signalActive}
-                        signalText={this.state.signalText} />
+                    
 
                 </div>
             </div>

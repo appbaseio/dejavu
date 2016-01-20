@@ -314,6 +314,7 @@ var Info = React.createClass({
                         <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">
+                        <Dropdown cols={this.props.columns} />
                         <FeatureComponent.AddDocument 
                             types={this.props.types} 
                             addRecord ={this.props.addRecord}
@@ -438,7 +439,7 @@ var DataTable = React.createClass({
         if(this.props.infoObj.availableTotal <= 5){
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument 
-                            types={this.props.types} 
+                            types={this.props.Types} 
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} 
                             text="&nbsp;&nbsp;Add more document"/>
@@ -447,7 +448,6 @@ var DataTable = React.createClass({
 
         return (
             <div className="dejavu-table">
-            <Dropdown cols={columns} />
             
             <Info infoObj={this.props.infoObj} 
             filterInfo = {this.props.filterInfo} 
@@ -456,7 +456,8 @@ var DataTable = React.createClass({
             types={this.props.Types} 
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc}
-            sortInfo ={this.props.sortInfo} />
+            sortInfo ={this.props.sortInfo}
+            columns = {columns} />
 
             {extraAddBtn}
             
