@@ -97,7 +97,7 @@ var AddDocument = React.createClass({
       };
     }
     return (
-      <div>
+      <div className="add-record-container pd-r10">
         <a className="add-record-btn btn btn-primary fa fa-plus"  title="Add" onClick={this.open} >{btnText}</a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
@@ -230,7 +230,8 @@ var ExportData = React.createClass({
     var querySample = '{"query":{"match_all":{}}}';
     return (
       <div>
-        <a className="export-record-btn btn btn-primary fa fa-download"  title="Export" onClick={this.open} >
+        <a title="Export" onClick={this.open} >
+          Export
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
@@ -290,7 +291,8 @@ var ImportData = React.createClass({
   render:function() {
     return (
       <div>
-        <a className="import-record-btn btn btn-primary fa fa-upload" title="Import" onClick={this.open} >
+        <a title="Import" onClick={this.open} >
+          Import
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>

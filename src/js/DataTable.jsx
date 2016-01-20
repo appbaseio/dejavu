@@ -165,7 +165,7 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
-        var itemText = item == 'json' ? 'type / id' : item;
+        var itemText = item == 'json' ? <span><a href="javascript:void(0);"  className="bracketIcon"></a>&nbsp;type / id</span> : item;
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -305,13 +305,16 @@ var Info = React.createClass({
         var sortInfo = this.props.sortInfo;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
+        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0"; 
+        var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         return (
                 <div className="infoRow container">
                 <div className=" row">
-                    <div className="col-xs-6 pull-left text-left pd-l0">
+                    <div className={infoObjClass}>
                         <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">
+                        <Dropdown cols={this.props.columns} />
                         <FeatureComponent.AddDocument 
                             types={this.props.types} 
                             addRecord ={this.props.addRecord}
@@ -329,7 +332,7 @@ var Info = React.createClass({
                         <div className={sortClass}>
                             <a href="javascript:void(0)" onClick={this.props.removeSort} className="removeFilter">
                                 <span className="inside-info">
-                                    {sortInfo.column}
+                                    <i className={sortAscClass}></i> {sortInfo.column}
                                 </span> 
                                 <span className="close-btn">
                                     <i className="fa fa-times"></i>
@@ -433,10 +436,10 @@ var DataTable = React.createClass({
 
         //Extra add btn
         var extraAddBtn = '';
-        if(this.props.infoObj.total < 5){
+        if(this.props.infoObj.availableTotal <= 5){
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument 
-                            types={this.props.types} 
+                            types={this.props.Types} 
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} 
                             text="&nbsp;&nbsp;Add more document"/>
@@ -445,7 +448,6 @@ var DataTable = React.createClass({
 
         return (
             <div className="dejavu-table">
-            <Dropdown cols={columns} />
             
             <Info infoObj={this.props.infoObj} 
             filterInfo = {this.props.filterInfo} 
@@ -454,7 +456,8 @@ var DataTable = React.createClass({
             types={this.props.Types} 
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc}
-            sortInfo ={this.props.sortInfo} />
+            sortInfo ={this.props.sortInfo}
+            columns = {columns} />
 
             {extraAddBtn}
             

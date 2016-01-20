@@ -28,7 +28,9 @@ var HomePage = React.createClass({
                     },
                     infoObj:{
                         showing:0,
-                        total:0
+                        total:0,
+                        getOnce:false,
+                        availableTotal:0
                     },
                     mappingObj:{}
                 };
@@ -165,8 +167,16 @@ var HomePage = React.createClass({
                 this.updateDataOnView(update);
                 this.setSignal(fromStream);
             }.bind(this), function(total){
-                this.setState({infoObj:{'total':total}});
+                var infoObj = this.state.infoObj;
+                infoObj.total = total;
+                this.setState({infoObj:infoObj});
             }.bind(this));
+        }
+        else{
+            var infoObj = this.state.infoObj;
+            infoObj.showing = 0;
+            infoObj.total = 0;
+            this.setState({infoObj:infoObj});
         }
     },
     setSignal:function(fromStream){
@@ -211,6 +221,24 @@ var HomePage = React.createClass({
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60*1000);
+        this.getTotalRecord();
+    },
+    getTotalRecord:function(){
+        var $this = this;
+        if(!this.state.infoObj.getOnce){
+            if(typeof APPNAME != 'undefined'){
+                feed.getTotalRecord().on('data',function(data){
+                    var infoObj = $this.state.infoObj;
+                    infoObj.getOnce = true;
+                    infoObj.availableTotal = data.hits.total;
+                    $this.setState({infoObj:infoObj});
+
+                    console.log(infoObj);
+                });
+            }
+            else
+                setTimeout(this.getTotalRecord, 1000);      
+        }
     },
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
@@ -397,7 +425,9 @@ var HomePage = React.createClass({
                 $this.setSignal(fromStream);
             },500);
         }.bind(this), function(total){
-            this.setState({infoObj:{'total':total}});
+            var infoObj = this.state.infoObj;
+            infoObj.total = total;
+            this.setState({infoObj:infoObj});
         }.bind(this));
     },
     removeFilter:function(){
@@ -435,7 +465,10 @@ var HomePage = React.createClass({
                             Types={this.state.types}
                             watchTypeHandler={this.watchStock}
                             unwatchTypeHandler={this.unwatchStock}
-                            ExportData={this.exportData} />
+                            ExportData={this.exportData}
+                            signalColor={this.state.signalColor}
+                            signalActive={this.state.signalActive}
+                            signalText={this.state.signalText} />
                     </div>
                      <div className="col-xs-12 dataContainer">
                         <DataTable

@@ -179,6 +179,15 @@ var feed = (function() {
                     body: queryBody
                 });
         },
+        getTotalRecord:function(){
+            // get historical data
+            return appbaseRef.search({
+                    from: 0,
+                    size: 0,
+                    type:[],
+                    body:{query:{match_all:{}}}
+                });
+        },
         filterQuery: function(method, columnName, value, typeName, callback, setTotal) {
             var queryBody = this.createFilterQuery(method, columnName, value, typeName);
             applyStreamSearch(typeName, callback, queryBody, setTotal);

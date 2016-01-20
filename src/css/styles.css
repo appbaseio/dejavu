@@ -33,6 +33,9 @@ label {
 .pd-r10{
   padding-right: 10px;
 }
+.clearfix{
+  clear: both;
+}
 .removeFilter{
   background: #3BC7F6;
   color: #fff;
@@ -51,10 +54,10 @@ label {
   width: 100%;
   left: 0;
   top: 0;
-  z-index: 5555;
   padding: 5px 22px;
   background: #f8fafb;
   border-bottom: 1px solid #eee;
+  z-index: 5;
 }
 .removeFilter .inside-info{
   padding: 5px 10px;
@@ -74,11 +77,9 @@ label {
     display: inline-block;
     border-radius: 50%;
     border: 2px solid #888;
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    z-index: 5;
     cursor: pointer;
+    float: right;
+    position: relative;
 }
 .signal-circle:before{
   content: " ";
@@ -178,18 +179,12 @@ body{
     left: 0;
     overflow: auto;
 }
-.dejavu-dropdown{
-  position: fixed;
-  left: 215px;
-  top: 15px;
-  z-index: 4;
-}
 .dejavu-dropdown .ab-menu-item{
   padding-left: 15px;
 }
 .table-container {
     width: 100%;
-    padding: 35px 0 0 0;
+    padding: 42px 0 0 0;
     box-sizing: border-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -217,8 +212,12 @@ body{
   top: 0;
   padding: 7px 0 0 10px;
   white-space: nowrap;
-  height: 35px;
+  height: 42px;
   overflow: inherit !important;
+  background: #fff;
+}
+.table-fixed-head .bracketIcon{
+  margin-top: -3px;
 }
 .table-fixed-head.sortActive,
 .table-fixed-head.filterActive{
@@ -268,11 +267,15 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
-.export-record-btn,
+/*.export-record-btn,
 .import-record-btn{
   position: absolute;
   top: 14px;
   right: 60px;
+}*/
+.add-record-container{
+  display: inline-block;
+  float: right;
 }
 .add-record-btn{
   position: relative;
@@ -341,6 +344,7 @@ body{
 }
 .headText .thtextShow{
   padding-right: 40px;
+  line-height: 30px;
 }
 .headText .iconList{
   position: absolute;
@@ -353,6 +357,7 @@ body{
 .headText .iconList .filterIcon{
   display: inline-block;
   float: right;
+  margin-top: 5px;
 }
 .sortIcon, .filterBtn{
   opacity: 0.2;
@@ -387,6 +392,16 @@ body{
 .singleItem{
   padding: 5px;
   border-bottom: 1px solid #eee;
+  margin: 0 !important;
+}
+.singleItem .btn{
+  float: none;
+}
+.singleItem input[type="text"]{
+  font-weight: lighter;
+  font-weight: lighter;
+  margin: 5px 0;
+  padding: 0 5px;
 }
 .singleItem .searchElement{
   display: none;
@@ -398,23 +413,27 @@ body{
   float: left;
   width: 250px
 }
-.appId .appId_icon{
-   width: 30px;
-  height: 30px;
+.bracketIcon{
+  width: 34px;
+  height: 34px;
   display: inline-block;
   text-align: center;
   border-radius: 50%;
   border: 1px solid #eee;
-  line-height: 26px;
+  line-height: 30px;
   float: left;
-  background: #3BC7F6;
-  color: #fff;
+  color: #3BC7F6;
+  position: relative;
 }
-.bracketIcon:hover{
-  text-decoration: none;
+.bracketIcon:hover,
+.bracketIcon:focus,
+.bracketIcon:active{
+  text-decoration: inherit;
+  outline: none;
+  border-color: #ddd;
 }
 .bracketIcon:before{
-  content: "{}"
+  content: "{...}"
 }
 .appId .appId_name{
     display: inline-block;
@@ -422,15 +441,58 @@ body{
     border: 1px solid #eee;
     border-left: 0;
     padding-left: 20px;
+    padding-right: 5px;
     margin-left: -15px;
-    line-height: 28px;
+    line-height: 30px;
     max-width: 215px;
     overflow: hidden;
-    height: 30px;
+    height: 34px;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 .appId .appId_appname{
      display: inline-block;
     float: left;
+}
+.left-tab{
+  height: 100%;
+}
+.typesList{
+  height: 100%;
+  padding-bottom: 80px;
+}
+.ieButton{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.feature-list{
+  list-style: none;
+  list-style-position: outside;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #e1e1e1;
+}
+
+.feature-list li{
+    
+}
+.feature-list li a{
+  width: 100%;
+  background: #eee;
+  display: inline-block;
+  padding: 5px 10px;
+  border-bottom: 1px solid #e1e1e1;
+  cursor: pointer;
+  color: #000;
+}
+.feature-list li:last-child a{
+    border-bottom: 0;
+}
+.feature-list li a:hover{
+  background: #e1e1e1;
+  text-decoration: none;
 }
