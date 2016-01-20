@@ -306,6 +306,7 @@ var Info = React.createClass({
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
         var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0"; 
+        var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         return (
                 <div className="infoRow container">
                 <div className=" row">
@@ -330,7 +331,7 @@ var Info = React.createClass({
                         <div className={sortClass}>
                             <a href="javascript:void(0)" onClick={this.props.removeSort} className="removeFilter">
                                 <span className="inside-info">
-                                    {sortInfo.column}
+                                    <i className={sortAscClass}></i> {sortInfo.column}
                                 </span> 
                                 <span className="close-btn">
                                     <i className="fa fa-times"></i>

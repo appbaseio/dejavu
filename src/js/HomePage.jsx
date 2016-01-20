@@ -295,7 +295,6 @@ var HomePage = React.createClass({
             }
         });
         var docs = this.state.documents;
-        alert(item);
         var sortedArray = this.sortIt(docs, item, order);
         this.setState({documents: sortedArray});
     },
