@@ -10,7 +10,7 @@
 
     "app":{
         "launch":{
-            "local_path":"index.html"
+            "local_path":"_site/index.html"
         }
     },
     "manifest_version": 2,
