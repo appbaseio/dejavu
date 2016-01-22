@@ -442,6 +442,7 @@ var DataTable = React.createClass({
                             types={this.props.Types} 
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} 
+                            link="true"
                             text="&nbsp;&nbsp;Add more document"/>
                           </div>  
         }

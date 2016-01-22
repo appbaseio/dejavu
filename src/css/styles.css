@@ -289,15 +289,20 @@ body{
 }
 .AddExtraBtn{
   position: absolute;
-  bottom: 50px;
+  bottom: 100px;
   text-align: center;
   width: 100%;
   z-index: 2;
 }
-.AddExtraBtn .add-record-btn{
-  float: none;
-  font-size: 26px;
-  line-height: 40px;
+.AddExtraBtn .add-record-container{
+  width: 100%;
+}
+.AddExtraBtn .add-record-link{
+  cursor: pointer;
+  font-size: 20px;
+}
+.AddExtraBtn .add-record-link:hover{
+  text-decoration: none;
 }
 .export-record-btn{
   right: 102px;

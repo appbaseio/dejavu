@@ -96,9 +96,11 @@ var AddDocument = React.createClass({
         body:'form-group'
       };
     }
+    var btnLinkClass = this.props.link == "true" ? 'add-record-link fa fa-plus':'add-record-btn btn btn-primary fa fa-plus';
+
     return (
       <div className="add-record-container pd-r10">
-        <a className="add-record-btn btn btn-primary fa fa-plus"  title="Add" onClick={this.open} >{btnText}</a>
+        <a href="javascript:void(0);" className={btnLinkClass}  title="Add" onClick={this.open} >{btnText}</a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Add Document</Modal.Title>
