@@ -305,7 +305,7 @@ var Info = React.createClass({
         var sortInfo = this.props.sortInfo;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0"; 
+        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0 recordTotalRow"; 
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         return (
                 <div className="infoRow container">

@@ -59,6 +59,10 @@ label {
   border-bottom: 1px solid #eee;
   z-index: 5;
 }
+.recordTotalRow{
+  padding-top: 4px;
+  margin: 0;
+}
 .removeFilter .inside-info{
   padding: 5px 10px;
   display: inline-block;   
