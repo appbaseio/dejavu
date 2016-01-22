@@ -225,7 +225,7 @@ body{
 }
 .table-fixed-head.sortActive,
 .table-fixed-head.filterActive{
-  background: #dfdfdf;
+  
 }
 .table-fixed-head.filterActive .filterBtn,
 .table-fixed-head.sortActive .sortIcon{
