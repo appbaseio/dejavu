@@ -320,21 +320,21 @@ var Info = React.createClass({
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} />
                         <div className={filterClass}>
-                            <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
+                            <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     {filterInfo.method}:&nbsp;{filterInfo.columnName}
                                 </span> 
-                                <span className="close-btn">
+                                <span className="close-btn"  onClick={this.props.removeFilter}>
                                     <i className="fa fa-times"></i>
                                 </span>
                             </a>
                         </div>
                         <div className={sortClass}>
-                            <a href="javascript:void(0)" onClick={this.props.removeSort} className="removeFilter">
+                            <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     <i className={sortAscClass}></i> {sortInfo.column}
                                 </span> 
-                                <span className="close-btn">
+                                <span className="close-btn"  onClick={this.props.removeSort}>
                                     <i className="fa fa-times"></i>
                                 </span>
                             </a>
