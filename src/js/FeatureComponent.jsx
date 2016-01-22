@@ -20,12 +20,12 @@ var AddDocument = React.createClass({
   },
   componentDidUpdate:function(){
     //apply select2 for auto complete
-    if(!this.state.validate.type && typeof this.props.types != 'undefined')
+    if(!this.state.validate.type && typeof this.props.types != 'undefined' && typeof this.props.selectClass != 'undefined')
       this.applySelect();
   },
-  applySelect:function(){
+  applySelect:function(ele){
     var $this = this;
-    var $eventSelect = $(".tags-select");
+    var $eventSelect = $("."+this.props.selectClass);
     var typeList = this.getType();
     $eventSelect.select2({
       tags: true,
@@ -46,7 +46,8 @@ var AddDocument = React.createClass({
                 touch:false,
                 type:false,
                 body:false
-              }
+              },
+              selectClass:''
           });
   },
 
@@ -97,6 +98,7 @@ var AddDocument = React.createClass({
       };
     }
     var btnLinkClass = this.props.link == "true" ? 'add-record-link fa fa-plus':'add-record-btn btn btn-primary fa fa-plus';
+    var selectClass = this.props.selectClass +' tags-select form-control';
 
     return (
       <div className="add-record-container pd-r10">
@@ -110,7 +112,7 @@ var AddDocument = React.createClass({
               <div className={validateClass.type}>
                 <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
                 <div className="col-sm-10">
-                  <select id="setType" className="tags-select form-control" multiple="multiple" name="type">
+                  <select id="setType" className={selectClass} multiple="multiple" name="type">
                   </select>
                     <span className="help-block">
                       Type is required.

@@ -165,7 +165,16 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
-        var itemText = item == 'json' ? <span><a href="javascript:void(0);"  className="bracketIcon"></a>&nbsp;type / id</span> : item;
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        prettyData =  <Pretty json="It will display the json object." />
+        var itemText = item == 'json' ? <span>
+                <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                    <a href="javascript:void(0);" className="bracketIcon"></a>
+                </OverlayTrigger>
+                &nbsp;type / id
+            </span>
+             : item;
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -318,7 +327,8 @@ var Info = React.createClass({
                         <FeatureComponent.AddDocument 
                             types={this.props.types} 
                             addRecord ={this.props.addRecord}
-                            getTypeDoc={this.props.getTypeDoc} />
+                            getTypeDoc={this.props.getTypeDoc}
+                            selectClass="tags-select-small" />
                         <div className={filterClass}>
                             <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
@@ -436,14 +446,15 @@ var DataTable = React.createClass({
 
         //Extra add btn
         var extraAddBtn = '';
-        if(this.props.infoObj.availableTotal <= 5){
+        if(this.props.infoObj.availableTotal <= 500){
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument 
                             types={this.props.Types} 
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} 
                             link="true"
-                            text="&nbsp;&nbsp;Add more document"/>
+                            text="&nbsp;&nbsp;Add more document"
+                            selectClass="tags-select-big"/>
                           </div>  
         }
 

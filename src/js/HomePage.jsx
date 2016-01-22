@@ -328,9 +328,10 @@ var HomePage = React.createClass({
         });
 
         recordObject.body = JSON.parse(recordObject.body);
-        feed.indexData(recordObject,function(){
-            $('#close-modal').click();
-        });
+        console.log(recordObject);
+        // feed.indexData(recordObject,function(){
+        //     $('#close-modal').click();
+        // });
 
     },
     getTypeDoc:function(){
