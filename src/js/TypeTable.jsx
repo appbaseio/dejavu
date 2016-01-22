@@ -76,10 +76,6 @@ var TypeTable = React.createClass({
                 <div className="row typesList">
                     <h4 className='types-header pull-left col-xs-12'>
                         <span className="pull-left">Types</span>
-                         <FeatureComponent.SignalCircle
-                                signalColor={this.props.signalColor}
-                                signalActive={this.props.signalActive}
-                                signalText={this.props.signalText} />
                     </h4>
                     <ul className='fa-ul types-list clearfix'>
                         {rowObj}
