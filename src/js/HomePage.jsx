@@ -328,10 +328,9 @@ var HomePage = React.createClass({
         });
 
         recordObject.body = JSON.parse(recordObject.body);
-        console.log(recordObject);
-        // feed.indexData(recordObject,function(){
-        //     $('#close-modal').click();
-        // });
+        feed.indexData(recordObject,function(){
+            $('#close-modal').click();
+        });
 
     },
     getTypeDoc:function(){
@@ -378,15 +377,17 @@ var HomePage = React.createClass({
                 exportObject.query = JSON.parse(val.value);
             }
         });
-
+        $('#exportBtn').addClass('loading').attr('disabled',true);
         var testQuery = feed.testQuery(exportObject.type, exportObject.query);
         testQuery.on('data',function(res){
             if(!res.hasOwnProperty('error'))
                 $this.exportQuery(exportObject);
             else
               toastr.error(res.error, 'ES Error : '+res.status, {timeOut: 5000})  
+            $('#exportBtn').removeClass('loading').removeAttr('disabled');
         }).on('error',function(err){
             toastr.error(err, 'ES Error', {timeOut: 5000})
+            $('#exportBtn').removeClass('loading').removeAttr('disabled');
         });
     },
     exportQuery:function(exportObject){

@@ -505,3 +505,10 @@ body{
   background: #e1e1e1;
   text-decoration: none;
 }
+#exportBtn .fa,
+#exportBtn.loading .submitText{
+  display: none;
+}
+#exportBtn.loading .fa{
+  display: block;
+}

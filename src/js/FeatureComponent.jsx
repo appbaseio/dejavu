@@ -265,7 +265,10 @@ var ExportData = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
+            <Button bsStyle="success" id="exportBtn" onClick={this.validateInput}>
+              <span className="submitText">Submit</span>
+              <i className="fa fa-spinner fa-spin"></i>
+            </Button>
             <Button id="close-export-modal" onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
