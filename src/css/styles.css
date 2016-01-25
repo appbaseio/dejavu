@@ -44,6 +44,14 @@ label {
   /* float: right; */
   border-radius: 4px;   
 }
+.removeFilter:hover,
+.removeFilter:active,
+.removeFilter:focus{
+  color: #fff;
+}
+.removeFilter:hover .close-btn{
+  color: #555;
+}
 .outsideTable{
   position: relative;
   height: 100%;
