@@ -85,7 +85,7 @@ var FieldCheckbox = React.createClass({
             }
         }
         this.setState({isChecked: checked});
-        this.props.columnToggle().toggleIt(elementId);
+        this.props.columnToggle().toggleIt(elementId, checked);
     },
     render: function() {
         var Input = ReactBootstrap.Input;

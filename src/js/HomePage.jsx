@@ -20,6 +20,7 @@ var HomePage = React.createClass({
     getInitialState: function() {
         return {documents: [], types: [], signalColor:'', signalActive:'', signalText:'',
                     visibleColumns:[],
+                    hiddenColumns:[],
                     sortInfo:{
                         active:false
                     },
@@ -92,11 +93,12 @@ var HomePage = React.createClass({
         infoObj.showing = showing;
         this.setState({infoObj:infoObj});
         data = this.state.documents;
+        hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
         for(var each in data){
             for(column in data[each]){
                 if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
-                    if(visibleColumns.indexOf(column) <= -1){
+                    if(visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1){
                         visibleColumns.push(column);
                     }
                 }
@@ -467,9 +469,30 @@ var HomePage = React.createClass({
     columnToggle:function() {
         var $this = this;
         var obj = {
-            toggleIt:function(elementId) {
-               var visibleColumns = $this.state.visibleColumns.filter((v) => {if(v != elementId) return v;});
-               $this.setState({visibleColumns:visibleColumns});
+            toggleIt:function(elementId, checked) {
+                if(!checked){
+                   //visible columns - update
+                   var visibleColumns = $this.state.visibleColumns.filter((v) => {if(v != elementId) return v;});
+                    
+                   //hidden columns - update
+                    hiddenColumns = $this.state.hiddenColumns;
+                    var flag = hiddenColumns.indexOf(elementId);
+                    if(flag == -1){
+                        hiddenColumns.push(elementId);
+                    }
+                }
+                else{
+                   //visible columns - update
+                    visibleColumns = $this.state.visibleColumns;
+                    var flag = visibleColumns.indexOf(elementId);
+                    if(flag == -1){
+                        visibleColumns.push(elementId);
+                    }
+                    
+                   //hidden columns - update
+                    var hiddenColumns = $this.state.hiddenColumns.filter((v) => {if(v != elementId) return v;});
+                }
+               $this.setState({visibleColumns:visibleColumns, hiddenColumns:hiddenColumns});
             },
             setVisibleColumn:function(){
 
