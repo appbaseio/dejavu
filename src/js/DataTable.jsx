@@ -224,6 +224,12 @@ var Cell = React.createClass({
         $('#copyId').val(this.props._type+'/'+this.props._id).select();
         document.execCommand("copy");
     },
+    selectRecord:function(ele){
+        _id = this.props._id;
+        _type = this.props._type;
+        row = this.props.row;
+        this.props.actionOnRecord.selectRecord(_id,_type, row);
+    },
     render: function(){
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
@@ -240,6 +246,7 @@ var Cell = React.createClass({
             to_display = data;
 
         var columnName = this.props.columnName;
+        var radioId = this.props.unique+'radio';
         // cell-data of format ``string`` and ``number`` is rendered inline.
         // If a field is a JSON object instead, it's displayed as a modal pop-up.
         // <a href="#"
@@ -250,6 +257,11 @@ var Cell = React.createClass({
         if(columnName == 'json'){
             prettyData =  <Pretty json={data} />
             to_display = <div className="appId">
+                            <span className="theme-element radio">  
+                                <input onChange={this.selectRecord} type="radio" name="selectRecord"
+                                 value={_id} id={radioId} />
+                                <label htmlFor={radioId}></label>
+                            </span>  
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
@@ -330,15 +342,34 @@ var Info = React.createClass({
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
+        var actionOnRecord = this.props.actionOnRecord;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
         var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0 recordTotalRow"; 
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
+        var totalClass = actionOnRecord.active ? 'hide' :'col-xs-12';
+        var selectionClass = actionOnRecord.active ? 'col-xs-12' :'hide';
         return (
                 <div className="infoRow container">
                 <div className=" row">
                     <div className={infoObjClass}>
-                        <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
+                        <div className={totalClass}>
+                            <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
+                        </div>
+                        <div className={selectionClass}>
+                            Selected : {actionOnRecord.id}
+
+                            <FeatureComponent.UpdateDocument 
+                            actionOnRecord={actionOnRecord}/>
+
+
+                            <FeatureComponent.DeleteDocument 
+                            actionOnRecord={actionOnRecord}/>
+
+                            <a href="javascript:void(0);" className="btn btn-info"
+                             onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+
+                        </div>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">
                         <Dropdown 
@@ -451,7 +482,9 @@ var DataTable = React.createClass({
                                 columnName={each}
                                 _id={data[row]['_id']}
                                 _type={data[row]['_type']}
-                                visibility={visibility} />);
+                                visibility={visibility} 
+                                row={newRow}
+                                actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
@@ -503,7 +536,8 @@ var DataTable = React.createClass({
             sortInfo ={this.props.sortInfo}
             columns = {columns}
             visibleColumns={visibleColumns}
-            columnToggle ={this.props.columnToggle} />
+            columnToggle ={this.props.columnToggle}
+            actionOnRecord={this.props.actionOnRecord} />
 
             {extraAddBtn}
             

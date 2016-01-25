@@ -429,7 +429,17 @@ body{
 }
 .appId{
   float: left;
-  width: 250px
+  width: 250px;
+  padding-left:20px; 
+}
+.appId .radio{
+  position: absolute;
+  left: 5px;
+  z-index: 2;
+  cursor: pointer;
+}
+.appId .radio input{
+  cursor: pointer;
 }
 .bracketIcon{
   width: 34px;
@@ -462,7 +472,7 @@ body{
     padding-right: 5px;
     margin-left: -15px;
     line-height: 30px;
-    max-width: 215px;
+    max-width: 190px;
     overflow: hidden;
     height: 34px;
     white-space: nowrap;
@@ -525,7 +535,9 @@ body{
 #exportBtn.loading .fa{
   display: block;
 }
-
+.inlineBlock{
+  display: inline-block;
+}
 
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,

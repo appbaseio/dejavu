@@ -70,15 +70,20 @@ var feed = (function() {
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
                 })
+                
+                //Stop old stream
+                if(typeof streamRef != 'undefined')
+                    streamRef.stop();
+                
                 // get new data updates
-            appbaseRef.searchStream({
-                type: types,
-                body: queryBody,
-            }).on('data', function(res) {
-                callback(res, true);
-            }).on('error', function(err) {
-                console.log("caught a stream error", err);
-            });
+                var streamRef = appbaseRef.searchStream({
+                    type: types,
+                    body: queryBody,
+                }).on('data', function(res) {
+                    callback(res, true);
+                }).on('error', function(err) {
+                    console.log("caught a stream error", err);
+                });
         }
     }
     // paginate and show new results when user scrolls
@@ -154,6 +159,24 @@ var feed = (function() {
             appbaseRef.index(recordObject).on('data', function(res) {
                 if (callback)
                     callback();
+            });
+        },
+        deleteRecord:function(id, type, callback){
+            appbaseRef.delete({
+                type:type,
+                id:id
+            }).on('data',function(data){
+                var localSdata = [];
+                for (data in sdata) {
+                    if (sdata[data]._type == type && sdata[data]._id == id){
+                        console.log('me');
+                    }
+                    else{
+                        localSdata[data] = sdata[data];
+                    }
+                }
+                sdata = localSdata;
+                callback(sdata);
             });
         },
         getSingleDoc: function(type, callback) {

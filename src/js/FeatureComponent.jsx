@@ -384,6 +384,147 @@ var RemoveFilterButton = React.createClass({
     }
 });
 
+//Update Document
+var UpdateDocument = React.createClass({
+
+  getInitialState:function() {
+    return { 
+              showModal: false,
+              validate:{
+                touch:false,
+                type:false,
+                body:false
+              }
+           };
+  },
+  componentDidUpdate:function(){
+   
+  },
+  close:function() {
+    this.setState({ 
+              showModal: false,
+              validate:{
+                touch:false,
+                body:false
+              },
+              selectClass:''
+          });
+  },
+  open:function() {
+    this.setState({ showModal: true });
+  },
+  validateInput:function(){
+    var validateClass = this.state.validate;
+    validateClass.touch = true;
+    validateClass.body = this.IsJsonString(document.getElementById('setBodyUpdate').value);
+    this.setState({validate:validateClass});
+    if(validateClass.body){
+      var updateJson = document.getElementById('setBodyUpdate').value;
+      this.props.actionOnRecord.updateRecord(updateJson);
+    }
+  },
+  IsJsonString:function(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  },
+  render:function() {
+    var typeList = '';
+    var actionOnRecord = this.props.actionOnRecord;
+    if(this.state.validate.touch){
+      var validateClass = {};
+      validateClass.body = this.state.validate.body ? 'form-group' : 'form-group has-error' ;
+    }
+    else{
+      var validateClass = {
+        type:'form-group',
+        body:'form-group'
+      };
+    }
+    
+    return (
+      <div className="add-record-container pd-r10">
+        <a href="javascript:void(0);" className='btn btn-primary fa fa-pencil'  title="Update" onClick={this.open} >Update</a>
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton>
+            <Modal.Title>Update Document</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="form-horizontal" id="updateObjectForm">
+              <div className="form-group">
+                <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
+                <div className="col-sm-10">
+                    <input type="text" className="form-control" id="type" name="type" value={actionOnRecord.type} readOnly />
+                </div>
+              </div>
+              <div className="form-group">
+                <label for="inputPassword3" className="col-sm-2 control-label">Id</label>
+                <div className="col-sm-10">
+                  <input type="text" className="form-control" id="setId"
+                  value={actionOnRecord.id} readOnly placeholder="set Id" name="id" />
+                </div>
+              </div>
+              <div className={validateClass.body}>
+                <label for="inputPassword3" className="col-sm-2 control-label">Object</label>
+                <div className="col-sm-10">
+                  <textarea id="setBodyUpdate" className="form-control" rows="10" name="body" defaultValue={actionOnRecord.row}></textarea>
+                   <span className="help-block">
+                      Body is required and should be valid JSON.
+                    </span>
+                </div>
+              </div>              
+            </form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
+            <Button id="close-update-modal" onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    );
+  }
+});
+
+var DeleteDocument = React.createClass({
+
+  getInitialState:function() {
+    return { 
+              showModal: false
+           };
+  },
+  componentDidUpdate:function(){
+  },
+  close:function() {
+    this.setState({ 
+              showModal: false
+          });
+  },
+  open:function() {
+    this.setState({ showModal: true });
+  },
+  render:function() {
+    return (
+      <div>
+        <a title="Delete" onClick={this.open} className="btn btn-danger fa fa-trash"></a>
+        <Modal show={this.state.showModal} onHide={this.close}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete Record?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>Are you sure, you want to delete this record?</p> 
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle="danger" onClick={this.props.actionOnRecord.deleteRecord}>Submit</Button>
+            <Button id="close-delete-modal" onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    );
+  }
+});
 
 var FeatureComponent = {
 	AddDocument:AddDocument,
@@ -391,7 +532,9 @@ var FeatureComponent = {
 	ExportData:ExportData,
   Pretty:Pretty,
   SignalCircle:SignalCircle,
-  RemoveFilterButton:RemoveFilterButton
+  RemoveFilterButton:RemoveFilterButton,
+  UpdateDocument:UpdateDocument,
+  DeleteDocument:DeleteDocument
 };
 
 module.exports = FeatureComponent;

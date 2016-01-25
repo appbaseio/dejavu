@@ -34,7 +34,17 @@ var HomePage = React.createClass({
                         getOnce:false,
                         availableTotal:0
                     },
-                    mappingObj:{}
+                    mappingObj:{},
+                    actionOnRecord:{
+                        active:false,
+                        id:null,
+                        type:null,
+                        row:null,
+                        selectRecord:this.selectRecord,
+                        updateRecord:this.updateRecord,
+                        deleteRecord:this.deleteRecord,
+                        removeSelection:this.removeSelection
+                    }
                 };
     },
     //The record might have nested json objects. They can't be shown
@@ -343,6 +353,9 @@ var HomePage = React.createClass({
     },
     addRecord:function(){
         var form = $('#addObjectForm').serializeArray();
+        this.indexCall(form,'close-modal');
+    },
+    indexCall:function(form, modalId){
         var recordObject = {};
         $.each(form,function(k2,v2){
             if(v2.value != '')
@@ -351,9 +364,8 @@ var HomePage = React.createClass({
 
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject,function(){
-            $('#close-modal').click();
+            $('#'+modalId).click();
         });
-
     },
     getTypeDoc:function(){
         var selectedType = $('#setType').val();
@@ -507,7 +519,33 @@ var HomePage = React.createClass({
         };
         return obj;
     },
-                        
+    selectRecord:function(id, type, row){
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.active = true;
+        actionOnRecord.id = id;
+        actionOnRecord.type = type;
+        actionOnRecord.row = JSON.stringify(row.json,null,4);
+        this.setState({actionOnRecord:actionOnRecord});
+    },         
+    removeSelection:function(){
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.active = false;
+        actionOnRecord.id = null;
+        actionOnRecord.type = null;
+        this.setState({actionOnRecord:actionOnRecord});
+        $('[name="selectRecord"]').removeAttr('checked');
+    },          
+    updateRecord:function(json){
+        var form = $('#updateObjectForm').serializeArray();
+        var recordObject = {};
+        this.indexCall(form,'close-update-modal');
+    },          
+    deleteRecord:function(){
+        feed.deleteRecord(this.state.actionOnRecord.id, this.state.actionOnRecord.type, function(update){
+            $('#close-delete-modal').click();
+            this.resetData();
+        }.bind(this));
+    },                    
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -546,6 +584,7 @@ var HomePage = React.createClass({
                             removeSort = {this.removeSort}
                             visibleColumns = {this.state.visibleColumns}
                             columnToggle ={this.columnToggle}
+                            actionOnRecord = {this.state.actionOnRecord}
                           />
                     </div>
                     
