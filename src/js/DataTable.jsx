@@ -29,17 +29,18 @@ var SingleMenuItem = React.createClass({
         this.props.getFilterVal(filterValue);
     },
     render: function(){
-        var singleItemClass = this.props.filterField == this.props.val ? 'radio singleItem active':'radio singleItem';
+        var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active':'singleItem';
         var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple':'Type here...';
+        var key = filterKeyGen(this.props.columnField,this.props.val);
         return (<div className={singleItemClass}>
-                  <label>
-                    <input onChange={this.changeFilter} type="radio" name="optionsRadios"
-                     value={this.props.val} />
-                    <span className="lableText">{this.props.val}</span>
-                  </label>
-                  <div className="searchElement">
-                    <input type="text" placeholder={placeholder} onKeyUp={this.valChange} />
-                  </div>
+                  <div className="theme-element radio">  
+                        <input onChange={this.changeFilter} type="radio" name="optionsRadios"
+                         value={this.props.val} id={key} />
+                        <label htmlFor={key}><span className="lableText">{this.props.val}</span></label>
+                    </div>  
+                      <div className="searchElement">
+                        <input className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+                      </div>
                 </div>);
     }
 });
@@ -74,9 +75,9 @@ var FilterDropdown = React.createClass({
             var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
             var stringFilter = (
                                 <Dropdown.Menu className="menuItems pull-right pd-0">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
                                     <div className="singleItem">
                                         <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
                                     </div>
@@ -85,8 +86,8 @@ var FilterDropdown = React.createClass({
 
             var numberFilter = (
                                 <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
                                         <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
                                     </div>
@@ -96,8 +97,8 @@ var FilterDropdown = React.createClass({
 
             var dateFilter = (
                                 <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
                                         <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
                                     </div>

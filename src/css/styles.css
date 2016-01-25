@@ -1,21 +1,7 @@
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
-input[type=checkbox] { display:none; } /* to hide the checkbox itself */
-input[type=checkbox] + label:before {
-  font-family: FontAwesome;
-  display: inline-block;
-  font-size: 1em;
-}
-
-input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
-input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
-
-input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
-input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow space for check mark */
-
 label {
   font-weight: 500;
 }
-
 .waiting {
   position: absolute;
   top: 50%;
@@ -405,6 +391,9 @@ body{
 .filterDropdown .filterBtn .caret{
   display: none;
 }
+.menuItems{
+  width: 200px;
+}
 .singleItem{
   padding: 5px;
   border-bottom: 1px solid #eee;
@@ -415,17 +404,28 @@ body{
 }
 .singleItem input[type="text"]{
   font-weight: lighter;
-  font-weight: lighter;
   padding: 0 5px;
+  height: 26px;
 }
 .singleItem .searchElement,
 .singleItem.active label .lableText{
   display: none;
 }
+.radio{
+  z-index: 1;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.radio .label{
+  line-height: 14px;
+}
 .singleItem.active .searchElement{
   display: block;
-  padding-left: 20px;
-  margin-top: -26px;
+  padding-left: 25px;
+  margin-top: -30px;
+  z-index: 2;
+  position: relative;
 }
 .appId{
   float: left;
@@ -520,4 +520,25 @@ body{
 }
 #exportBtn.loading .fa{
   display: block;
+}
+
+
+/*Color Schemes*/
+.theme-element.checkbox input[type="checkbox"]:checked + label::after,
+.theme-element.checkbox input[type="radio"]:checked + label::after{
+  background: #3BC7F6;
+  color: #fff;
+}
+.theme-element.radio label::after{
+  background: #3BC7F6;
+}
+.btn-primary{
+  background: #3BC7F6; 
+  border-color: #2F9ED5;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus{
+  border-color: #2F9ED5;
+  background: #2F9ED5; 
 }

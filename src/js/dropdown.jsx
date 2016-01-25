@@ -92,12 +92,14 @@ var FieldCheckbox = React.createClass({
         var key = dropdownKeyGen(this.props._type);
         return(
             <div className='ab-menu-item'>
-                <input 
-                id={key} 
-                type="checkbox" key={key}
-                defaultChecked={this.state.isChecked} 
-                onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
-                <label htmlFor={key}> {this.props._type} </label>
+                <div className="checkbox theme-element">
+                    <input 
+                    id={key} 
+                    type="checkbox" key={key}
+                    defaultChecked={this.state.isChecked} 
+                    onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
+                    <label htmlFor={key}> {this.props._type} </label>
+                </div>
             </div>
         );
     }

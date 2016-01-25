@@ -34,14 +34,16 @@ var TypeRow = React.createClass({
     render: function() {
         return(
                 <li>
+                    <div className="theme-element checkbox">
                     <input
-                     id={this.props.type}
-                     type="checkbox"
-                     key={this.props.type}
-                     checked={this.state.isChecked}
-                     onChange={this.unwatch}
-                     readOnly={false}/>
-                    <label htmlFor={this.props.type}>{this.props.type}</label>
+                         id={this.props.type}
+                         type="checkbox"
+                         key={this.props.type}
+                         checked={this.state.isChecked}
+                         onChange={this.unwatch}
+                         readOnly={false}/>
+                        <label htmlFor={this.props.type}>{this.props.type}</label>
+                    </div>
                 </li>
         );
     }
