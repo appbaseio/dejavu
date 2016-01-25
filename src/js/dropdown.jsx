@@ -61,6 +61,8 @@ var FieldCheckbox = React.createClass({
     // we do this by assigning specific keys to them. check KeyGen.
     check: function(elementId, event){
         var checked = true;
+        if(elementId == 'type / id')
+                elementId = 'json';
         if(document.getElementById(elementId).style.display === "none"){
             document.getElementById(elementId).style.display = "";
             checked = true;
