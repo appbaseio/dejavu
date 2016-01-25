@@ -177,21 +177,28 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        if(types.length){
-            feed.getData(types, function(update, fromStream){
-                this.updateDataOnView(update);
-                this.setSignal(fromStream);
-            }.bind(this), function(total){
-                var infoObj = this.state.infoObj;
-                infoObj.total = total;
-                this.setState({infoObj:infoObj});
-            }.bind(this));
+        console.log(this.state.filterInfo);
+        if(this.state.filterInfo.active){
+            var filterInfo = this.state.filterInfo;
+            this.applyFilter(filterInfo.typeName, filterInfo.columnName, filterInfo.method, filterInfo.value);
         }
         else{
-            var infoObj = this.state.infoObj;
-            infoObj.showing = 0;
-            infoObj.total = 0;
-            this.setState({infoObj:infoObj});
+            if(types.length){
+                feed.getData(types, function(update, fromStream){
+                    this.updateDataOnView(update);
+                    this.setSignal(fromStream);
+                }.bind(this), function(total){
+                    var infoObj = this.state.infoObj;
+                    infoObj.total = total;
+                    this.setState({infoObj:infoObj});
+                }.bind(this));
+            }
+            else{
+                var infoObj = this.state.infoObj;
+                infoObj.showing = 0;
+                infoObj.total = 0;
+                this.setState({infoObj:infoObj});
+            }
         }
     },
     setSignal:function(fromStream){
@@ -424,7 +431,7 @@ var HomePage = React.createClass({
         });
     },
     applyFilter:function(typeName, columnName, method, value){
-        filterVal = value.split(',');
+        filterVal = $.isArray(value) ? value : value.split(',');
         var $this = this;
         var filterObj = this.state.filterInfo;
         filterObj['type'] = typeName;

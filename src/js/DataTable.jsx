@@ -179,9 +179,9 @@ var Column = React.createClass({
                 <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                     <a href="javascript:void(0);" className="bracketIcon"></a>
                 </OverlayTrigger>
-                &nbsp;type / id
+                <span onClick={this.sortingInit}>&nbsp;type / id</span>
             </span>
-             : item;
+             : <span onClick={this.sortingInit}>item</span>;
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -191,7 +191,7 @@ var Column = React.createClass({
         return (<th id={item} width={cellWidth} className="tableHead">
                     <div className={fixedHead}>
                         <div className="headText">
-                            <div className="thtextShow" onClick={this.sortingInit}>
+                            <div className="thtextShow">
                                 {itemText}
                             </div>
                             <div className="iconList">
