@@ -213,6 +213,17 @@ var Column = React.createClass({
 // **Cell** defines the properties of each cell in the
 // data table.
 var Cell = React.createClass({
+    copyId:function(){
+        console.log(this.props._type);
+        console.log(this.props._id);
+        var range = document.createRange();
+        var selection = window.getSelection();
+        range.selectNodeContents(document.getElementById(this.props.unique));
+        selection.removeAllRanges();
+        selection.addRange(range);
+        $('#copyId').val(this.props._type+'/'+this.props._id).select();
+        document.execCommand("copy");
+    },
     render: function(){
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
@@ -242,7 +253,7 @@ var Cell = React.createClass({
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
-                            <span className="appId_name">
+                            <span className="appId_name" onClick={this.copyId}>
                                 <span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
@@ -505,7 +516,7 @@ var DataTable = React.createClass({
                  selectedTypes={this.props.selectedTypes}
                  filterInfo={this.props.filterInfo} />
              </div>
-
+             <input id="copyId" className="hide" />
             </div>
         );
     }
