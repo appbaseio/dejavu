@@ -35,7 +35,7 @@ var SingleMenuItem = React.createClass({
                   <label>
                     <input onChange={this.changeFilter} type="radio" name="optionsRadios"
                      value={this.props.val} />
-                    {this.props.val}
+                    <span className="lableText">{this.props.val}</span>
                   </label>
                   <div className="searchElement">
                     <input type="text" placeholder={placeholder} onKeyUp={this.valChange} />
@@ -73,7 +73,7 @@ var FilterDropdown = React.createClass({
             var datatype = this.props.datatype;
             var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
             var stringFilter = (
-                                <Dropdown.Menu className="menuItems pull-right">
+                                <Dropdown.Menu className="menuItems pull-right pd-0">
                                     <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
                                     <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
                                     <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />

@@ -22,7 +22,7 @@ label {
   left: 50%;
 }
 .pd-0{
-  padding: 0;
+  padding: 0 !important;
 }
 .pd-r0{
   padding-right: 0;
@@ -393,7 +393,6 @@ body{
 .filterDropdown.active .filterDropdownContainer{
   display: block;
 }
-
 .filterDropdown .filterBtn{
   padding: 0;
   background: transparent;
@@ -417,14 +416,16 @@ body{
 .singleItem input[type="text"]{
   font-weight: lighter;
   font-weight: lighter;
-  margin: 5px 0;
   padding: 0 5px;
 }
-.singleItem .searchElement{
+.singleItem .searchElement,
+.singleItem.active label .lableText{
   display: none;
 }
 .singleItem.active .searchElement{
   display: block;
+  padding-left: 20px;
+  margin-top: -26px;
 }
 .appId{
   float: left;
