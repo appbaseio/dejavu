@@ -235,7 +235,7 @@ var ExportData = React.createClass({
     return (
       <div>
         <a title="Export" onClick={this.open} >
-          Export
+          <img src="src/img/export.png" alt=""/> Export
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
@@ -299,7 +299,7 @@ var ImportData = React.createClass({
     return (
       <div>
         <a title="Import" onClick={this.open} >
-          Import
+          <img src="src/img/import.png" /> Import
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>

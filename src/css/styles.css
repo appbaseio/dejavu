@@ -500,18 +500,22 @@ body{
 }
 .feature-list li a{
   width: 100%;
-  background: #eee;
+  background: #fff;
   display: inline-block;
   padding: 5px 10px;
   border-bottom: 1px solid #e1e1e1;
   cursor: pointer;
   color: #000;
 }
+.feature-list li a img{
+  width: 30px;
+  padding-right: 10px;
+}
 .feature-list li:last-child a{
     border-bottom: 0;
 }
 .feature-list li a:hover{
-  background: #e1e1e1;
+  background: #f1f1f1;
   text-decoration: none;
 }
 #exportBtn .fa,

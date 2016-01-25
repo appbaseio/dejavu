@@ -85,7 +85,7 @@ var FilterDropdown = React.createClass({
                                     <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
                                     <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
@@ -95,7 +95,7 @@ var FilterDropdown = React.createClass({
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
@@ -106,7 +106,7 @@ var FilterDropdown = React.createClass({
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
@@ -375,8 +375,15 @@ var DataTable = React.createClass({
         
         //If render from sort, dont change the order of columns
         if(!$this.props.sortInfo.active){
-            fixed = ['json'];
-            columns = ['json'];
+            if($this.props.infoObj.showing != 0){
+                fixed = ['json'];
+                columns = ['json'];
+            }
+            else{
+                fixed = [];
+                columns = [];
+            }
+
             fullColumns = {
                 type:'',
                 columns:columns
