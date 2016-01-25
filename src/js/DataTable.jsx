@@ -21,6 +21,11 @@ var SingleMenuItem = React.createClass({
     changeFilter:function(e){
         var filterField = e.currentTarget.value;
         this.props.changeFilter(filterField, this.state.filterValue);
+        var key = filterKeyGen(this.props.columnField,this.props.val);
+        var keyInput = key+'-input';
+        setTimeout(() => {
+            $('#'+keyInput).focus();
+        },300);
         //this.setState({filterField:filterField});
     },
     valChange:function(e){
@@ -32,14 +37,15 @@ var SingleMenuItem = React.createClass({
         var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active':'singleItem';
         var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple':'Type here...';
         var key = filterKeyGen(this.props.columnField,this.props.val);
+        var keyInput = key+'-input';
         return (<div className={singleItemClass}>
-                  <div className="theme-element radio">  
+                    <div className="theme-element radio">  
                         <input onChange={this.changeFilter} type="radio" name="optionsRadios"
                          value={this.props.val} id={key} />
                         <label htmlFor={key}><span className="lableText">{this.props.val}</span></label>
                     </div>  
                       <div className="searchElement">
-                        <input className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+                        <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
                       </div>
                 </div>);
     }

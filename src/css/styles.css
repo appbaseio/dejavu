@@ -417,7 +417,7 @@ body{
   padding-top: 5px;
   padding-bottom: 5px;
 }
-.radio .label{
+.radio label{
   line-height: 14px;
 }
 .singleItem.active .searchElement{
