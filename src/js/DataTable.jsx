@@ -357,7 +357,7 @@ var Info = React.createClass({
                             <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                         </div>
                         <div className={selectionClass}>
-                            Selected : {actionOnRecord.id}
+                            <span className="pull-left">Selected : {actionOnRecord.id}</span>
 
                             <FeatureComponent.UpdateDocument 
                             actionOnRecord={actionOnRecord}/>

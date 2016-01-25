@@ -446,7 +446,7 @@ var UpdateDocument = React.createClass({
     }
     
     return (
-      <div className="add-record-container pd-r10">
+      <div className="inlineBlock pd-r10">
         <a href="javascript:void(0);" className='btn btn-primary fa fa-pencil'  title="Update" onClick={this.open} >Update</a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
@@ -507,7 +507,7 @@ var DeleteDocument = React.createClass({
   },
   render:function() {
     return (
-      <div>
+      <div className="inlineBlock">
         <a title="Delete" onClick={this.open} className="btn btn-danger fa fa-trash"></a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
