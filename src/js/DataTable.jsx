@@ -285,7 +285,7 @@ var Table = React.createClass({
         var column_width = 250;
         var elem = document.getElementById('table-scroller');
         if(elem != null){
-            elem.style.width = this.props.renderColumns.length*column_width+'px';
+            elem.style.width = this.props.visibleColumns.length*column_width+'px';
         }
         return (
             <div id='table-container' className="table-container">
@@ -323,7 +323,11 @@ var Info = React.createClass({
                         <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                     </div>
                     <div className="col-xs-6 pull-right pd-r0">
-                        <Dropdown cols={this.props.columns} />
+                        <Dropdown 
+                        visibleColumns ={this.props.visibleColumns}
+                        columnToggle ={this.props.columnToggle}
+                         cols={this.props.columns} />
+
                         <FeatureComponent.AddDocument 
                             types={this.props.types} 
                             addRecord ={this.props.addRecord}
@@ -434,7 +438,9 @@ var DataTable = React.createClass({
                         mappingObj={$this.props.mappingObj}
                         filterInfo={$this.props.filterInfo} />);
         });
-		var renderRows1 = [];
+		var visibleColumns = this.props.visibleColumns;
+
+        var renderRows1 = [];
 
         //If render from sort, dont render the coumns
         var renderRows = rows.map(function(item)
@@ -469,13 +475,16 @@ var DataTable = React.createClass({
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc}
             sortInfo ={this.props.sortInfo}
-            columns = {columns} />
+            columns = {columns}
+            visibleColumns={visibleColumns}
+            columnToggle ={this.props.columnToggle} />
 
             {extraAddBtn}
             
             <div className="outsideTable">
                 <Table
                  renderColumns={renderColumns}
+                 visibleColumns = {visibleColumns}
                  renderRows={renderRows}
                  scrollFunction={this.props.scrollFunction}
                  selectedTypes={this.props.selectedTypes}

@@ -8,6 +8,7 @@ var ReactBootstrap = require('react-bootstrap');
 
 var Dropdown = React.createClass({
     render: function(){
+        var $this = this;
         var Dropdown = ReactBootstrap.Dropdown;
         var columns = this.props.cols;
         var MenuItem = ReactBootstrap.MenuItem;
@@ -17,7 +18,7 @@ var Dropdown = React.createClass({
             var key = dropdownKeyGen(item);
             if(item == 'json')
                 item = 'type / id';
-            return <FieldCheckbox key={i} _type={item} _key={this.key}/>;
+            return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={this.key}/>;
         });
         return (
             <Dropdown
@@ -84,6 +85,7 @@ var FieldCheckbox = React.createClass({
             }
         }
         this.setState({isChecked: checked});
+        this.props.columnToggle().toggleIt(elementId);
     },
     render: function() {
         var Input = ReactBootstrap.Input;

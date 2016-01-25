@@ -19,6 +19,7 @@ var HomePage = React.createClass({
 
     getInitialState: function() {
         return {documents: [], types: [], signalColor:'', signalActive:'', signalText:'',
+                    visibleColumns:[],
                     sortInfo:{
                         active:false
                     },
@@ -90,6 +91,18 @@ var HomePage = React.createClass({
         var infoObj = this.state.infoObj;
         infoObj.showing = showing;
         this.setState({infoObj:infoObj});
+        data = this.state.documents;
+        var visibleColumns = [];
+        for(var each in data){
+            for(column in data[each]){
+                if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
+                    if(visibleColumns.indexOf(column) <= -1){
+                        visibleColumns.push(column);
+                    }
+                }
+            }
+        }
+        this.setState({visibleColumns:visibleColumns});
     },
 
     // Logic to stream continuous data.
@@ -451,6 +464,20 @@ var HomePage = React.createClass({
         this.setState({documents: sortedArray});
         this.setState({sortInfo:{active:false}});
     },
+    columnToggle:function() {
+        var $this = this;
+        var obj = {
+            toggleIt:function(elementId) {
+               var visibleColumns = $this.state.visibleColumns.filter((v) => {if(v != elementId) return v;});
+               $this.setState({visibleColumns:visibleColumns});
+            },
+            setVisibleColumn:function(){
+
+            }
+        };
+        return obj;
+    },
+                        
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -487,6 +514,8 @@ var HomePage = React.createClass({
                             getTypeDoc={this.getTypeDoc}
                             Types={this.state.types}
                             removeSort = {this.removeSort}
+                            visibleColumns = {this.state.visibleColumns}
+                            columnToggle ={this.columnToggle}
                           />
                     </div>
                     
