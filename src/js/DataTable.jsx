@@ -57,7 +57,7 @@ var FilterDropdown = React.createClass({
     getInitialState:function(){
         return {
                     filterField:null,
-                    filterValue:''
+                    filterValue:null
                 };
     },
     changeFilter : function(field, value){
@@ -70,7 +70,8 @@ var FilterDropdown = React.createClass({
         this.setState({filterValue:val});
     },
     applyFilter:function(){
-        this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
+        if(this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
+           this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
     },
     render:function(){
             var ButtonToolbar = ReactBootstrap.ButtonToolbar;
