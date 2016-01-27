@@ -349,6 +349,9 @@ body{
   padding-right: 40px;
   line-height: 30px;
 }
+.headText .thtextShow.leftGap{
+  padding-left: 20px;
+}
 .headText .iconList{
   position: absolute;
   right: 5px;

@@ -182,6 +182,7 @@ var Column = React.createClass({
                 <span onClick={this.sortingInit}>&nbsp;type / id</span>
             </span>
              : <span onClick={this.sortingInit}>{item}</span>;
+        var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';     
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -191,7 +192,7 @@ var Column = React.createClass({
         return (<th id={item} width={cellWidth} className="tableHead">
                     <div className={fixedHead}>
                         <div className="headText">
-                            <div className="thtextShow">
+                            <div className={thtextShow}>
                                 {itemText}
                             </div>
                             <div className="iconList">
