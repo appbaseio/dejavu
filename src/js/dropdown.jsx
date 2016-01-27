@@ -16,8 +16,7 @@ var Dropdown = React.createClass({
         // as a list of react components i.e FieldCheckbox.
         var ColumnsCheckbox =  columns.map(function(item, i){
             var key = dropdownKeyGen(item);
-            if(item == 'json')
-                item = 'type / id';
+            if(item != 'json')
             return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={this.key}/>;
         });
         return (
