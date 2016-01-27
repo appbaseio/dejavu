@@ -17,6 +17,7 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         this.setState({isChecked:checked});
+        this.props.typeInfo.typeCounter();
     },
     unwatch: function() {
         var checked = false;
@@ -61,7 +62,8 @@ var TypeTable = React.createClass({
                          key={type}
                          type={types[type]}
                          unwatchTypeHandler={this.props.unwatchTypeHandler}
-                         watchTypeHandler={this.props.watchTypeHandler} />);
+                         watchTypeHandler={this.props.watchTypeHandler}
+                         typeInfo={this.props.typeInfo} />);
         }
         if(types.length < 1) {
             return (

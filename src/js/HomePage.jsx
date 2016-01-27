@@ -45,7 +45,8 @@ var HomePage = React.createClass({
                         updateRecord:this.updateRecord,
                         deleteRecord:this.deleteRecord,
                         removeSelection:this.removeSelection
-                    }
+                    },
+                    typeInfo:{count:0, typeCounter:this.typeCounter}
                 };
     },
     //The record might have nested json objects. They can't be shown
@@ -276,8 +277,7 @@ var HomePage = React.createClass({
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
         subsetESTypes.push(typeName);
-        this.getStreamingData(subsetESTypes);
-        console.log("selections: ", subsetESTypes);
+        this.applyGetStream();
     },
     unwatchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
@@ -285,6 +285,19 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
         console.log("selections: ", subsetESTypes);
+    },
+    typeCounter:function(){
+        var typeInfo = this.state.typeInfo;
+        typeInfo.count++;
+        this.setState({typeInfo:typeInfo});
+        this.applyGetStream();
+    },
+    applyGetStream:function(){
+        var typeInfo = this.state.typeInfo;
+            if(typeInfo.count >= this.state.types.length){
+                this.getStreamingData(subsetESTypes);
+                console.log("selections: ", subsetESTypes);
+            }
     },
     setMap:function(){
         var $this = this;
@@ -578,7 +591,8 @@ var HomePage = React.createClass({
                             ExportData={this.exportData}
                             signalColor={this.state.signalColor}
                             signalActive={this.state.signalActive}
-                            signalText={this.state.signalText} />
+                            signalText={this.state.signalText}
+                            typeInfo={this.state.typeInfo} />
                     </div>
                      <div className="col-xs-12 dataContainer">
                         <DataTable
@@ -609,3 +623,4 @@ var HomePage = React.createClass({
 });
 
 module.exports = HomePage;
+
