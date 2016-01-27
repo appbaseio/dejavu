@@ -432,13 +432,13 @@ body{
   width: 250px;
   padding-left:20px; 
 }
-.appId .radio{
+.appId .selectrow{
   position: absolute;
   left: 5px;
   z-index: 2;
   cursor: pointer;
 }
-.appId .radio input{
+.appId .selectrow input{
   cursor: pointer;
 }
 .bracketIcon{
@@ -557,4 +557,7 @@ body{
 .btn-primary:focus{
   border-color: #2F9ED5;
   background: #2F9ED5; 
+}
+.greyBtn{
+  color: #6e8593;
 }

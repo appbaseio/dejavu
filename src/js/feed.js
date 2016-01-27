@@ -52,7 +52,7 @@ var feed = (function() {
             }
 
             var queryBody = queryBody ? queryBody : defaultQueryBody;
-            
+                
             // get historical data
             appbaseRef.search({
                     type: types,
@@ -161,10 +161,12 @@ var feed = (function() {
                     callback();
             });
         },
-        deleteRecord:function(id, type, callback){
-            appbaseRef.delete({
-                type:type,
-                id:id
+        deleteRecord:function(selectedRows, callback){
+            var deleteArray = selectedRows.map( v => ({"delete":v}) );
+            console.log(deleteArray);
+            
+            appbaseRef.bulk({
+                body:deleteArray
             }).on('data',function(data){
                 var localSdata = [];
                 for (data in sdata) {

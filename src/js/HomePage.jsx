@@ -40,6 +40,7 @@ var HomePage = React.createClass({
                         id:null,
                         type:null,
                         row:null,
+                        selectedRows:[],
                         selectRecord:this.selectRecord,
                         updateRecord:this.updateRecord,
                         deleteRecord:this.deleteRecord,
@@ -519,12 +520,22 @@ var HomePage = React.createClass({
         };
         return obj;
     },
-    selectRecord:function(id, type, row){
+    selectRecord:function(id, type, row, currentCheck){
+        selectedRows = [];
+        $('.rowSelectionCheckbox:checked').each((i, v)=>{
+            var obj = {
+                        _id:$(v).attr('value'),
+                        _type:$(v).data('type')
+                    }; 
+            selectedRows.push(obj); 
+        });
+
         var actionOnRecord = this.state.actionOnRecord;
-        actionOnRecord.active = true;
+        actionOnRecord.active = selectedRows.length ? true : false;
         actionOnRecord.id = id;
         actionOnRecord.type = type;
         actionOnRecord.row = JSON.stringify(row.json,null,4);
+        actionOnRecord.selectedRows = selectedRows;
         this.setState({actionOnRecord:actionOnRecord});
     },         
     removeSelection:function(){
@@ -541,7 +552,7 @@ var HomePage = React.createClass({
         this.indexCall(form,'close-update-modal');
     },          
     deleteRecord:function(){
-        feed.deleteRecord(this.state.actionOnRecord.id, this.state.actionOnRecord.type, function(update){
+        feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
             $('#close-delete-modal').click();
             this.resetData();
         }.bind(this));

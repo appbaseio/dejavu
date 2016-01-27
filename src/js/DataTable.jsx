@@ -228,7 +228,7 @@ var Cell = React.createClass({
         _id = this.props._id;
         _type = this.props._type;
         row = this.props.row;
-        this.props.actionOnRecord.selectRecord(_id,_type, row);
+        this.props.actionOnRecord.selectRecord(_id,_type, row, ele.currentTarget.checked);
     },
     render: function(){
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
@@ -257,9 +257,9 @@ var Cell = React.createClass({
         if(columnName == 'json'){
             prettyData =  <Pretty json={data} />
             to_display = <div className="appId">
-                            <span className="theme-element radio">  
-                                <input onChange={this.selectRecord} type="radio" name="selectRecord"
-                                 value={_id} id={radioId} />
+                            <span className="theme-element selectrow checkbox">  
+                                <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
+                                 value={_id} data-type={_type} id={radioId} />
                                 <label htmlFor={radioId}></label>
                             </span>  
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
@@ -345,10 +345,13 @@ var Info = React.createClass({
         var actionOnRecord = this.props.actionOnRecord;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0 recordTotalRow"; 
+        var infoObjClass = infoObj.total == 0 ? "hide":"pull-left text-left pd-l0 recordTotalRow"; 
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' :'col-xs-12';
         var selectionClass = actionOnRecord.active ? 'col-xs-12' :'hide';
+
+        var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
+
         return (
                 <div className="infoRow container">
                 <div className=" row">
@@ -357,21 +360,19 @@ var Info = React.createClass({
                             <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
                         </div>
                         <div className={selectionClass}>
-                            <span className="pull-left">Selected : {actionOnRecord.id}</span>
+                            <span className="pull-left  pd-r10"> <strong>{ actionOnRecord.selectedRows.length}</strong> Selected of total <strong>{infoObj.total}</strong></span>
 
-                            <FeatureComponent.UpdateDocument 
-                            actionOnRecord={actionOnRecord}/>
-
+                            {UpdateDocument}
 
                             <FeatureComponent.DeleteDocument 
                             actionOnRecord={actionOnRecord}/>
 
-                            <a href="javascript:void(0);" className="btn btn-info"
+                            <a href="javascript:void(0);" className="greyBtn"
                              onClick={actionOnRecord.removeSelection}>Remove Selection</a>
 
                         </div>
                     </div>
-                    <div className="col-xs-6 pull-right pd-r0">
+                    <div className="pull-right pd-r0">
                         <Dropdown 
                         visibleColumns ={this.props.visibleColumns}
                         columnToggle ={this.props.columnToggle}
