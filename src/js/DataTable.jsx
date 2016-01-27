@@ -179,7 +179,7 @@ var Column = React.createClass({
                 <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                     <a href="javascript:void(0);" className="bracketIcon"></a>
                 </OverlayTrigger>
-                <span onClick={this.sortingInit}>&nbsp;type / id</span>
+                <span onClick={this.sortingInit}>&nbsp;&nbsp;type / id</span>
             </span>
              : <span onClick={this.sortingInit}>{item}</span>;
         var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';     
@@ -363,19 +363,28 @@ var Info = React.createClass({
                 <div className=" row">
                     <div className={infoObjClass}>
                         <div className={totalClass}>
-                            <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
+                            <span className="info_single">
+                                <label>Showing <strong>{infoObj.showing}</strong> of total 
+                                <strong>&nbsp;{infoObj.total}</strong>
+                                </label>
+                            </span>    
                         </div>
                         <div className={selectionClass}>
-                            <span className="pull-left  pd-r10"> <strong>{ actionOnRecord.selectedRows.length}</strong> Selected of total <strong>{infoObj.total}</strong></span>
+                            <span className="pull-left  pd-r10 info_single"> 
+                                <strong>{ actionOnRecord.selectedRows.length}</strong> Selected of total <strong>
+                                    {infoObj.total}
+                                </strong>
+                            </span>
 
-                            {UpdateDocument}
+                            <span className="pull-left">
+                                {UpdateDocument}
 
-                            <FeatureComponent.DeleteDocument 
-                            actionOnRecord={actionOnRecord}/>
+                                <FeatureComponent.DeleteDocument 
+                                actionOnRecord={actionOnRecord}/>
 
-                            <a href="javascript:void(0);" className="greyBtn"
-                             onClick={actionOnRecord.removeSelection}>Remove Selection</a>
-
+                                <a href="javascript:void(0);" className="greyBtn info_single"
+                                 onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+                            </span> 
                         </div>
                     </div>
                     <div className="pull-right pd-r0">

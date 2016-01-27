@@ -60,7 +60,6 @@ var feed = (function() {
                     size: DATA_SIZE,
                     body: queryBody
                 }).on('data', function(res) {
-                    setTotal(res.hits.total);
                     dataOffset += DATA_SIZE;
                     if (res.hits.hits.length == 0) {
                         callback(null, 0);
@@ -76,16 +75,44 @@ var feed = (function() {
                     streamRef.stop();
                 
                 // get new data updates
+                console.log(types[0]);
                 var streamRef = appbaseRef.searchStream({
-                    type: types,
-                    body: queryBody,
+                    type: types[0],
+                    body: queryBody
                 }).on('data', function(res) {
                     callback(res, true);
                 }).on('error', function(err) {
                     console.log("caught a stream error", err);
                 });
+
+                // Counter stream
+                countStream(types, setTotal);
         }
-    }
+    };
+
+    //This function is built only to maintain the total number of records 
+    //It's hard to figure out correct total number of records while streaming and filtering is together
+    function countStream(types, setTotal){
+        appbaseRef.search({
+            type: types,
+            body: {"query":{"match_all":{}}}
+        }).on('data', function(res) {
+            
+            setTotal(res.hits.total);
+        });
+
+        var counterStream = appbaseRef.searchStream({
+            type: types,
+            body: {"query":{"match_all":{}}}
+        }).on('data', function(res) {
+            debugger
+            setTotal(res.hits.total);
+            //callback(res, true);
+        }).on('error', function(err) {
+            //console.log("caught a stream error", err);
+        });
+    };
+
     // paginate and show new results when user scrolls
     // to the bottom of the existing results.
     function paginationSearch(typeName, from, callback, queryBody) {

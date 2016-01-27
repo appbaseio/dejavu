@@ -1,4 +1,12 @@
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
+@font-face {
+  font-family: "Source Sans Pro Regular";
+  src: url('fonts/source/sourcesanspro-regular.ttf');
+
+}
+body{
+  font-family: "Source Sans Pro Regular";
+}
 label {
   font-weight: 500;
 }
@@ -53,9 +61,12 @@ label {
   border-bottom: 1px solid #eee;
   z-index: 5;
 }
+.infoRow .info_single{
+  line-height: 28px;
+}
 .recordTotalRow{
-  padding-top: 4px;
   margin: 0;
+  height: 28px;
 }
 .removeFilter .inside-info{
   padding: 5px 10px;
@@ -350,7 +361,7 @@ body{
   line-height: 30px;
 }
 .headText .thtextShow.leftGap{
-  padding-left: 20px;
+  padding-left: 26px;
 }
 .headText .iconList{
   position: absolute;
@@ -433,13 +444,13 @@ body{
 .appId{
   float: left;
   width: 250px;
-  padding-left:20px; 
+  padding-left:26px; 
   position: relative;
 }
 .appId .selectrow{
   position: absolute;
   left: 0;
-  top: 0;
+  top: -2px;
   z-index: 2;
   cursor: pointer;
   display: none;
@@ -547,6 +558,9 @@ body{
 }
 .inlineBlock{
   display: inline-block;
+}
+.themeBtn{
+  padding: 3px 6px;
 }
 
 /*Color Schemes*/

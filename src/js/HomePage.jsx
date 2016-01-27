@@ -358,6 +358,8 @@ var HomePage = React.createClass({
     dynamicSort:function (property, reverse) {
         return function (a,b) {
             sortOrder = reverse ? -1 : 1;
+            if(property == 'json')
+                property = '_type';
             if(isNaN(a[property]))
                 var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
             else
