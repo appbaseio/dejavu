@@ -543,6 +543,7 @@ var HomePage = React.createClass({
         actionOnRecord.active = false;
         actionOnRecord.id = null;
         actionOnRecord.type = null;
+        actionOnRecord.selectedRows = [];
         this.setState({actionOnRecord:actionOnRecord});
         $('[name="selectRecord"]').removeAttr('checked');
     },          
@@ -554,6 +555,7 @@ var HomePage = React.createClass({
     deleteRecord:function(){
         feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
             $('#close-delete-modal').click();
+            this.removeSelection();
             this.resetData();
         }.bind(this));
     },                    

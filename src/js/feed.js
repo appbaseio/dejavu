@@ -52,7 +52,7 @@ var feed = (function() {
             }
 
             var queryBody = queryBody ? queryBody : defaultQueryBody;
-                
+
             // get historical data
             appbaseRef.search({
                     type: types,
@@ -168,16 +168,13 @@ var feed = (function() {
             appbaseRef.bulk({
                 body:deleteArray
             }).on('data',function(data){
-                var localSdata = [];
                 for (data in sdata) {
-                    if (sdata[data]._type == type && sdata[data]._id == id){
-                        console.log('me');
-                    }
-                    else{
-                        localSdata[data] = sdata[data];
-                    }
+                    selectedRows.forEach((v)=>{
+                        if (sdata[data]._type == v._type && sdata[data]._id == v._id){
+                            delete sdata[data];
+                        }
+                    });
                 }
-                sdata = localSdata;
                 callback(sdata);
             });
         },

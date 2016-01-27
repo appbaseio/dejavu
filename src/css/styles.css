@@ -431,10 +431,12 @@ body{
   float: left;
   width: 250px;
   padding-left:20px; 
+  position: relative;
 }
 .appId .selectrow{
   position: absolute;
-  left: 5px;
+  left: 0;
+  top: 0;
   z-index: 2;
   cursor: pointer;
   display: none;
