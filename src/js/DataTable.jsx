@@ -233,7 +233,8 @@ var Cell = React.createClass({
     render: function(){
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
-        
+        var actionOnRecord = this.props.actionOnRecord;
+
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
@@ -253,10 +254,14 @@ var Cell = React.createClass({
         //                         onClick={showJSON.bind(null, data, _type, _id)}>
         //                         <i className="fa fa-external-link" />
         //                     </a>;
-
+        var appIdClass = "appId";
+        actionOnRecord.selectedRows.forEach((v) => {
+            if(v._id == _id)
+                appIdClass += " showRow";
+        });
         if(columnName == 'json'){
             prettyData =  <Pretty json={data} />
-            to_display = <div className="appId">
+            to_display = <div className={appIdClass}>
                             <span className="theme-element selectrow checkbox">  
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
                                  value={_id} data-type={_type} id={radioId} />

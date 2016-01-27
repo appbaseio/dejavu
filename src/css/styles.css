@@ -437,6 +437,11 @@ body{
   left: 5px;
   z-index: 2;
   cursor: pointer;
+  display: none;
+}
+.appId:hover .selectrow,
+.appId.showRow .selectrow{
+  display: inline-block;
 }
 .appId .selectrow input{
   cursor: pointer;
