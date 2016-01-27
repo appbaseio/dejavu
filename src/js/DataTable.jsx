@@ -181,7 +181,7 @@ var Column = React.createClass({
                 </OverlayTrigger>
                 <span onClick={this.sortingInit}>&nbsp;type / id</span>
             </span>
-             : <span onClick={this.sortingInit}>item</span>;
+             : <span onClick={this.sortingInit}>{item}</span>;
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
