@@ -1,4 +1,4 @@
-//This contains the extra features like 
+//This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
 
 var React = require('react');
@@ -9,7 +9,7 @@ var ReactBootstrap = require('react-bootstrap');
 var AddDocument = React.createClass({
 
   getInitialState:function() {
-    return { 
+    return {
               showModal: false,
               validate:{
                 touch:false,
@@ -32,7 +32,7 @@ var AddDocument = React.createClass({
       maximumSelectionLength: 1,
       data:typeList
     });
-    $eventSelect.on("change", function (e) { 
+    $eventSelect.on("change", function (e) {
       var validateClass = $this.state.validate;
       validateClass.type = true;
       $this.setState({validate:validateClass});
@@ -40,7 +40,7 @@ var AddDocument = React.createClass({
     });
   },
   close:function() {
-    this.setState({ 
+    this.setState({
               showModal: false,
               validate:{
                 touch:false,
@@ -81,7 +81,7 @@ var AddDocument = React.createClass({
     var typeList = '';
     var btnText = this.props.text ? this.props.text : '';
     if(typeof this.props.types != 'undefined')
-    { 
+    {
       typeList = this.props.types.map(function(type){
         return <option value={type}>{type}</option>
       });
@@ -105,40 +105,39 @@ var AddDocument = React.createClass({
         <a href="javascript:void(0);" className={btnLinkClass}  title="Add" onClick={this.open} >{btnText}</a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-            <Modal.Title>Add Document</Modal.Title>
+            <Modal.Title>Add Data</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form className="form-horizontal" id="addObjectForm">
               <div className={validateClass.type}>
-                <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
-                <div className="col-sm-10">
+                <label for="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
+                <div className="col-sm-9">
                   <select id="setType" className={selectClass} multiple="multiple" name="type">
                   </select>
                     <span className="help-block">
-                      Type is required.
+                      Type in which the data will be stored.
                     </span>
                 </div>
               </div>
               <div className="form-group">
-                <label for="inputPassword3" className="col-sm-2 control-label">Id</label>
-                <div className="col-sm-10">
+                <label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
+                <div className="col-sm-9">
                   <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
                 </div>
               </div>
               <div className={validateClass.body}>
-                <label for="inputPassword3" className="col-sm-2 control-label">Object</label>
-                <div className="col-sm-10">
+                <label for="inputPassword3" className="col-sm-3 control-label">JSON</label>
+                <div className="col-sm-9">
                   <textarea id="setBody" className="form-control" rows="10" name="body"></textarea>
                    <span className="help-block">
-                      Body is required and should be valid JSON.
+                      A data document is stored as a JSON object.
                     </span>
                 </div>
-              </div>              
+              </div>
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
-            <Button id="close-modal" onClick={this.close}>Close</Button>
+            <Button bsStyle="success" onClick={this.validateInput}>Add</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -149,7 +148,7 @@ var AddDocument = React.createClass({
 var ExportData = React.createClass({
 
   getInitialState:function() {
-    return { 
+    return {
               showModal: false,
               validate:{
                 touch:false,
@@ -171,14 +170,14 @@ var ExportData = React.createClass({
       //tags: true,
       data:typeList
     });
-    $eventSelect.on("change", function (e) { 
+    $eventSelect.on("change", function (e) {
       var validateClass = $this.state.validate;
       validateClass.type = true;
       $this.setState({validate:validateClass});
     });
   },
   close:function() {
-    this.setState({ 
+    this.setState({
               showModal: false,
               validate:{
                 touch:false,
@@ -235,11 +234,11 @@ var ExportData = React.createClass({
     return (
       <div>
         <a title="Export" onClick={this.open} >
-          <img src="src/img/export.png" alt=""/> Export
+          <img src="src/img/export.png" alt=""/> Export Data as JSON
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-            <Modal.Title>Export Data</Modal.Title>
+            <Modal.Title>Export Appbase Data</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form className="form-horizontal" id="addObjectForm_export">
@@ -261,15 +260,14 @@ var ExportData = React.createClass({
                       Query should be valid JSON.
                     </span>
                 </div>
-              </div>              
+              </div>
             </form>
           </Modal.Body>
           <Modal.Footer>
             <Button bsStyle="success" id="exportBtn" onClick={this.validateInput}>
-              <span className="submitText">Submit</span>
+              <span className="submitText">Export</span>
               <i className="fa fa-spinner fa-spin"></i>
             </Button>
-            <Button id="close-export-modal" onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -281,14 +279,14 @@ var ExportData = React.createClass({
 var ImportData = React.createClass({
 
   getInitialState:function() {
-    return { 
+    return {
               showModal: false
            };
   },
   componentDidUpdate:function(){
   },
   close:function() {
-    this.setState({ 
+    this.setState({
               showModal: false
           });
   },
@@ -299,14 +297,14 @@ var ImportData = React.createClass({
     return (
       <div>
         <a title="Import" onClick={this.open} >
-          <img src="src/img/import.png" /> Import
+          <img src="src/img/import.png" /> Import <span className="small-span">from JSON, MongoDB, ElasticSearch</span>
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Import Data</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h3>Import content</h3>  
+            <h3>Import content</h3>
           </Modal.Body>
           <Modal.Footer>
             <Button id="close-modal" onClick={this.close}>Close</Button>
@@ -322,7 +320,7 @@ var ImportData = React.createClass({
 var Pretty = React.createClass({
     componentDidMount: function(){
         var current = React.findDOMNode(this);
-        hljs.highlightBlock(current);    
+        hljs.highlightBlock(current);
     },
     selectText:function() {
       var range = document.createRange();
@@ -346,7 +344,7 @@ var Pretty = React.createClass({
 //Signal to indicate stream
 var SignalCircle = React.createClass({
     componentDidMount:function(){
-       
+
     },
     render: function(){
         var signalColor = "signal-circle "+this.props.signalColor;
@@ -367,7 +365,7 @@ var SignalCircle = React.createClass({
 //Remove filter
 var RemoveFilterButton = React.createClass({
     componentDidMount:function(){
-       
+
     },
     render: function(){
         var filterInfoText = JSON.stringify(this.props.filterInfo);
@@ -388,7 +386,7 @@ var RemoveFilterButton = React.createClass({
 var UpdateDocument = React.createClass({
 
   getInitialState:function() {
-    return { 
+    return {
               showModal: false,
               validate:{
                 touch:false,
@@ -398,10 +396,10 @@ var UpdateDocument = React.createClass({
            };
   },
   componentDidUpdate:function(){
-   
+
   },
   close:function() {
-    this.setState({ 
+    this.setState({
               showModal: false,
               validate:{
                 touch:false,
@@ -444,40 +442,40 @@ var UpdateDocument = React.createClass({
         body:'form-group'
       };
     }
-    
+
     return (
       <div className="inlineBlock pd-r10 pull-left">
-        <a href="javascript:void(0);" className='btn btn-default greyBtn themeBtn'  title="Update" onClick={this.open} >
-          <i className="fa fa-pencil"></i>&nbsp;&nbsp;Update
+        <a href="javascript:void(0);" className='btn btn-default themeBtn'  title="Update" onClick={this.open} >
+          <i className="fa fa-pencil greyBtn"></i>&nbsp;&nbsp;Update
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-            <Modal.Title>Update Document</Modal.Title>
+            <Modal.Title>Update Data</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form className="form-horizontal" id="updateObjectForm">
               <div className="form-group">
-                <label for="inputEmail3" className="col-sm-2 control-label">Type</label>
-                <div className="col-sm-10">
+                <label for="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka Table)</span></label>
+                <div className="col-sm-9">
                     <input type="text" className="form-control" id="type" name="type" value={actionOnRecord.type} readOnly />
                 </div>
               </div>
               <div className="form-group">
-                <label for="inputPassword3" className="col-sm-2 control-label">Id</label>
-                <div className="col-sm-10">
+                <label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
+                <div className="col-sm-9">
                   <input type="text" className="form-control" id="setId"
                   value={actionOnRecord.id} readOnly placeholder="set Id" name="id" />
                 </div>
               </div>
               <div className={validateClass.body}>
-                <label for="inputPassword3" className="col-sm-2 control-label">Object</label>
-                <div className="col-sm-10">
+                <label for="inputPassword3" className="col-sm-3 control-label">JSON <span className="small-span">(partial object)</span></label>
+                <div className="col-sm-9">
                   <textarea id="setBodyUpdate" className="form-control" rows="10" name="body" defaultValue={actionOnRecord.row}></textarea>
                    <span className="help-block">
                       Body is required and should be valid JSON.
                     </span>
                 </div>
-              </div>              
+              </div>
             </form>
           </Modal.Body>
           <Modal.Footer>
@@ -493,14 +491,14 @@ var UpdateDocument = React.createClass({
 var DeleteDocument = React.createClass({
 
   getInitialState:function() {
-    return { 
+    return {
               showModal: false
            };
   },
   componentDidUpdate:function(){
   },
   close:function() {
-    this.setState({ 
+    this.setState({
               showModal: false
           });
   },
@@ -510,19 +508,18 @@ var DeleteDocument = React.createClass({
   render:function() {
     return (
       <div className="inlineBlock pd-r10 pull-left ">
-        <a title="Delete" onClick={this.open} className="btn btn-default themeBtn greyBtn">
-          <i className="fa fa-trash"></i>&nbsp;&nbsp;Delete
+        <a title="Delete" onClick={this.open} className="btn btn-default themeBtn">
+          <i className="fa fa-trash greyBtn"></i>&nbsp;&nbsp;Delete
         </a>
         <Modal show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
-            <Modal.Title>Delete Record?</Modal.Title>
+            <Modal.Title>Delete Data</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Are you sure, you want to delete this record?</p> 
+            <p>Hitting delete will <b>permanently</b> remove the selected data.</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="danger" onClick={this.props.actionOnRecord.deleteRecord}>Submit</Button>
-            <Button id="close-delete-modal" onClick={this.close}>Close</Button>
+            <Button bsStyle="danger" onClick={this.props.actionOnRecord.deleteRecord}>Confirm Deletion</Button>
           </Modal.Footer>
         </Modal>
       </div>

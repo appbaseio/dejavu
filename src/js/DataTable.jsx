@@ -39,11 +39,11 @@ var SingleMenuItem = React.createClass({
         var key = filterKeyGen(this.props.columnField,this.props.val);
         var keyInput = key+'-input';
         return (<div className={singleItemClass}>
-                    <div className="theme-element radio">  
+                    <div className="theme-element radio">
                         <input onChange={this.changeFilter} type="radio" name="optionsRadios"
                          value={this.props.val} id={key} />
                         <label htmlFor={key}><span className="lableText">{this.props.val}</span></label>
-                    </div>  
+                    </div>
                       <div className="searchElement">
                         <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
                       </div>
@@ -111,7 +111,7 @@ var FilterDropdown = React.createClass({
                                     </div>
                                 </Dropdown.Menu>
                               );
-            
+
             var FilterMenuItems = '';
 
             switch(datatype){
@@ -175,21 +175,21 @@ var Column = React.createClass({
         var datatype = null;
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
-        prettyData =  <Pretty json="It will display the json object." />
+        prettyData =  " Clicking on {...} displays the JSON data. ";
         var itemText = item == 'json' ? <span>
-                <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
                     <a href="javascript:void(0);" className="bracketIcon"></a>
                 </OverlayTrigger>
                 <span onClick={this.sortingInit}>&nbsp;&nbsp;type / id</span>
             </span>
              : <span onClick={this.sortingInit}>{item}</span>;
-        var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';     
+        var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
         //console.log(datatype, item);
         //var handleSort = this.sortingInit;
-        
+
         return (<th id={item} width={cellWidth} className="tableHead">
                     <div className={fixedHead}>
                         <div className="headText">
@@ -264,11 +264,11 @@ var Cell = React.createClass({
         if(columnName == 'json'){
             prettyData =  <Pretty json={data} />
             to_display = <div className={appIdClass}>
-                            <span className="theme-element selectrow checkbox">  
+                            <span className="theme-element selectrow checkbox">
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
                                  value={_id} data-type={_type} id={radioId} />
                                 <label htmlFor={radioId}></label>
-                            </span>  
+                            </span>
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
@@ -277,7 +277,7 @@ var Cell = React.createClass({
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
                         </div>
-        }   
+        }
         else{
             if(typeof data !== 'string'){
                 if(typeof data !== 'number'){
@@ -288,9 +288,9 @@ var Cell = React.createClass({
                                 </OverlayTrigger>
                 }
             }
-        } 
+        }
         return <td
-                 width={cellWidth} 
+                 width={cellWidth}
                 id={this.props.unique}
                 key={this.props.unique}
                 style={style}
@@ -352,7 +352,7 @@ var Info = React.createClass({
         var actionOnRecord = this.props.actionOnRecord;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var infoObjClass = infoObj.total == 0 ? "hide":"pull-left text-left pd-l0 recordTotalRow"; 
+        var infoObjClass = infoObj.total == 0 ? "hide":"pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' :'col-xs-12';
         var selectionClass = actionOnRecord.active ? 'col-xs-12' :'hide';
@@ -365,14 +365,14 @@ var Info = React.createClass({
                     <div className={infoObjClass}>
                         <div className={totalClass}>
                             <span className="info_single">
-                                <label>Showing <strong>{infoObj.showing}</strong> of total 
+                                <label>Showing <strong>{infoObj.showing}</strong> of total
                                 <strong>&nbsp;{infoObj.total}</strong>
                                 </label>
-                            </span>    
+                            </span>
                         </div>
                         <div className={selectionClass}>
-                            <span className="pull-left  pd-r10 info_single"> 
-                                <strong>{ actionOnRecord.selectedRows.length}</strong> Selected of total <strong>
+                            <span className="pull-left  pd-r10 info_single">
+                                <strong>{ actionOnRecord.selectedRows.length}</strong> selected of total <strong>
                                     {infoObj.total}
                                 </strong>
                             </span>
@@ -380,22 +380,22 @@ var Info = React.createClass({
                             <span className="pull-left">
                                 {UpdateDocument}
 
-                                <FeatureComponent.DeleteDocument 
+                                <FeatureComponent.DeleteDocument
                                 actionOnRecord={actionOnRecord}/>
 
-                                <a href="javascript:void(0);" className="greyBtn info_single"
+                                <a href="javascript:void(0);" className="info_single"
                                  onClick={actionOnRecord.removeSelection}>Remove Selection</a>
-                            </span> 
+                            </span>
                         </div>
                     </div>
                     <div className="pull-right pd-r0">
-                        <Dropdown 
+                        <Dropdown
                         visibleColumns ={this.props.visibleColumns}
                         columnToggle ={this.props.columnToggle}
                          cols={this.props.columns} />
 
-                        <FeatureComponent.AddDocument 
-                            types={this.props.types} 
+                        <FeatureComponent.AddDocument
+                            types={this.props.types}
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc}
                             selectClass="tags-select-small" />
@@ -403,7 +403,7 @@ var Info = React.createClass({
                             <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     {filterInfo.method}:&nbsp;{filterInfo.columnName}
-                                </span> 
+                                </span>
                                 <span className="close-btn"  onClick={this.props.removeFilter}>
                                     <i className="fa fa-times"></i>
                                 </span>
@@ -413,7 +413,7 @@ var Info = React.createClass({
                             <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     <i className={sortAscClass}></i> {sortInfo.column}
-                                </span> 
+                                </span>
                                 <span className="close-btn"  onClick={this.props.removeSort}>
                                     <i className="fa fa-times"></i>
                                 </span>
@@ -431,7 +431,7 @@ var DataTable = React.createClass({
     render: function () {
         var $this = this;
         var data = this.props._data;
-        
+
         //If render from sort, dont change the order of columns
         if(!$this.props.sortInfo.active){
             if($this.props.infoObj.showing != 0){
@@ -499,16 +499,16 @@ var DataTable = React.createClass({
                                 columnName={each}
                                 _id={data[row]['_id']}
                                 _type={data[row]['_type']}
-                                visibility={visibility} 
+                                visibility={visibility}
                                 row={newRow}
                                 actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
         var renderColumns = fullColumns.columns.map(function(item){
-            return (<Column _item={item} key={item} 
+            return (<Column _item={item} key={item}
                         _type={fullColumns.type}
-                        _sortInfo={$this.props.sortInfo} 
+                        _sortInfo={$this.props.sortInfo}
                         handleSort={$this.props.handleSort}
                         mappingObj={$this.props.mappingObj}
                         filterInfo={$this.props.filterInfo} />);
@@ -530,24 +530,24 @@ var DataTable = React.createClass({
         //Show only when total records are less than 5
         if(this.props.infoObj.availableTotal <= 5){
             extraAddBtn = <div className="AddExtraBtn">
-                            <FeatureComponent.AddDocument 
-                            types={this.props.Types} 
+                            <FeatureComponent.AddDocument
+                            types={this.props.Types}
                             addRecord ={this.props.addRecord}
-                            getTypeDoc={this.props.getTypeDoc} 
+                            getTypeDoc={this.props.getTypeDoc}
                             link="true"
-                            text="&nbsp;&nbsp;Add more document"
+                            text="&nbsp;&nbsp;Add new data"
                             selectClass="tags-select-big"/>
-                          </div>  
+                          </div>
         }
 
         return (
             <div className="dejavu-table">
-            
-            <Info infoObj={this.props.infoObj} 
-            filterInfo = {this.props.filterInfo} 
+
+            <Info infoObj={this.props.infoObj}
+            filterInfo = {this.props.filterInfo}
             removeFilter={this.props.removeFilter}
             removeSort = {this.props.removeSort}
-            types={this.props.Types} 
+            types={this.props.Types}
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc}
             sortInfo ={this.props.sortInfo}
@@ -557,7 +557,7 @@ var DataTable = React.createClass({
             actionOnRecord={this.props.actionOnRecord} />
 
             {extraAddBtn}
-            
+
             <div className="outsideTable">
                 <Table
                  renderColumns={renderColumns}
