@@ -392,6 +392,7 @@ var HomePage = React.createClass({
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject,method,function(){
             $('#'+modalId).click();
+            $('.close').click();
         });
     },
     getTypeDoc:function(){
@@ -466,6 +467,7 @@ var HomePage = React.createClass({
           success: function(data){
             toastr.success('Data is exported, please check your email : '+PROFILE.email+'.');
             $('#close-export-modal').click();
+            $('.close').click();
           }
         });
     },
@@ -592,7 +594,7 @@ var HomePage = React.createClass({
         feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
             $('.loadingBtn').removeClass('loading');
             $('#close-delete-modal').click();
-
+            $('.close').click();
             var infoObj = this.state.infoObj;
             infoObj.total -= this.state.actionOnRecord.selectedRows.length;    
             
