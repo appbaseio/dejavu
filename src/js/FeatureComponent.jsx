@@ -264,7 +264,7 @@ var ExportData = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="success" id="exportBtn" onClick={this.validateInput}>
+            <Button bsStyle="success" id="exportBtn" className="loadingBtn" onClick={this.validateInput}>
               <span className="submitText">Export</span>
               <i className="fa fa-spinner fa-spin"></i>
             </Button>
