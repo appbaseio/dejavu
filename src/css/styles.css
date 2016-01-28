@@ -494,6 +494,7 @@ body{
 }
 .radio label{
   line-height: 14px;
+  display: block;
 }
 .singleItem.active .searchElement{
   display: block;
