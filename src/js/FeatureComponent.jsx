@@ -519,7 +519,11 @@ var DeleteDocument = React.createClass({
             <p>Hitting delete will <b>permanently</b> remove the selected data.</p>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="danger" onClick={this.props.actionOnRecord.deleteRecord}>Confirm Deletion</Button>
+            <Button bsStyle="danger" id="deleteBtn" className="loadingBtn"
+              onClick={this.props.actionOnRecord.deleteRecord}>
+              <span className="submitText">Confirm Deletion</span>
+              <i className="fa fa-spinner fa-spin"></i>
+            </Button>
           </Modal.Footer>
         </Modal>
       </div>

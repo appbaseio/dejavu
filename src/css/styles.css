@@ -278,6 +278,9 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
+.columnAdjust{
+  padding-top: 14px !important;
+}
 /*.export-record-btn,
 .import-record-btn{
   position: absolute;
@@ -555,11 +558,11 @@ body{
   background: #f1f1f1;
   text-decoration: none;
 }
-#exportBtn .fa,
-#exportBtn.loading .submitText{
+.loadingBtn .fa,
+.loadingBtn.loading .submitText{
   display: none;
 }
-#exportBtn.loading .fa{
+.loadingBtn.loading .fa{
   display: block;
 }
 .inlineBlock{
@@ -567,6 +570,9 @@ body{
 }
 .themeBtn{
   padding: 3px 6px;
+}
+.checkbox input[type="checkbox"], .checkbox input[type="radio"]{
+  cursor: pointer;
 }
 
 /*Color Schemes*/

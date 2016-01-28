@@ -69,24 +69,24 @@ var feed = (function() {
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
                 })
+
+                // Counter stream
+                countStream(types, setTotal);
                 
                 //Stop old stream
                 if(typeof streamRef != 'undefined')
                     streamRef.stop();
                 
                 // get new data updates
-                console.log(types[0]);
-                var streamRef = appbaseRef.searchStream({
-                    type: types[0],
+                console.log(queryBody);
+                streamRef = appbaseRef.searchStream({
+                    type: types,
                     body: queryBody
                 }).on('data', function(res) {
                     callback(res, true);
                 }).on('error', function(err) {
                     console.log("caught a stream error", err);
                 });
-
-                // Counter stream
-                countStream(types, setTotal);
         }
     };
 
@@ -97,16 +97,25 @@ var feed = (function() {
             type: types,
             body: {"query":{"match_all":{}}}
         }).on('data', function(res) {
-            
             setTotal(res.hits.total);
         });
 
-        var counterStream = appbaseRef.searchStream({
+        //Stop old stream
+        if(typeof counterStream != 'undefined')
+            counterStream.stop();
+
+        counterStream = appbaseRef.searchStream({
             type: types,
             body: {"query":{"match_all":{}}}
-        }).on('data', function(res) {
-            debugger
-            setTotal(res.hits.total);
+        }).on('data', function(res2) {
+            //For update data
+            if(res2._updated){
+
+            }
+            //For Index data
+            else{
+                setTotal(0, true, 'index');
+            }
             //callback(res, true);
         }).on('error', function(err) {
             //console.log("caught a stream error", err);
@@ -181,12 +190,23 @@ var feed = (function() {
                 }, 1000);
             }
         },
-        indexData: function(recordObject, callback) {
-            console.log(recordObject);
-            appbaseRef.index(recordObject).on('data', function(res) {
-                if (callback)
-                    callback();
-            });
+        indexData: function(recordObject, method, callback) {
+            if(method == 'index'){
+                appbaseRef.index(recordObject).on('data', function(res) {
+                    if (callback)
+                        callback();
+                });    
+            }
+            else{
+                var doc = recordObject.body;
+                recordObject.body = {doc:doc};
+                console.log(recordObject);
+                appbaseRef.update(recordObject).on('data', function(res) {
+                    if (callback)
+                        callback();
+                });       
+            }
+            
         },
         deleteRecord:function(selectedRows, callback){
             var deleteArray = selectedRows.map( v => ({"delete":v}) );
@@ -197,8 +217,10 @@ var feed = (function() {
             }).on('data',function(data){
                 for (data in sdata) {
                     selectedRows.forEach((v)=>{
-                        if (sdata[data]._type == v._type && sdata[data]._id == v._id){
-                            delete sdata[data];
+                        if(typeof sdata[data] != 'undefined'){
+                            if (sdata[data]._type == v._type && sdata[data]._id == v._id){
+                                delete sdata[data];
+                            }
                         }
                     });
                 }

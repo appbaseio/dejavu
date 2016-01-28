@@ -57,11 +57,13 @@ var HomePage = React.createClass({
 
     flatten: function(data, callback) {
         var fields = [];
-        for(var each in data['_source']){
-            data[each] = data['_source'][each];
-            if(typeof data[each] !== 'string'){
-                if(typeof data[each] !== 'number'){
-                        fields.push(each);
+        if(data != null){
+            for(var each in data['_source']){
+                data[each] = data['_source'][each];
+                if(typeof data[each] !== 'string'){
+                    if(typeof data[each] !== 'number'){
+                            fields.push(each);
+                    }
                 }
             }
         }
@@ -189,19 +191,28 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        console.log(this.state.filterInfo);
         if(this.state.filterInfo.active){
             var filterInfo = this.state.filterInfo;
-            this.applyFilter(filterInfo.typeName, filterInfo.columnName, filterInfo.method, filterInfo.value);
+            this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
         }
         else{
             if(types.length){
                 feed.getData(types, function(update, fromStream){
                     this.updateDataOnView(update);
                     this.setSignal(fromStream);
-                }.bind(this), function(total){
+                }.bind(this), function(total, fromStream, method){
                     var infoObj = this.state.infoObj;
-                    infoObj.total = total;
+                    //Do this if from stream
+                    if(fromStream){
+                        //For index data
+                        if(method == 'index'){
+                            infoObj.total += 1;    
+                        }
+                    }
+                    //Else go for this
+                    else{
+                        infoObj.total = total;
+                    }
                     this.setState({infoObj:infoObj});
                 }.bind(this));
             }
@@ -369,9 +380,9 @@ var HomePage = React.createClass({
     },
     addRecord:function(){
         var form = $('#addObjectForm').serializeArray();
-        this.indexCall(form,'close-modal');
+        this.indexCall(form,'close-modal', 'index');
     },
-    indexCall:function(form, modalId){
+    indexCall:function(form, modalId, method){
         var recordObject = {};
         $.each(form,function(k2,v2){
             if(v2.value != '')
@@ -379,7 +390,7 @@ var HomePage = React.createClass({
         });
 
         recordObject.body = JSON.parse(recordObject.body);
-        feed.indexData(recordObject,function(){
+        feed.indexData(recordObject,method,function(){
             $('#'+modalId).click();
         });
     },
@@ -459,28 +470,37 @@ var HomePage = React.createClass({
         });
     },
     applyFilter:function(typeName, columnName, method, value){
-        filterVal = $.isArray(value) ? value : value.split(',');
-        var $this = this;
-        var filterObj = this.state.filterInfo;
-        filterObj['type'] = typeName;
-        filterObj['columnName'] = columnName;
-        filterObj['method'] = method;
-        filterObj['value'] = filterVal;
-        filterObj['active'] = true;
-        this.setState({filterInfo:filterObj});
-
-        feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
-            sdata = [];
-            $this.resetData();
-            setTimeout(function(){
-                $this.updateDataOnView(update);
-                $this.setSignal(fromStream);
-            },500);
-        }.bind(this), function(total){
-            var infoObj = this.state.infoObj;
-            infoObj.total = total;
-            this.setState({infoObj:infoObj});
-        }.bind(this));
+            filterVal = $.isArray(value) ? value : value.split(',');
+            var $this = this;
+            var filterObj = this.state.filterInfo;
+            filterObj['type'] = typeName;
+            filterObj['columnName'] = columnName;
+            filterObj['method'] = method;
+            filterObj['value'] = filterVal;
+            filterObj['active'] = true;
+            this.setState({filterInfo:filterObj});
+            if(typeName != '' && typeName != null){ 
+                feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
+                    if(!fromStream)
+                    {
+                        sdata = [];
+                        $this.resetData();
+                    }
+                    setTimeout(function(){
+                        $this.updateDataOnView(update);
+                    },500);
+                }.bind(this), function(total){
+                    var infoObj = this.state.infoObj;
+                    infoObj.total = total;
+                    this.setState({infoObj:infoObj});
+                }.bind(this));
+            }
+            else{
+                    var infoObj = this.state.infoObj;
+                    infoObj.showing = 0;
+                    infoObj.total = 0;
+                    this.setState({infoObj:infoObj});
+            }
     },
     removeFilter:function(){
         var $this = this;
@@ -565,11 +585,19 @@ var HomePage = React.createClass({
     updateRecord:function(json){
         var form = $('#updateObjectForm').serializeArray();
         var recordObject = {};
-        this.indexCall(form,'close-update-modal');
+        this.indexCall(form,'close-update-modal','update');
     },          
     deleteRecord:function(){
+        $('.loadingBtn').addClass('loading');
         feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
+            $('.loadingBtn').removeClass('loading');
             $('#close-delete-modal').click();
+
+            var infoObj = this.state.infoObj;
+            infoObj.total -= this.state.actionOnRecord.selectedRows.length;    
+            
+            this.setState({infoObj:infoObj});
+
             this.removeSelection();
             this.resetData();
         }.bind(this));
