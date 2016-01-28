@@ -565,6 +565,9 @@ body{
 .themeBtn{
   padding: 3px 6px;
 }
+.checkbox input[type="checkbox"], .checkbox input[type="radio"]{
+  cursor: pointer;
+}
 
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
