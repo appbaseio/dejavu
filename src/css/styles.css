@@ -549,11 +549,11 @@ body{
   background: #f1f1f1;
   text-decoration: none;
 }
-#exportBtn .fa,
-#exportBtn.loading .submitText{
+.loadingBtn .fa,
+.loadingBtn.loading .submitText{
   display: none;
 }
-#exportBtn.loading .fa{
+.loadingBtn.loading .fa{
   display: block;
 }
 .inlineBlock{

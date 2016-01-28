@@ -265,7 +265,7 @@ var ExportData = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="success" id="exportBtn" onClick={this.validateInput}>
+            <Button bsStyle="success" id="exportBtn" className="loadingBtn" onClick={this.validateInput}>
               <span className="submitText">Submit</span>
               <i className="fa fa-spinner fa-spin"></i>
             </Button>
@@ -521,7 +521,11 @@ var DeleteDocument = React.createClass({
             <p>Are you sure, you want to delete this record?</p> 
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="danger" onClick={this.props.actionOnRecord.deleteRecord}>Submit</Button>
+            <Button bsStyle="danger" id="deleteBtn" className="loadingBtn" 
+              onClick={this.props.actionOnRecord.deleteRecord}>
+              <span className="submitText">Delete</span>
+              <i className="fa fa-spinner fa-spin"></i>
+            </Button>
             <Button id="close-delete-modal" onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>

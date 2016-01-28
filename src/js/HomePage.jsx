@@ -568,7 +568,9 @@ var HomePage = React.createClass({
         this.indexCall(form,'close-update-modal');
     },          
     deleteRecord:function(){
+        $('.loadingBtn').addClass('loading');
         feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
+            $('.loadingBtn').removeClass('loading');
             $('#close-delete-modal').click();
             this.removeSelection();
             this.resetData();

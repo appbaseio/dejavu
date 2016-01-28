@@ -195,10 +195,13 @@ var feed = (function() {
             appbaseRef.bulk({
                 body:deleteArray
             }).on('data',function(data){
+                debugger
                 for (data in sdata) {
                     selectedRows.forEach((v)=>{
-                        if (sdata[data]._type == v._type && sdata[data]._id == v._id){
-                            delete sdata[data];
+                        if(typeof sdata[data] != 'undefined'){
+                            if (sdata[data]._type == v._type && sdata[data]._id == v._id){
+                                delete sdata[data];
+                            }
                         }
                     });
                 }
