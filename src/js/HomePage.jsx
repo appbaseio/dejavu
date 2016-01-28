@@ -57,11 +57,13 @@ var HomePage = React.createClass({
 
     flatten: function(data, callback) {
         var fields = [];
-        for(var each in data['_source']){
-            data[each] = data['_source'][each];
-            if(typeof data[each] !== 'string'){
-                if(typeof data[each] !== 'number'){
-                        fields.push(each);
+        if(data != null){
+            for(var each in data['_source']){
+                data[each] = data['_source'][each];
+                if(typeof data[each] !== 'string'){
+                    if(typeof data[each] !== 'number'){
+                            fields.push(each);
+                    }
                 }
             }
         }
@@ -189,10 +191,9 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        console.log(this.state.filterInfo);
         if(this.state.filterInfo.active){
             var filterInfo = this.state.filterInfo;
-            this.applyFilter(filterInfo.typeName, filterInfo.columnName, filterInfo.method, filterInfo.value);
+            this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
         }
         else{
             if(types.length){
@@ -469,30 +470,37 @@ var HomePage = React.createClass({
         });
     },
     applyFilter:function(typeName, columnName, method, value){
-        filterVal = $.isArray(value) ? value : value.split(',');
-        var $this = this;
-        var filterObj = this.state.filterInfo;
-        filterObj['type'] = typeName;
-        filterObj['columnName'] = columnName;
-        filterObj['method'] = method;
-        filterObj['value'] = filterVal;
-        filterObj['active'] = true;
-        this.setState({filterInfo:filterObj});
-
-        feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
-            if(!fromStream)
-            {
-                sdata = [];
-                $this.resetData();
+            filterVal = $.isArray(value) ? value : value.split(',');
+            var $this = this;
+            var filterObj = this.state.filterInfo;
+            filterObj['type'] = typeName;
+            filterObj['columnName'] = columnName;
+            filterObj['method'] = method;
+            filterObj['value'] = filterVal;
+            filterObj['active'] = true;
+            this.setState({filterInfo:filterObj});
+            if(typeName != '' && typeName != null){ 
+                feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
+                    if(!fromStream)
+                    {
+                        sdata = [];
+                        $this.resetData();
+                    }
+                    setTimeout(function(){
+                        $this.updateDataOnView(update);
+                    },500);
+                }.bind(this), function(total){
+                    var infoObj = this.state.infoObj;
+                    infoObj.total = total;
+                    this.setState({infoObj:infoObj});
+                }.bind(this));
             }
-            setTimeout(function(){
-                $this.updateDataOnView(update);
-            },500);
-        }.bind(this), function(total){
-            var infoObj = this.state.infoObj;
-            infoObj.total = total;
-            this.setState({infoObj:infoObj});
-        }.bind(this));
+            else{
+                    var infoObj = this.state.infoObj;
+                    infoObj.showing = 0;
+                    infoObj.total = 0;
+                    this.setState({infoObj:infoObj});
+            }
     },
     removeFilter:function(){
         var $this = this;
