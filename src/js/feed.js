@@ -195,7 +195,6 @@ var feed = (function() {
             appbaseRef.bulk({
                 body:deleteArray
             }).on('data',function(data){
-                debugger
                 for (data in sdata) {
                     selectedRows.forEach((v)=>{
                         if(typeof sdata[data] != 'undefined'){
