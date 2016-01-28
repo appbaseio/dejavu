@@ -104,10 +104,18 @@ var feed = (function() {
         if(typeof counterStream != 'undefined')
             counterStream.stop();
 
-        var counterStream = appbaseRef.searchStream({
+        counterStream = appbaseRef.searchStream({
             type: types,
             body: {"query":{"match_all":{}}}
         }).on('data', function(res2) {
+            //For update data
+            if(res2._updated){
+
+            }
+            //For Index data
+            else{
+                setTotal(0, true, 'index');
+            }
             //callback(res, true);
         }).on('error', function(err) {
             //console.log("caught a stream error", err);
@@ -182,12 +190,23 @@ var feed = (function() {
                 }, 1000);
             }
         },
-        indexData: function(recordObject, callback) {
-            console.log(recordObject);
-            appbaseRef.index(recordObject).on('data', function(res) {
-                if (callback)
-                    callback();
-            });
+        indexData: function(recordObject, method, callback) {
+            if(method == 'index'){
+                appbaseRef.index(recordObject).on('data', function(res) {
+                    if (callback)
+                        callback();
+                });    
+            }
+            else{
+                var doc = recordObject.body;
+                recordObject.body = {doc:doc};
+                console.log(recordObject);
+                appbaseRef.update(recordObject).on('data', function(res) {
+                    if (callback)
+                        callback();
+                });       
+            }
+            
         },
         deleteRecord:function(selectedRows, callback){
             var deleteArray = selectedRows.map( v => ({"delete":v}) );
