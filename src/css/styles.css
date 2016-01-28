@@ -152,12 +152,27 @@ body{
   top: 0;
   margin: 0;
 }
+.init-ES{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 4;
+  background: #fff; 
+  padding-right: 150px;
+}
+.init-ES .submit-btn{
+  position: absolute;
+  right: 0;
+  width: 150px;
+}
 .typeContainer{
   width: 270px;
   border-right: 1px solid #eee;
   padding: 15px;
   background: #f8fafb;
   z-index: 2;
+  padding-top: 50px;
 }
 .dataContainer{
   padding-left: 270px;
@@ -166,6 +181,7 @@ body{
   overflow: hidden;
   position: absolute;
   width: 100%;
+  padding-top: 50px;
 }
 .highlight-tip {
   background: #f5e79e;

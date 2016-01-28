@@ -11,9 +11,12 @@ var appbaseRef;
 var getMapFlag = false;
 
 APPNAME = config.appname;
-USERNAME = config.username;
-PASSWORD = config.password;
-EMAIL = config.email;
+URL = config.url;
+var urlsplit = URL.split(':');
+var pwsplit = urlsplit[2].split('@');
+USERNAME = urlsplit[1].replace('//','');
+PASSWORD = pwsplit[0];
+console.log(USERNAME, PASSWORD);
 init();
 APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
 

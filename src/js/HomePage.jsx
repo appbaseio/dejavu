@@ -601,7 +601,12 @@ var HomePage = React.createClass({
             this.removeSelection();
             this.resetData();
         }.bind(this));
-    },                    
+    },                 
+    initEs:function(){
+        debugger
+        var formInfo = $('#init-ES').serializeArray();
+        console.log(formInfo);
+    },   
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -613,6 +618,15 @@ var HomePage = React.createClass({
             <div>
                 <div id='modal' />
                 <div className="row dejavuContainer">
+                    <form className="col-xs-12 init-ES" id="init-ES">
+                        <div className="form-group  col-xs-8">
+                            <input type="text" className="form-control" name="exampleInputName2" placeholder="Jane Doe" />
+                        </div>
+                        <div className="form-group  col-xs-4 pd-l0">
+                            <input type="text" className="form-control" name="exampleInputEmail2" placeholder="jane.doe@example.com" />
+                        </div>
+                        <a className="btn btn-default submit-btn" onClick={this.initEs}>Submit</a>
+                    </form>
                     <div className="typeContainer">
                         <TypeTable
                             Types={this.state.types}
