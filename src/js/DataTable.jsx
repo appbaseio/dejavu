@@ -247,6 +247,7 @@ var Cell = React.createClass({
             _id = this.props._id;
             _type = this.props._type;
             to_display = data;
+            tdClass = 'column_width columnAdjust';
 
         var columnName = this.props.columnName;
         var radioId = this.props.unique+'radio';
@@ -276,7 +277,8 @@ var Cell = React.createClass({
                                 <span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
-                        </div>
+                        </div>;
+            tdClass = 'column_width';                
         }   
         else{
             if(typeof data !== 'string'){
@@ -286,6 +288,7 @@ var Cell = React.createClass({
                                     <a href="javascript:void(0);"  className="bracketIcon">
                                     </a>
                                 </OverlayTrigger>
+                    tdClass = 'column_width';
                 }
             }
         } 
@@ -294,7 +297,7 @@ var Cell = React.createClass({
                 id={this.props.unique}
                 key={this.props.unique}
                 style={style}
-                className="column_width">
+                className={tdClass}>
                     {to_display}
                 </td>;
     }

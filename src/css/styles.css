@@ -276,6 +276,9 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
+.columnAdjust{
+  padding-top: 14px !important;
+}
 /*.export-record-btn,
 .import-record-btn{
   position: absolute;
