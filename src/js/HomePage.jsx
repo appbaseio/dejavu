@@ -603,9 +603,16 @@ var HomePage = React.createClass({
         }.bind(this));
     },                 
     initEs:function(){
-        debugger
         var formInfo = $('#init-ES').serializeArray();
-        console.log(formInfo);
+        formInfo.forEach((v) => {
+            if(v.name == 'url'){
+                window.localStorage.setItem('esurl',v.value);
+            }
+            else{
+                window.localStorage.setItem('appname',v.value);
+            }
+        });
+        window.location.href = "index.html";
     },   
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -614,18 +621,31 @@ var HomePage = React.createClass({
 
 
     render: function () {
+        var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
         return (
             <div>
                 <div id='modal' />
                 <div className="row dejavuContainer">
-                    <form className="col-xs-12 init-ES" id="init-ES">
-                        <div className="form-group  col-xs-8">
-                            <input type="text" className="form-control" name="exampleInputName2" placeholder="Jane Doe" />
-                        </div>
-                        <div className="form-group  col-xs-4 pd-l0">
-                            <input type="text" className="form-control" name="exampleInputEmail2" placeholder="jane.doe@example.com" />
-                        </div>
-                        <a className="btn btn-default submit-btn" onClick={this.initEs}>Submit</a>
+                    <form className={EsForm} id="init-ES">
+                        <div className="vertical0">
+                            <div className="vertical1">
+                                <div className="esContainer">
+                                    <div className="img-container">
+                                        <img src="assets/img/icon.png" />
+                                    </div>
+                                    <h1>DejaVu Browser for ElasticSearch</h1>
+                                    <div className="form-group m-0 col-xs-8 pd-0 pr-5">
+                                        <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
+                                    </div>
+                                    <div className="form-group m-0 col-xs-4 pd-0 pr-5">
+                                        <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
+                                    </div>
+                                    <div className="submit-btn-container">
+                                        <a className="btn btn-default submit-btn" onClick={this.initEs}>Start Browsing</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
                     </form>
                     <div className="typeContainer">
                         <TypeTable

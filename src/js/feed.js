@@ -10,17 +10,24 @@ var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
 
-APPNAME = config.appname;
-URL = config.url;
-var urlsplit = URL.split(':');
-var pwsplit = urlsplit[2].split('@');
-USERNAME = urlsplit[1].replace('//','');
-PASSWORD = pwsplit[0];
-console.log(USERNAME, PASSWORD);
-init();
-APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
+ config = {
+        url:window.localStorage.getItem('esurl'),
+        appname:window.localStorage.getItem('appname')
+    };
 
+    APPNAME = config.appname;
+    URL = config.url;
+    var urlsplit = URL.split(':');
+    var pwsplit = urlsplit[2].split('@');
+    USERNAME = urlsplit[1].replace('//','');
+    PASSWORD = pwsplit[0];
+    console.log(USERNAME, PASSWORD);
+    APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
+
+init();
+    
 function init() {
+
     // Instantiating appbase ref with the global configs defined above.
     appbaseRef = new Appbase({
         url: 'https://' + HOSTNAME,

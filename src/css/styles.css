@@ -19,6 +19,12 @@ label {
 .pd-r10{
   padding-right: 10px;
 }
+.pr-5{
+  padding-right: 5px !important;
+}
+.m-0{
+  margin: 0;
+}
 .clearfix{
   clear: both;
 }
@@ -157,14 +163,58 @@ body{
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 4;
-  background: #fff; 
-  padding-right: 150px;
+  z-index: 6;
+  background: #eee;
+  padding: 5px;
+  padding-right: 130px;
+  border-bottom: 1px solid #ddd;
 }
 .init-ES .submit-btn{
   position: absolute;
-  right: 0;
-  width: 150px;
+  right: 5px;
+  width: 125px;
+}
+.init-ES h1,
+.init-ES .img-container{
+  display: none;
+}
+.EsBigForm{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999;
+  background: #eee;
+  text-align: center;
+}
+.EsBigForm h1,
+.EsBigForm .form-group,
+.EsBigForm .submit-btn-container,
+.EsBigForm .img-container{
+  width: 100%;
+  margin-bottom: 15px;
+}
+.EsBigForm .img-container{
+  margin-bottom: 70px;
+}
+.EsBigForm .esContainer{
+  margin: 0 auto 15px auto;
+  max-width: 700px;  
+}
+.EsBigForm h1{
+  display: block;
+  margin:-44px 0 30px 0;
+}
+.EsBigForm .submit-btn-container{
+  float: left;
+}
+.EsBigForm .vertical0{
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.EsBigForm .vertical1{
+  display: table-cell;
+  vertical-align: middle;
 }
 .typeContainer{
   width: 270px;
@@ -172,7 +222,7 @@ body{
   padding: 15px;
   background: #f8fafb;
   z-index: 2;
-  padding-top: 50px;
+  padding-top: 44px;
 }
 .dataContainer{
   padding-left: 270px;
@@ -181,7 +231,7 @@ body{
   overflow: hidden;
   position: absolute;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 44px;
 }
 .highlight-tip {
   background: #f5e79e;
