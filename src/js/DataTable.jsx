@@ -21,6 +21,11 @@ var SingleMenuItem = React.createClass({
     changeFilter:function(e){
         var filterField = e.currentTarget.value;
         this.props.changeFilter(filterField, this.state.filterValue);
+        var key = filterKeyGen(this.props.columnField,this.props.val);
+        var keyInput = key+'-input';
+        setTimeout(() => {
+            $('#'+keyInput).focus();
+        },300);
         //this.setState({filterField:filterField});
     },
     valChange:function(e){
@@ -29,17 +34,19 @@ var SingleMenuItem = React.createClass({
         this.props.getFilterVal(filterValue);
     },
     render: function(){
-        var singleItemClass = this.props.filterField == this.props.val ? 'radio singleItem active':'radio singleItem';
+        var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active':'singleItem';
         var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple':'Type here...';
+        var key = filterKeyGen(this.props.columnField,this.props.val);
+        var keyInput = key+'-input';
         return (<div className={singleItemClass}>
-                  <label>
-                    <input onChange={this.changeFilter} type="radio" name="optionsRadios"
-                     value={this.props.val} />
-                    {this.props.val}
-                  </label>
-                  <div className="searchElement">
-                    <input type="text" placeholder={placeholder} onKeyUp={this.valChange} />
-                  </div>
+                    <div className="theme-element radio">  
+                        <input onChange={this.changeFilter} type="radio" name="optionsRadios"
+                         value={this.props.val} id={key} />
+                        <label htmlFor={key}><span className="lableText">{this.props.val}</span></label>
+                    </div>  
+                      <div className="searchElement">
+                        <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+                      </div>
                 </div>);
     }
 });
@@ -50,7 +57,7 @@ var FilterDropdown = React.createClass({
     getInitialState:function(){
         return {
                     filterField:null,
-                    filterValue:''
+                    filterValue:null
                 };
     },
     changeFilter : function(field, value){
@@ -63,7 +70,8 @@ var FilterDropdown = React.createClass({
         this.setState({filterValue:val});
     },
     applyFilter:function(){
-        this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
+        if(this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
+           this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
     },
     render:function(){
             var ButtonToolbar = ReactBootstrap.ButtonToolbar;
@@ -73,22 +81,22 @@ var FilterDropdown = React.createClass({
             var datatype = this.props.datatype;
             var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
             var stringFilter = (
-                                <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
+                                <Dropdown.Menu className="menuItems pull-right pd-0">
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
+                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
 
             var numberFilter = (
                                 <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
@@ -96,10 +104,10 @@ var FilterDropdown = React.createClass({
 
             var dateFilter = (
                                 <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
-                                        <button className='btn btn-info' onClick={this.applyFilter}>Apply</button>
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
                               );
@@ -165,7 +173,17 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
         var filterId = 'filter-'+item;
         var datatype = null;
-        var itemText = item == 'json' ? <span><a href="javascript:void(0);"  className="bracketIcon"></a>&nbsp;type / id</span> : item;
+        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+        var Popover = ReactBootstrap.Popover;
+        prettyData =  <Pretty json="It will display the json object." />
+        var itemText = item == 'json' ? <span>
+                <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                    <a href="javascript:void(0);" className="bracketIcon"></a>
+                </OverlayTrigger>
+                <span onClick={this.sortingInit}>&nbsp;&nbsp;type / id</span>
+            </span>
+             : <span onClick={this.sortingInit}>{item}</span>;
+        var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';     
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
@@ -175,7 +193,7 @@ var Column = React.createClass({
         return (<th id={item} width={cellWidth} className="tableHead">
                     <div className={fixedHead}>
                         <div className="headText">
-                            <div className="thtextShow" onClick={this.sortingInit}>
+                            <div className={thtextShow}>
                                 {itemText}
                             </div>
                             <div className="iconList">
@@ -197,10 +215,28 @@ var Column = React.createClass({
 // **Cell** defines the properties of each cell in the
 // data table.
 var Cell = React.createClass({
+    copyId:function(){
+        console.log(this.props._type);
+        console.log(this.props._id);
+        var range = document.createRange();
+        var selection = window.getSelection();
+        range.selectNodeContents(document.getElementById(this.props.unique));
+        selection.removeAllRanges();
+        selection.addRange(range);
+        $('#copyId').val(this.props._type+'/'+this.props._id).select();
+        document.execCommand("copy");
+    },
+    selectRecord:function(ele){
+        _id = this.props._id;
+        _type = this.props._type;
+        row = this.props.row;
+        this.props.actionOnRecord.selectRecord(_id,_type, row, ele.currentTarget.checked);
+    },
     render: function(){
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
-        
+        var actionOnRecord = this.props.actionOnRecord;
+
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
@@ -211,26 +247,38 @@ var Cell = React.createClass({
             _id = this.props._id;
             _type = this.props._type;
             to_display = data;
+            tdClass = 'column_width columnAdjust';
 
         var columnName = this.props.columnName;
+        var radioId = this.props.unique+'radio';
         // cell-data of format ``string`` and ``number`` is rendered inline.
         // If a field is a JSON object instead, it's displayed as a modal pop-up.
         // <a href="#"
         //                         onClick={showJSON.bind(null, data, _type, _id)}>
         //                         <i className="fa fa-external-link" />
         //                     </a>;
-
+        var appIdClass = "appId";
+        actionOnRecord.selectedRows.forEach((v) => {
+            if(v._id == _id)
+                appIdClass += " showRow";
+        });
         if(columnName == 'json'){
             prettyData =  <Pretty json={data} />
-            to_display = <div className="appId">
+            to_display = <div className={appIdClass}>
+                            <span className="theme-element selectrow checkbox">  
+                                <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
+                                 value={_id} data-type={_type} id={radioId} />
+                                <label htmlFor={radioId}></label>
+                            </span>  
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
-                            <span className="appId_name">
+                            <span className="appId_name" onClick={this.copyId}>
                                 <span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
                                 <span className="appId_id" title={_id}>{_id}</span>
                             </span>
-                        </div>
+                        </div>;
+            tdClass = 'column_width';                
         }   
         else{
             if(typeof data !== 'string'){
@@ -240,6 +288,7 @@ var Cell = React.createClass({
                                     <a href="javascript:void(0);"  className="bracketIcon">
                                     </a>
                                 </OverlayTrigger>
+                    tdClass = 'column_width';
                 }
             }
         } 
@@ -248,7 +297,7 @@ var Cell = React.createClass({
                 id={this.props.unique}
                 key={this.props.unique}
                 style={style}
-                className="column_width">
+                className={tdClass}>
                     {to_display}
                 </td>;
     }
@@ -276,7 +325,7 @@ var Table = React.createClass({
         var column_width = 250;
         var elem = document.getElementById('table-scroller');
         if(elem != null){
-            elem.style.width = this.props.renderColumns.length*column_width+'px';
+            elem.style.width = this.props.visibleColumns.length*column_width+'px';
         }
         return (
             <div id='table-container' className="table-container">
@@ -303,38 +352,72 @@ var Info = React.createClass({
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
+        var actionOnRecord = this.props.actionOnRecord;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var infoObjClass = infoObj.total == 0 ? "hide":"col-xs-6 pull-left text-left pd-l0"; 
+        var infoObjClass = infoObj.total == 0 ? "hide":"pull-left text-left pd-l0 recordTotalRow"; 
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
+        var totalClass = actionOnRecord.active ? 'hide' :'col-xs-12';
+        var selectionClass = actionOnRecord.active ? 'col-xs-12' :'hide';
+
+        var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
+
         return (
                 <div className="infoRow container">
                 <div className=" row">
                     <div className={infoObjClass}>
-                        <label>Showing <strong>{infoObj.showing}</strong> of total <strong>{infoObj.total}</strong></label>
+                        <div className={totalClass}>
+                            <span className="info_single">
+                                <label>Showing <strong>{infoObj.showing}</strong> of total 
+                                <strong>&nbsp;{infoObj.total}</strong>
+                                </label>
+                            </span>    
+                        </div>
+                        <div className={selectionClass}>
+                            <span className="pull-left  pd-r10 info_single"> 
+                                <strong>{ actionOnRecord.selectedRows.length}</strong> Selected of total <strong>
+                                    {infoObj.total}
+                                </strong>
+                            </span>
+
+                            <span className="pull-left">
+                                {UpdateDocument}
+
+                                <FeatureComponent.DeleteDocument 
+                                actionOnRecord={actionOnRecord}/>
+
+                                <a href="javascript:void(0);" className="greyBtn info_single"
+                                 onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+                            </span> 
+                        </div>
                     </div>
-                    <div className="col-xs-6 pull-right pd-r0">
-                        <Dropdown cols={this.props.columns} />
+                    <div className="pull-right pd-r0">
+                        <Dropdown 
+                        visibleColumns ={this.props.visibleColumns}
+                        columnToggle ={this.props.columnToggle}
+                         cols={this.props.columns} />
+
                         <FeatureComponent.AddDocument 
                             types={this.props.types} 
                             addRecord ={this.props.addRecord}
-                            getTypeDoc={this.props.getTypeDoc} />
+                            getTypeDoc={this.props.getTypeDoc}
+                            selectClass="tags-select-small" />
                         <div className={filterClass}>
-                            <a href="javascript:void(0)" onClick={this.props.removeFilter} className="removeFilter">
+                            <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     {filterInfo.method}:&nbsp;{filterInfo.columnName}
                                 </span> 
-                                <span className="close-btn">
+                                <span className="close-btn"  onClick={this.props.removeFilter}>
                                     <i className="fa fa-times"></i>
                                 </span>
                             </a>
                         </div>
                         <div className={sortClass}>
-                            <a href="javascript:void(0)" onClick={this.props.removeSort} className="removeFilter">
+                            <a href="javascript:void(0)" className="removeFilter">
                                 <span className="inside-info">
                                     <i className={sortAscClass}></i> {sortInfo.column}
                                 </span> 
-                                <span className="close-btn">
+                                <span className="close-btn"  onClick={this.props.removeSort}>
                                     <i className="fa fa-times"></i>
                                 </span>
                             </a>
@@ -354,8 +437,15 @@ var DataTable = React.createClass({
         
         //If render from sort, dont change the order of columns
         if(!$this.props.sortInfo.active){
-            fixed = ['json'];
-            columns = ['json'];
+            if($this.props.infoObj.showing != 0){
+                fixed = ['json'];
+                columns = ['json'];
+            }
+            else{
+                fixed = [];
+                columns = [];
+            }
+
             fullColumns = {
                 type:'',
                 columns:columns
@@ -412,7 +502,9 @@ var DataTable = React.createClass({
                                 columnName={each}
                                 _id={data[row]['_id']}
                                 _type={data[row]['_type']}
-                                visibility={visibility} />);
+                                visibility={visibility} 
+                                row={newRow}
+                                actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
         }
@@ -424,7 +516,9 @@ var DataTable = React.createClass({
                         mappingObj={$this.props.mappingObj}
                         filterInfo={$this.props.filterInfo} />);
         });
-		var renderRows1 = [];
+		var visibleColumns = this.props.visibleColumns;
+
+        var renderRows1 = [];
 
         //If render from sort, dont render the coumns
         var renderRows = rows.map(function(item)
@@ -436,13 +530,16 @@ var DataTable = React.createClass({
 
         //Extra add btn
         var extraAddBtn = '';
+        //Show only when total records are less than 5
         if(this.props.infoObj.availableTotal <= 5){
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument 
                             types={this.props.Types} 
                             addRecord ={this.props.addRecord}
                             getTypeDoc={this.props.getTypeDoc} 
-                            text="&nbsp;&nbsp;Add more document"/>
+                            link="true"
+                            text="&nbsp;&nbsp;Add more document"
+                            selectClass="tags-select-big"/>
                           </div>  
         }
 
@@ -457,19 +554,23 @@ var DataTable = React.createClass({
             addRecord ={this.props.addRecord}
             getTypeDoc={this.props.getTypeDoc}
             sortInfo ={this.props.sortInfo}
-            columns = {columns} />
+            columns = {columns}
+            visibleColumns={visibleColumns}
+            columnToggle ={this.props.columnToggle}
+            actionOnRecord={this.props.actionOnRecord} />
 
             {extraAddBtn}
             
             <div className="outsideTable">
                 <Table
                  renderColumns={renderColumns}
+                 visibleColumns = {visibleColumns}
                  renderRows={renderRows}
                  scrollFunction={this.props.scrollFunction}
                  selectedTypes={this.props.selectedTypes}
                  filterInfo={this.props.filterInfo} />
              </div>
-
+             <input id="copyId" className="hide" />
             </div>
         );
     }

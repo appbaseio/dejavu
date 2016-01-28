@@ -1,28 +1,14 @@
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
-input[type=checkbox] { display:none; } /* to hide the checkbox itself */
-input[type=checkbox] + label:before {
-  font-family: FontAwesome;
-  display: inline-block;
-  font-size: 1em;
-}
-
-input[type=checkbox] + label:before { content: "\f096"; } /* unchecked icon */
-input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
-
-input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
-input[type=checkbox]:checked + label:before { letter-spacing: 10px; } /* allow space for check mark */
-
 label {
   font-weight: 500;
 }
-
 .waiting {
   position: absolute;
   top: 50%;
   left: 50%;
 }
 .pd-0{
-  padding: 0;
+  padding: 0 !important;
 }
 .pd-r0{
   padding-right: 0;
@@ -44,6 +30,14 @@ label {
   /* float: right; */
   border-radius: 4px;   
 }
+.removeFilter:hover,
+.removeFilter:active,
+.removeFilter:focus{
+  color: #fff;
+}
+.removeFilter:hover .close-btn{
+  color: #555;
+}
 .outsideTable{
   position: relative;
   height: 100%;
@@ -58,6 +52,13 @@ label {
   background: #f8fafb;
   border-bottom: 1px solid #eee;
   z-index: 5;
+}
+.infoRow .info_single{
+  line-height: 28px;
+}
+.recordTotalRow{
+  margin: 0;
+  height: 28px;
 }
 .removeFilter .inside-info{
   padding: 5px 10px;
@@ -221,7 +222,7 @@ body{
 }
 .table-fixed-head.sortActive,
 .table-fixed-head.filterActive{
-  background: #dfdfdf;
+  
 }
 .table-fixed-head.filterActive .filterBtn,
 .table-fixed-head.sortActive .sortIcon{
@@ -267,6 +268,9 @@ body{
   min-width: 250px;
   overflow: hidden;
 }
+.columnAdjust{
+  padding-top: 14px !important;
+}
 /*.export-record-btn,
 .import-record-btn{
   position: absolute;
@@ -285,15 +289,20 @@ body{
 }
 .AddExtraBtn{
   position: absolute;
-  bottom: 50px;
+  bottom: 100px;
   text-align: center;
   width: 100%;
   z-index: 2;
 }
-.AddExtraBtn .add-record-btn{
-  float: none;
-  font-size: 26px;
-  line-height: 40px;
+.AddExtraBtn .add-record-container{
+  width: 100%;
+}
+.AddExtraBtn .add-record-link{
+  cursor: pointer;
+  font-size: 20px;
+}
+.AddExtraBtn .add-record-link:hover{
+  text-decoration: none;
 }
 .export-record-btn{
   right: 102px;
@@ -346,6 +355,9 @@ body{
   padding-right: 40px;
   line-height: 30px;
 }
+.headText .thtextShow.leftGap{
+  padding-left: 26px;
+}
 .headText .iconList{
   position: absolute;
   right: 5px;
@@ -376,7 +388,6 @@ body{
 .filterDropdown.active .filterDropdownContainer{
   display: block;
 }
-
 .filterDropdown .filterBtn{
   padding: 0;
   background: transparent;
@@ -389,6 +400,9 @@ body{
 .filterDropdown .filterBtn .caret{
   display: none;
 }
+.menuItems{
+  width: 200px;
+}
 .singleItem{
   padding: 5px;
   border-bottom: 1px solid #eee;
@@ -399,19 +413,49 @@ body{
 }
 .singleItem input[type="text"]{
   font-weight: lighter;
-  font-weight: lighter;
-  margin: 5px 0;
   padding: 0 5px;
+  height: 26px;
 }
-.singleItem .searchElement{
+.singleItem .searchElement,
+.singleItem.active label .lableText{
   display: none;
+}
+.radio{
+  z-index: 1;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.radio label{
+  line-height: 14px;
 }
 .singleItem.active .searchElement{
   display: block;
+  padding-left: 25px;
+  margin-top: -30px;
+  z-index: 2;
+  position: relative;
 }
 .appId{
   float: left;
-  width: 250px
+  width: 250px;
+  padding-left:26px; 
+  position: relative;
+}
+.appId .selectrow{
+  position: absolute;
+  left: 0;
+  top: -2px;
+  z-index: 2;
+  cursor: pointer;
+  display: none;
+}
+.appId:hover .selectrow,
+.appId.showRow .selectrow{
+  display: inline-block;
+}
+.appId .selectrow input{
+  cursor: pointer;
 }
 .bracketIcon{
   width: 34px;
@@ -444,7 +488,7 @@ body{
     padding-right: 5px;
     margin-left: -15px;
     line-height: 30px;
-    max-width: 215px;
+    max-width: 190px;
     overflow: hidden;
     height: 34px;
     white-space: nowrap;
@@ -482,17 +526,60 @@ body{
 }
 .feature-list li a{
   width: 100%;
-  background: #eee;
+  background: #fff;
   display: inline-block;
   padding: 5px 10px;
   border-bottom: 1px solid #e1e1e1;
   cursor: pointer;
   color: #000;
 }
+.feature-list li a img{
+  width: 30px;
+  padding-right: 10px;
+}
 .feature-list li:last-child a{
     border-bottom: 0;
 }
 .feature-list li a:hover{
-  background: #e1e1e1;
+  background: #f1f1f1;
   text-decoration: none;
+}
+.loadingBtn .fa,
+.loadingBtn.loading .submitText{
+  display: none;
+}
+.loadingBtn.loading .fa{
+  display: block;
+}
+.inlineBlock{
+  display: inline-block;
+}
+.themeBtn{
+  padding: 3px 6px;
+}
+.checkbox input[type="checkbox"], .checkbox input[type="radio"]{
+  cursor: pointer;
+}
+
+/*Color Schemes*/
+.theme-element.checkbox input[type="checkbox"]:checked + label::after,
+.theme-element.checkbox input[type="radio"]:checked + label::after{
+  background: #3BC7F6;
+  color: #fff;
+}
+.theme-element.radio label::after{
+  background: #3BC7F6;
+}
+.btn-primary{
+  background: #3BC7F6; 
+  border-color: #2F9ED5;
+}
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus{
+  border-color: #2F9ED5;
+  background: #2F9ED5; 
+}
+.greyBtn{
+  color: #6e8593;
 }

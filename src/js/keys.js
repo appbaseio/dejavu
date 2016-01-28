@@ -12,3 +12,10 @@ var rowKeyGen = function(row){
 var dropdownKeyGen = function(selection){
 	return 'dropdown'+selection;
 }
+
+//	filter key gen is for the dropwown in the filter.
+var filterKeyGen = function(column,field){
+	column = column.replace(/\s/,'');
+	field = field.replace(/\s/,'');
+	return 'filter'+column+field;
+}

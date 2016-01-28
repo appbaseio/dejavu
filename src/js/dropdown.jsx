@@ -8,6 +8,7 @@ var ReactBootstrap = require('react-bootstrap');
 
 var Dropdown = React.createClass({
     render: function(){
+        var $this = this;
         var Dropdown = ReactBootstrap.Dropdown;
         var columns = this.props.cols;
         var MenuItem = ReactBootstrap.MenuItem;
@@ -15,9 +16,8 @@ var Dropdown = React.createClass({
         // as a list of react components i.e FieldCheckbox.
         var ColumnsCheckbox =  columns.map(function(item, i){
             var key = dropdownKeyGen(item);
-            if(item == 'json')
-                item = 'type / id';
-            return <FieldCheckbox key={i} _type={item} _key={this.key}/>;
+            if(item != 'json')
+            return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={this.key}/>;
         });
         return (
             <Dropdown
@@ -61,6 +61,8 @@ var FieldCheckbox = React.createClass({
     // we do this by assigning specific keys to them. check KeyGen.
     check: function(elementId, event){
         var checked = true;
+        if(elementId == 'type / id')
+                elementId = 'json';
         if(document.getElementById(elementId).style.display === "none"){
             document.getElementById(elementId).style.display = "";
             checked = true;
@@ -82,18 +84,21 @@ var FieldCheckbox = React.createClass({
             }
         }
         this.setState({isChecked: checked});
+        this.props.columnToggle().toggleIt(elementId, checked);
     },
     render: function() {
         var Input = ReactBootstrap.Input;
         var key = dropdownKeyGen(this.props._type);
         return(
             <div className='ab-menu-item'>
-                <input 
-                id={key} 
-                type="checkbox" key={key}
-                defaultChecked={this.state.isChecked} 
-                onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
-                <label htmlFor={key}> {this.props._type} </label>
+                <div className="checkbox theme-element">
+                    <input 
+                    id={key} 
+                    type="checkbox" key={key}
+                    defaultChecked={this.state.isChecked} 
+                    onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
+                    <label htmlFor={key}> {this.props._type} </label>
+                </div>
             </div>
         );
     }

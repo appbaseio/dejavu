@@ -17,6 +17,7 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         this.setState({isChecked:checked});
+        this.props.typeInfo.typeCounter();
     },
     unwatch: function() {
         var checked = false;
@@ -34,14 +35,16 @@ var TypeRow = React.createClass({
     render: function() {
         return(
                 <li>
+                    <div className="theme-element checkbox">
                     <input
-                     id={this.props.type}
-                     type="checkbox"
-                     key={this.props.type}
-                     checked={this.state.isChecked}
-                     onChange={this.unwatch}
-                     readOnly={false}/>
-                    <label htmlFor={this.props.type}>{this.props.type}</label>
+                         id={this.props.type}
+                         type="checkbox"
+                         key={this.props.type}
+                         checked={this.state.isChecked}
+                         onChange={this.unwatch}
+                         readOnly={false}/>
+                        <label htmlFor={this.props.type}>{this.props.type}</label>
+                    </div>
                 </li>
         );
     }
@@ -59,7 +62,8 @@ var TypeTable = React.createClass({
                          key={type}
                          type={types[type]}
                          unwatchTypeHandler={this.props.unwatchTypeHandler}
-                         watchTypeHandler={this.props.watchTypeHandler} />);
+                         watchTypeHandler={this.props.watchTypeHandler}
+                         typeInfo={this.props.typeInfo} />);
         }
         if(types.length < 1) {
             return (

@@ -19,6 +19,8 @@ var HomePage = React.createClass({
 
     getInitialState: function() {
         return {documents: [], types: [], signalColor:'', signalActive:'', signalText:'',
+                    visibleColumns:[],
+                    hiddenColumns:[],
                     sortInfo:{
                         active:false
                     },
@@ -32,7 +34,19 @@ var HomePage = React.createClass({
                         getOnce:false,
                         availableTotal:0
                     },
-                    mappingObj:{}
+                    mappingObj:{},
+                    actionOnRecord:{
+                        active:false,
+                        id:null,
+                        type:null,
+                        row:null,
+                        selectedRows:[],
+                        selectRecord:this.selectRecord,
+                        updateRecord:this.updateRecord,
+                        deleteRecord:this.deleteRecord,
+                        removeSelection:this.removeSelection
+                    },
+                    typeInfo:{count:0, typeCounter:this.typeCounter}
                 };
     },
     //The record might have nested json objects. They can't be shown
@@ -43,11 +57,13 @@ var HomePage = React.createClass({
 
     flatten: function(data, callback) {
         var fields = [];
-        for(var each in data['_source']){
-            data[each] = data['_source'][each];
-            if(typeof data[each] !== 'string'){
-                if(typeof data[each] !== 'number'){
-                        fields.push(each);
+        if(data != null){
+            for(var each in data['_source']){
+                data[each] = data['_source'][each];
+                if(typeof data[each] !== 'string'){
+                    if(typeof data[each] !== 'number'){
+                            fields.push(each);
+                    }
                 }
             }
         }
@@ -90,6 +106,19 @@ var HomePage = React.createClass({
         var infoObj = this.state.infoObj;
         infoObj.showing = showing;
         this.setState({infoObj:infoObj});
+        data = this.state.documents;
+        hiddenColumns = this.state.hiddenColumns;
+        var visibleColumns = [];
+        for(var each in data){
+            for(column in data[each]){
+                if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
+                    if(visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1){
+                        visibleColumns.push(column);
+                    }
+                }
+            }
+        }
+        this.setState({visibleColumns:visibleColumns});
     },
 
     // Logic to stream continuous data.
@@ -162,21 +191,37 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        if(types.length){
-            feed.getData(types, function(update, fromStream){
-                this.updateDataOnView(update);
-                this.setSignal(fromStream);
-            }.bind(this), function(total){
-                var infoObj = this.state.infoObj;
-                infoObj.total = total;
-                this.setState({infoObj:infoObj});
-            }.bind(this));
+        if(this.state.filterInfo.active){
+            var filterInfo = this.state.filterInfo;
+            this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
         }
         else{
-            var infoObj = this.state.infoObj;
-            infoObj.showing = 0;
-            infoObj.total = 0;
-            this.setState({infoObj:infoObj});
+            if(types.length){
+                feed.getData(types, function(update, fromStream){
+                    this.updateDataOnView(update);
+                    this.setSignal(fromStream);
+                }.bind(this), function(total, fromStream, method){
+                    var infoObj = this.state.infoObj;
+                    //Do this if from stream
+                    if(fromStream){
+                        //For index data
+                        if(method == 'index'){
+                            infoObj.total += 1;    
+                        }
+                    }
+                    //Else go for this
+                    else{
+                        infoObj.total = total;
+                    }
+                    this.setState({infoObj:infoObj});
+                }.bind(this));
+            }
+            else{
+                var infoObj = this.state.infoObj;
+                infoObj.showing = 0;
+                infoObj.total = 0;
+                this.setState({infoObj:infoObj});
+            }
         }
     },
     setSignal:function(fromStream){
@@ -243,8 +288,7 @@ var HomePage = React.createClass({
     watchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
         subsetESTypes.push(typeName);
-        this.getStreamingData(subsetESTypes);
-        console.log("selections: ", subsetESTypes);
+        this.applyGetStream();
     },
     unwatchStock: function(typeName){
         this.setState({sortInfo:{active:false}});
@@ -252,6 +296,19 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
         console.log("selections: ", subsetESTypes);
+    },
+    typeCounter:function(){
+        var typeInfo = this.state.typeInfo;
+        typeInfo.count++;
+        this.setState({typeInfo:typeInfo});
+        this.applyGetStream();
+    },
+    applyGetStream:function(){
+        var typeInfo = this.state.typeInfo;
+            if(typeInfo.count >= this.state.types.length){
+                this.getStreamingData(subsetESTypes);
+                console.log("selections: ", subsetESTypes);
+            }
     },
     setMap:function(){
         var $this = this;
@@ -312,6 +369,8 @@ var HomePage = React.createClass({
     dynamicSort:function (property, reverse) {
         return function (a,b) {
             sortOrder = reverse ? -1 : 1;
+            if(property == 'json')
+                property = '_type';
             if(isNaN(a[property]))
                 var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
             else
@@ -321,6 +380,9 @@ var HomePage = React.createClass({
     },
     addRecord:function(){
         var form = $('#addObjectForm').serializeArray();
+        this.indexCall(form,'close-modal', 'index');
+    },
+    indexCall:function(form, modalId, method){
         var recordObject = {};
         $.each(form,function(k2,v2){
             if(v2.value != '')
@@ -328,10 +390,9 @@ var HomePage = React.createClass({
         });
 
         recordObject.body = JSON.parse(recordObject.body);
-        feed.indexData(recordObject,function(){
-            $('#close-modal').click();
+        feed.indexData(recordObject,method,function(){
+            $('#'+modalId).click();
         });
-
     },
     getTypeDoc:function(){
         var selectedType = $('#setType').val();
@@ -377,15 +438,17 @@ var HomePage = React.createClass({
                 exportObject.query = JSON.parse(val.value);
             }
         });
-
+        $('#exportBtn').addClass('loading').attr('disabled',true);
         var testQuery = feed.testQuery(exportObject.type, exportObject.query);
         testQuery.on('data',function(res){
             if(!res.hasOwnProperty('error'))
                 $this.exportQuery(exportObject);
             else
               toastr.error(res.error, 'ES Error : '+res.status, {timeOut: 5000})  
+            $('#exportBtn').removeClass('loading').removeAttr('disabled');
         }).on('error',function(err){
             toastr.error(err, 'ES Error', {timeOut: 5000})
+            $('#exportBtn').removeClass('loading').removeAttr('disabled');
         });
     },
     exportQuery:function(exportObject){
@@ -407,28 +470,37 @@ var HomePage = React.createClass({
         });
     },
     applyFilter:function(typeName, columnName, method, value){
-        filterVal = value.split(',');
-        var $this = this;
-        var filterObj = this.state.filterInfo;
-        filterObj['type'] = typeName;
-        filterObj['columnName'] = columnName;
-        filterObj['method'] = method;
-        filterObj['value'] = filterVal;
-        filterObj['active'] = true;
-        this.setState({filterInfo:filterObj});
-
-        feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
-            sdata = [];
-            $this.resetData();
-            setTimeout(function(){
-                $this.updateDataOnView(update);
-                $this.setSignal(fromStream);
-            },500);
-        }.bind(this), function(total){
-            var infoObj = this.state.infoObj;
-            infoObj.total = total;
-            this.setState({infoObj:infoObj});
-        }.bind(this));
+            filterVal = $.isArray(value) ? value : value.split(',');
+            var $this = this;
+            var filterObj = this.state.filterInfo;
+            filterObj['type'] = typeName;
+            filterObj['columnName'] = columnName;
+            filterObj['method'] = method;
+            filterObj['value'] = filterVal;
+            filterObj['active'] = true;
+            this.setState({filterInfo:filterObj});
+            if(typeName != '' && typeName != null){ 
+                feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
+                    if(!fromStream)
+                    {
+                        sdata = [];
+                        $this.resetData();
+                    }
+                    setTimeout(function(){
+                        $this.updateDataOnView(update);
+                    },500);
+                }.bind(this), function(total){
+                    var infoObj = this.state.infoObj;
+                    infoObj.total = total;
+                    this.setState({infoObj:infoObj});
+                }.bind(this));
+            }
+            else{
+                    var infoObj = this.state.infoObj;
+                    infoObj.showing = 0;
+                    infoObj.total = 0;
+                    this.setState({infoObj:infoObj});
+            }
     },
     removeFilter:function(){
         var $this = this;
@@ -449,6 +521,87 @@ var HomePage = React.createClass({
         this.setState({documents: sortedArray});
         this.setState({sortInfo:{active:false}});
     },
+    columnToggle:function() {
+        var $this = this;
+        var obj = {
+            toggleIt:function(elementId, checked) {
+                if(!checked){
+                   //visible columns - update
+                   var visibleColumns = $this.state.visibleColumns.filter((v) => {if(v != elementId) return v;});
+                    
+                   //hidden columns - update
+                    hiddenColumns = $this.state.hiddenColumns;
+                    var flag = hiddenColumns.indexOf(elementId);
+                    if(flag == -1){
+                        hiddenColumns.push(elementId);
+                    }
+                }
+                else{
+                   //visible columns - update
+                    visibleColumns = $this.state.visibleColumns;
+                    var flag = visibleColumns.indexOf(elementId);
+                    if(flag == -1){
+                        visibleColumns.push(elementId);
+                    }
+                    
+                   //hidden columns - update
+                    var hiddenColumns = $this.state.hiddenColumns.filter((v) => {if(v != elementId) return v;});
+                }
+               $this.setState({visibleColumns:visibleColumns, hiddenColumns:hiddenColumns});
+            },
+            setVisibleColumn:function(){
+
+            }
+        };
+        return obj;
+    },
+    selectRecord:function(id, type, row, currentCheck){
+        selectedRows = [];
+        $('.rowSelectionCheckbox:checked').each((i, v)=>{
+            var obj = {
+                        _id:$(v).attr('value'),
+                        _type:$(v).data('type')
+                    }; 
+            selectedRows.push(obj); 
+        });
+
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.active = selectedRows.length ? true : false;
+        actionOnRecord.id = id;
+        actionOnRecord.type = type;
+        actionOnRecord.row = JSON.stringify(row.json,null,4);
+        actionOnRecord.selectedRows = selectedRows;
+        this.setState({actionOnRecord:actionOnRecord});
+    },         
+    removeSelection:function(){
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.active = false;
+        actionOnRecord.id = null;
+        actionOnRecord.type = null;
+        actionOnRecord.selectedRows = [];
+        this.setState({actionOnRecord:actionOnRecord});
+        $('[name="selectRecord"]').removeAttr('checked');
+    },          
+    updateRecord:function(json){
+        var form = $('#updateObjectForm').serializeArray();
+        var recordObject = {};
+        this.indexCall(form,'close-update-modal','update');
+    },          
+    deleteRecord:function(){
+        $('.loadingBtn').addClass('loading');
+        feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update){
+            $('.loadingBtn').removeClass('loading');
+            $('#close-delete-modal').click();
+
+            var infoObj = this.state.infoObj;
+            infoObj.total -= this.state.actionOnRecord.selectedRows.length;    
+            
+            this.setState({infoObj:infoObj});
+
+            this.removeSelection();
+            this.resetData();
+        }.bind(this));
+    },                    
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -468,7 +621,8 @@ var HomePage = React.createClass({
                             ExportData={this.exportData}
                             signalColor={this.state.signalColor}
                             signalActive={this.state.signalActive}
-                            signalText={this.state.signalText} />
+                            signalText={this.state.signalText}
+                            typeInfo={this.state.typeInfo} />
                     </div>
                      <div className="col-xs-12 dataContainer">
                         <DataTable
@@ -485,6 +639,9 @@ var HomePage = React.createClass({
                             getTypeDoc={this.getTypeDoc}
                             Types={this.state.types}
                             removeSort = {this.removeSort}
+                            visibleColumns = {this.state.visibleColumns}
+                            columnToggle ={this.columnToggle}
+                            actionOnRecord = {this.state.actionOnRecord}
                           />
                     </div>
                 </div>
@@ -494,3 +651,4 @@ var HomePage = React.createClass({
 });
 
 module.exports = HomePage;
+
