@@ -69,24 +69,24 @@ var feed = (function() {
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
                 })
+
+                // Counter stream
+                countStream(types, setTotal);
                 
                 //Stop old stream
                 if(typeof streamRef != 'undefined')
                     streamRef.stop();
                 
                 // get new data updates
-                console.log(types[0]);
-                var streamRef = appbaseRef.searchStream({
-                    type: types[0],
+                console.log(queryBody);
+                streamRef = appbaseRef.searchStream({
+                    type: types,
                     body: queryBody
                 }).on('data', function(res) {
                     callback(res, true);
                 }).on('error', function(err) {
                     console.log("caught a stream error", err);
                 });
-
-                // Counter stream
-                countStream(types, setTotal);
         }
     };
 
@@ -97,16 +97,17 @@ var feed = (function() {
             type: types,
             body: {"query":{"match_all":{}}}
         }).on('data', function(res) {
-            
             setTotal(res.hits.total);
         });
+
+        //Stop old stream
+        if(typeof counterStream != 'undefined')
+            counterStream.stop();
 
         var counterStream = appbaseRef.searchStream({
             type: types,
             body: {"query":{"match_all":{}}}
-        }).on('data', function(res) {
-            debugger
-            setTotal(res.hits.total);
+        }).on('data', function(res2) {
             //callback(res, true);
         }).on('error', function(err) {
             //console.log("caught a stream error", err);

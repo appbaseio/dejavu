@@ -127,6 +127,7 @@ var HomePage = React.createClass({
         var key = rowKeyGen(update);
 
         if (!Array.isArray(update)) {
+        debugger
         //If the record already exists in sdata, it should
         //either be a delete request or a change to an
         //existing record.
@@ -470,11 +471,13 @@ var HomePage = React.createClass({
         this.setState({filterInfo:filterObj});
 
         feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream){
-            sdata = [];
-            $this.resetData();
+            if(!fromStream)
+            {
+                sdata = [];
+                $this.resetData();
+            }
             setTimeout(function(){
                 $this.updateDataOnView(update);
-                $this.setSignal(fromStream);
             },500);
         }.bind(this), function(total){
             var infoObj = this.state.infoObj;
