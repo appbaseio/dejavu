@@ -586,7 +586,7 @@ body{
 }
 .btn-primary{
   background: #3BC7F6;
-  border-color: #2F9ED5;
+  border-color: transparent;
 }
 .btn-primary:hover,
 .btn-primary:active,
