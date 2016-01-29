@@ -94,14 +94,16 @@ var HomePage = React.createClass({
         for(each in sdata){
             sdata_values.push(sdata[each]);
         }
+        //if sort is already applied
         if(this.state.sortInfo.active){
-            //if sort is already applied
             var sortedArray = this.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
             this.setState({documents: sortedArray});
         }
-        else
-         this.setState({documents: sdata_values});
-
+        //by default sort it by typename by passing json field
+        else{
+            var sortedArray = this.sortIt(sdata_values, 'json', false);
+            this.setState({documents: sortedArray});
+        } 
         var showing = this.state.documents.length;
         var infoObj = this.state.infoObj;
         infoObj.showing = showing;
@@ -109,8 +111,8 @@ var HomePage = React.createClass({
         data = this.state.documents;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
-        for(var each in data){
-            for(column in data[each]){
+        for(var each in sdata){
+            for(column in sdata[each]){
                 if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
                     if(visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1){
                         visibleColumns.push(column);
@@ -255,7 +257,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     removeType: function(typeName) {
-        feed.deleteData(typeName, function() {
+        feed.deleteData(typeName, function(data) {
             this.resetData();
         }.bind(this));
     },
@@ -295,7 +297,6 @@ var HomePage = React.createClass({
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
-        console.log("selections: ", subsetESTypes);
     },
     typeCounter:function(){
         var typeInfo = this.state.typeInfo;
@@ -391,8 +392,8 @@ var HomePage = React.createClass({
 
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject,method,function(){
-            $('#'+modalId).click();
-            $('.close').click();
+        $('#'+modalId).click();
+        $('.close').click();
         });
     },
     getTypeDoc:function(){
