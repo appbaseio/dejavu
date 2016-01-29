@@ -180,13 +180,20 @@ var Column = React.createClass({
                 <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
                     <a href="javascript:void(0);" className="bracketIcon"></a>
                 </OverlayTrigger>
-                <span onClick={this.sortingInit}>&nbsp;&nbsp;type / id</span>
+                <span>&nbsp;&nbsp;type / id</span>
             </span>
              : <span onClick={this.sortingInit}>{item}</span>;
         var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';
         if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
+
+        //Allow sorting if item is not the first column
+        //here first column is  json = type/id
+        var sortIcon = item == 'json' ? <span></span> : <span className="sortIcon"  onClick={this.sortingInit}>
+                                            <i className ="fa fa-chevron-up asc-icon" />
+                                            <i className ="fa fa-chevron-down desc-icon" />
+                                        </span> ;
         //console.log(datatype, item);
         //var handleSort = this.sortingInit;
 
@@ -197,10 +204,7 @@ var Column = React.createClass({
                                 {itemText}
                             </div>
                             <div className="iconList">
-                                <span className="sortIcon"  onClick={this.sortingInit}>
-                                    <i className ="fa fa-chevron-up asc-icon" />
-                                    <i className ="fa fa-chevron-down desc-icon" />
-                                </span>
+                                {sortIcon}
                                 <span className="filterIcon">
                                     <FilterDropdown columnField={item} type={type} datatype = {datatype} filterInfo={this.props.filterInfo} />
                                 </span>

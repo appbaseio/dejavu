@@ -94,14 +94,16 @@ var HomePage = React.createClass({
         for(each in sdata){
             sdata_values.push(sdata[each]);
         }
+        //if sort is already applied
         if(this.state.sortInfo.active){
-            //if sort is already applied
             var sortedArray = this.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
             this.setState({documents: sortedArray});
         }
-        else
-         this.setState({documents: sdata_values});
-
+        //by default sort it by typename by passing json field
+        else{
+            var sortedArray = this.sortIt(sdata_values, 'json', false);
+            this.setState({documents: sortedArray});
+        } 
         var showing = this.state.documents.length;
         var infoObj = this.state.infoObj;
         infoObj.showing = showing;

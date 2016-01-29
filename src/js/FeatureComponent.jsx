@@ -312,7 +312,7 @@ var ImportData = React.createClass({
                 <a href="https://github.com/appbaseio/transporter/releases/tag/v0.1.2-appbase" target="_new"> here <span className="fa fa-external-link"></span></a>.</li>
               <li>Set the source and sink configurations as mentioned
               in the file here, and save it in the same folder as config.yml.</li>
-            <li>Run the transporter using ./transporter run --config <config_file> <transform_file></li>
+            <li>Run the transporter using ./transporter run --config &lt;config_file&gt; &lt;transform_file&gt;</li>
             </ol>
             <p>Or shoot us at info@appbase.io or intercom if you want us to help with importing data.</p>
           </Modal.Body>
