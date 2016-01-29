@@ -1,9 +1,4 @@
 /*------------------------------------------ checkboxes ----------------------------------------------------*/
-@font-face {
-  font-family: "Source Sans Pro Regular";
-  src: url('fonts/source/sourcesanspro-regular.ttf');
-
-}
 label {
   font-weight: 500;
 }
