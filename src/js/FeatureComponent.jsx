@@ -518,7 +518,7 @@ var DeleteDocument = React.createClass({
         <a title="Delete" onClick={this.open} className="btn btn-default themeBtn">
           <i className="fa fa-trash greyBtn"></i>&nbsp;&nbsp;Delete
         </a>
-        <Modal show={this.state.showModal} onHide={this.close}>
+        <Modal className="modal-danger" show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Delete Data</Modal.Title>
           </Modal.Header>
