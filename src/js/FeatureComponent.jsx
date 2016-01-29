@@ -486,8 +486,7 @@ var UpdateDocument = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="success" onClick={this.validateInput}>Submit</Button>
-            <Button id="close-update-modal" onClick={this.close}>Close</Button>
+            <Button bsStyle="success" onClick={this.validateInput}>Update</Button>
           </Modal.Footer>
         </Modal>
       </div>
