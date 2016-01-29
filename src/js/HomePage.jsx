@@ -111,8 +111,8 @@ var HomePage = React.createClass({
         data = this.state.documents;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
-        for(var each in data){
-            for(column in data[each]){
+        for(var each in sdata){
+            for(column in sdata[each]){
                 if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
                     if(visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1){
                         visibleColumns.push(column);
@@ -257,7 +257,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     removeType: function(typeName) {
-        feed.deleteData(typeName, function() {
+        feed.deleteData(typeName, function(data) {
             this.resetData();
         }.bind(this));
     },
@@ -297,7 +297,6 @@ var HomePage = React.createClass({
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
-        console.log("selections: ", subsetESTypes);
     },
     typeCounter:function(){
         var typeInfo = this.state.typeInfo;
