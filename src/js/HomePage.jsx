@@ -168,6 +168,7 @@ var HomePage = React.createClass({
         //If its a new record, we add it to sdata and then
         //apply the `new transition`.
         else {
+            console.log(update);
             sdata[key] = update;
             this.resetData();
             for(var each in update) {

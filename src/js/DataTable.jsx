@@ -476,7 +476,7 @@ var DataTable = React.createClass({
                 // is present already, if not we appen to the
                 // right.
                 if(fixed.indexOf(columns[each]) <= -1){
-                    if(data[row][columns[each]]){
+                    if(data[row].hasOwnProperty([columns[each]])){
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
                     }
