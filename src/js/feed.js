@@ -83,6 +83,8 @@ var feed = (function() {
                     type: types,
                     body: queryBody
                 }).on('data', function(res) {
+                    if(res.hasOwnProperty('_updated'))
+                        delete res._updated;
                     callback(res, true);
                 }).on('error', function(err) {
                     console.log("caught a stream error", err);
