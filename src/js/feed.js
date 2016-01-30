@@ -9,6 +9,7 @@ const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
+var OperationFlag = false;
 
 parent.globalAppData(function(res) {
     APPNAME = res.appname;
@@ -17,7 +18,6 @@ parent.globalAppData(function(res) {
     PASSWORD = res.password;
     EMAIL = res.email;
     PROFILE = res.profile;
-    console.log(PROFILE);
     init();
     APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
 });
@@ -66,8 +66,10 @@ var feed = (function() {
                     } else {
                         callback(res.hits.hits);
                     }
+                    allowOtherOperation();
                 }).on('error', function(err) {
                     console.log("caught a retrieval error", err);
+                    allowOtherOperation();
                 })
 
                 // Counter stream
@@ -78,7 +80,6 @@ var feed = (function() {
                     streamRef.stop();
                 
                 // get new data updates
-                console.log(queryBody);
                 streamRef = appbaseRef.searchStream({
                     type: types,
                     body: queryBody
@@ -122,6 +123,12 @@ var feed = (function() {
         }).on('error', function(err) {
             //console.log("caught a stream error", err);
         });
+    };
+
+    function allowOtherOperation(){
+        setTimeout(() => {
+            OperationFlag = false;
+        },500);
     };
 
     // paginate and show new results when user scrolls

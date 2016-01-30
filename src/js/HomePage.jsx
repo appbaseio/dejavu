@@ -194,37 +194,45 @@ var HomePage = React.createClass({
         this.setSampleData(update);
     },
     getStreamingData: function(types){
-        if(this.state.filterInfo.active){
-            var filterInfo = this.state.filterInfo;
-            this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
-        }
-        else{
-            if(types.length){
-                feed.getData(types, function(update, fromStream){
-                    this.updateDataOnView(update);
-                    this.setSignal(fromStream);
-                }.bind(this), function(total, fromStream, method){
-                    var infoObj = this.state.infoObj;
-                    //Do this if from stream
-                    if(fromStream){
-                        //For index data
-                        if(method == 'index'){
-                            infoObj.total += 1;    
-                        }
-                    }
-                    //Else go for this
-                    else{
-                        infoObj.total = total;
-                    }
-                    this.setState({infoObj:infoObj});
-                }.bind(this));
+        if(!OperationFlag){
+            OperationFlag = true;
+            if(this.state.filterInfo.active){
+                var filterInfo = this.state.filterInfo;
+                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
             }
             else{
-                var infoObj = this.state.infoObj;
-                infoObj.showing = 0;
-                infoObj.total = 0;
-                this.setState({infoObj:infoObj});
+                if(types.length){
+                    feed.getData(types, function(update, fromStream){
+                        this.updateDataOnView(update);
+                        this.setSignal(fromStream);
+                    }.bind(this), function(total, fromStream, method){
+                        var infoObj = this.state.infoObj;
+                        //Do this if from stream
+                        if(fromStream){
+                            //For index data
+                            if(method == 'index'){
+                                infoObj.total += 1;    
+                            }
+                        }
+                        //Else go for this
+                        else{
+                            infoObj.total = total;
+                        }
+                        this.setState({infoObj:infoObj});
+                    }.bind(this));
+                }
+                else{
+                    OperationFlag = false;
+                    var infoObj = this.state.infoObj;
+                    infoObj.showing = 0;
+                    infoObj.total = 0;
+                    this.setState({infoObj:infoObj});
+                }
             }
+        }
+        else{
+            console.log(OperationFlag);
+            setTimeout(() => this.getStreamingData(types),300);
         }
     },
     setSignal:function(fromStream){
@@ -309,7 +317,6 @@ var HomePage = React.createClass({
         var typeInfo = this.state.typeInfo;
             if(typeInfo.count >= this.state.types.length){
                 this.getStreamingData(subsetESTypes);
-                console.log("selections: ", subsetESTypes);
             }
     },
     setMap:function(){
