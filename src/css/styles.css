@@ -608,6 +608,36 @@ body{
   background: #3BC7F6;
   color: #fff;
 }
+.modal .btn-export {
+  background: transparent;
+  color: #3BC7F6;
+  border-color: #3BC7F6;
+}
+.modal .btn-export:hover {
+  background: #3BC7F6;
+  color: #fff;
+}
+.modal.modal-export .modal-content{
+  border-color: #3BC7F6;
+}
+.modal.modal-update .modal-content{
+  border-color: #F5E79E;
+}
+.modal.modal-update .modal-header{
+  color: #F5E79E;
+}
+.modal.modal-update .close{
+  color: #F5E79E;
+}
+.modal .btn-update{
+  background: transparent;
+  color: #F5E79E;
+  border-color: #F5E79E;
+}
+.modal .btn-update:hover {
+  background: #F5E79E;
+  color: #fff;
+}
 .modal .btn-danger{
   background: transparent;
   color: #FF8484;
