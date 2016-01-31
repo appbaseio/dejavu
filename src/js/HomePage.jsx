@@ -203,7 +203,8 @@ var HomePage = React.createClass({
             else{
                 if(types.length){
                     feed.getData(types, function(update, fromStream){
-                        this.updateDataOnView(update);
+                        if(update != null)
+                            this.updateDataOnView(update);
                         this.setSignal(fromStream);
                     }.bind(this), function(total, fromStream, method){
                         var infoObj = this.state.infoObj;

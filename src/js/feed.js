@@ -59,10 +59,15 @@ var feed = (function() {
                     size: DATA_SIZE,
                     body: queryBody
                 }).on('data', function(res) {
-                    if (res.hits.hits.length == 0) {
-                        callback(null, 0);
-                    } else {
-                        callback(res.hits.hits);
+                    try{
+                        if (res.hits.hits.length == 0) {
+                            callback(null, 0);
+                        } else {
+                            callback(res.hits.hits);
+                        }
+                    }
+                    catch(err){
+                        console.log(err);
                     }
                     allowOtherOperation();
                 }).on('error', function(err) {
