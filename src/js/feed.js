@@ -37,7 +37,6 @@ var sdata = {}; // data to be displayed in table
 var headers = ["_type", "_id"];
 var esTypes = []; // all the types in current 'app'
 var subsetESTypes = []; // currently 'selected' types
-var dataOffset = 0; // pagination offset
 
 var feed = (function() {
 
@@ -60,7 +59,6 @@ var feed = (function() {
                     size: DATA_SIZE,
                     body: queryBody
                 }).on('data', function(res) {
-                    dataOffset += DATA_SIZE;
                     if (res.hits.hits.length == 0) {
                         callback(null, 0);
                     } else {
@@ -74,11 +72,11 @@ var feed = (function() {
 
                 // Counter stream
                 countStream(types, setTotal);
-                
+
                 //Stop old stream
                 if(typeof streamRef != 'undefined')
                     streamRef.stop();
-                
+
                 // get new data updates
                 streamRef = appbaseRef.searchStream({
                     type: types,
@@ -93,7 +91,7 @@ var feed = (function() {
         }
     };
 
-    //This function is built only to maintain the total number of records 
+    //This function is built only to maintain the total number of records
     //It's hard to figure out correct total number of records while streaming and filtering is together
     function countStream(types, setTotal){
         appbaseRef.search({
@@ -116,7 +114,7 @@ var feed = (function() {
 
             }
             //For Index data
-            else{
+            else {
                 setTotal(0, true, 'index');
             }
             //callback(res, true);
@@ -147,7 +145,6 @@ var feed = (function() {
             size: DATA_SIZE,
             body: queryBody
         }).on('data', function(res) {
-            dataOffset += DATA_SIZE;
             callback(res.hits.hits);
         })
     }
@@ -171,12 +168,10 @@ var feed = (function() {
         },
         // ``paginateData()`` finds new results from the data offset.
         paginateData: function(callback, queryBody) {
-            if (dataOffset >= DATA_SIZE && dataOffset % DATA_SIZE === 0) {
-                if (queryBody != null)
-                    paginationSearch(subsetESTypes, dataOffset, callback, queryBody)
-                else
-                    paginationSearch(subsetESTypes, dataOffset, callback)
-            }
+            if (queryBody != null)
+                paginationSearch(subsetESTypes, Object.keys(sdata).length, callback, queryBody)
+            else
+                paginationSearch(subsetESTypes, Object.keys(sdata).length, callback)
         },
         // gets all the types of the current app;
         getTypes: function(callback) {
@@ -204,7 +199,7 @@ var feed = (function() {
                 appbaseRef.index(recordObject).on('data', function(res) {
                     if (callback)
                         callback();
-                });    
+                });
             }
             else{
                 var doc = recordObject.body;
@@ -213,14 +208,14 @@ var feed = (function() {
                 appbaseRef.update(recordObject).on('data', function(res) {
                     if (callback)
                         callback();
-                });       
+                });
             }
-            
+
         },
         deleteRecord:function(selectedRows, callback){
             var deleteArray = selectedRows.map( v => ({"delete":v}) );
             console.log(deleteArray);
-            
+
             appbaseRef.bulk({
                 body:deleteArray
             }).on('data',function(data){
