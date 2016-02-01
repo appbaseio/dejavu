@@ -3,38 +3,43 @@ var FeatureComponent = require('./FeatureComponent.jsx');
 
 // Each row in the types table on the left side.
 var TypeRow = React.createClass({
-    getInitialState: function(){
+    getInitialState: function() {
         // we store the state(checked/unchecked) for every type
         // so that when we reload, the state restores.
-        
-        return {isChecked: false};
+
+        return {
+            isChecked: false
+        };
     },
-    componentDidMount:function(){
+    componentDidMount: function() {
         var value = window.localStorage.getItem(this.props.type);
         checked = false;
-        if(value == "true"){
+        if (value == "true") {
             checked = true;
             this.props.watchTypeHandler(this.props.type);
         }
-        this.setState({isChecked:checked});
+        this.setState({
+            isChecked: checked
+        });
         this.props.typeInfo.typeCounter();
     },
     unwatch: function() {
         var checked = false;
-        if(this.state.isChecked){
+        if (this.state.isChecked) {
             this.props.unwatchTypeHandler(this.props.type);
-        }
-        else{
+        } else {
             checked = true;
             this.props.watchTypeHandler(this.props.type);
         }
         // every time its checked we update the local storage.
         window.localStorage.setItem(this.props.type, checked);
-        this.setState({isChecked: checked});
+        this.setState({
+            isChecked: checked
+        });
     },
     render: function() {
-        return(
-                <li>
+        return (
+            <li>
                     <div className="theme-element checkbox">
                     <input
                          id={this.props.type}
@@ -53,11 +58,11 @@ var TypeRow = React.createClass({
 // This is for the table holding the types on the
 // left tab.
 var TypeTable = React.createClass({
-    render: function()  {
+    render: function() {
         var types = this.props.Types;
-            rowObj = [];
-            appname = APPNAME;
-        for(var type in types){
+        rowObj = [];
+        appname = APPNAME;
+        for (var type in types) {
             rowObj.push(<TypeRow
                          key={type}
                          type={types[type]}
@@ -65,9 +70,9 @@ var TypeTable = React.createClass({
                          watchTypeHandler={this.props.watchTypeHandler}
                          typeInfo={this.props.typeInfo} />);
         }
-        if(types.length < 1) {
+        if (types.length < 1) {
             return (
-            <div className='left-tab'>
+                <div className='left-tab'>
               <div className="highlight-tip left-tip">
                   <strong>No data to view!</strong> Insert data by following this
                   tutorial <a href="http://docs.appbase.io/scalr/rest/intro.html" target="_blank">here</a>.

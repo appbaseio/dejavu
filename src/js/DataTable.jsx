@@ -12,32 +12,34 @@ var cellWidth = '250px';
 
 //Radio button with appropriate search input field
 var SingleMenuItem = React.createClass({
-    getInitialState:function(){
+    getInitialState: function() {
         return {
-            filterField:'',
-            filterValue:''
+            filterField: '',
+            filterValue: ''
         };
     },
-    changeFilter:function(e){
+    changeFilter: function(e) {
         var filterField = e.currentTarget.value;
         this.props.changeFilter(filterField, this.state.filterValue);
-        var key = filterKeyGen(this.props.columnField,this.props.val);
-        var keyInput = key+'-input';
+        var key = filterKeyGen(this.props.columnField, this.props.val);
+        var keyInput = key + '-input';
         setTimeout(() => {
-            $('#'+keyInput).focus();
-        },300);
+            $('#' + keyInput).focus();
+        }, 300);
         //this.setState({filterField:filterField});
     },
-    valChange:function(e){
+    valChange: function(e) {
         var filterValue = e.currentTarget.value;
-        this.setState({filterValue:filterValue});
+        this.setState({
+            filterValue: filterValue
+        });
         this.props.getFilterVal(filterValue);
     },
-    render: function(){
-        var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active':'singleItem';
-        var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple':'Type here...';
-        var key = filterKeyGen(this.props.columnField,this.props.val);
-        var keyInput = key+'-input';
+    render: function() {
+        var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active' : 'singleItem';
+        var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple' : 'Type here...';
+        var key = filterKeyGen(this.props.columnField, this.props.val);
+        var keyInput = key + '-input';
         return (<div className={singleItemClass}>
                     <div className="theme-element radio">
                         <input onChange={this.changeFilter} type="radio" name="optionsRadios"
@@ -54,34 +56,36 @@ var SingleMenuItem = React.createClass({
 
 //Filter dropdown for each column header
 var FilterDropdown = React.createClass({
-    getInitialState:function(){
+    getInitialState: function() {
         return {
-                    filterField:null,
-                    filterValue:null
-                };
+            filterField: null,
+            filterValue: null
+        };
     },
-    changeFilter : function(field, value){
-       this.setState({
-                        filterField:field,
-                        filterValue:value
-                    });
+    changeFilter: function(field, value) {
+        this.setState({
+            filterField: field,
+            filterValue: value
+        });
     },
-    getFilterVal:function(val){
-        this.setState({filterValue:val});
+    getFilterVal: function(val) {
+        this.setState({
+            filterValue: val
+        });
     },
-    applyFilter:function(){
-        if(this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
-           this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
+    applyFilter: function() {
+        if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
+            this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
     },
-    render:function(){
-            var ButtonToolbar = ReactBootstrap.ButtonToolbar;
-            var DropdownButton = ReactBootstrap.DropdownButton;
-            var MenuItem = ReactBootstrap.MenuItem;
-            var Dropdown = ReactBootstrap.Dropdown;
-            var datatype = this.props.datatype;
-            var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
-            var stringFilter = (
-                                <Dropdown.Menu className="menuItems pull-right pd-0">
+    render: function() {
+        var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+        var DropdownButton = ReactBootstrap.DropdownButton;
+        var MenuItem = ReactBootstrap.MenuItem;
+        var Dropdown = ReactBootstrap.Dropdown;
+        var datatype = this.props.datatype;
+        var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
+        var stringFilter = (
+            <Dropdown.Menu className="menuItems pull-right pd-0">
                                     <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
                                     <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
                                     <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
@@ -89,56 +93,55 @@ var FilterDropdown = React.createClass({
                                         <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
-                              );
+        );
 
-            var numberFilter = (
-                                <Dropdown.Menu className="menuItems pull-right">
+        var numberFilter = (
+            <Dropdown.Menu className="menuItems pull-right">
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
                                         <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
-                              );
+        );
 
 
-            var dateFilter = (
-                                <Dropdown.Menu className="menuItems pull-right">
+        var dateFilter = (
+            <Dropdown.Menu className="menuItems pull-right">
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
                                     <div className="singleItem">
                                         <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
-                              );
+        );
 
-            var FilterMenuItems = '';
+        var FilterMenuItems = '';
 
-            switch(datatype){
-                case 'string':
-                    FilterMenuItems = stringFilter;
+        switch (datatype) {
+            case 'string':
+                FilterMenuItems = stringFilter;
                 break;
-                case 'long':
-                case 'integer':
-                case 'short':
-                case 'byte':
-                case 'double':
-                case 'float':
-                    FilterMenuItems = numberFilter;
+            case 'long':
+            case 'integer':
+            case 'short':
+            case 'byte':
+            case 'double':
+            case 'float':
+                FilterMenuItems = numberFilter;
                 break;
-                case 'date':
-                    FilterMenuItems = dateFilter;
+            case 'date':
+                FilterMenuItems = dateFilter;
                 break;
-                default:
-                    datatype = null;
+            default:
+                datatype = null;
                 break;
-            }
+        }
 
-            if(datatype == null){
-                return (<span></span>);
-            }
-            else{
-                return (<div className="filterDropdown">
+        if (datatype == null) {
+            return (<span></span>);
+        } else {
+            return (<div className="filterDropdown">
                     <ButtonToolbar>
                         <Dropdown id="ab" className="filterDropdownContainer">
                           <Dropdown.Toggle className="filterBtn">
@@ -148,43 +151,46 @@ var FilterDropdown = React.createClass({
                         </Dropdown>
                     </ButtonToolbar>
                 </div>);
-            }
+        }
     }
 });
 
 var Column = React.createClass({
-    getInitialState:function(){
-        return {type:null};
+    getInitialState: function() {
+        return {
+            type: null
+        };
     },
-    sortingInit:function(){
+    sortingInit: function() {
         this.props.handleSort(this.props._item, this.props._type, this);
     },
-    componentDidMount:function(){
-        this.setState({type:this.props._type});
+    componentDidMount: function() {
+        this.setState({
+            type: this.props._type
+        });
     },
-    render: function(){
+    render: function() {
         var item = this.props._item;
         var type = this.state.type == null ? this.props._type : this.state.type;
         var sortInfo = this.props._sortInfo;
         var filterInfo = this.props.filterInfo;
 
         var filterClass = filterInfo.active && filterInfo.columnName == item ? 'filterActive' : '';
-        var extraClass = sortInfo.column == item ? 'sortActive '+sortInfo.reverse : '';
-        var fixedHead = 'table-fixed-head column_width '+extraClass+' '+filterClass;
-        var filterId = 'filter-'+item;
+        var extraClass = sortInfo.column == item ? 'sortActive ' + sortInfo.reverse : '';
+        var fixedHead = 'table-fixed-head column_width ' + extraClass + ' ' + filterClass;
+        var filterId = 'filter-' + item;
         var datatype = null;
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
-        prettyData =  " Clicking on {...} displays the JSON data. ";
+        prettyData = " Clicking on {...} displays the JSON data. ";
         var itemText = item == 'json' ? <span>
                 <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
                     <a href="javascript:void(0);" className="bracketIcon"></a>
                 </OverlayTrigger>
                 <span>&nbsp;&nbsp;type / id</span>
-            </span>
-             : <span onClick={this.sortingInit}>{item}</span>;
-        var thtextShow = item == 'json' ? 'leftGap thtextShow':'thtextShow';
-        if(typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined'){
+            </span> : <span onClick={this.sortingInit}>{item}</span>;
+        var thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
+        if (typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
 
@@ -193,7 +199,7 @@ var Column = React.createClass({
         var sortIcon = item == 'json' ? <span></span> : <span className="sortIcon"  onClick={this.sortingInit}>
                                             <i className ="fa fa-chevron-up asc-icon" />
                                             <i className ="fa fa-chevron-down desc-icon" />
-                                        </span> ;
+                                        </span>;
         //console.log(datatype, item);
         //var handleSort = this.sortingInit;
 
@@ -219,7 +225,7 @@ var Column = React.createClass({
 // **Cell** defines the properties of each cell in the
 // data table.
 var Cell = React.createClass({
-    copyId:function(){
+    copyId: function() {
         console.log(this.props._type);
         console.log(this.props._id);
         var range = document.createRange();
@@ -227,16 +233,16 @@ var Cell = React.createClass({
         range.selectNodeContents(document.getElementById(this.props.unique));
         selection.removeAllRanges();
         selection.addRange(range);
-        $('#copyId').val(this.props._type+'/'+this.props._id).select();
+        $('#copyId').val(this.props._type + '/' + this.props._id).select();
         document.execCommand("copy");
     },
-    selectRecord:function(ele){
+    selectRecord: function(ele) {
         _id = this.props._id;
         _type = this.props._type;
         row = this.props.row;
-        this.props.actionOnRecord.selectRecord(_id,_type, row, ele.currentTarget.checked);
+        this.props.actionOnRecord.selectRecord(_id, _type, row, ele.currentTarget.checked);
     },
-    render: function(){
+    render: function() {
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
         var actionOnRecord = this.props.actionOnRecord;
@@ -244,17 +250,19 @@ var Cell = React.createClass({
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
-            style = {display:vb};
-            data = this.props.item;
-            // The id of the html element is generated
-            // in keys.js.
-            _id = this.props._id;
-            _type = this.props._type;
-            to_display = data;
-            tdClass = 'column_width columnAdjust';
+        style = {
+            display: vb
+        };
+        data = this.props.item;
+        // The id of the html element is generated
+        // in keys.js.
+        _id = this.props._id;
+        _type = this.props._type;
+        to_display = data;
+        tdClass = 'column_width columnAdjust';
 
         var columnName = this.props.columnName;
-        var radioId = this.props.unique+'radio';
+        var radioId = this.props.unique + 'radio';
         // cell-data of format ``string`` and ``number`` is rendered inline.
         // If a field is a JSON object instead, it's displayed as a modal pop-up.
         // <a href="#"
@@ -263,11 +271,11 @@ var Cell = React.createClass({
         //                     </a>;
         var appIdClass = "appId";
         actionOnRecord.selectedRows.forEach((v) => {
-            if(v._id == _id)
+            if (v._id == _id)
                 appIdClass += " showRow";
         });
-        if(columnName == 'json'){
-            prettyData =  <Pretty json={data} />
+        if (columnName == 'json') {
+            prettyData = <Pretty json={data} />
             to_display = <div className={appIdClass}>
                             <span className="theme-element selectrow checkbox">
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
@@ -283,11 +291,10 @@ var Cell = React.createClass({
                             </span>
                         </div>;
             tdClass = 'column_width';
-        }   
-        else{
-            if(typeof data !== 'string'){
-                if(typeof data !== 'number'){
-                    prettyData =  <Pretty json={data} />
+        } else {
+            if (typeof data !== 'string') {
+                if (typeof data !== 'number') {
+                    prettyData = <Pretty json={data} />
                     to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                     <a href="javascript:void(0);"  className="bracketIcon">
                                     </a>
@@ -310,7 +317,7 @@ var Cell = React.createClass({
 // This is just to give  unique id to the rows so that we can add
 // CSS transitions upon updates/deletes
 var Row = React.createClass({
-    render: function(){
+    render: function() {
         return <tr id={this.props._id}>{this.props.row}</tr>;
     }
 });
@@ -328,8 +335,8 @@ var Table = React.createClass({
     render: function() {
         var column_width = 250;
         var elem = document.getElementById('table-scroller');
-        if(elem != null){
-            elem.style.width = this.props.visibleColumns.length*column_width+'px';
+        if (elem != null) {
+            elem.style.width = this.props.visibleColumns.length * column_width + 'px';
         }
         return (
             <div id='table-container' className="table-container">
@@ -352,22 +359,22 @@ var Table = React.createClass({
 })
 
 var Info = React.createClass({
-    render:function(){
+    render: function() {
         var infoObj = this.props.infoObj;
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
         var actionOnRecord = this.props.actionOnRecord;
-        var filterClass = filterInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var sortClass = sortInfo.active ? 'pull-right text-right pd-r10':'hide';
-        var infoObjClass = infoObj.total == 0 ? "hide":"pull-left text-left pd-l0 recordTotalRow";
+        var filterClass = filterInfo.active ? 'pull-right text-right pd-r10' : 'hide';
+        var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
+        var infoObjClass = infoObj.total == 0 ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
-        var totalClass = actionOnRecord.active ? 'hide' :'col-xs-12';
-        var selectionClass = actionOnRecord.active ? 'col-xs-12' :'hide';
+        var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12';
+        var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
 
         return (
-                <div className="infoRow container">
+            <div className="infoRow container">
                 <div className=" row">
                     <div className={infoObjClass}>
                         <div className={totalClass}>
@@ -429,36 +436,35 @@ var Info = React.createClass({
                     </div>
                 </div>
                 </div>
-                )
+        )
     }
 });
 // This has the main properties that define the main data table
 // i.e. the right side.
 var DataTable = React.createClass({
-    render: function () {
+    render: function() {
         var $this = this;
         var data = this.props._data;
 
         //If render from sort, dont change the order of columns
-        if(!$this.props.sortInfo.active){
-            if($this.props.infoObj.showing != 0){
+        if (!$this.props.sortInfo.active) {
+            if ($this.props.infoObj.showing != 0) {
                 fixed = ['json'];
                 columns = ['json'];
-            }
-            else{
+            } else {
                 fixed = [];
                 columns = [];
             }
 
             fullColumns = {
-                type:'',
-                columns:columns
+                type: '',
+                columns: columns
             }
-            for(var each in data){
+            for (var each in data) {
                 fullColumns.type = data[each]['_type'];
-                for(column in data[each]){
-                    if(fixed.indexOf(column) <= -1 && column != '_id' && column != '_type'){
-                        if(fullColumns.columns.indexOf(column) <= -1){
+                for (column in data[each]) {
+                    if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
+                        if (fullColumns.columns.indexOf(column) <= -1) {
                             fullColumns.columns.push(column);
                         }
                     }
@@ -466,21 +472,20 @@ var DataTable = React.createClass({
             }
         }
         var rows = [];
-        for(var row in data){
+        for (var row in data) {
             var newRow = {};
             newRow['json'] = data[row]['json'];
             // newRow['_type'] = data[row]['_type'];
             // newRow['_id'] = data[row]['_id'];
-            for(var each in columns){
+            for (var each in columns) {
                 // We check if every column of the new document
                 // is present already, if not we appen to the
                 // right.
-                if(fixed.indexOf(columns[each]) <= -1){
-                    if(data[row].hasOwnProperty([columns[each]])){
+                if (fixed.indexOf(columns[each]) <= -1) {
+                    if (data[row].hasOwnProperty([columns[each]])) {
                         var cell = data[row][columns[each]];
                         newRow[columns[each]] = cell;
-                    }
-                    else{
+                    } else {
                         // Just to make sure it doesn't display
                         // a null.
                         newRow[columns[each]] = '';
@@ -488,15 +493,15 @@ var DataTable = React.createClass({
                 }
             }
             renderRow = [];
-            for(var each in newRow){
+            for (var each in newRow) {
                 var _key = keyGen(data[row], each);
-                    elem = document.getElementById(each);
-                    visibility = '';
+                elem = document.getElementById(each);
+                visibility = '';
 
                 // We see if the column is already closed of open
                 // using the html key attribute and render their
                 // visibility correspondingly.
-                if(elem){
+                if (elem) {
                     visibility = elem.style.display;
                 }
                 renderRow.push(<Cell
@@ -510,9 +515,12 @@ var DataTable = React.createClass({
                                 row={newRow}
                                 actionOnRecord={$this.props.actionOnRecord}/>);
             }
-            rows.push({'_key': String(data[row]['_id'])+String(data[row]['_type']), 'row':renderRow});
+            rows.push({
+                '_key': String(data[row]['_id']) + String(data[row]['_type']),
+                'row': renderRow
+            });
         }
-        var renderColumns = fullColumns.columns.map(function(item){
+        var renderColumns = fullColumns.columns.map(function(item) {
             return (<Column _item={item} key={item}
                         _type={fullColumns.type}
                         _sortInfo={$this.props.sortInfo}
@@ -520,13 +528,12 @@ var DataTable = React.createClass({
                         mappingObj={$this.props.mappingObj}
                         filterInfo={$this.props.filterInfo} />);
         });
-		var visibleColumns = this.props.visibleColumns;
+        var visibleColumns = this.props.visibleColumns;
 
         var renderRows1 = [];
 
         //If render from sort, dont render the coumns
-        var renderRows = rows.map(function(item)
-        {
+        var renderRows = rows.map(function(item) {
             var _key = item['_key'];
             var row = item['row'];
             return <Row key={_key} _id={_key} row={row} />;
@@ -535,7 +542,7 @@ var DataTable = React.createClass({
         //Extra add btn
         var extraAddBtn = '';
         //Show only when total records are less than 5
-        if(this.props.infoObj.availableTotal <= 5){
+        if (this.props.infoObj.availableTotal <= 5) {
             extraAddBtn = <div className="AddExtraBtn">
                             <FeatureComponent.AddDocument
                             types={this.props.Types}

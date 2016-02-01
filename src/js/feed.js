@@ -55,68 +55,75 @@ var feed = (function() {
 
             // get historical data
             appbaseRef.search({
-                    type: types,
-                    from: 0,
-                    size: DATA_SIZE,
-                    body: queryBody
-                }).on('data', function(res) {
-                    try{
-                        if (res.hits.hits.length == 0) {
-                            callback(null, 0);
-                        } else {
-                            callback(res.hits.hits);
-                        }
+                type: types,
+                from: 0,
+                size: DATA_SIZE,
+                body: queryBody
+            }).on('data', function(res) {
+                try {
+                    if (res.hits.hits.length == 0) {
+                        callback(null, 0);
+                    } else {
+                        callback(res.hits.hits);
                     }
-                    catch(err){
-                        console.log(err);
-                    }
-                    allowOtherOperation();
-                }).on('error', function(err) {
-                    console.log("caught a retrieval error", err);
-                    allowOtherOperation();
-                })
+                } catch (err) {
+                    console.log(err);
+                }
+                allowOtherOperation();
+            }).on('error', function(err) {
+                console.log("caught a retrieval error", err);
+                allowOtherOperation();
+            })
 
-                // Counter stream
-                countStream(types, setTotal);
+            // Counter stream
+            countStream(types, setTotal);
 
-                //Stop old stream
-                if(typeof streamRef != 'undefined')
-                    streamRef.stop();
+            //Stop old stream
+            if (typeof streamRef != 'undefined')
+                streamRef.stop();
 
-                // get new data updates
-                streamRef = appbaseRef.searchStream({
-                    type: types,
-                    body: queryBody
-                }).on('data', function(res) {
-                    if(res.hasOwnProperty('_updated'))
-                        delete res._updated;
-                    callback(res, true);
-                }).on('error', function(err) {
-                    console.log("caught a stream error", err);
-                });
+            // get new data updates
+            streamRef = appbaseRef.searchStream({
+                type: types,
+                body: queryBody
+            }).on('data', function(res) {
+                if (res.hasOwnProperty('_updated'))
+                    delete res._updated;
+                callback(res, true);
+            }).on('error', function(err) {
+                console.log("caught a stream error", err);
+            });
         }
     };
 
     //This function is built only to maintain the total number of records
     //It's hard to figure out correct total number of records while streaming and filtering is together
-    function countStream(types, setTotal){
+    function countStream(types, setTotal) {
         appbaseRef.search({
             type: types,
-            body: {"query":{"match_all":{}}}
+            body: {
+                "query": {
+                    "match_all": {}
+                }
+            }
         }).on('data', function(res) {
             setTotal(res.hits.total);
         });
 
         //Stop old stream
-        if(typeof counterStream != 'undefined')
+        if (typeof counterStream != 'undefined')
             counterStream.stop();
 
         counterStream = appbaseRef.searchStream({
             type: types,
-            body: {"query":{"match_all":{}}}
+            body: {
+                "query": {
+                    "match_all": {}
+                }
+            }
         }).on('data', function(res2) {
             //For update data
-            if(res2._updated){
+            if (res2._updated) {
 
             }
             //For Index data
@@ -129,10 +136,10 @@ var feed = (function() {
         });
     };
 
-    function allowOtherOperation(){
+    function allowOtherOperation() {
         setTimeout(() => {
             OperationFlag = false;
-        },500);
+        }, 500);
     };
 
     // paginate and show new results when user scrolls
@@ -165,7 +172,7 @@ var feed = (function() {
         deleteData: function(typeName, callback) {
             localSdata = {};
             for (data in sdata) {
-                if (sdata[data]._type !== typeName){
+                if (sdata[data]._type !== typeName) {
                     localSdata[data] = sdata[data];
                 }
             }
@@ -177,8 +184,8 @@ var feed = (function() {
         // and apply paginate if total records is less than from value
         paginateData: function(total, callback, queryBody) {
             paginateCount++;
-            var from = paginateCount*DATA_SIZE;
-            if(total >= from){
+            var from = paginateCount * DATA_SIZE;
+            if (total >= from) {
                 if (queryBody != null)
                     paginationSearch(subsetESTypes, from, callback, queryBody);
                 else
@@ -207,15 +214,16 @@ var feed = (function() {
             }
         },
         indexData: function(recordObject, method, callback) {
-            if(method == 'index'){
+            if (method == 'index') {
                 appbaseRef.index(recordObject).on('data', function(res) {
                     if (callback)
                         callback();
                 });
-            }
-            else{
+            } else {
                 var doc = recordObject.body;
-                recordObject.body = {doc:doc};
+                recordObject.body = {
+                    doc: doc
+                };
                 console.log(recordObject);
                 appbaseRef.update(recordObject).on('data', function(res) {
                     if (callback)
@@ -224,17 +232,19 @@ var feed = (function() {
             }
 
         },
-        deleteRecord:function(selectedRows, callback){
-            var deleteArray = selectedRows.map( v => ({"delete":v}) );
+        deleteRecord: function(selectedRows, callback) {
+            var deleteArray = selectedRows.map(v => ({
+                "delete": v
+            }));
             console.log(deleteArray);
 
             appbaseRef.bulk({
-                body:deleteArray
-            }).on('data',function(data){
+                body: deleteArray
+            }).on('data', function(data) {
                 for (data in sdata) {
-                    selectedRows.forEach((v)=>{
-                        if(typeof sdata[data] != 'undefined'){
-                            if (sdata[data]._type == v._type && sdata[data]._id == v._id){
+                    selectedRows.forEach((v) => {
+                        if (typeof sdata[data] != 'undefined') {
+                            if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
                                 delete sdata[data];
                             }
                         }
@@ -271,23 +281,27 @@ var feed = (function() {
                 }
             });
         },
-        testQuery:function(types, queryBody){
+        testQuery: function(types, queryBody) {
             // get historical data
             return appbaseRef.search({
-                    type: types,
-                    from: 0,
-                    size: 0,
-                    body: queryBody
-                });
+                type: types,
+                from: 0,
+                size: 0,
+                body: queryBody
+            });
         },
-        getTotalRecord:function(){
+        getTotalRecord: function() {
             // get historical data
             return appbaseRef.search({
-                    from: 0,
-                    size: 0,
-                    type:[],
-                    body:{query:{match_all:{}}}
-                });
+                from: 0,
+                size: 0,
+                type: [],
+                body: {
+                    query: {
+                        match_all: {}
+                    }
+                }
+            });
         },
         filterQuery: function(method, columnName, value, typeName, callback, setTotal) {
             var queryBody = this.createFilterQuery(method, columnName, value, typeName);
@@ -377,7 +391,6 @@ var feed = (function() {
             return queryBody;
         }
     };
-
 
 
 
