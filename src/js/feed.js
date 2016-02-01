@@ -10,7 +10,7 @@ var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
 var OperationFlag = false;
-
+var paginateCount = 0;
 parent.globalAppData(function(res) {
     APPNAME = res.appname;
     APPID = res.appid;
@@ -50,6 +50,7 @@ var feed = (function() {
                 }
             }
 
+            paginateCount = 0;
             var queryBody = queryBody ? queryBody : defaultQueryBody;
 
             // get historical data
@@ -172,11 +173,17 @@ var feed = (function() {
             callback(sdata);
         },
         // ``paginateData()`` finds new results from the data offset.
-        paginateData: function(callback, queryBody) {
-            if (queryBody != null)
-                paginationSearch(subsetESTypes, Object.keys(sdata).length, callback, queryBody)
-            else
-                paginationSearch(subsetESTypes, Object.keys(sdata).length, callback)
+        // use paginate count and increase it everytime by 1 page
+        // and apply paginate if total records is less than from value
+        paginateData: function(total, callback, queryBody) {
+            paginateCount++;
+            var from = paginateCount*DATA_SIZE;
+            if(total >= from){
+                if (queryBody != null)
+                    paginationSearch(subsetESTypes, from, callback, queryBody);
+                else
+                    paginationSearch(subsetESTypes, from, callback);
+            }
         },
         // gets all the types of the current app;
         getTypes: function(callback) {

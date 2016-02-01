@@ -253,7 +253,7 @@ var HomePage = React.createClass({
 
         if(filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
-        feed.paginateData(function(update) {
+        feed.paginateData(this.state.infoObj.total, function(update) {
             this.updateDataOnView(update);
         }.bind(this), queryBody);
     },
