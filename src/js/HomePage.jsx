@@ -128,7 +128,6 @@ var HomePage = React.createClass({
     updateDataOnView: function(update) {
         update = this.flatten(update, this.injectLink);
         var key = rowKeyGen(update);
-
         if (!Array.isArray(update)) {
             //If the record already exists in sdata, it should
             //either be a delete request or a change to an
@@ -181,7 +180,9 @@ var HomePage = React.createClass({
             for (var each = 0; each < update.length; each++) {
                 update[each] = this.flatten(update[each], this.injectLink);
                 var key = rowKeyGen(update[each]);
-                sdata[key] = update[each];
+                if (!sdata[key]) {
+                  sdata[key] = update[each];
+                }
             }
             this.resetData();
         }
@@ -202,7 +203,6 @@ var HomePage = React.createClass({
                     feed.getData(types, function(update, fromStream) {
                         if (update != null)
                             this.updateDataOnView(update);
-                        this.setSignal(fromStream);
                     }.bind(this), function(total, fromStream, method) {
                         var infoObj = this.state.infoObj;
                         //Do this if from stream
@@ -295,7 +295,6 @@ var HomePage = React.createClass({
                 active: false
             }
         });
-        sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
         subsetESTypes.push(typeName);
         this.applyGetStream();
     },
@@ -337,13 +336,9 @@ var HomePage = React.createClass({
         }
     },
     handleScroll: function(event) {
-        var elem = document.getElementById('table-scroller');
-        elemElem = document.getElementById('data-table');
-        var upar = elem.scrollTop;
-        scroll = elem.offsetHeight;
-        niche = elem.scrollHeight;
+        var scroller = document.getElementById('table-scroller');
         // Plug in a handler which takes care of infinite scrolling
-        if (upar + scroll >= niche) {
+        if (scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight) {
             this.paginateData();
         }
     },

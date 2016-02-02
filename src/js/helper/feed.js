@@ -48,14 +48,15 @@ var feed = (function() {
                     match_all: {}
                 }
             }
-
             var queryBody = queryBody ? queryBody : defaultQueryBody;
 
+            var dataSize = Object.keys(sdata).length;
+            sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
             // get historical data
             appbaseRef.search({
                 type: types,
                 from: 0,
-                size: DATA_SIZE,
+                size: Math.max(dataSize, DATA_SIZE),
                 body: queryBody
             }).on('data', function(res) {
                 try {
@@ -186,11 +187,8 @@ var feed = (function() {
         // gets all the types of the current app;
         getTypes: function(callback) {
             if (typeof APPNAME != 'undefined') {
-                appbaseRef.getTypes().on('data', function(res) {
-                    var types = res.filter(function(val) {
-                        return val[0] !== '.'
-                    });
-                    if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
+                appbaseRef.getTypes().on('data', function(types) {
+                    if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
                         esTypes = types.slice();
                         callback(types);
                     }
