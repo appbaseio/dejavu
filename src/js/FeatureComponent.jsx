@@ -249,7 +249,7 @@ var ExportData = React.createClass({
         <a title="Export" onClick={this.open} >
           <img src="src/img/export.png" alt=""/> Export Data as JSON
         </a>
-        <Modal className="modal-export" show={this.state.showModal} onHide={this.close}>
+        <Modal className="modal-info" show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Export Appbase Data</Modal.Title>
           </Modal.Header>
@@ -277,7 +277,7 @@ var ExportData = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button className="export" id="exportBtn" className="loadingBtn" onClick={this.validateInput}>
+            <Button className="info" id="exportBtn" className="loadingBtn" onClick={this.validateInput}>
               <span className="submitText">Export</span>
               <i className="fa fa-spinner fa-spin"></i>
             </Button>
@@ -469,7 +469,7 @@ var UpdateDocument = React.createClass({
         <a href="javascript:void(0);" className='btn btn-default themeBtn'  title="Update" onClick={this.open} >
           <i className="fa fa-pencil greyBtn"></i>&nbsp;&nbsp;Update
         </a>
-        <Modal className="modal-update" show={this.state.showModal} onHide={this.close}>
+        <Modal className="modal-warning" show={this.state.showModal} onHide={this.close}>
           <Modal.Header closeButton>
             <Modal.Title>Update Data</Modal.Title>
           </Modal.Header>
@@ -500,7 +500,7 @@ var UpdateDocument = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="update" onClick={this.validateInput}>Update</Button>
+            <Button bsStyle="warning" onClick={this.validateInput}>Update</Button>
           </Modal.Footer>
         </Modal>
       </div>

@@ -588,7 +588,7 @@ body{
   border-radius: 100%;
   border: 1px solid;
   font-size: 14px;
-  line-height: 14px;
+  line-height: 0px;
   padding: 3px 0;
   text-align: center;
   position: absolute;
@@ -608,33 +608,33 @@ body{
   background: #3BC7F6;
   color: #fff;
 }
-.modal .btn-export {
+.modal .btn-info {
   background: transparent;
   color: #3BC7F6;
   border-color: #3BC7F6;
 }
-.modal .btn-export:hover {
+.modal .btn-info:hover {
   background: #3BC7F6;
   color: #fff;
 }
-.modal.modal-export .modal-content{
+.modal.modal-info .modal-content{
   border-color: #3BC7F6;
 }
-.modal.modal-update .modal-content{
+.modal.modal-warning .modal-content{
   border-color: #F5E79E;
 }
-.modal.modal-update .modal-header{
+.modal.modal-warning .modal-header{
   color: #F5E79E;
 }
-.modal.modal-update .close{
+.modal.modal-warning .close{
   color: #F5E79E;
 }
-.modal .btn-update{
+.modal .btn-warning{
   background: transparent;
   color: #F5E79E;
   border-color: #F5E79E;
 }
-.modal .btn-update:hover {
+.modal .btn-warning:hover {
   background: #F5E79E;
   color: #fff;
 }
