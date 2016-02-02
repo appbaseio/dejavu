@@ -24,15 +24,15 @@ var Info = React.createClass({
                             <div className={totalClass}>
                                 <span className="info_single">
                                     <label>Showing
-                                        <strong>{infoObj.showing}</strong>of total
+                                        <strong>&nbsp;{infoObj.showing}</strong> of total
                                         <strong>&nbsp;{infoObj.total}</strong>
                                     </label>
                                 </span>
                             </div>
                             <div className={selectionClass}>
                                 <span className="pull-left pd-r10 info_single">
-                                    <strong>{ actionOnRecord.selectedRows.length}</strong>selected of total
-                                    <strong>{infoObj.total}</strong>
+                                    <strong>{actionOnRecord.selectedRows.length}</strong> selected of total
+                                    <strong>&nbsp;{infoObj.total}</strong>
                                 </span>
                                 <span className="pull-left">{UpdateDocument}
                                     <FeatureComponent.DeleteDocument
