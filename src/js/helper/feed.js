@@ -61,9 +61,9 @@ var feed = (function() {
             }).on('data', function(res) {
                 try {
                     if (res.hits.hits.length == 0) {
-                        callback(null, 0);
+                        callback(null,false, 0);
                     } else {
-                        callback(res.hits.hits);
+                        callback(res.hits.hits,false, res.hits.total);
                     }
                 } catch (err) {
                     console.log(err);

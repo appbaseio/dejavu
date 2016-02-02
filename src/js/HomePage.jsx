@@ -38,6 +38,7 @@ var HomePage = React.createClass({
                 total: 0,
                 getOnce: false,
                 availableTotal: 0,
+                searchTotal: 0,
                 pageLoading:false
             },
             mappingObj: {},
@@ -203,9 +204,13 @@ var HomePage = React.createClass({
             //Get the data without filter
             else {
                 if (types.length) {
-                    feed.getData(types, function(update, fromStream) {
-                        //if (update != null)
-                            this.updateDataOnView(update);
+                    feed.getData(types, function(update, fromStream, total) {
+                        this.updateDataOnView(update);
+                        var infoObj = this.state.infoObj;
+                        infoObj.searchTotal = total;
+                        this.setState({
+                            infoObj: infoObj
+                        });
                     }.bind(this), function(total, fromStream, method) {
                         var infoObj = this.state.infoObj;
                         //Do this if from stream
@@ -345,9 +350,10 @@ var HomePage = React.createClass({
     },
     handleScroll: function(event) {
         var scroller = document.getElementById('table-scroller');
+        var infoObj = this.state.infoObj;
+            
         // Plug in a handler which takes care of infinite scrolling
-        if (scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight-100) {
-            var infoObj = this.state.infoObj;
+        if (infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight-100) {
             infoObj.pageLoading = true;
             this.setState({
                 infoObj:infoObj
@@ -474,13 +480,19 @@ var HomePage = React.createClass({
             filterInfo: filterObj
         });
         if (typeName != '' && typeName != null) {
-            feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream) {
+            feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream, total) {
                 if (!fromStream) {
                     sdata = [];
                     $this.resetData();
                 }
+                var infoObj = this.state.infoObj;
+                infoObj.searchTotal = total;
+                $this.setState({
+                    infoObj: infoObj
+                });
                 setTimeout(function() {
-                    $this.updateDataOnView(update);
+                    if(update != null)
+                        $this.updateDataOnView(update);
                 }, 500);
             }.bind(this), function(total) {
                 var infoObj = this.state.infoObj;
