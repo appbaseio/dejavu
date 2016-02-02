@@ -190,7 +190,8 @@ var feed = (function() {
                 appbaseRef.getTypes().on('data', function(types) {
                     if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
                         esTypes = types.slice();
-                        callback(types);
+                        if (callback !== null)
+                          callback(types);
                     }
                 }).on('error', function(err) {
                     console.log('error in retrieving types: ', err)
@@ -203,10 +204,15 @@ var feed = (function() {
             }
         },
         indexData: function(recordObject, method, callback) {
+            var self = this;
             if (method == 'index') {
                 appbaseRef.index(recordObject).on('data', function(res) {
-                    if (callback)
-                        callback();
+                    if (esTypes.indexOf(res._type) === -1) {
+                        self.getTypes(function(newTypes) {
+                          if (callback)
+                            callback(newTypes);
+                        });
+                    }
                 });
             } else {
                 var doc = recordObject.body;

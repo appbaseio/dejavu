@@ -369,9 +369,12 @@ var HomePage = React.createClass({
         });
 
         recordObject.body = JSON.parse(recordObject.body);
-        feed.indexData(recordObject, method, function() {
+        feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
-        });
+            this.setState({
+              types: newTypes
+            })
+        }.bind(this));
     },
     getTypeDoc: function() {
         var selectedType = $('#setType').val();
