@@ -241,7 +241,8 @@ body{
 .dejavu-table .table>thead>tr>td,
 .dejavu-table .table>thead>tr>th,
 #data-table{
-  border: 0 !important
+  border: 0 !important;
+  background: #fff;
 }
 .table>thead>tr>th{
   padding: 0;

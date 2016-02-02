@@ -184,10 +184,6 @@ var HomePage = React.createClass({
                 sdata[key] = update[each];
             }
             this.resetData();
-            for (var each = 0; each < update.length; each++) {
-                var key = rowKeyGen(update[each]);
-                newTransition(key);
-            }
         }
         this.setSampleData(update);
     },
@@ -299,6 +295,7 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+        sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
         subsetESTypes.push(typeName);
         this.applyGetStream();
     },
