@@ -3,6 +3,7 @@ var ReactBootstrap = require('react-bootstrap');
 var Dropdown = require('./dropdown.jsx');
 var FeatureComponent = require('../featureComponent.jsx');
 var FilterDropdown = require('./filterDropdown.jsx');
+var PageLoading = require('./pageLoading.jsx');
 var Info = require('./Info.jsx');
 var Column = require('./column.jsx');
 var Pretty = FeatureComponent.Pretty;
@@ -101,14 +102,6 @@ var Cell = React.createClass({
                 className={tdClass}>
                     {to_display}
                 </td>;
-    }
-});
-
-// This is just to give  unique id to the rows so that we can add
-// CSS transitions upon updates/deletes
-var Row = React.createClass({
-    render: function() {
-        return <tr id={this.props._id}>{this.props.row}</tr>;
     }
 });
 
@@ -245,10 +238,12 @@ var DataTable = React.createClass({
         var renderRows1 = [];
 
         // //If render from sort, dont render the coumns
-        var renderRows = rows.map(function(item) {
+        var renderRows = rows.map(function(item, key) {
             var _key = item['_key'];
-            var row = item['row'];
-            return <Row key={_key} _id={_key} row={row} />;
+            var row = item['row']; 
+            return (<tr id={_key} key={_key}>
+                        {row}
+                    </tr>);
         });
 
         //Extra add btn
@@ -293,6 +288,11 @@ var DataTable = React.createClass({
                  selectedTypes={this.props.selectedTypes}
                  filterInfo={this.props.filterInfo} />
              </div>
+            <PageLoading  
+                key="123" 
+                visibleColumns={visibleColumns}
+                infoObj={this.props.infoObj}>
+            </PageLoading>
              <input id="copyId" className="hide" />
             </div>
         );

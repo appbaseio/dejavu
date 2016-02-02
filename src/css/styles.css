@@ -571,6 +571,21 @@ body{
 .checkbox input[type="checkbox"], .checkbox input[type="radio"]{
   cursor: pointer;
 }
+.pageLoading{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background: rgba(100,100,100,0.25);
+  text-align: center;
+  display: table;
+}
+.pageLoading .vertical1{
+  display: table-cell;
+  vertical-align: middle;
+}
 
 .modal .modal-content{
   background: #fff;

@@ -37,7 +37,8 @@ var HomePage = React.createClass({
                 showing: 0,
                 total: 0,
                 getOnce: false,
-                availableTotal: 0
+                availableTotal: 0,
+                pageLoading:false
             },
             mappingObj: {},
             actionOnRecord: {
@@ -246,6 +247,11 @@ var HomePage = React.createClass({
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
         feed.paginateData(this.state.infoObj.total, function(update) {
             this.updateDataOnView(update);
+            var infoObj = this.state.infoObj;
+            infoObj.pageLoading = false;
+            this.setState({
+                infoObj:infoObj
+            });
         }.bind(this), queryBody);
     },
     // only called on change in types.
@@ -341,6 +347,11 @@ var HomePage = React.createClass({
         var scroller = document.getElementById('table-scroller');
         // Plug in a handler which takes care of infinite scrolling
         if (scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight-100) {
+            var infoObj = this.state.infoObj;
+            infoObj.pageLoading = true;
+            this.setState({
+                infoObj:infoObj
+            });
             this.paginateData();
         }
     },
