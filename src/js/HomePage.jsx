@@ -81,6 +81,7 @@ var HomePage = React.createClass({
     //DOM are much more expensive.
 
     resetData: function() {
+
         sdata_values = [];
         for (each in sdata) {
             sdata_values.push(sdata[each]);
@@ -126,9 +127,10 @@ var HomePage = React.createClass({
     // We call the ``getData()`` function in feed.js
     // which returns a single json document(record).
     updateDataOnView: function(update) {
-        update = this.flatten(update, this.injectLink);
-        var key = rowKeyGen(update);
         if (!Array.isArray(update)) {
+            update = this.flatten(update, this.injectLink);
+            var key = rowKeyGen(update);
+        
             //If the record already exists in sdata, it should
             //either be a delete request or a change to an
             //existing record.
@@ -201,7 +203,7 @@ var HomePage = React.createClass({
             else {
                 if (types.length) {
                     feed.getData(types, function(update, fromStream) {
-                        if (update != null)
+                        //if (update != null)
                             this.updateDataOnView(update);
                     }.bind(this), function(total, fromStream, method) {
                         var infoObj = this.state.infoObj;
@@ -338,7 +340,7 @@ var HomePage = React.createClass({
     handleScroll: function(event) {
         var scroller = document.getElementById('table-scroller');
         // Plug in a handler which takes care of infinite scrolling
-        if (scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight) {
+        if (scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight-100) {
             this.paginateData();
         }
     },

@@ -181,6 +181,9 @@ var DataTable = React.createClass({
             }
         }
         var rows = [];
+        var visibleColumns = [];
+        var renderColumns = [];
+
         for (var row in data) {
             var newRow = {};
             newRow['json'] = data[row]['json'];
@@ -241,7 +244,7 @@ var DataTable = React.createClass({
 
         var renderRows1 = [];
 
-        //If render from sort, dont render the coumns
+        // //If render from sort, dont render the coumns
         var renderRows = rows.map(function(item) {
             var _key = item['_key'];
             var row = item['row'];

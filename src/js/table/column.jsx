@@ -3,7 +3,9 @@ var ReactBootstrap = require('react-bootstrap');
 var FilterDropdown = require('./filterDropdown.jsx');
 
 var cellWidth = '250px';
-
+var OverlayTrigger = ReactBootstrap.OverlayTrigger;
+var Popover = ReactBootstrap.Popover;
+        
 var Column = React.createClass({
     getInitialState: function() {
         return {
@@ -19,6 +21,7 @@ var Column = React.createClass({
         });
     },
     render: function() {
+        
         var item = this.props._item;
         var type = this.state.type == null ? this.props._type : this.state.type;
         var sortInfo = this.props._sortInfo;
@@ -29,17 +32,19 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width ' + extraClass + ' ' + filterClass;
         var filterId = 'filter-' + item;
         var datatype = null;
-        var OverlayTrigger = ReactBootstrap.OverlayTrigger;
-        var Popover = ReactBootstrap.Popover;
         prettyData = " Clicking on {...} displays the JSON data. ";
-        var itemText = item == 'json' ? <span>
-                <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
-                    <a href="javascript:void(0);" className="bracketIcon"></a>
-                </OverlayTrigger>
-                <span>&nbsp;&nbsp;type / id</span>
-            </span> : <span onClick={this.sortingInit}>{item}</span>;
+        var itemText = item == 'json' ? 
+                (<span>
+                    <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
+                        <a href="javascript:void(0);" className="bracketIcon"></a>
+                    </OverlayTrigger>
+                    <span>&nbsp;&nbsp;type / id</span>
+                </span>) : 
+                (<span onClick={this.sortingInit}>{item}
+                </span>);
         var thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
-        if (typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
+        
+        if (item != 'json' && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
 
