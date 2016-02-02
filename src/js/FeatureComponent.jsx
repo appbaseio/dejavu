@@ -107,48 +107,46 @@ var AddDocument = React.createClass({
         var btnLinkClass = this.props.link == "true" ? 'add-record-link fa fa-plus' : 'add-record-btn btn btn-primary fa fa-plus';
         var selectClass = this.props.selectClass + ' tags-select form-control';
 
-        return (
-            <div className="add-record-container pd-r10">
-        <a href="javascript:void(0);" className={btnLinkClass}  title="Add" onClick={this.open} >{btnText}</a>
-        <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>Add Data</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form className="form-horizontal" id="addObjectForm">
-              <div className={validateClass.type}>
-                <label for="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
-                <div className="col-sm-9">
-                  <select id="setType" className={selectClass} multiple="multiple" name="type">
-                  </select>
-                    <span className="help-block">
-                      Type in which the data will be stored.
-                    </span>
-                </div>
-              </div>
-              <div className="form-group">
-                <label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
-                <div className="col-sm-9">
-                  <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
-                </div>
-              </div>
-              <div className={validateClass.body}>
-                <label for="inputPassword3" className="col-sm-3 control-label">JSON</label>
-                <div className="col-sm-9">
-                  <textarea id="setBody" className="form-control" rows="10" name="body"></textarea>
-                   <span className="help-block">
-                      A data document is stored as a JSON object.
-                    </span>
-                </div>
-              </div>
-            </form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button bsStyle="success" onClick={this.validateInput}>Add</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-        );
+        return (<div className="add-record-container pd-r10">
+                    <a href="javascript:void(0);" className={btnLinkClass}  title="Add" onClick={this.open} >{btnText}</a>
+                    <Modal show={this.state.showModal} onHide={this.close}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Add Data</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <form className="form-horizontal" id="addObjectForm">
+                          <div className={validateClass.type}>
+                            <label for="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
+                            <div className="col-sm-9">
+                              <select id="setType" className={selectClass} multiple="multiple" name="type">
+                              </select>
+                                <span className="help-block">
+                                  Type in which the data will be stored.
+                                </span>
+                            </div>
+                          </div>
+                          <div className="form-group">
+                            <label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
+                            <div className="col-sm-9">
+                              <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
+                            </div>
+                          </div>
+                          <div className={validateClass.body}>
+                            <label for="inputPassword3" className="col-sm-3 control-label">JSON</label>
+                            <div className="col-sm-9">
+                              <textarea id="setBody" className="form-control" rows="10" name="body"></textarea>
+                               <span className="help-block">
+                                  A data document is stored as a JSON object.
+                                </span>
+                            </div>
+                          </div>
+                        </form>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button bsStyle="success" onClick={this.validateInput}>Add</Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </div>);
     }
 });
 
@@ -310,31 +308,29 @@ var ImportData = React.createClass({
         });
     },
     render: function() {
-        return (
-            <div>
-        <a title="Import" onClick={this.open} >
-          <img src="src/img/import.png" /> Import <span className="small-span">from JSON, MongoDB</span>
-        </a>
-        <Modal show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>Import Data into Appbase <span className="small-span">from JSON, MongoDB</span></Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>Use appbase.io's <a href="https://github.com/appbaseio/transporter" target="_new">transporter <span className="fa fa-external-link"></span></a> fork to import data from
-            MongoDB, any JSON structure, or text file in three simple steps:
-            </p>
-            <ol>
-              <li>Get the latest release for your system from
-                <a href="https://github.com/appbaseio/transporter/releases/tag/v0.1.2-appbase" target="_new"> here <span className="fa fa-external-link"></span></a>.</li>
-              <li>Set the source and sink configurations as mentioned
-              in the file here, and save it in the same folder as config.yml.</li>
-            <li>Run the transporter using ./transporter run --config &lt;config_file&gt; &lt;transform_file&gt;</li>
-            </ol>
-            <p>Or shoot us at info@appbase.io or intercom if you want us to help with importing data.</p>
-          </Modal.Body>
-        </Modal>
-      </div>
-        );
+        return (<div>
+                    <a title="Import" onClick={this.open} >
+                      <img src="src/img/import.png" /> Import <span className="small-span">from JSON, MongoDB</span>
+                    </a>
+                    <Modal show={this.state.showModal} onHide={this.close}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Import Data into Appbase <span className="small-span">from JSON, MongoDB</span></Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <p>Use appbase.io's <a href="https://github.com/appbaseio/transporter" target="_new">transporter <span className="fa fa-external-link"></span></a> fork to import data from
+                        MongoDB, any JSON structure, or text file in three simple steps:
+                        </p>
+                        <ol>
+                          <li>Get the latest release for your system from
+                            <a href="https://github.com/appbaseio/transporter/releases/tag/v0.1.2-appbase" target="_new"> here <span className="fa fa-external-link"></span></a>.</li>
+                          <li>Set the source and sink configurations as mentioned
+                          in the file here, and save it in the same folder as config.yml.</li>
+                        <li>Run the transporter using ./transporter run --config &lt;config_file&gt; &lt;transform_file&gt;</li>
+                        </ol>
+                        <p>Or shoot us at info@appbase.io or intercom if you want us to help with importing data.</p>
+                      </Modal.Body>
+                    </Modal>
+                  </div>);
     }
 });
 

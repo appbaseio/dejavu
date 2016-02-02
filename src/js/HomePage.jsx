@@ -1,7 +1,7 @@
 var React = require('react');
-var TypeTable = require('./TypeTable.jsx');
-var DataTable = require('./DataTable.jsx');
-var FeatureComponent = require('./FeatureComponent.jsx')
+var TypeTable = require('./typeTable.jsx');
+var DataTable = require('./table/dataTable.jsx');
+var FeatureComponent = require('./featureComponent.jsx')
     // This is the file which commands the data update/delete/append.
     // Any react component that wishes to modify the data state should
     // do so by flowing back the data and calling the `resetData` function
@@ -64,25 +64,8 @@ var HomePage = React.createClass({
     //object it contains.
 
     flatten: function(data, callback) {
-        var fields = [];
-        if (data != null) {
-            for (var each in data['_source']) {
-                data[each] = data['_source'][each];
-                if (typeof data[each] !== 'string') {
-                    if (typeof data[each] !== 'number') {
-                        fields.push(each);
-                    }
-                }
-            }
-        }
-        data['json'] = data['_source'];
-        if (data['_source'])
-            delete data['_source'];
-        if (data['_index'])
-            delete data['_index'];
-        if (data['_score'])
-            delete data['_score'];
-        return callback(data, fields);
+        var response = help.flatten(data);
+        return callback(response.data, response.fields);
     },
     injectLink: function(data, fields) {
         return data;
@@ -104,14 +87,14 @@ var HomePage = React.createClass({
         }
         //if sort is already applied
         if (this.state.sortInfo.active) {
-            var sortedArray = this.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
+            var sortedArray = help.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
             this.setState({
                 documents: sortedArray
             });
         }
         //by default sort it by typename by passing json field
         else {
-            var sortedArray = this.sortIt(sdata_values, 'json', false);
+            var sortedArray = help.sortIt(sdata_values, 'json', false);
             this.setState({
                 documents: sortedArray
             });
@@ -211,10 +194,14 @@ var HomePage = React.createClass({
     getStreamingData: function(types) {
         if (!OperationFlag) {
             OperationFlag = true;
+
+            //If filter is applied apply filter data
             if (this.state.filterInfo.active) {
                 var filterInfo = this.state.filterInfo;
                 this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
-            } else {
+            }
+            //Get the data without filter
+            else {
                 if (types.length) {
                     feed.getData(types, function(update, fromStream) {
                         if (update != null)
@@ -250,18 +237,6 @@ var HomePage = React.createClass({
         } else {
             console.log(OperationFlag);
             setTimeout(() => this.getStreamingData(types), 300);
-        }
-    },
-    setSignal: function(fromStream) {
-        this.setState({
-            'signalColor': 'btn-warning',
-            'signalActive': 'active',
-            'signalText': 'Stream is waiting for data updates.'
-        });
-        if (fromStream) {
-            this.setState({
-                'signalColor': 'btn-success'
-            });
         }
     },
     // infinite scroll implementation
@@ -375,19 +350,8 @@ var HomePage = React.createClass({
             this.paginateData();
         }
     },
-    getOrder: function(itemIn) {
-        var finalVal = false;
-        if (itemIn == this.currentItem) {
-            if (!this.currentOrder)
-                finalVal = true;
-        } else {
-            this.currentItem = itemIn;
-        }
-        this.currentOrder = finalVal;
-        return finalVal;
-    },
     handleSort: function(item, type, eve) {
-        order = this.getOrder(item);
+        order = help.getOrder(item);
         this.setState({
             sortInfo: {
                 active: true,
@@ -396,35 +360,10 @@ var HomePage = React.createClass({
             }
         });
         var docs = this.state.documents;
-        var sortedArray = this.sortIt(docs, item, order);
+        var sortedArray = help.sortIt(docs, item, order);
         this.setState({
             documents: sortedArray
         });
-    },
-    sortIt: function(arr, prop, reverse) {
-        var $this = this;
-        var existsOnly = _.filter(arr, function(elm) {
-            return typeof elm[prop] != 'undefined'
-        });
-        var nonExistsOnly = _.filter(arr, function(elm) {
-            return typeof elm[prop] == 'undefined'
-        });
-
-        var a2 = existsOnly.sort($this.dynamicSort(prop, reverse));
-        var a2 = $.merge(a2, nonExistsOnly);
-        return a2;
-    },
-    dynamicSort: function(property, reverse) {
-        return function(a, b) {
-            sortOrder = reverse ? -1 : 1;
-            if (property == 'json')
-                property = '_type';
-            if (isNaN(a[property]))
-                var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
-            else
-                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-            return result * sortOrder;
-        }
     },
     addRecord: function() {
         var form = $('#addObjectForm').serializeArray();
@@ -474,21 +413,11 @@ var HomePage = React.createClass({
             typeDocSample: typeDocSample
         });
     },
+    //Get the form data in help exportData,
+    //Do the test query before exporting data
     exportData: function() {
-        var form = $('#addObjectForm_export').serializeArray();
+        var exportObject = help.exportData();
         var $this = this;
-        var exportObject = {
-            type: [],
-            username: PROFILE.name
-        };
-        form.forEach(function(val) {
-            if (val.name == 'type') {
-                exportObject.type.push(val.value);
-            } else if (val.name == 'body') {
-                exportObject.query = JSON.parse(val.value);
-            }
-        });
-        $('#exportBtn').addClass('loading').attr('disabled', true);
         var testQuery = feed.testQuery(exportObject.type, exportObject.query);
         testQuery.on('data', function(res) {
             if (!res.hasOwnProperty('error'))
@@ -578,7 +507,7 @@ var HomePage = React.createClass({
     },
     removeSort: function() {
         var docs = this.state.documents;
-        var sortedArray = this.sortIt(docs, '_type', false);
+        var sortedArray = help.sortIt(docs, '_type', false);
         this.setState({
             documents: sortedArray
         });
@@ -629,31 +558,13 @@ var HomePage = React.createClass({
         return obj;
     },
     selectRecord: function(id, type, row, currentCheck) {
-        selectedRows = [];
-        $('.rowSelectionCheckbox:checked').each((i, v) => {
-            var obj = {
-                _id: $(v).attr('value'),
-                _type: $(v).data('type')
-            };
-            selectedRows.push(obj);
-        });
-
-        var actionOnRecord = this.state.actionOnRecord;
-        actionOnRecord.active = selectedRows.length ? true : false;
-        actionOnRecord.id = id;
-        actionOnRecord.type = type;
-        actionOnRecord.row = JSON.stringify(row.json, null, 4);
-        actionOnRecord.selectedRows = selectedRows;
+        var actionOnRecord = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck);
         this.setState({
             actionOnRecord: actionOnRecord
         });
     },
     removeSelection: function() {
-        var actionOnRecord = this.state.actionOnRecord;
-        actionOnRecord.active = false;
-        actionOnRecord.id = null;
-        actionOnRecord.type = null;
-        actionOnRecord.selectedRows = [];
+        var actionOnRecord = help.removeSelection(this.state.actionOnRecord);
         this.setState({
             actionOnRecord: actionOnRecord
         });
@@ -688,8 +599,7 @@ var HomePage = React.createClass({
 
 
     render: function() {
-        return (
-            <div>
+        return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
                         <div className="typeContainer">
@@ -723,8 +633,7 @@ var HomePage = React.createClass({
                                 actionOnRecord = {this.state.actionOnRecord} />
                         </div>
                     </div>
-                </div>
-        );
+                </div>);
     }
 });
 

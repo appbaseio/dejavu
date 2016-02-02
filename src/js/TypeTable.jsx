@@ -1,5 +1,5 @@
 var React = require('react');
-var FeatureComponent = require('./FeatureComponent.jsx');
+var FeatureComponent = require('./featureComponent.jsx');
 
 // Each row in the types table on the left side.
 var TypeRow = React.createClass({
@@ -39,7 +39,7 @@ var TypeRow = React.createClass({
     },
     render: function() {
         return (
-            <li>
+                <li>
                     <div className="theme-element checkbox">
                     <input
                          id={this.props.type}
