@@ -229,7 +229,7 @@ var HomePage = React.createClass({
                     OperationFlag = false;
                     var infoObj = this.state.infoObj;
                     infoObj.showing = 0;
-                    infoObj.totalRecord = 0;
+                    totalRecord = 0;
                     this.setState({
                         infoObj: infoObj,
                         totalRecord: totalRecord
