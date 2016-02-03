@@ -1,8 +1,6 @@
 // This file contains all the logic for your app
 // authentication and streaming data from your
 // endpoint.
-
-
 // **Configs:** Appname and Credentials
 const HOSTNAME = "scalr.api.appbase.io"
 const DATA_SIZE = 20;
@@ -22,9 +20,9 @@ var getMapFlag = false;
     USERNAME = urlsplit[1].replace('//','');
     PASSWORD = pwsplit[0];
     console.log(USERNAME, PASSWORD);
+    var OperationFlag = false;
     APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
-
-init();
+    init();
     
 function init() {
 
@@ -42,7 +40,6 @@ var sdata = {}; // data to be displayed in table
 var headers = ["_type", "_id"];
 var esTypes = []; // all the types in current 'app'
 var subsetESTypes = []; // currently 'selected' types
-var dataOffset = 0; // pagination offset
 
 var feed = (function() {
 
@@ -55,75 +52,97 @@ var feed = (function() {
                     match_all: {}
                 }
             }
-
             var queryBody = queryBody ? queryBody : defaultQueryBody;
 
+            var dataSize = Object.keys(sdata).length;
+            sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
             // get historical data
             appbaseRef.search({
-                    type: types,
-                    from: 0,
-                    size: DATA_SIZE,
-                    body: queryBody
-                }).on('data', function(res) {
-                    dataOffset += DATA_SIZE;
+                type: types,
+                from: 0,
+                size: Math.max(dataSize, DATA_SIZE),
+                body: queryBody
+            }).on('data', function(res) {
+                try {
                     if (res.hits.hits.length == 0) {
-                        callback(null, 0);
+                        callback(null, false, 0);
                     } else {
-                        callback(res.hits.hits);
+                        callback(res.hits.hits, false, res.hits.total);
                     }
-                }).on('error', function(err) {
-                    console.log("caught a retrieval error", err);
-                })
-                // Counter stream
-                countStream(types, setTotal);
-                
-                //Stop old stream
-                if(typeof streamRef != 'undefined')
-                    streamRef.stop();
-                
-                // get new data updates
-                console.log(queryBody);
-                streamRef = appbaseRef.searchStream({
-                    type: types,
-                    body: queryBody
-                }).on('data', function(res) {
-                    callback(res, true);
-                }).on('error', function(err) {
-                    console.log("caught a stream error", err);
-                });
+                } catch (err) {
+                    console.log(err);
+                }
+                allowOtherOperation();
+            }).on('error', function(err) {
+                console.log("caught a retrieval error", err);
+                allowOtherOperation();
+            })
+
+            // Counter stream
+            countStream(types, setTotal);
+
+            //Stop old stream
+            if (typeof streamRef != 'undefined')
+                streamRef.stop();
+
+            // get new data updates
+            streamRef = appbaseRef.searchStream({
+                type: types,
+                body: queryBody
+            }).on('data', function(res) {
+                if (res.hasOwnProperty('_updated'))
+                    delete res._updated;
+                callback(res, true);
+            }).on('error', function(err) {
+                console.log("caught a stream error", err);
+            });
         }
     };
 
-    //This function is built only to maintain the total number of records 
+    //This function is built only to maintain the total number of records
     //It's hard to figure out correct total number of records while streaming and filtering is together
-    function countStream(types, setTotal){
+    function countStream(types, setTotal) {
         appbaseRef.search({
             type: types,
-            body: {"query":{"match_all":{}}}
+            body: {
+                "query": {
+                    "match_all": {}
+                }
+            }
         }).on('data', function(res) {
             setTotal(res.hits.total);
         });
 
         //Stop old stream
-        if(typeof counterStream != 'undefined')
+        if (typeof counterStream != 'undefined')
             counterStream.stop();
 
         counterStream = appbaseRef.searchStream({
             type: types,
-            body: {"query":{"match_all":{}}}
+            body: {
+                "query": {
+                    "match_all": {}
+                }
+            }
         }).on('data', function(res2) {
             //For update data
-            if(res2._updated){
+            if (res2._updated) {
 
             }
             //For Index data
-            else{
+            else {
                 setTotal(0, true, 'index');
             }
             //callback(res, true);
         }).on('error', function(err) {
             //console.log("caught a stream error", err);
         });
+    };
+
+    function allowOtherOperation() {
+        setTimeout(() => {
+            OperationFlag = false;
+        }, 500);
     };
 
     // paginate and show new results when user scrolls
@@ -142,7 +161,6 @@ var feed = (function() {
             size: DATA_SIZE,
             body: queryBody
         }).on('data', function(res) {
-            dataOffset += DATA_SIZE;
             callback(res.hits.hits);
         })
     }
@@ -157,32 +175,27 @@ var feed = (function() {
         deleteData: function(typeName, callback) {
             localSdata = {};
             for (data in sdata) {
-                if (sdata[data]._type !== typeName){
+                if (sdata[data]._type !== typeName) {
                     localSdata[data] = sdata[data];
                 }
             }
             sdata = localSdata;
             callback(sdata);
         },
-        // ``paginateData()`` finds new results from the data offset.
-        paginateData: function(callback, queryBody) {
-            if (dataOffset >= DATA_SIZE && dataOffset % DATA_SIZE === 0) {
-                if (queryBody != null)
-                    paginationSearch(subsetESTypes, dataOffset, callback, queryBody)
-                else
-                    paginationSearch(subsetESTypes, dataOffset, callback)
-            }
+        // ``paginateData()`` scrolls new results using the
+        // datatable's current length.
+        paginateData: function(total, callback, queryBody) {
+            paginationSearch(subsetESTypes, Object.keys(sdata).length, callback,
+                (queryBody != null) ? queryBody : null);
         },
         // gets all the types of the current app;
         getTypes: function(callback) {
             if (typeof APPNAME != 'undefined') {
-                appbaseRef.getTypes().on('data', function(res) {
-                    var types = res.filter(function(val) {
-                        return val[0] !== '.'
-                    });
-                    if (JSON.stringify(esTypes) !== JSON.stringify(types)) {
+                appbaseRef.getTypes().on('data', function(types) {
+                    if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
                         esTypes = types.slice();
-                        callback(types);
+                        if (callback !== null)
+                            callback(types);
                     }
                 }).on('error', function(err) {
                     console.log('error in retrieving types: ', err)
@@ -195,34 +208,44 @@ var feed = (function() {
             }
         },
         indexData: function(recordObject, method, callback) {
-            if(method == 'index'){
+            var self = this;
+            if (method == 'index') {
                 appbaseRef.index(recordObject).on('data', function(res) {
-                    if (callback)
+                    if (esTypes.indexOf(res._type) === -1) {
+                        self.getTypes(function(newTypes) {
+                            if (callback)
+                                callback(newTypes);
+                        });
+                    } else {
                         callback();
-                });    
-            }
-            else{
+                    }
+                });
+            } else {
                 var doc = recordObject.body;
-                recordObject.body = {doc:doc};
+                recordObject.body = {
+                    doc: doc
+                };
                 console.log(recordObject);
                 appbaseRef.update(recordObject).on('data', function(res) {
                     if (callback)
                         callback();
-                });       
+                });
             }
-            
+
         },
-        deleteRecord:function(selectedRows, callback){
-            var deleteArray = selectedRows.map( v => ({"delete":v}) );
+        deleteRecord: function(selectedRows, callback) {
+            var deleteArray = selectedRows.map(v => ({
+                "delete": v
+            }));
             console.log(deleteArray);
-            
+
             appbaseRef.bulk({
-                body:deleteArray
-            }).on('data',function(data){
+                body: deleteArray
+            }).on('data', function(data) {
                 for (data in sdata) {
-                    selectedRows.forEach((v)=>{
-                        if(typeof sdata[data] != 'undefined'){
-                            if (sdata[data]._type == v._type && sdata[data]._id == v._id){
+                    selectedRows.forEach((v) => {
+                        if (typeof sdata[data] != 'undefined') {
+                            if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
                                 delete sdata[data];
                             }
                         }
@@ -259,23 +282,27 @@ var feed = (function() {
                 }
             });
         },
-        testQuery:function(types, queryBody){
+        testQuery: function(types, queryBody) {
             // get historical data
             return appbaseRef.search({
-                    type: types,
-                    from: 0,
-                    size: 0,
-                    body: queryBody
-                });
+                type: types,
+                from: 0,
+                size: 0,
+                body: queryBody
+            });
         },
-        getTotalRecord:function(){
+        getTotalRecord: function() {
             // get historical data
             return appbaseRef.search({
-                    from: 0,
-                    size: 0,
-                    type:[],
-                    body:{query:{match_all:{}}}
-                });
+                from: 0,
+                size: 0,
+                type: [],
+                body: {
+                    query: {
+                        match_all: {}
+                    }
+                }
+            });
         },
         filterQuery: function(method, columnName, value, typeName, callback, setTotal) {
             var queryBody = this.createFilterQuery(method, columnName, value, typeName);
@@ -365,8 +392,5 @@ var feed = (function() {
             return queryBody;
         }
     };
-
-
-
 
 }());
