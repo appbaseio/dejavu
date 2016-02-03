@@ -44,7 +44,8 @@ var Column = React.createClass({
                 </span>);
         var thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
         
-        if (item != 'json' && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
+        //get the datatype if field is not json & type mapping has properties field
+        if (item != 'json' && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
             datatype = this.props.mappingObj[type]['properties'][item].type;
         }
 

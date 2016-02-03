@@ -88,6 +88,7 @@ var HomePage = React.createClass({
     resetData: function(total) {
         var sortedArray = [];
         sdata_values = [];
+
         for (each in sdata) {
             sdata_values.push(sdata[each]);
         }
@@ -117,6 +118,7 @@ var HomePage = React.createClass({
                 }
             }
         }
+
         //set the combined state
         this.setState({
             documents: sortedArray,

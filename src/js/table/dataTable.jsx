@@ -235,7 +235,7 @@ var DataTable = React.createClass({
                         filterInfo={$this.props.filterInfo} />);
         });
         var visibleColumns = this.props.visibleColumns;
-
+        
         var renderRows1 = [];
 
         // //If render from sort, dont render the coumns
@@ -270,6 +270,7 @@ var DataTable = React.createClass({
                                         pageLoading={this.props.pageLoading}>
                                     </PageLoading>) : '';
 
+        
         return (
             <div className="dejavu-table">
 
