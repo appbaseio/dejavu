@@ -188,7 +188,11 @@ var HomePage = React.createClass({
                   sdata[key] = update[each];
                 }
             }
+            d3 = new Date();
+            console.log(d3.getTime() - d2.getTime(), 'After updating the data');
             this.resetData();
+            d4 = new Date();
+            console.log(d4.getTime() - d3.getTime(), 'After reset the data');
         }
         this.setSampleData(update);
     },
@@ -204,7 +208,10 @@ var HomePage = React.createClass({
             //Get the data without filter
             else {
                 if (types.length) {
+                    d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
+                        d2 = new Date();
+                        console.log(d2.getTime() - d1.getTime(), 'After Get the data');
                         this.updateDataOnView(update);
                         var infoObj = this.state.infoObj;
                         infoObj.searchTotal = total;
@@ -247,16 +254,20 @@ var HomePage = React.createClass({
     paginateData: function() {
         var filterInfo = this.state.filterInfo;
         var queryBody = null;
-
+        d1 = new Date();
         if (filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
         feed.paginateData(this.state.infoObj.total, function(update) {
+            d2 = new Date();
+            console.log(d2.getTime() - d1.getTime(),'After get the data');
             this.updateDataOnView(update);
             var infoObj = this.state.infoObj;
             infoObj.pageLoading = false;
             this.setState({
                 infoObj:infoObj
             });
+            d5 = new Date();
+            console.log(d5.getTime() - d4.getTime(), 'After stop loading');
         }.bind(this), queryBody);
     },
     // only called on change in types.
