@@ -83,32 +83,24 @@ var HomePage = React.createClass({
     //DOM are much more expensive.
 
     resetData: function() {
-
+        var sortedArray = [];
         sdata_values = [];
         for (each in sdata) {
             sdata_values.push(sdata[each]);
         }
         //if sort is already applied
         if (this.state.sortInfo.active) {
-            var sortedArray = help.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
-            this.setState({
-                documents: sortedArray
-            });
+            sortedArray = help.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
+            
         }
         //by default sort it by typename by passing json field
         else {
-            var sortedArray = help.sortIt(sdata_values, 'json', false);
-            this.setState({
-                documents: sortedArray
-            });
+            sortedArray = help.sortIt(sdata_values, 'json', false);
         }
-        var showing = this.state.documents.length;
+        var showing = sortedArray.length;
         var infoObj = this.state.infoObj;
         infoObj.showing = showing;
-        this.setState({
-            infoObj: infoObj
-        });
-        data = this.state.documents;
+        data = sortedArray;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
         for (var each in sdata) {
@@ -120,7 +112,10 @@ var HomePage = React.createClass({
                 }
             }
         }
+        //set the combined state
         this.setState({
+            documents: sortedArray,
+            infoObj: infoObj,
             visibleColumns: visibleColumns
         });
     },
