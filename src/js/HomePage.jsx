@@ -1,7 +1,7 @@
 var React = require('react');
 var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
-var FeatureComponent = require('./featureComponent.jsx')
+var FeatureComponent = require('./featureComponent.jsx');
     // This is the file which commands the data update/delete/append.
     // Any react component that wishes to modify the data state should
     // do so by flowing back the data and calling the `resetData` function
