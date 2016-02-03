@@ -2,15 +2,17 @@ var React = require('react');
 var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
 var FeatureComponent = require('./featureComponent.jsx');
-    // This is the file which commands the data update/delete/append.
-    // Any react component that wishes to modify the data state should
-    // do so by flowing back the data and calling the `resetData` function
-    //here. This is sort of like the Darth Vader - Dangerous and
-    // Commands everything !
-    //
-    // ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
+var PureRenderMixin = require('react-addons-pure-render-mixin');
+// This is the file which commands the data update/delete/append.
+// Any react component that wishes to modify the data state should
+// do so by flowing back the data and calling the `resetData` function
+//here. This is sort of like the Darth Vader - Dangerous and
+// Commands everything !
+//
+// ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
 
 var HomePage = React.createClass({
+    mixins: [PureRenderMixin],
 
     // The underlying data structure that holds the documents/records
     // is a hashmap with keys as `_id + _type`(refer to keys.js). Its
@@ -38,9 +40,10 @@ var HomePage = React.createClass({
                 total: 0,
                 getOnce: false,
                 availableTotal: 0,
-                searchTotal: 0,
-                pageLoading:false
+                searchTotal: 0
             },
+            totalRecord: 0,
+            pageLoading: false,
             mappingObj: {},
             actionOnRecord: {
                 active: false,
@@ -82,7 +85,7 @@ var HomePage = React.createClass({
     //later but it is not that expensive right now, read writes to
     //DOM are much more expensive.
 
-    resetData: function() {
+    resetData: function(total) {
         var sortedArray = [];
         sdata_values = [];
         for (each in sdata) {
@@ -91,15 +94,17 @@ var HomePage = React.createClass({
         //if sort is already applied
         if (this.state.sortInfo.active) {
             sortedArray = help.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
-            
+
         }
         //by default sort it by typename by passing json field
         else {
             sortedArray = help.sortIt(sdata_values, 'json', false);
         }
-        var showing = sortedArray.length;
         var infoObj = this.state.infoObj;
-        infoObj.showing = showing;
+        infoObj.showing = sortedArray.length;
+        if (typeof total != 'undefined') {
+            infoObj.searchTotal = total;
+        }
         data = sortedArray;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
@@ -116,18 +121,19 @@ var HomePage = React.createClass({
         this.setState({
             documents: sortedArray,
             infoObj: infoObj,
-            visibleColumns: visibleColumns
+            visibleColumns: visibleColumns,
+            pageLoading: false
         });
     },
 
     // Logic to stream continuous data.
     // We call the ``getData()`` function in feed.js
     // which returns a single json document(record).
-    updateDataOnView: function(update) {
+    updateDataOnView: function(update, total) {
         if (!Array.isArray(update)) {
             update = this.flatten(update, this.injectLink);
             var key = rowKeyGen(update);
-        
+
             //If the record already exists in sdata, it should
             //either be a delete request or a change to an
             //existing record.
@@ -175,21 +181,29 @@ var HomePage = React.createClass({
                 var _key = rowKeyGen(update);
                 newTransition(_key);
             }
+            this.setSampleData(update);
         } else { // when update is an array
             for (var each = 0; each < update.length; each++) {
                 update[each] = this.flatten(update[each], this.injectLink);
                 var key = rowKeyGen(update[each]);
                 if (!sdata[key]) {
-                  sdata[key] = update[each];
+                    sdata[key] = update[each];
                 }
             }
             d3 = new Date();
             console.log(d3.getTime() - d2.getTime(), 'After updating the data');
-            this.resetData();
+            this.resetData(total);
             d4 = new Date();
             console.log(d4.getTime() - d3.getTime(), 'After reset the data');
+            this.setSampleData(update[0]);
         }
-        this.setSampleData(update);
+    },
+    streamCallback: function(total, fromStream, method) {
+        var totalRecord = this.state.totalRecord;
+        totalRecord = fromStream ? (method == 'index' ? (totalRecord + 1) : totalRecord) : total;
+        this.setState({
+            totalRecord: totalRecord
+        });
     },
     getStreamingData: function(types) {
         if (!OperationFlag) {
@@ -207,36 +221,18 @@ var HomePage = React.createClass({
                     feed.getData(types, function(update, fromStream, total) {
                         d2 = new Date();
                         console.log(d2.getTime() - d1.getTime(), 'After Get the data');
-                        this.updateDataOnView(update);
-                        var infoObj = this.state.infoObj;
-                        infoObj.searchTotal = total;
-                        this.setState({
-                            infoObj: infoObj
-                        });
+                        this.updateDataOnView(update, total);
                     }.bind(this), function(total, fromStream, method) {
-                        var infoObj = this.state.infoObj;
-                        //Do this if from stream
-                        if (fromStream) {
-                            //For index data
-                            if (method == 'index') {
-                                infoObj.total += 1;
-                            }
-                        }
-                        //Else go for this
-                        else {
-                            infoObj.total = total;
-                        }
-                        this.setState({
-                            infoObj: infoObj
-                        });
+                        this.streamCallback(total, fromStream, method);
                     }.bind(this));
                 } else {
                     OperationFlag = false;
                     var infoObj = this.state.infoObj;
                     infoObj.showing = 0;
-                    infoObj.total = 0;
+                    infoObj.totalRecord = 0;
                     this.setState({
-                        infoObj: infoObj
+                        infoObj: infoObj,
+                        totalRecord: totalRecord
                     });
                 }
             }
@@ -254,13 +250,8 @@ var HomePage = React.createClass({
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
         feed.paginateData(this.state.infoObj.total, function(update) {
             d2 = new Date();
-            console.log(d2.getTime() - d1.getTime(),'After get the data');
+            console.log(d2.getTime() - d1.getTime(), 'After get the data');
             this.updateDataOnView(update);
-            var infoObj = this.state.infoObj;
-            infoObj.pageLoading = false;
-            this.setState({
-                infoObj:infoObj
-            });
             d5 = new Date();
             console.log(d5.getTime() - d4.getTime(), 'After stop loading');
         }.bind(this), queryBody);
@@ -357,13 +348,13 @@ var HomePage = React.createClass({
     handleScroll: function(event) {
         var scroller = document.getElementById('table-scroller');
         var infoObj = this.state.infoObj;
-            
+
         // Plug in a handler which takes care of infinite scrolling
-        if (infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight-100) {
-            infoObj.pageLoading = true;
+        if (infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100) {
             this.setState({
-                infoObj:infoObj
+                pageLoading: true
             });
+            console.log(this.state.pageLoading);
             this.paginateData();
         }
     },
@@ -396,9 +387,11 @@ var HomePage = React.createClass({
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
-            this.setState({
-              types: newTypes
-            })
+            if (typeof newTypes != 'undefined') {
+                this.setState({
+                    types: newTypes
+                })
+            }
         }.bind(this));
     },
     getTypeDoc: function() {
@@ -442,11 +435,13 @@ var HomePage = React.createClass({
         testQuery.on('data', function(res) {
             if (!res.hasOwnProperty('error'))
                 $this.exportQuery(exportObject);
-            else
+            else {
                 toastr.error(res.error, 'ES Error : ' + res.status, {
                     timeOut: 5000
                 })
-            $('#exportBtn').removeClass('loading').removeAttr('disabled');
+                $('#exportBtn').removeClass('loading').removeAttr('disabled');
+            }
+
         }).on('error', function(err) {
             toastr.error(err, 'ES Error', {
                 timeOut: 5000
@@ -467,9 +462,10 @@ var HomePage = React.createClass({
                 withCredentials: true
             },
             success: function(data) {
-                toastr.success('Data is exported, please check your email : ' + PROFILE.email + '.');
+                $('#exportBtn').removeClass('loading').removeAttr('disabled');
                 $('#close-export-modal').click();
                 $('.close').click();
+                toastr.success('Data is exported, please check your email : ' + PROFILE.email + '.');
             }
         });
     },
@@ -489,23 +485,14 @@ var HomePage = React.createClass({
             feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream, total) {
                 if (!fromStream) {
                     sdata = [];
-                    $this.resetData();
+                    $this.resetData(total);
                 }
-                var infoObj = this.state.infoObj;
-                infoObj.searchTotal = total;
-                $this.setState({
-                    infoObj: infoObj
-                });
                 setTimeout(function() {
-                    if(update != null)
+                    if (update != null)
                         $this.updateDataOnView(update);
                 }, 500);
-            }.bind(this), function(total) {
-                var infoObj = this.state.infoObj;
-                infoObj.total = total;
-                this.setState({
-                    infoObj: infoObj
-                });
+            }.bind(this), function(total, fromStream, method) {
+                this.streamCallback(total, fromStream, method);
             }.bind(this));
         } else {
             var infoObj = this.state.infoObj;
@@ -588,12 +575,14 @@ var HomePage = React.createClass({
         this.setState({
             actionOnRecord: actionOnRecord
         });
+        this.forceUpdate();
     },
     removeSelection: function() {
         var actionOnRecord = help.removeSelection(this.state.actionOnRecord);
         this.setState({
             actionOnRecord: actionOnRecord
         });
+        this.forceUpdate();
         $('[name="selectRecord"]').removeAttr('checked');
     },
     updateRecord: function(json) {
@@ -645,6 +634,7 @@ var HomePage = React.createClass({
                                 sortInfo={this.state.sortInfo}
                                 filterInfo={this.state.filterInfo}
                                 infoObj={this.state.infoObj}
+                                totalRecord={this.state.totalRecord}
                                 scrollFunction={this.handleScroll}
                                 selectedTypes={subsetESTypes}
                                 handleSort={this.handleSort}
@@ -656,7 +646,8 @@ var HomePage = React.createClass({
                                 removeSort = {this.removeSort}
                                 visibleColumns = {this.state.visibleColumns}
                                 columnToggle ={this.columnToggle}
-                                actionOnRecord = {this.state.actionOnRecord} />
+                                actionOnRecord = {this.state.actionOnRecord}
+                                pageLoading={this.state.pageLoading} />
                         </div>
                     </div>
                 </div>);

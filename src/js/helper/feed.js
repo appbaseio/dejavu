@@ -1,8 +1,6 @@
 // This file contains all the logic for your app
 // authentication and streaming data from your
 // endpoint.
-
-
 // **Configs:** Appname and Credentials
 const HOSTNAME = "scalr.api.appbase.io"
 const DATA_SIZE = 20;
@@ -61,9 +59,9 @@ var feed = (function() {
             }).on('data', function(res) {
                 try {
                     if (res.hits.hits.length == 0) {
-                        callback(null,false, 0);
+                        callback(null, false, 0);
                     } else {
-                        callback(res.hits.hits,false, res.hits.total);
+                        callback(res.hits.hits, false, res.hits.total);
                     }
                 } catch (err) {
                     console.log(err);
@@ -182,7 +180,7 @@ var feed = (function() {
         // datatable's current length.
         paginateData: function(total, callback, queryBody) {
             paginationSearch(subsetESTypes, Object.keys(sdata).length, callback,
-                (queryBody != null)?queryBody:null);
+                (queryBody != null) ? queryBody : null);
         },
         // gets all the types of the current app;
         getTypes: function(callback) {
@@ -191,7 +189,7 @@ var feed = (function() {
                     if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
                         esTypes = types.slice();
                         if (callback !== null)
-                          callback(types);
+                            callback(types);
                     }
                 }).on('error', function(err) {
                     console.log('error in retrieving types: ', err)
@@ -209,9 +207,11 @@ var feed = (function() {
                 appbaseRef.index(recordObject).on('data', function(res) {
                     if (esTypes.indexOf(res._type) === -1) {
                         self.getTypes(function(newTypes) {
-                          if (callback)
-                            callback(newTypes);
+                            if (callback)
+                                callback(newTypes);
                         });
+                    } else {
+                        callback();
                     }
                 });
             } else {
@@ -386,7 +386,5 @@ var feed = (function() {
             return queryBody;
         }
     };
-
-
 
 }());

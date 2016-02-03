@@ -6,6 +6,7 @@ var FilterDropdown = require('./filterDropdown.jsx');
 var PageLoading = require('./pageLoading.jsx');
 var Info = require('./Info.jsx');
 var Column = require('./column.jsx');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
 var Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -240,7 +241,7 @@ var DataTable = React.createClass({
         // //If render from sort, dont render the coumns
         var renderRows = rows.map(function(item, key) {
             var _key = item['_key'];
-            var row = item['row']; 
+            var row = item['row'];
             return (<tr id={_key} key={_key}>
                         {row}
                     </tr>);
@@ -261,21 +262,30 @@ var DataTable = React.createClass({
                           </div>
         }
 
+        //Page loading - show while paging
+        var pageLoadingComponent = this.props.pageLoading ?
+            (<PageLoading  
+                                        key="123" 
+                                        visibleColumns={visibleColumns}
+                                        pageLoading={this.props.pageLoading}>
+                                    </PageLoading>) : '';
+
         return (
             <div className="dejavu-table">
 
-            <Info infoObj={this.props.infoObj}
+            <Info infoObj= {this.props.infoObj}
+            totalRecord= {this.props.totalRecord}
             filterInfo = {this.props.filterInfo}
-            removeFilter={this.props.removeFilter}
+            removeFilter= {this.props.removeFilter}
             removeSort = {this.props.removeSort}
             types={this.props.Types}
-            addRecord ={this.props.addRecord}
-            getTypeDoc={this.props.getTypeDoc}
-            sortInfo ={this.props.sortInfo}
+            addRecord = {this.props.addRecord}
+            getTypeDoc= {this.props.getTypeDoc}
+            sortInfo = {this.props.sortInfo}
             columns = {columns}
-            visibleColumns={visibleColumns}
-            columnToggle ={this.props.columnToggle}
-            actionOnRecord={this.props.actionOnRecord} />
+            visibleColumns= {visibleColumns}
+            columnToggle = {this.props.columnToggle}
+            actionOnRecord= {this.props.actionOnRecord} />
 
             {extraAddBtn}
 
@@ -287,13 +297,9 @@ var DataTable = React.createClass({
                  scrollFunction={this.props.scrollFunction}
                  selectedTypes={this.props.selectedTypes}
                  filterInfo={this.props.filterInfo} />
-             </div>
-            <PageLoading  
-                key="123" 
-                visibleColumns={visibleColumns}
-                infoObj={this.props.infoObj}>
-            </PageLoading>
-             <input id="copyId" className="hide" />
+            </div>
+            {pageLoadingComponent}    
+            <input id="copyId" className="hide" />
             </div>
         );
     }

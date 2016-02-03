@@ -39,7 +39,7 @@ var TypeRow = React.createClass({
     },
     render: function() {
         return (
-                <li>
+            <li>
                     <div className="theme-element checkbox">
                     <input
                          id={this.props.type}
