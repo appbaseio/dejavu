@@ -277,10 +277,10 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
-        setInterval(this.setMap, 2000);
+        mappingInterval = setInterval(this.setMap, 2000);
         setTimeout(this.getStreamingTypes, 2000);
         // call every 1 min.
-        setInterval(this.getStreamingTypes, 60 * 1000);
+        streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
     },
     getTotalRecord: function() {
@@ -344,6 +344,9 @@ var HomePage = React.createClass({
                 $this.setState({
                     'mappingObj': mappingObjData[APPNAME]['mappings']
                 });
+            }).fail(function( jqXHR, textStatus, errorThrown){
+                if(jqXHR.status == 401)
+                    clearInterval(mappingInterval);
             });
         }
     },

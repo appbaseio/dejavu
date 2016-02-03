@@ -198,6 +198,8 @@ var feed = (function() {
                             callback(types);
                     }
                 }).on('error', function(err) {
+                    console.log(err);
+                    clearInterval(streamingInterval);
                     console.log('error in retrieving types: ', err)
                 })
             } else {
