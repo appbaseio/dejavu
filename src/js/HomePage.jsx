@@ -624,6 +624,9 @@ var HomePage = React.createClass({
         });
         window.location.href = "index.html";
     },
+    reloadData:function(){
+        this.getStreamingData(subsetESTypes);
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -633,6 +636,7 @@ var HomePage = React.createClass({
 
     render: function() {
         var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
+        var esText = config.url != null ? 'Connect': 'Start Browsing';
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -651,7 +655,7 @@ var HomePage = React.createClass({
                                             <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
                                         </div>
                                         <div className="submit-btn-container">
-                                            <a className="btn btn-default submit-btn" onClick={this.initEs}>Start Browsing</a>
+                                            <a className="btn btn-default submit-btn" onClick={this.initEs}>{esText}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -687,7 +691,8 @@ var HomePage = React.createClass({
                                 visibleColumns = {this.state.visibleColumns}
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
-                                pageLoading={this.state.pageLoading} />
+                                pageLoading={this.state.pageLoading}
+                                reloadData={this.reloadData} />
                         </div>
                     </div>
                 </div>);
