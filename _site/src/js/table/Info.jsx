@@ -14,7 +14,7 @@ var Info = React.createClass({
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var infoObjClass = totalRecord == 0 ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
-        var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12';
+        var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
         var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
@@ -23,6 +23,12 @@ var Info = React.createClass({
                     <div className=" row">
                         <div className={infoObjClass}>
                             <div className={totalClass}>
+                                <a  
+                                    href="javascript:void(0);"
+                                    className="btn btn-default themeBtn m-r10"
+                                    onClick={this.props.reloadData}>
+                                    <i className="fa fa-refresh"></i> Reload
+                                </a>
                                 <span className="info_single">
                                     <label>Showing
                                         <strong>&nbsp;{infoObj.showing}</strong> of total

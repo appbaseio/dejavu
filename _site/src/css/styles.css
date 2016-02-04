@@ -22,6 +22,12 @@ label {
 .pr-5{
   padding-right: 5px !important;
 }
+.m-r5{
+  margin-right: 5px;
+}
+.m-r10{
+  margin-right: 10px;
+}
 .m-0{
   margin: 0;
 }
@@ -652,7 +658,6 @@ body{
   display: table-cell;
   vertical-align: middle;
 }
-
 .modal .modal-content{
   background: #fff;
   border-radius: 4px;

@@ -624,6 +624,9 @@ var HomePage = React.createClass({
         });
         window.location.href = "index.html";
     },
+    reloadData:function(){
+        this.getStreamingData(subsetESTypes);
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -688,7 +691,8 @@ var HomePage = React.createClass({
                                 visibleColumns = {this.state.visibleColumns}
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
-                                pageLoading={this.state.pageLoading} />
+                                pageLoading={this.state.pageLoading}
+                                reloadData={this.reloadData} />
                         </div>
                     </div>
                 </div>);

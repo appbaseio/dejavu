@@ -286,7 +286,8 @@ var DataTable = React.createClass({
             columns = {columns}
             visibleColumns= {visibleColumns}
             columnToggle = {this.props.columnToggle}
-            actionOnRecord= {this.props.actionOnRecord} />
+            actionOnRecord= {this.props.actionOnRecord} 
+            reloadData = {this.props.reloadData}/>
 
             {extraAddBtn}
 
