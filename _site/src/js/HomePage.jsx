@@ -633,6 +633,7 @@ var HomePage = React.createClass({
 
     render: function() {
         var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
+        var esText = config.url != null ? 'Connect': 'Start Browsing';
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -651,7 +652,7 @@ var HomePage = React.createClass({
                                             <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
                                         </div>
                                         <div className="submit-btn-container">
-                                            <a className="btn btn-default submit-btn" onClick={this.initEs}>Start Browsing</a>
+                                            <a className="btn btn-default submit-btn" onClick={this.initEs}>{esText}</a>
                                         </div>
                                     </div>
                                 </div>
