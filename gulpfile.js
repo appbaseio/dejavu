@@ -4,14 +4,14 @@ var source = require("vinyl-source-stream");
 var reactify = require('reactify');
 
 gulp.task('browserify', function() {
-	var b = browserify({
-		entries: ['_site/src/js/app.js'],
-		debug: true
-	});
-	b.transform(reactify); // use the reactify transform
-	return b.bundle()
-		.pipe(source('main.js'))
-		.pipe(gulp.dest('./_site/dist'));
+    var b = browserify({
+        entries: ['_site/src/js/app.js'],
+        debug: true
+    });
+    b.transform(reactify); // use the reactify transform
+    return b.bundle()
+        .pipe(source('main.js'))
+        .pipe(gulp.dest('./_site/dist'));
 });
 
 gulp.task('connect', function () {
@@ -29,19 +29,20 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('watch', ['connect'], function() {
-	var live = require('gulp-livereload');
+gulp.task('watch', ['browserify','connect'], function() {
+    var live = require('gulp-livereload');
     live.listen();
-
     gulp.watch([
-    	'_site/src/js/*.js',
-    	'_site/src/js/*.jsx'	
+        '_site/src/js/*.js',
+        '_site/dist/main.js'    
     ]).on('change', function (file) {
         live.changed(file.path);
     });
+    gulp.watch('_site/src/js/*/*.jsx', ['browserify']);
+    gulp.watch('_site/src/js/*/*.js', ['browserify']);
+    gulp.watch('_site/src/js/*.jsx', ['browserify']);
+    gulp.watch('_site/src/js/*.js', ['browserify']);
 
-	gulp.watch('_site/src/js/*.js', ['browserify']);
-	gulp.watch('_site/src/js/*.jsx', ['browserify']);
 });
 
 gulp.task('default', ['browserify']);
