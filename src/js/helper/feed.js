@@ -324,7 +324,7 @@ var feed = (function() {
 					queryBody = {
 						"query": {
 							"bool": {
-								"should": queryMaker,
+								"must": queryMaker,
 								"minimum_should_match": 1
 							}
 						}
