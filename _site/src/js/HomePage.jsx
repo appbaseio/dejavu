@@ -277,8 +277,8 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
-        mappingInterval = setInterval(this.setMap, 2000);
-        setTimeout(this.getStreamingTypes, 2000);
+        mappingInterval = setInterval(this.setMap, 5000);
+        setTimeout(this.getStreamingTypes, 5000);
         // call every 1 min.
         streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
@@ -336,7 +336,7 @@ var HomePage = React.createClass({
     },
     setMap: function() {
         var $this = this;
-        if (!getMapFlag && APPNAME) {
+        if (APPNAME) {
             var mappingObj = feed.getMapping();
             mappingObj.done(function(data) {
                 mappingObjData = data;
@@ -393,6 +393,7 @@ var HomePage = React.createClass({
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
             if (typeof newTypes != 'undefined') {
+                this.setMap();
                 this.setState({
                     types: newTypes
                 })
