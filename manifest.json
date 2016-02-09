@@ -2,15 +2,15 @@
     "name":"dejaVu",
     "version":"0.1",
     "icons":{
-        "16":"assets/img/icon_16.png",
-        "32":"assets/img/icon_32.png",
-        "48":"assets/img/icon_48.png",
-        "128":"assets/img/icon_128.png"
+        "16":"site/assets/img/icon_16.png",
+        "32":"site/assets/img/icon_32.png",
+        "48":"site/assets/img/icon_48.png",
+        "128":"site/assets/img/icon_128.png"
     },
 
     "app":{
         "launch":{
-            "local_path":"_site/index.html"
+            "local_path":"site/index.html"
         }
     },
     "permissions": ["cookies", "storage", "http://*/*", "https://*/*"],
