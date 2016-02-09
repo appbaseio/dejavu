@@ -26,20 +26,50 @@ var SingleMenuItem = React.createClass({
         });
         this.props.getFilterVal(filterValue);
     },
+    rangeChange: function(key) {
+        var keyInput = key + '-input';
+        var keyInputRange = key + '-inputRange';
+        var startDate = $('#'+keyInput).val();
+        var endDate = $('#'+keyInputRange).val();
+        if(startDate != '' && endDate != '') {
+            var filterValue = startDate+'@'+endDate;
+            this.setState({
+                filterValue: filterValue
+            });
+            this.props.getFilterVal(filterValue);
+        }
+    },
     render: function() {
         var singleItemClass = this.props.filterField == this.props.val ? 'singleItem active' : 'singleItem';
         var placeholder = this.props.val == 'has' || this.props.val == 'has not' ? 'Type , for multiple' : 'Type here...';
         var key = filterKeyGen(this.props.columnField, this.props.val);
         var keyInput = key + '-input';
+        var keyInputRange = key + '-inputRange';
+        
+        var searchElement = this.props.val == 'range' ?
+                            (<div className="searchElement">
+                                <input id={keyInput} 
+                                    className="form-control" 
+                                    type="text" 
+                                    placeholder="starting date" 
+                                    onKeyUp={this.rangeChange.bind(null, key)} />
+                                <input id={keyInputRange}
+                                    className="form-control mt-5" 
+                                    type="text" 
+                                    placeholder="ending date" 
+                                    onKeyUp={this.rangeChange.bind(null, key)} />
+                            </div>) :
+                            (<div className="searchElement">
+                                <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+                            </div>);
+        
         return (<div className={singleItemClass}>
                     <div className="theme-element radio">
                         <input onChange={this.changeFilter} type="radio" name="optionsRadios"
                          value={this.props.val} id={key} />
                         <label htmlFor={key}><span className="lableText">{this.props.val}</span></label>
                     </div>
-                      <div className="searchElement">
-                        <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
-                      </div>
+                        {searchElement}
                 </div>);
     }
 });
@@ -101,6 +131,7 @@ var FilterDropdown = React.createClass({
             <Dropdown.Menu className="menuItems pull-right">
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
                                     <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
+                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="range" />
                                     <div className="singleItem">
                                         <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
