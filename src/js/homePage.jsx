@@ -173,7 +173,6 @@ var HomePage = React.createClass({
             //If its a new record, we add it to sdata and then
             //apply the `new transition`.
             else {
-                console.log(update);
                 sdata[key] = update;
                 this.resetData();
                 for (var each in update) {
@@ -193,10 +192,8 @@ var HomePage = React.createClass({
                 }
             }
             d3 = new Date();
-            console.log(d3.getTime() - d2.getTime(), 'After updating the data');
             this.resetData(total);
             d4 = new Date();
-            console.log(d4.getTime() - d3.getTime(), 'After reset the data');
             this.setSampleData(update[0]);
         }
     },
@@ -222,7 +219,6 @@ var HomePage = React.createClass({
                     d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
                         d2 = new Date();
-                        console.log(d2.getTime() - d1.getTime(), 'After Get the data');
                         this.updateDataOnView(update, total);
                     }.bind(this), function(total, fromStream, method) {
                         this.streamCallback(total, fromStream, method);
@@ -239,7 +235,6 @@ var HomePage = React.createClass({
                 }
             }
         } else {
-            console.log(OperationFlag);
             setTimeout(() => this.getStreamingData(types), 300);
         }
     },
@@ -252,10 +247,8 @@ var HomePage = React.createClass({
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
         feed.paginateData(this.state.infoObj.total, function(update) {
             d2 = new Date();
-            console.log(d2.getTime() - d1.getTime(), 'After get the data');
             this.updateDataOnView(update);
             d5 = new Date();
-            console.log(d5.getTime() - d4.getTime(), 'After stop loading');
         }.bind(this), queryBody);
     },
     // only called on change in types.
@@ -277,8 +270,8 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
-        setInterval(this.setMap, 2000);
-        setTimeout(this.getStreamingTypes, 2000);
+        setInterval(this.setMap, 5000);
+        setTimeout(this.getStreamingTypes, 5000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
@@ -294,8 +287,6 @@ var HomePage = React.createClass({
                     $this.setState({
                         infoObj: infoObj
                     });
-
-                    console.log(infoObj);
                 });
             } else
                 setTimeout(this.getTotalRecord, 1000);
@@ -336,13 +327,13 @@ var HomePage = React.createClass({
     },
     setMap: function() {
         var $this = this;
-        if (!getMapFlag && APPNAME) {
-            var mappingObj = feed.getMapping();
-            mappingObj.done(function(data) {
+        if (APPNAME) {
+            var getMappingObj = feed.getMapping();
+            getMappingObj.done(function(data) {
                 mappingObjData = data;
                 getMapFlag = true;
                 $this.setState({
-                    'mappingObj': mappingObjData[APPNAME]['mappings']
+                    mappingObj: mappingObjData[APPNAME]['mappings']
                 });
             });
         }
@@ -356,7 +347,6 @@ var HomePage = React.createClass({
             this.setState({
                 pageLoading: true
             });
-            console.log(this.state.pageLoading);
             this.paginateData();
         }
     },
@@ -390,6 +380,7 @@ var HomePage = React.createClass({
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
             if (typeof newTypes != 'undefined') {
+                this.setMap();
                 this.setState({
                     types: newTypes
                 })

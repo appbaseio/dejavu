@@ -21,7 +21,7 @@ var Column = React.createClass({
         });
     },
     render: function() {
-        
+        console.log(this.props.mappingObj);
         var item = this.props._item;
         var type = this.state.type == null ? this.props._type : this.state.type;
         var sortInfo = this.props._sortInfo;
