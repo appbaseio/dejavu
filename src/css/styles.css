@@ -19,6 +19,12 @@ label {
 .pd-r10{
   padding-right: 10px;
 }
+.mt-10{
+  margin-top: 10px;
+}
+.mt-5{
+  margin-top: 5px;
+}
 .clearfix{
   clear: both;
 }
