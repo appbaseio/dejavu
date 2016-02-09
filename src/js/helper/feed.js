@@ -387,6 +387,21 @@ var feed = (function() {
 						}
 					};
 					break;
+
+                case 'range':
+                    rangeVal = value[0].split('@');
+                    termObj = {};
+                    termObj[columnName] = {};
+                    termObj[columnName] = {
+                        "gte": rangeVal[0],
+                        "lte": rangeVal[1]
+                    };
+                    queryBody = {
+                        "query": {
+                            "range": termObj
+                        }
+                    };
+                    break;    
 			}
 			return queryBody;
 		}

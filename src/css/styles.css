@@ -31,6 +31,12 @@ label {
 .m-0{
   margin: 0;
 }
+.mt-10{
+  margin-top: 10px;
+}
+.mt-5{
+  margin-top: 5px;
+}
 .clearfix{
   clear: both;
 }
