@@ -523,6 +523,7 @@ body{
 .typesList{
   height: 100%;
   padding-bottom: 80px;
+  overflow: auto;
 }
 .ieButton{
   position: absolute;
