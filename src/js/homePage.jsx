@@ -273,8 +273,8 @@ var HomePage = React.createClass({
         this.setMap();
         setTimeout(this.setMap, 2000)
         setTimeout(this.getStreamingTypes, 2000);
-        setInterval(this.setMap, 5000);
         // call every 1 min.
+        setInterval(this.setMap, 60 * 1000);
         setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
     },
