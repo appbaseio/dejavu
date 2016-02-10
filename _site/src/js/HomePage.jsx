@@ -686,6 +686,9 @@ var HomePage = React.createClass({
                                 pageLoading={this.state.pageLoading}
                                 reloadData={this.reloadData} />
                         </div>
+                        <footer className="text-center">
+                            <a href="http://appbaseio.github.io/dejaVu">How it works</a> | Powered by <a href="http://appbase.io">Appbase</a>
+                        </footer>
                     </div>
                 </div>);
     }

@@ -170,7 +170,7 @@ body{
   top: 0;
   margin: 0;
 }
-.init-ES{
+.init-ES, footer{
   position: absolute;
   top: 0;
   left: 0;
@@ -180,6 +180,13 @@ body{
   padding: 5px;
   padding-right: 130px;
   border-bottom: 1px solid #ddd;
+}
+footer{
+  top: auto;
+  bottom: 0;
+  padding-right: 5px;
+  border-top: 1px solid #ddd;
+  border-bottom: 0;
 }
 .init-ES .submit-btn{
   position: absolute;
@@ -237,13 +244,11 @@ body{
   padding-top: 44px;
 }
 .dataContainer{
-  padding-left: 270px;
-  padding-right: 0;
   height: 100%;
   overflow: hidden;
   position: absolute;
   width: 100%;
-  padding-top: 44px;
+  padding: 44px 0 44px 270px;
 }
 .highlight-tip {
   background: #f5e79e;
