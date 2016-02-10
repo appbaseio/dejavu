@@ -670,6 +670,17 @@ footer{
   display: table-cell;
   vertical-align: middle;
 }
+.powered_by{
+  position: absolute;
+  right: 5px;
+}
+iframe{
+  border: 0 !important;
+}
+.github-star{
+  position: absolute;
+  left: 5px;
+}
 .modal .modal-content{
   background: #fff;
   border-radius: 4px;
@@ -777,3 +788,4 @@ footer{
 .greyBtn{
   color: #6e8593;
 }
+

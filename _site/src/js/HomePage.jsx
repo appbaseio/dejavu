@@ -687,7 +687,13 @@ var HomePage = React.createClass({
                                 reloadData={this.reloadData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">How it works</a> | Powered by <a href="http://appbase.io">Appbase</a>
+                            <a href="http://appbaseio.github.io/dejaVu">How it works</a> 
+                            <span className="text-right pull-right powered_by">
+                                 Powered by <a href="http://appbase.io">appbase.io</a>
+                            </span>  
+                            <span className="pull-left github-star">
+                                <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
+                            </span>   
                         </footer>
                     </div>
                 </div>);
