@@ -1,13 +1,28 @@
 {
-  "name": "dejaVu",
+  "name": "land.io",
+  "homepage": "http://tatygrassini.github.io/landio-html/",
+  "authors": [
+    "Taty Grassini"
+  ],
+  "description": "Landio is a responsive HTML template, built on top of Bootstrap 4 and based on the Land.io Sketch design by Peter Finlan. This template and the UI kit were coded by Taty Grassini.",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Land.io",
+    "UI-kit",
+    "design"
+  ],
+  "license": "Codrops custom Licence",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "README.md",
+    "bower.json"
+  ],
   "dependencies": {
-    "appbase-js": "latest",
-    "jquery": "~2.1.4",
-    "react": "~0.14.0",
-    "react-bootstrap": "~0.25.1",
-    "underscore": "~1.8.3",
-    "bootstrap": "~3.3.6",
-    "font-awesome": "~4.5.0",
-    "toastr": "~2.1.2"
+    "font-awesome": "~4.5.0"
   }
 }

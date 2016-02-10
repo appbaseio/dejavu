@@ -1,0 +1,396 @@
+//  --------------------------------------------------
+//  Video.js v4.12.15
+//  LANDIO player skin
+//  --------------------------------------------------
+//  Global
+//  Volume/Mute
+//  Progress
+//  Time Display
+//  Big Play Button
+//  Loading Spinner
+//  Required Styles
+//  Poster Styles
+
+
+//
+// =Global
+// --------------------------------------------------
+
+.vjs-hidden,
+.vjs-controls-disabled .vjs-control-bar,
+.vjs-using-native-controls .vjs-control-bar,
+.vjs-error .vjs-control-bar,
+.vjs-live-controls,
+.vjs-play-control,
+.vjs-default-skin .vjs-seek-handle,
+.vjs-remaining-time,
+.vjs-time-divider,
+.vjs-using-native-controls .vjs-big-play-button,
+.vjs-error .vjs-big-play-button,
+.vjs-menu,
+.vjs-menu-button,
+.vjs-menu-content,
+.vjs-has-started .vjs-poster,
+.vjs-controls-disabled .vjs-poster,
+.vjs-using-native-controls .vjs-poster,
+.ytp-button {
+  display: none !important;
+}
+
+@font-face {
+  font-family: 'icomoon';
+  src:url('fonts/icomoon.eot?-d8wcrs');
+  src:url('fonts/icomoon.eot?#iefix-d8wcrs') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?-d8wcrs') format('truetype'),
+    url('fonts/icomoon.woff?-d8wcrs') format('woff'),
+    url('fonts/icomoon.svg?-d8wcrs#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.vjs-default-skin { color: #fff; }
+
+// Slider - used for Volume bar and Seek bar
+.vjs-default-skin .vjs-slider {
+  position: relative;
+  padding: 0;
+  outline: 0;
+  cursor: pointer;
+}
+
+// Control Bar
+.vjs-default-skin .vjs-control-bar {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: transparent;
+  height: 51px;
+}
+
+// Show the control bar only once the video has started playing
+.vjs-has-started .vjs-control-bar,
+.vjs-has-started .vjs-big-play-button {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.1s, opacity 0.1s;
+}
+
+// Hide the control bar AND PAUSE BUTTON when the video is playing and the user is inactive
+.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar,
+.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-big-play-button {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 1s, opacity 1s;
+}
+
+// Don't hide the control bar if it's audio
+.vjs-audio.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar {
+  opacity: 1;
+  visibility: visible;
+}
+
+// General styles for individual controls.
+.vjs-default-skin .vjs-control {
+  outline: none;
+  position: relative;
+  float: left;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+// Icon font for buttons
+.vjs-default-skin .vjs-control:before {
+  font-family: 'icomoon';
+  font-size: 1.5em;
+  line-height: 2;
+  text-align: center;
+}
+
+// Hides control text visually, but have it available for screenreaders
+.vjs-default-skin .vjs-control-text {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+
+//
+// =Volume/Mute
+// --------------------------------------------------
+
+.vjs-default-skin .vjs-mute-control {
+  position: absolute;
+  bottom: 13px;
+  left: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transform: translateX(-154px);
+  @include media-breakpoint-down(sm) {
+    bottom: 3px;
+  }
+}
+
+.vjs-default-skin .vjs-mute-control:before { content: "\e617"; }
+.vjs-default-skin .vjs-mute-control.vjs-vol-0:before { content: "\e615"; }
+.vjs-default-skin .vjs-mute-control.vjs-vol-1:before { content: "\e616"; }
+.vjs-default-skin .vjs-mute-control.vjs-vol-2:before { content: "\e618"; }
+
+.vjs-default-skin .vjs-volume-control {
+  position: absolute;
+  right: 49%;
+  bottom: 40px;
+  width: 16rem;
+  transform: translateX(50%);
+  @include media-breakpoint-down(sm) {
+    bottom: 30px;
+  }
+}
+
+.vjs-default-skin .vjs-volume-bar {
+  margin: 0;
+  width: 16rem;
+  height: 5px;
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 2px;
+}
+
+.vjs-default-skin .vjs-volume-level {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0.3125rem;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+.vjs-default-skin .vjs-volume-bar .vjs-volume-handle {
+  position: absolute;
+  left: 15rem;
+}
+
+.vjs-default-skin .vjs-volume-handle:before {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  content: "";
+  position: relative;
+  top: -8px;
+  left: 0px;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+
+//
+// =Progress
+// --------------------------------------------------
+
+.vjs-default-skin .vjs-progress-control {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: 8px;
+  font-size: 0.3em;
+}
+
+.vjs-default-skin .vjs-progress-holder { height: 100%; }
+
+.vjs-default-skin .vjs-progress-holder .vjs-play-progress,
+.vjs-default-skin .vjs-progress-holder .vjs-load-progress,
+.vjs-default-skin .vjs-progress-holder .vjs-load-progress div {
+  position: absolute;
+  display: block;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 0;
+  left: 0;
+  top: 0;
+}
+
+.vjs-default-skin .vjs-play-progress { background-color: rgba(255,255,255,.8); }
+
+.vjs-default-skin .vjs-load-progress { background-color: rgba(255, 255, 255, 0.5); }
+
+
+//
+// =Time Display
+// --------------------------------------------------
+
+.vjs-default-skin .vjs-current-time,
+.vjs-default-skin .vjs-duration {
+  margin-right: 0.9375rem;
+  margin-left: 0.9375rem;
+  padding: 0.1875rem 0.8125rem;
+  background-color: rgba(236,236,236,.4);
+  border-radius: 0.25rem;
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+}
+
+.vjs-default-skin .vjs-current-time { float: left; }
+
+.vjs-default-skin .vjs-duration { float: right; }
+
+
+//
+// =Big Play Button
+// --------------------------------------------------
+
+.vjs-default-skin .vjs-big-play-button {
+  position: absolute;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+
+  &:before {
+    content: "\e611"; // PLAY icon
+    font-family: 'icomoon';
+    font-size: 3.125rem;
+  }
+
+  &:hover { cursor: pointer; }
+
+  &:focus { outline: 0; }
+}
+
+.vjs-playing .vjs-big-play-button {
+  pointer-events: none;
+  &:before {
+    content: "\e614"; // PAUSE icon
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .vjs-has-started .vjs-big-play-button {
+    top: 30%;
+  }
+}
+
+
+//
+// =Loading Spinner
+// --------------------------------------------------
+
+.vjs-loading-spinner {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 4em;
+  line-height: 1;
+  width: 1em;
+  height: 1em;
+  margin-left: -0.5em;
+  margin-top: -0.5em;
+  opacity: 0.75;
+}
+
+.vjs-waiting .vjs-loading-spinner,
+.vjs-seeking .vjs-loading-spinner {
+  display: block;
+  animation: spin 1.5s infinite linear;
+}
+
+.vjs-default-skin .vjs-loading-spinner:before {
+  content: "\e619";
+  font-family: 'icomoon';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  text-shadow: 0em 0em 0.1em #000;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+
+//
+// =Required Styles
+// --------------------------------------------------
+
+.video-js {
+  background-color: $gray;
+  position: relative;
+  padding: 0;
+  font-size: 10px;
+  vertical-align: middle; // Allow poster to be vertically aligned
+  font-weight: normal;
+  font-style: normal;
+  font-family: $font-family-sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.1538;
+  user-select: none;
+
+  @extend .has-light-mask;
+
+}
+
+.video-js.vjs-has-started:after { z-index: -1; }
+
+.video-js .vjs-tech {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+//
+// =Poster Styles
+// --------------------------------------------------
+
+.vjs-poster {
+  margin: 0;
+  padding: 0;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+  background-color: $gray;
+  cursor: pointer;
+}
+.vjs-poster img {
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  height: auto;
+}
+
+// Don't hide the poster if we're playing audio
+.vjs-audio.vjs-has-started .vjs-poster { display: block; }
+
+// show poster at the end
+.vjs-ended .vjs-poster { display: block; }
+
+.vjs-lock-showing {
+  display: block !important;
+  opacity: 1;
+  visibility: visible;
+}
