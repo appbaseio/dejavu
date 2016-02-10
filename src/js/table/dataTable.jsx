@@ -18,8 +18,6 @@ var cellWidth = '250px';
 // data table.
 var Cell = React.createClass({
     copyId: function() {
-        console.log(this.props._type);
-        console.log(this.props._id);
         var range = document.createRange();
         var selection = window.getSelection();
         range.selectNodeContents(document.getElementById(this.props.unique));
@@ -110,7 +108,6 @@ var Cell = React.createClass({
 // pagination, throbbers, styling etc.
 var Table = React.createClass({
     componentDidMount: function() {
-        console.log("mounted");
         var elem = document.getElementById('table-scroller');
         // WE are listning for scroll even so we get notified
         // when the scroll hits the bottom. For pagination.

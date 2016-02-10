@@ -270,8 +270,10 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
+        this.setMap();
+        setTimeout(this.setMap, 2000)
+        setTimeout(this.getStreamingTypes, 2000);
         setInterval(this.setMap, 5000);
-        setTimeout(this.getStreamingTypes, 5000);
         // call every 1 min.
         setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
@@ -327,7 +329,7 @@ var HomePage = React.createClass({
     },
     setMap: function() {
         var $this = this;
-        if (APPNAME) {
+        if (APPNAME && !$('.modal-backdrop').hasClass('in')) {
             var getMappingObj = feed.getMapping();
             getMappingObj.done(function(data) {
                 mappingObjData = data;
@@ -380,10 +382,12 @@ var HomePage = React.createClass({
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
             if (typeof newTypes != 'undefined') {
-                this.setMap();
                 this.setState({
                     types: newTypes
-                })
+                });
+                setTimeout(function(){
+                    this.setMap();
+                }.bind(this),500);
             }
         }.bind(this));
     },
@@ -395,11 +399,16 @@ var HomePage = React.createClass({
             if (!typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
-                    typeDocSample[selectedType] = data.hits.hits[0]._source;
-                    $this.setState({
-                        typeDocSample: typeDocSample
-                    });
-                    $this.showSample(typeDocSample[selectedType]);
+                    try {
+                        typeDocSample[selectedType] = data.hits.hits[0]._source;
+                        $this.setState({
+                            typeDocSample: typeDocSample
+                        });
+                        $this.showSample(typeDocSample[selectedType]);
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
                 });
 
             } else this.showSample(typeDocSample[selectedType]);
