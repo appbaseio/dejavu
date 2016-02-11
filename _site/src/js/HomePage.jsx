@@ -216,7 +216,6 @@ var HomePage = React.createClass({
                 if (types.length) {
                     d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
-                        console.log('subset',subsetESTypes, types);
                         if(subsetESTypes.length)
                             this.updateDataOnView(update, total);
                         else
