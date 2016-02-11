@@ -204,6 +204,18 @@ var HomePage = React.createClass({
             totalRecord: totalRecord
         });
     },
+    onEmptySelection: function(){
+        OperationFlag = false;
+        var infoObj = this.state.infoObj;
+        infoObj.showing = 0;
+        totalRecord = 0;
+        sdata = {};
+        this.setState({
+            infoObj: infoObj,
+            totalRecord: totalRecord,
+            documents: sdata
+        });
+    },
     getStreamingData: function(types) {
         if (!OperationFlag) {
             OperationFlag = true;
@@ -226,16 +238,7 @@ var HomePage = React.createClass({
                         this.streamCallback(total, fromStream, method);
                     }.bind(this));
                 } else {
-                    OperationFlag = false;
-                    var infoObj = this.state.infoObj;
-                    infoObj.showing = 0;
-                    totalRecord = 0;
-                    sdata = {};
-                    this.setState({
-                        infoObj: infoObj,
-                        totalRecord: totalRecord,
-                        documents: sdata
-                    });
+                    this.onEmptySelection();
                 }
             }
         } else {
@@ -501,12 +504,7 @@ var HomePage = React.createClass({
                 this.streamCallback(total, fromStream, method);
             }.bind(this));
         } else {
-            var infoObj = this.state.infoObj;
-            infoObj.showing = 0;
-            infoObj.total = 0;
-            this.setState({
-                infoObj: infoObj
-            });
+            this.onEmptySelection();
         }
     },
     removeFilter: function() {
