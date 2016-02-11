@@ -218,8 +218,10 @@ var HomePage = React.createClass({
                 if (types.length) {
                     d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
-                        d2 = new Date();
-                        this.updateDataOnView(update, total);
+                        if(subsetESTypes.length)
+                            this.updateDataOnView(update, total);
+                        else
+                            this.updateDataOnView([],0);
                     }.bind(this), function(total, fromStream, method) {
                         this.streamCallback(total, fromStream, method);
                     }.bind(this));
@@ -228,9 +230,11 @@ var HomePage = React.createClass({
                     var infoObj = this.state.infoObj;
                     infoObj.showing = 0;
                     totalRecord = 0;
+                    sdata = {};
                     this.setState({
                         infoObj: infoObj,
-                        totalRecord: totalRecord
+                        totalRecord: totalRecord,
+                        documents: sdata
                     });
                 }
             }
