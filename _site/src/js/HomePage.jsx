@@ -216,7 +216,11 @@ var HomePage = React.createClass({
                 if (types.length) {
                     d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
-                        this.updateDataOnView(update, total);
+                        console.log('subset',subsetESTypes, types);
+                        if(subsetESTypes.length)
+                            this.updateDataOnView(update, total);
+                        else
+                            this.updateDataOnView([],0);
                     }.bind(this), function(total, fromStream, method) {
                         this.streamCallback(total, fromStream, method);
                     }.bind(this));
@@ -225,9 +229,11 @@ var HomePage = React.createClass({
                     var infoObj = this.state.infoObj;
                     infoObj.showing = 0;
                     totalRecord = 0;
+                    sdata = {};
                     this.setState({
                         infoObj: infoObj,
-                        totalRecord: totalRecord
+                        totalRecord: totalRecord,
+                        documents: sdata
                     });
                 }
             }
@@ -415,13 +421,15 @@ var HomePage = React.createClass({
         $('#setBody').val(objJson);
     },
     setSampleData: function(update) {
-        var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
-        typeDocSample[update['_type']] = $.extend({}, update);
-        delete typeDocSample[update['_type']]._id;
-        delete typeDocSample[update['_type']]._type;
-        this.setState({
-            typeDocSample: typeDocSample
-        });
+        if(typeof update != 'undefined'){
+            var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
+            typeDocSample[update['_type']] = $.extend({}, update);
+            delete typeDocSample[update['_type']]._id;
+            delete typeDocSample[update['_type']]._type;
+            this.setState({
+                typeDocSample: typeDocSample
+            });
+        }
     },
     //Get the form data in help exportData,
     //Do the test query before exporting data
