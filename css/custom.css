@@ -78,7 +78,7 @@
 .js-hero.play .dejaVu-content,
 .js-hero.play .dejaVu-icon-strip,
 .js-hero.play .live-btn-strip {
-	opacity: 0.15;
+	opacity: 0.02;
 }
 .js-hero .hero_content a{
 	color: #fff;
@@ -87,7 +87,7 @@
 .dejavu-icon{
 	transition: all 0.5s;
 }
-.dejaVu-icon-strip.fixed{
+/*.dejaVu-icon-strip.fixed{
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -99,7 +99,7 @@
 .dejaVu-icon-strip.fixed .dejaVu-icon{
 	width: 50px;
 	margin: 10px 0 !important;
-}
+}*/
 .section-footer .nav-media{
 	text-align: right;
 }
@@ -137,6 +137,12 @@
 .section-footer{
 	padding:0;
 }
-.section-footer .media{
-	padding-top: 18px;
+.section-footer .media,
+.section-footer .nav-inline>li a
+{
+	padding: 1rem 0;
+	margin: 0;
+}
+.section-footer .nav-inline{
+	padding: 0
 }
