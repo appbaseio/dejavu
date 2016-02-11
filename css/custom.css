@@ -68,7 +68,16 @@
 	background: rgba(0,0,0,0.50);
 	color: #fff;
 }
-.js-hero.play .hero_content{
+.js-hero .fa-pause,
+.js-hero.play .fa-play{
+	display: none;
+}
+.js-hero.play .fa-pause{
+	display: inline-block;
+}
+.js-hero.play .dejaVu-content,
+.js-hero.play .dejaVu-icon-strip,
+.js-hero.play .live-btn-strip {
 	opacity: 0.15;
 }
 .js-hero .hero_content a{
@@ -110,6 +119,12 @@
     padding-left: 3px;
     font-size: 30px;
     line-height: 26px;
+    color: #000;
+}
+.btn>span.fa-pause{
+    font-size: 30px;
+    line-height: 26px;
+    margin-left: -2px;
     color: #000;
 }
 .p-text{
