@@ -40,7 +40,8 @@ var HomePage = React.createClass({
                 total: 0,
                 getOnce: false,
                 availableTotal: 0,
-                searchTotal: 0
+                searchTotal: 0,
+                userTouchAdd: this.userTouchAdd
             },
             totalRecord: 0,
             pageLoading: false,
@@ -417,10 +418,16 @@ var HomePage = React.createClass({
             } else this.showSample(typeDocSample[selectedType]);
         }
     },
+    userTouchFlag: false,
+    //If user didn't touch to textarea only then show the json
     showSample: function(obj) {
-        var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
-        var objJson = JSON.stringify(convertJson, null, 2);
-        $('#setBody').val(objJson);
+        debugger
+        if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
+        else{
+            var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
+            var objJson = JSON.stringify(convertJson, null, 2);
+            $('#setBody').val(objJson);
+        }
     },
     setSampleData: function(update) {
         if(typeof update != 'undefined'){
@@ -623,6 +630,10 @@ var HomePage = React.createClass({
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
+    },
+    userTouchAdd: function(flag){
+        this.userTouchFlag = flag;
+
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
