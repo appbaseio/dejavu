@@ -139,7 +139,7 @@ var feed = (function() {
 	};
 
 	function allowOtherOperation() {
-		setTimeout(() => {
+		setTimeout(function(){
 			OperationFlag = false;
 		}, 500);
 	};
@@ -234,16 +234,16 @@ var feed = (function() {
 
 		},
 		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(v => ({
-				"delete": v
-			}));
+			var deleteArray = selectedRows.map(function(v){
+				return	{"delete": v};
+			});
 			console.log(deleteArray);
 
 			appbaseRef.bulk({
 				body: deleteArray
 			}).on('data', function(data) {
 				for (data in sdata) {
-					selectedRows.forEach((v) => {
+					selectedRows.forEach(function(v){
 						if (typeof sdata[data] != 'undefined') {
 							if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
 								delete sdata[data];

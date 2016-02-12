@@ -60,7 +60,7 @@ var Cell = React.createClass({
         //                         <i className="fa fa-external-link" />
         //                     </a>;
         var appIdClass = "appId";
-        actionOnRecord.selectedRows.forEach((v) => {
+        actionOnRecord.selectedRows.forEach(function(v){
             if (v._id == _id)
                 appIdClass += " showRow";
         });
