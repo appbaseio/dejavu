@@ -40,7 +40,8 @@ var HomePage = React.createClass({
                 total: 0,
                 getOnce: false,
                 availableTotal: 0,
-                searchTotal: 0
+                searchTotal: 0,
+                userTouchAdd: this.userTouchAdd
             },
             totalRecord: 0,
             pageLoading: false,
@@ -202,6 +203,18 @@ var HomePage = React.createClass({
             totalRecord: totalRecord
         });
     },
+    onEmptySelection: function(){
+        OperationFlag = false;
+        var infoObj = this.state.infoObj;
+        infoObj.showing = 0;
+        totalRecord = 0;
+        sdata = {};
+        this.setState({
+            infoObj: infoObj,
+            totalRecord: totalRecord,
+            documents: sdata
+        });
+    },
     getStreamingData: function(types) {
         if (!OperationFlag) {
             OperationFlag = true;
@@ -216,23 +229,19 @@ var HomePage = React.createClass({
                 if (types.length) {
                     d1 = new Date();
                     feed.getData(types, function(update, fromStream, total) {
-                        this.updateDataOnView(update, total);
+                        if(subsetESTypes.length)
+                            this.updateDataOnView(update, total);
+                        else
+                            this.updateDataOnView([],0);
                     }.bind(this), function(total, fromStream, method) {
                         this.streamCallback(total, fromStream, method);
                     }.bind(this));
                 } else {
-                    OperationFlag = false;
-                    var infoObj = this.state.infoObj;
-                    infoObj.showing = 0;
-                    totalRecord = 0;
-                    this.setState({
-                        infoObj: infoObj,
-                        totalRecord: totalRecord
-                    });
+                    this.onEmptySelection();
                 }
             }
         } else {
-            setTimeout(() => this.getStreamingData(types), 300);
+            setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
         }
     },
     // infinite scroll implementation
@@ -409,19 +418,26 @@ var HomePage = React.createClass({
             } else this.showSample(typeDocSample[selectedType]);
         }
     },
+    userTouchFlag: false,
+    //If user didn't touch to textarea only then show the json
     showSample: function(obj) {
-        var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
-        var objJson = JSON.stringify(convertJson, null, 2);
-        $('#setBody').val(objJson);
+        if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
+        else{
+            var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
+            var objJson = JSON.stringify(convertJson, null, 2);
+            $('#setBody').val(objJson);
+        }
     },
     setSampleData: function(update) {
-        var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
-        typeDocSample[update['_type']] = $.extend({}, update);
-        delete typeDocSample[update['_type']]._id;
-        delete typeDocSample[update['_type']]._type;
-        this.setState({
-            typeDocSample: typeDocSample
-        });
+        if(typeof update != 'undefined'){
+            var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
+            typeDocSample[update['_type']] = $.extend({}, update);
+            delete typeDocSample[update['_type']]._id;
+            delete typeDocSample[update['_type']]._type;
+            this.setState({
+                typeDocSample: typeDocSample
+            });
+        }
     },
     //Get the form data in help exportData,
     //Do the test query before exporting data
@@ -492,12 +508,7 @@ var HomePage = React.createClass({
                 this.streamCallback(total, fromStream, method);
             }.bind(this));
         } else {
-            var infoObj = this.state.infoObj;
-            infoObj.showing = 0;
-            infoObj.total = 0;
-            this.setState({
-                infoObj: infoObj
-            });
+            this.onEmptySelection();
         }
     },
     removeFilter: function() {
@@ -533,7 +544,7 @@ var HomePage = React.createClass({
             toggleIt: function(elementId, checked) {
                 if (!checked) {
                     //visible columns - update
-                    var visibleColumns = $this.state.visibleColumns.filter((v) => {
+                    var visibleColumns = $this.state.visibleColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
 
@@ -552,7 +563,7 @@ var HomePage = React.createClass({
                     }
 
                     //hidden columns - update
-                    var hiddenColumns = $this.state.hiddenColumns.filter((v) => {
+                    var hiddenColumns = $this.state.hiddenColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
                 }
@@ -606,7 +617,7 @@ var HomePage = React.createClass({
     },                 
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
-        formInfo.forEach((v) => {
+        formInfo.forEach(function(v) {
             if(v.name == 'url'){
                 window.localStorage.setItem('esurl',v.value);
             }
@@ -618,6 +629,10 @@ var HomePage = React.createClass({
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
+    },
+    userTouchAdd: function(flag){
+        this.userTouchFlag = flag;
+
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -687,9 +702,9 @@ var HomePage = React.createClass({
                                 reloadData={this.reloadData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">How it works</a> 
+                            <a href="http://appbaseio.github.io/dejaVu">watch video</a> 
                             <span className="text-right pull-right powered_by">
-                                 Powered by <a href="http://appbase.io">appbase.io</a>
+                                Create your ElasticSearch in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>  
                             <span className="pull-left github-star">
                                 <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
