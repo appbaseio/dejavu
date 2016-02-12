@@ -2,32 +2,27 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
+const HOSTNAME = "scalr.api.appbase.io"
 const DATA_SIZE = 20;
-var APPNAME, USERNAME, PASSWORD, URL;
+var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
-
-config = {
-    url: window.localStorage.getItem('esurl'),
-    appname: window.localStorage.getItem('appname')
-};
-
-APPNAME = config.appname;
-URL = config.url;
-var urlsplit = URL.split(':');
-var pwsplit = urlsplit[2].split('@');
-USERNAME = urlsplit[1].replace('//', '');
-PASSWORD = pwsplit[0];
-console.log(USERNAME, PASSWORD);
 var OperationFlag = false;
-APPURL = URL + '/' + APPNAME;
-init();
+parent.globalAppData(function(res) {
+    APPNAME = res.appname;
+    APPID = res.appid;
+    USERNAME = res.username;
+    PASSWORD = res.password;
+    EMAIL = res.email;
+    PROFILE = res.profile;
+    init();
+    APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
+});
 
 function init() {
-
     // Instantiating appbase ref with the global configs defined above.
     appbaseRef = new Appbase({
-        url: URL,
+        url: 'https://' + HOSTNAME,
         appname: APPNAME,
         username: USERNAME,
         password: PASSWORD
@@ -139,7 +134,7 @@ var feed = (function() {
     };
 
     function allowOtherOperation() {
-        setTimeout(function(){
+        setTimeout(function() {
             OperationFlag = false;
         }, 500);
     };
@@ -184,7 +179,8 @@ var feed = (function() {
         // ``paginateData()`` scrolls new results using the
         // datatable's current length.
         paginateData: function(total, callback, queryBody) {
-            paginationSearch(subsetESTypes, Object.keys(sdata).length, callback, (queryBody != null) ? queryBody : null);
+            paginationSearch(subsetESTypes, Object.keys(sdata).length, callback,
+                (queryBody != null) ? queryBody : null);
         },
         // gets all the types of the current app;
         getTypes: function(callback) {
@@ -196,8 +192,6 @@ var feed = (function() {
                             callback(types);
                     }
                 }).on('error', function(err) {
-                    console.log(err);
-                    clearInterval(streamingInterval);
                     console.log('error in retrieving types: ', err)
                 })
             } else {
@@ -234,8 +228,8 @@ var feed = (function() {
 
         },
         deleteRecord: function(selectedRows, callback) {
-            var deleteArray = selectedRows.map(function(v){
-                return  {"delete": v};
+            var deleteArray = selectedRows.map(function(v) {
+                return {"delete": v};
             });
             console.log(deleteArray);
 
@@ -243,7 +237,7 @@ var feed = (function() {
                 body: deleteArray
             }).on('data', function(data) {
                 for (data in sdata) {
-                    selectedRows.forEach(function(v){
+                    selectedRows.forEach(function(v) {
                         if (typeof sdata[data] != 'undefined') {
                             if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
                                 delete sdata[data];
@@ -269,7 +263,8 @@ var feed = (function() {
             });
         },
         getMapping: function() {
-            var createUrl = URL + '/' + APPNAME + '/_mapping';
+            var APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@' + HOSTNAME + '/' + APPNAME;
+            var createUrl = APPURL + '/_mapping';
             return $.ajax({
                 type: 'GET',
                 beforeSend: function(request) {
@@ -387,7 +382,7 @@ var feed = (function() {
                         }
                     };
                     break;
-                    
+
                 case 'range':
                     rangeVal = value[0].split('@');
                     termObj = {};
@@ -401,7 +396,7 @@ var feed = (function() {
                             "range": termObj
                         }
                     };
-                    break;  
+                    break;
             }
             return queryBody;
         }
