@@ -192,9 +192,7 @@ var HomePage = React.createClass({
                     sdata[key] = update[each];
                 }
             }
-            d3 = new Date();
             this.resetData(total);
-            d4 = new Date();
             this.setSampleData(update[0]);
         }
     },
@@ -243,7 +241,7 @@ var HomePage = React.createClass({
                 }
             }
         } else {
-            setTimeout(() => this.getStreamingData(types), 300);
+            setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
         }
     },
     // infinite scroll implementation
@@ -254,9 +252,7 @@ var HomePage = React.createClass({
         if (filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
         feed.paginateData(this.state.infoObj.total, function(update) {
-            d2 = new Date();
             this.updateDataOnView(update);
-            d5 = new Date();
         }.bind(this), queryBody);
     },
     // only called on change in types.
@@ -432,17 +428,16 @@ var HomePage = React.createClass({
             $('#setBody').val(objJson);
         }
     },
-    userTouchAdd: function(flag){
-        this.userTouchFlag = flag;
-    },
     setSampleData: function(update) {
-        var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
-        typeDocSample[update['_type']] = $.extend({}, update);
-        delete typeDocSample[update['_type']]._id;
-        delete typeDocSample[update['_type']]._type;
-        this.setState({
-            typeDocSample: typeDocSample
-        });
+        if(typeof update != 'undefined'){
+            var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
+            typeDocSample[update['_type']] = $.extend({}, update);
+            delete typeDocSample[update['_type']]._id;
+            delete typeDocSample[update['_type']]._type;
+            this.setState({
+                typeDocSample: typeDocSample
+            });
+        }
     },
     //Get the form data in help exportData,
     //Do the test query before exporting data
@@ -549,7 +544,7 @@ var HomePage = React.createClass({
             toggleIt: function(elementId, checked) {
                 if (!checked) {
                     //visible columns - update
-                    var visibleColumns = $this.state.visibleColumns.filter((v) => {
+                    var visibleColumns = $this.state.visibleColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
 
@@ -568,7 +563,7 @@ var HomePage = React.createClass({
                     }
 
                     //hidden columns - update
-                    var hiddenColumns = $this.state.hiddenColumns.filter((v) => {
+                    var hiddenColumns = $this.state.hiddenColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
                 }
@@ -622,7 +617,7 @@ var HomePage = React.createClass({
     },                 
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
-        formInfo.forEach((v) => {
+        formInfo.forEach(function(v) {
             if(v.name == 'url'){
                 window.localStorage.setItem('esurl',v.value);
             }
@@ -634,6 +629,10 @@ var HomePage = React.createClass({
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
+    },
+    userTouchAdd: function(flag){
+        this.userTouchFlag = flag;
+
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
