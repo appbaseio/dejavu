@@ -40,7 +40,8 @@ var HomePage = React.createClass({
                 total: 0,
                 getOnce: false,
                 availableTotal: 0,
-                searchTotal: 0
+                searchTotal: 0,
+                userTouchAdd: this.userTouchAdd
             },
             totalRecord: 0,
             pageLoading: false,
@@ -421,10 +422,18 @@ var HomePage = React.createClass({
             } else this.showSample(typeDocSample[selectedType]);
         }
     },
+    userTouchFlag: false,
+    //If user didn't touch to textarea only then show the json
     showSample: function(obj) {
-        var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
-        var objJson = JSON.stringify(convertJson, null, 2);
-        $('#setBody').val(objJson);
+        if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
+        else{
+            var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
+            var objJson = JSON.stringify(convertJson, null, 2);
+            $('#setBody').val(objJson);
+        }
+    },    
+    userTouchAdd: function(flag){
+        this.userTouchFlag = flag;
     },
     setSampleData: function(update) {
         var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};

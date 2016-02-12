@@ -51,6 +51,7 @@ var Info = React.createClass({
                                             types={this.props.types}
                                             addRecord ={this.props.addRecord}
                                             getTypeDoc={this.props.getTypeDoc}
+                                            userTouchAdd={this.props.infoObj.userTouchAdd}
                                             selectClass="tags-select-small" />
                             <div className={filterClass}>
                                 <a href="javascript:void(0)" className="removeFilter">
