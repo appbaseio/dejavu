@@ -60,7 +60,7 @@ var Cell = React.createClass({
         //                         <i className="fa fa-external-link" />
         //                     </a>;
         var appIdClass = "appId";
-        actionOnRecord.selectedRows.forEach((v) => {
+        actionOnRecord.selectedRows.forEach(function(v){
             if (v._id == _id)
                 appIdClass += " showRow";
         });
@@ -283,7 +283,8 @@ var DataTable = React.createClass({
             columns = {columns}
             visibleColumns= {visibleColumns}
             columnToggle = {this.props.columnToggle}
-            actionOnRecord= {this.props.actionOnRecord} />
+            actionOnRecord= {this.props.actionOnRecord} 
+            reloadData = {this.props.reloadData}/>
 
             {extraAddBtn}
 

@@ -243,7 +243,7 @@ var HomePage = React.createClass({
                 }
             }
         } else {
-            setTimeout(() => this.getStreamingData(types), 300);
+            setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
         }
     },
     // infinite scroll implementation
@@ -549,7 +549,7 @@ var HomePage = React.createClass({
             toggleIt: function(elementId, checked) {
                 if (!checked) {
                     //visible columns - update
-                    var visibleColumns = $this.state.visibleColumns.filter((v) => {
+                    var visibleColumns = $this.state.visibleColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
 
@@ -568,7 +568,7 @@ var HomePage = React.createClass({
                     }
 
                     //hidden columns - update
-                    var hiddenColumns = $this.state.hiddenColumns.filter((v) => {
+                    var hiddenColumns = $this.state.hiddenColumns.filter(function(v){
                         if (v != elementId) return v;
                     });
                 }

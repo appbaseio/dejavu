@@ -79,13 +79,13 @@ var help = {
     },
     selectRecord: function(actionOnRecord, id, type, row, currentCheck) {
         selectedRows = [];
-        $('.rowSelectionCheckbox:checked').each((i, v) => {
+        $('.rowSelectionCheckbox:checked').each(function(i, v){
             var obj = {
                 _id: $(v).attr('value'),
                 _type: $(v).data('type')
             };
             selectedRows.push(obj);
-        });;
+        });
         actionOnRecord.active = selectedRows.length ? true : false;
         actionOnRecord.id = id;
         actionOnRecord.type = type;

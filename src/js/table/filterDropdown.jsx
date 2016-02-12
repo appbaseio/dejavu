@@ -14,7 +14,7 @@ var SingleMenuItem = React.createClass({
         this.props.changeFilter(filterField, this.state.filterValue);
         var key = filterKeyGen(this.props.columnField, this.props.val);
         var keyInput = key + '-input';
-        setTimeout(() => {
+        setTimeout(function(){
             $('#' + keyInput).focus();
         }, 300);
         //this.setState({filterField:filterField});
