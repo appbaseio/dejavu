@@ -2,6 +2,8 @@ var browserify = require('browserify');
 var gulp = require('gulp');
 var source = require("vinyl-source-stream");
 var reactify = require('reactify');
+var uglify = require('gulp-uglify');
+var rename = require("gulp-rename");
 
 gulp.task('browserify', function() {
     var b = browserify({
@@ -12,6 +14,15 @@ gulp.task('browserify', function() {
     return b.bundle()
         .pipe(source('main.js'))
         .pipe(gulp.dest('./_site/dist'));
+});
+
+gulp.task('compact', function() {
+    return gulp.src('_site/dist/main.js')
+        .pipe(uglify())
+        .pipe(rename({
+          suffix: '.min'
+        }))    
+        .pipe(gulp.dest('_site/dist'));
 });
 
 gulp.task('connect', function () {
@@ -32,12 +43,13 @@ gulp.task('connect', function () {
 gulp.task('watch', ['browserify','connect'], function() {
     var live = require('gulp-livereload');
     live.listen();
-    gulp.watch([
-        '_site/src/js/*.js',
-        '_site/dist/main.js'    
-    ]).on('change', function (file) {
-        live.changed(file.path);
-    });
+    // gulp.watch([
+    //     '_site/src/js/*.js',
+    //     '_site/dist/main.js'    
+    // ]).on('change', function (file) {
+    //     live.changed(file.path);
+    // });
+    gulp.watch('_site/dist/main.js',['compact']);
     gulp.watch('_site/src/js/*/*.jsx', ['browserify']);
     gulp.watch('_site/src/js/*/*.js', ['browserify']);
     gulp.watch('_site/src/js/*.jsx', ['browserify']);
