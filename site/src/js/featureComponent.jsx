@@ -52,8 +52,8 @@ var AddDocument = React.createClass({
             selectClass: ''
         });
     },
-
     open: function() {
+        this.userTouch(false);
         this.setState({
             showModal: true
         });
@@ -85,6 +85,9 @@ var AddDocument = React.createClass({
             return false;
         }
         return true;
+    },
+    userTouch: function(flag) {
+        this.props.userTouchAdd(flag);
     },
     render: function() {
         var typeList = '';
@@ -134,7 +137,9 @@ var AddDocument = React.createClass({
                           <div className={validateClass.body}>
                             <label for="inputPassword3" className="col-sm-3 control-label">JSON</label>
                             <div className="col-sm-9">
-                              <textarea id="setBody" className="form-control" rows="10" name="body"></textarea>
+                              <textarea id="setBody" className="form-control" rows="10" name="body"
+                                onClick={this.userTouch.bind(null, true)}
+                                onFocus={this.userTouch.bind(null, true)}></textarea>
                                <span className="help-block">
                                   A data document is stored as a JSON object.
                                 </span>
