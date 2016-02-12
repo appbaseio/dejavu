@@ -421,7 +421,6 @@ var HomePage = React.createClass({
     userTouchFlag: false,
     //If user didn't touch to textarea only then show the json
     showSample: function(obj) {
-        debugger
         if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
         else{
             var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
