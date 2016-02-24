@@ -270,6 +270,19 @@ var feed = (function() {
 		},
 		getMapping: function() {
 			var createUrl = URL + '/' + APPNAME + '/_mapping';
+			// var URL = 'https://pW2DT42Cw:a4fae72b-014d-4600-bb6e-544be036db40@scalr.api.appbase.io';
+			// var APPNAME = 'App2';
+			// var createUrl = URL + '/' + APPNAME + '/_mapping';
+			// var xhr = new XMLHttpRequest();
+			// xhr.open('GET', createUrl, true);
+			// xhr.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+			// xhr.withCredentials = true;
+			// xhr.onreadystatechange = function() {
+			//   if (xhr.readyState == 4 && xhr.status == 200) {
+			//     alert(11);
+			//   }
+			// };
+			// xhr.send(null);
 			return $.ajax({
 				type: 'GET',
 				beforeSend: function(request) {
