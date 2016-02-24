@@ -1,5 +1,5 @@
 var React = require('react');
-var FeatureComponent = require('./featureComponent.jsx');
+var FeatureComponent = require('./features/featureComponent.jsx');
 
 // Each row in the types table on the left side.
 var TypeRow = React.createClass({

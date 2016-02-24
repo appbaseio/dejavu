@@ -43,12 +43,11 @@ gulp.task('connect', function () {
 gulp.task('watch', ['browserify','connect'], function() {
     var live = require('gulp-livereload');
     live.listen();
-    // gulp.watch([
-    //     '_site/src/js/*.js',
-    //     '_site/dist/main.js'    
-    // ]).on('change', function (file) {
-    //     live.changed(file.path);
-    // });
+    gulp.watch([
+        '_site/dist/main.min.js'    
+    ]).on('change', function (file) {
+        live.changed(file.path);
+    });
     gulp.watch('_site/dist/main.js',['compact']);
     gulp.watch('_site/src/js/*/*.jsx', ['browserify']);
     gulp.watch('_site/src/js/*/*.js', ['browserify']);
