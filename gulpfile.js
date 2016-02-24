@@ -42,7 +42,7 @@ gulp.task('connect', function () {
 
 gulp.task('watch', ['browserify','connect'], function() {
     var live = require('gulp-livereload');
-    live.listen();
+    live.listen({port: 35735});
     gulp.watch([
         '_site/dist/main.min.js'    
     ]).on('change', function (file) {
