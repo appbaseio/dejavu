@@ -7,21 +7,21 @@ var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
 var getMapFlag = false;
 
-config = {
+var config = {
 	url: window.localStorage.getItem('esurl'),
 	appname: window.localStorage.getItem('appname')
 };
 
-APPNAME = config.appname;
-URL = config.url;
+var APPNAME = config.appname;
+var URL = config.url;
 var urlsplit = URL.split(':');
 var pwsplit = urlsplit[2].split('@');
-USERNAME = urlsplit[1].replace('//', '');
-PASSWORD = pwsplit[0];
-HOST =  URL.indexOf('@') != -1 ? 'https://'+pwsplit[1] : URL;
-console.log(USERNAME, PASSWORD);
+var USERNAME = urlsplit[1].replace('//', '');
+var PASSWORD = pwsplit[0];
+var httpPrefix = URL.split('://');
+var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
 var OperationFlag = false;
-APPURL = URL + '/' + APPNAME;
+var APPURL = URL + '/' + APPNAME;
 init();
 
 function init() {
