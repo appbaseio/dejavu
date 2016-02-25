@@ -31,6 +31,7 @@ var HomePage = React.createClass({
             sortInfo: {
                 active: false
             },
+            connect: false,
             filterInfo: {
                 active: false,
                 applyFilter: this.applyFilter
@@ -262,7 +263,8 @@ var HomePage = React.createClass({
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
             this.setState({
-                types: update
+                types: update,
+                connect: true
             });
         }.bind(this));
     },
@@ -643,7 +645,9 @@ var HomePage = React.createClass({
 
     render: function() {
         var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
-        var esText = config.url != null ? 'Connect': 'Start Browsing';
+        var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
+        var esBtn = this.state.connect ? 'btn-primary ': '';
+        esBtn += 'btn btn-default submit-btn';
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -662,7 +666,7 @@ var HomePage = React.createClass({
                                             <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
                                         </div>
                                         <div className="submit-btn-container">
-                                            <a className="btn btn-default submit-btn" onClick={this.initEs}>{esText}</a>
+                                            <a className={esBtn} onClick={this.initEs}>{esText}</a>
                                         </div>
                                     </div>
                                 </div>
