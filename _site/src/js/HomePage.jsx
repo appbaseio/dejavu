@@ -349,7 +349,7 @@ var HomePage = React.createClass({
         var infoObj = this.state.infoObj;
 
         // Plug in a handler which takes care of infinite scrolling
-        if (infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100) {
+        if (subsetESTypes.length && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100) {
             this.setState({
                 pageLoading: true
             });
