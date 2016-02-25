@@ -263,7 +263,7 @@ var feed = (function() {
             });
         },
         getMapping: function() {
-            var APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@' + HOSTNAME + '/' + APPNAME;
+            var APPURL = 'https://' + HOSTNAME + '/' + APPNAME;
             var createUrl = APPURL + '/_mapping';
             return $.ajax({
                 type: 'GET',

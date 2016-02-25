@@ -21,6 +21,7 @@ var Column = React.createClass({
         });
     },
     render: function() {
+        
         var item = this.props._item;
         var type = this.state.type == null ? this.props._type : this.state.type;
         var sortInfo = this.props._sortInfo;
@@ -44,8 +45,13 @@ var Column = React.createClass({
         var thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
         
         //get the datatype if field is not json & type mapping has properties field
-        if (item != 'json' && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
-            datatype = this.props.mappingObj[type]['properties'][item].type;
+        try {
+            if (item != 'json' && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
+                datatype = this.props.mappingObj[type]['properties'][item].type;
+            }
+        }
+        catch(err) {
+            console.log(err);
         }
 
         //Allow sorting if item is not the first column
