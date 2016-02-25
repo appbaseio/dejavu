@@ -5,7 +5,12 @@ DejaVu - a modern ElasticSearch databrowser
 
 ## Comparison
 
-Comparison with existing ElasticSearch browsers.
+|     Features     |                                                    DejaVu                                                    | Elasticsearch-head | Elasticsearch-kopf | Elasticsearch-browser |                                 Kibana                                |
+|:----------------:|:------------------------------------------------------------------------------------------------------------:|:------------------:|:------------------:|:---------------------:|:---------------------------------------------------------------------:|
+| Installation     | 100% browser javascript. Also available as a chrome extension and an ES plugin.      |                    |                    |                       | A server client setup. Uses an ElasticSearch index to store metadata. |
+| Modern UI        | Built with React, a live-reload based interface.                                                  |                    |                    |                       |                                                                       |
+| Browser features | Create, view and edit data from your ElasticSearch index. Auto mapping detection and data filtering support. |                    |                    |                       |                                                                       |
+| Open Source      | Hackable, comes with a MIT license.                                                                          |                    |                    |                       |                                                                       |
 
 ## Installation Steps
 
