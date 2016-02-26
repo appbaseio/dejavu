@@ -1,7 +1,7 @@
 var React = require('react');
 var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
-var FeatureComponent = require('./featureComponent.jsx');
+var FeatureComponent = require('./features/featureComponent.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
@@ -252,7 +252,7 @@ var HomePage = React.createClass({
         var queryBody = null;
         d1 = new Date();
         if (filterInfo.active)
-            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
+            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
         feed.paginateData(this.state.infoObj.total, function(update) {
             d2 = new Date();
             this.updateDataOnView(update);
@@ -487,7 +487,7 @@ var HomePage = React.createClass({
             }
         });
     },
-    applyFilter: function(typeName, columnName, method, value) {
+    applyFilter: function(typeName, columnName, method, value, analyzed) {
         filterVal = $.isArray(value) ? value : value.split(',');
         var $this = this;
         var filterObj = this.state.filterInfo;
@@ -496,11 +496,12 @@ var HomePage = React.createClass({
         filterObj['method'] = method;
         filterObj['value'] = filterVal;
         filterObj['active'] = true;
+        filterObj['analyzed'] = analyzed;
         this.setState({
             filterInfo: filterObj
         });
         if (typeName != '' && typeName != null) {
-            feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream, total) {
+            feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
                 if (!fromStream) {
                     sdata = [];
                     $this.resetData(total);
