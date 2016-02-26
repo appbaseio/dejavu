@@ -7,10 +7,10 @@ DejaVu - a modern ElasticSearch databrowser
 
 |     Features     |                                                    DejaVu                                                    | Elasticsearch-head | Elasticsearch-kopf | Elasticsearch-browser |                                 Kibana                                |
 |:----------------:|:------------------------------------------------------------------------------------------------------------:|:------------------:|:------------------:|:---------------------:|:---------------------------------------------------------------------:|
-| Installation     | 100% browser javascript. Also available as a chrome extension and an ES plugin.      |                    |                    |                       | A server client setup. Uses an ElasticSearch index to store metadata. |
-| Modern UI        | Built with React, a live-reload based interface.                                                  |                    |                    |                       |                                                                       |
-| Browser features | Create, view and edit data from your ElasticSearch index. Auto mapping detection and data filtering support. |                    |                    |                       |                                                                       |
-| Open Source      | Hackable, comes with a MIT license.                                                                          |                    |                    |                       |                                                                       |
+| Installation     | 100% browser javascript. Also available as a chrome extension and an ES plugin.      | Available as ES plugin and you can also run it on any server from filesystem |                    |                       | A server client setup. Uses an ElasticSearch index to store metadata. |
+| Modern UI        | Built with React, a live-reload based interface.                                                  | Built with jQuery JavaScript Library v1.6.1 - older UI                   |                    |                       |                                                                       |
+| Browser features | Create, view and edit data from your ElasticSearch index. Auto mapping detection and data filtering support. |             Only data view is available with search feature support. |                    |                       |                                                                       |
+| Open Source      | Hackable, comes with a MIT license.                                                                          |  Apache License               |                    |                       |                                                                       |
 
 ## Installation Steps
 
