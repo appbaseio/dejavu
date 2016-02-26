@@ -197,9 +197,20 @@ var HomePage = React.createClass({
             this.setSampleData(update[0]);
         }
     },
-    streamCallback: function(total, fromStream, method) {
+    countTotalRecord: function(total, fromStream, method){
         var totalRecord = this.state.totalRecord;
-        totalRecord = fromStream ? (method == 'index' ? (totalRecord + 1) : totalRecord) : total;
+        if(fromStream) {
+            if(method == 'index')
+                totalRecord += 1;
+            else if(method == 'delete')
+                totalRecord -= 1;
+        }
+        else
+            totalRecord = total
+        return totalRecord;
+    },
+    streamCallback: function(total, fromStream, method) {
+        var totalRecord = this.countTotalRecord(total, fromStream, method);
         this.setState({
             totalRecord: totalRecord
         });
