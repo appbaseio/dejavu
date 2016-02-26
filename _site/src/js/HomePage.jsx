@@ -251,7 +251,7 @@ var HomePage = React.createClass({
         var queryBody = null;
         d1 = new Date();
         if (filterInfo.active)
-            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type);
+            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
         feed.paginateData(this.state.infoObj.total, function(update) {
             this.updateDataOnView(update);
         }.bind(this), queryBody);
@@ -484,7 +484,7 @@ var HomePage = React.createClass({
             }
         });
     },
-    applyFilter: function(typeName, columnName, method, value) {
+    applyFilter: function(typeName, columnName, method, value, analyzed) {
         filterVal = $.isArray(value) ? value : value.split(',');
         var $this = this;
         var filterObj = this.state.filterInfo;
@@ -493,11 +493,12 @@ var HomePage = React.createClass({
         filterObj['method'] = method;
         filterObj['value'] = filterVal;
         filterObj['active'] = true;
+        filterObj['analyzed'] = analyzed;
         this.setState({
             filterInfo: filterObj
         });
         if (typeName != '' && typeName != null) {
-            feed.filterQuery(method, columnName, filterVal, subsetESTypes, function(update, fromStream, total) {
+            feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
                 if (!fromStream) {
                     sdata = [];
                     $this.resetData(total);

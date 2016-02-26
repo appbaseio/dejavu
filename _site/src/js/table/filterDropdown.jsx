@@ -24,7 +24,7 @@ var FilterDropdown = React.createClass({
     },
     applyFilter: function() {
         if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
-            this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue);
+            this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.props.analyzed);
     },
     render: function() {
         var ButtonToolbar = ReactBootstrap.ButtonToolbar;

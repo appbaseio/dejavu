@@ -304,22 +304,23 @@ var feed = (function() {
 				}
 			});
 		},
-		filterQuery: function(method, columnName, value, typeName, callback, setTotal) {
-			var queryBody = this.createFilterQuery(method, columnName, value, typeName);
+		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
+			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
 			applyStreamSearch(typeName, callback, queryBody, setTotal);
 		},
 		//Create Filter Query by passing attributes
-		createFilterQuery: function(method, columnName, value, typeName) {
+		createFilterQuery: function(method, columnName, value, typeName, analyzed) {
 			var queryBody = {};
 			switch (method) {
 				case 'has':
 					var queryMaker = [];
+					//If field is analyzed use MATCH else term
+					var subQuery = analyzed ? 'match' : 'term';
 					value.forEach(function(val) {
 						var termObj = {};
 						termObj[columnName] = val.trim();
-						var obj = {
-							'term': termObj
-						};
+						var obj = {}
+						obj[subQuery] = termObj;
 						queryMaker.push(obj);
 					});
 					queryBody = {
@@ -334,12 +335,13 @@ var feed = (function() {
 
 				case 'has not':
 					var queryMaker = [];
+					var subQuery = analyzed ? 'match' : 'term';
+					
 					value.forEach(function(val) {
 						var termObj = {};
 						termObj[columnName] = val.trim();
-						var obj = {
-							'term': termObj
-						};
+						var obj = {};
+						obj[subQuery] = termObj;
 						queryMaker.push(obj);
 					});
 					queryBody = {

@@ -32,6 +32,7 @@ var Column = React.createClass({
         var fixedHead = 'table-fixed-head column_width ' + extraClass + ' ' + filterClass;
         var filterId = 'filter-' + item;
         var datatype = null;
+        var analyzed = true;
         prettyData = " Clicking on {...} displays the JSON data. ";
         var itemText = item == 'json' ? 
                 (<span>
@@ -48,6 +49,7 @@ var Column = React.createClass({
         try {
             if (item != 'json' && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
                 datatype = this.props.mappingObj[type]['properties'][item].type;
+                analyzed = this.props.mappingObj[type]['properties'][item].index == 'not_analyzed' ? false : true;
             }
         }
         catch(err) {
@@ -72,7 +74,7 @@ var Column = React.createClass({
                             <div className="iconList">
                                 {sortIcon}
                                 <span className="filterIcon">
-                                    <FilterDropdown columnField={item} type={type} datatype = {datatype} filterInfo={this.props.filterInfo} />
+                                    <FilterDropdown columnField={item} type={type} datatype = {datatype} analyzed={analyzed} filterInfo={this.props.filterInfo} />
                                 </span>
                             </div>
                         </div>
