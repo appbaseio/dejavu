@@ -25,6 +25,7 @@ var APPURL = URL + '/' + APPNAME;
 init();
 
 function init() {
+
 	// Instantiating appbase ref with the global configs defined above.
 	appbaseRef = new Appbase({
 		url: URL,
