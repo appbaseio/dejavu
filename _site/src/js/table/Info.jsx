@@ -25,7 +25,7 @@ var Info = React.createClass({
                     <div className=" row">
                         <div className={infoObjClass}>
                             <div className={totalClass}>
-                                <a  
+                                <a
                                     href="javascript:void(0);"
                                     className="btn btn-default themeBtn m-r10"
                                     onClick={this.props.reloadData}>
@@ -82,7 +82,7 @@ var Info = React.createClass({
                             <div className={hiddenClass}>
                                 <a href="javascript:void(0)" className="removeFilter">
                                     <span className="inside-info">
-                                        <i className="fa fa-cog"></i>&nbsp;Hidden:&nbsp;{hiddenColumns.length}
+                                        <i className="fa fa-eye-slash"></i>&nbsp;hide:&nbsp;{hiddenColumns.length}
                                     </span>
                                     <span className="close-btn" onClick={this.props.removeHidden}>
                                         <i className="fa fa-times"></i>
