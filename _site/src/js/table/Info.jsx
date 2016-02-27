@@ -10,8 +10,10 @@ var Info = React.createClass({
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
         var actionOnRecord = this.props.actionOnRecord;
+        var hiddenColumns = this.props.hiddenColumns;
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
+        var hiddenClass = hiddenColumns.length ? 'pull-right text-right pd-r10' : 'hide';
         var infoObjClass = totalRecord == 0 ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
@@ -73,6 +75,16 @@ var Info = React.createClass({
                                         <i className={sortAscClass}></i>&nbsp;{sortInfo.column}
                                     </span>
                                     <span className="close-btn" onClick={this.props.removeSort}>
+                                        <i className="fa fa-times"></i>
+                                    </span>
+                                </a>
+                            </div>
+                            <div className={hiddenClass}>
+                                <a href="javascript:void(0)" className="removeFilter">
+                                    <span className="inside-info">
+                                        <i className="fa fa-cog"></i>&nbsp;Hidden:&nbsp;{hiddenColumns.length}
+                                    </span>
+                                    <span className="close-btn" onClick={this.props.removeHidden}>
                                         <i className="fa fa-times"></i>
                                     </span>
                                 </a>
