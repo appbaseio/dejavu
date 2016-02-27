@@ -134,6 +134,9 @@ var feed = (function() {
 			if (res2._updated) {
 
 			}
+			else if (res2._deleted) {
+				setTotal(0, true, 'delete');
+			}
 			//For Index data
 			else {
 				setTotal(0, true, 'index');
