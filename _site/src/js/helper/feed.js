@@ -6,6 +6,7 @@ const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
 var getMapFlag = false;
+var appAuth = true;
 
 var config = {
 	url: window.localStorage.getItem('esurl'),
