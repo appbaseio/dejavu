@@ -76,8 +76,7 @@
 	display: inline-block;
 }
 .js-hero.play .dejaVu-content,
-.js-hero.play .dejaVu-icon-strip,
-.js-hero.play .live-btn-strip {
+.js-hero.play .dejaVu-icon-strip {
 	opacity: 0.02;
 }
 .js-hero .hero_content a{
