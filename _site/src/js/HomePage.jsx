@@ -245,7 +245,7 @@ var HomePage = React.createClass({
             //If filter is applied apply filter data
             if (this.state.filterInfo.active) {
                 var filterInfo = this.state.filterInfo;
-                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
+                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
             }
             //Get the data without filter
             else {
