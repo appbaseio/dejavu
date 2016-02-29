@@ -61,7 +61,8 @@ var HomePage = React.createClass({
             typeInfo: {
                 count: 0,
                 typeCounter: this.typeCounter
-            }
+            },
+            errorShow: false
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -299,12 +300,14 @@ var HomePage = React.createClass({
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
         this.setMap();
-        setTimeout(this.setMap, 2000)
-        setTimeout(this.getStreamingTypes, 2000);
-        // call every 1 min.
-        setInterval(this.setMap, 60 * 1000);
-        setInterval(this.getStreamingTypes, 60 * 1000);
-        this.getTotalRecord();
+        if(appAuth) {
+            setTimeout(this.setMap, 2000)
+            setTimeout(this.getStreamingTypes, 2000);
+            // call every 1 min.
+            mappingInterval = setInterval(this.setMap, 60 * 1000);
+            streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+            this.getTotalRecord();
+        }
     },
     componentDidUpdate: function() {
         var hiddenColumns = this.state.hiddenColumns;
@@ -404,6 +407,15 @@ var HomePage = React.createClass({
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
+            }).error(function(xhr){
+                if(xhr.status == 401){
+                    $this.setState({
+                        errorShow: true
+                    }); 
+                    appAuth = false;
+                    clearInterval(mappingInterval);
+                    clearInterval(streamingInterval);
+                }
             });
         }
     },
@@ -696,7 +708,11 @@ var HomePage = React.createClass({
     },
     userTouchAdd: function(flag){
         this.userTouchFlag = flag;
-
+    },
+    closeErrorModal: function(){
+        this.setState({
+            errorShow: false
+        });
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -776,6 +792,10 @@ var HomePage = React.createClass({
                                 <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
                             </span>   
                         </footer>
+                        <FeatureComponent.ErrorModal 
+                            errorShow={this.state.errorShow}
+                            closeErrorModal = {this.closeErrorModal}>
+                        </FeatureComponent.ErrorModal>
                     </div>
                 </div>);
     }

@@ -6,6 +6,7 @@ const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
 var getMapFlag = false;
+var appAuth = true;
 
 var config = {
 	url: window.localStorage.getItem('esurl'),
@@ -128,6 +129,9 @@ var feed = (function() {
 			//For update data
 			if (res2._updated) {
 
+			}
+			else if (res2._deleted) {
+				setTotal(0, true, 'delete');
 			}
 			//For Index data
 			else {

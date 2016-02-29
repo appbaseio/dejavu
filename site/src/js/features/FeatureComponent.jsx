@@ -12,6 +12,7 @@ var SignalCircle = require('./SignalCircle.jsx');
 var RemoveFilterButton = require('./RemoveFilterButton.jsx');
 var UpdateDocument = require('./UpdateDocument.jsx');
 var DeleteDocument = require('./DeleteDocument.jsx');
+var ErrorModal = require('./ErrorModal.jsx');
 
 var FeatureComponent = {
     AddDocument: AddDocument,
@@ -21,7 +22,8 @@ var FeatureComponent = {
     SignalCircle: SignalCircle,
     RemoveFilterButton: RemoveFilterButton,
     UpdateDocument: UpdateDocument,
-    DeleteDocument: DeleteDocument
+    DeleteDocument: DeleteDocument,
+    ErrorModal: ErrorModal
 };
 
 module.exports = FeatureComponent;
