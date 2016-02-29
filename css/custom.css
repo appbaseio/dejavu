@@ -83,8 +83,15 @@
 	color: #fff;
 }
 .dejaVu-icon-strip,
-.dejavu-icon{
+.dejavu-icon {
 	transition: all 0.5s;
+}
+.pd-0{
+	padding: 0;
+}
+.img-responsive {
+	max-width: 100%;
+	padding-bottom: 20px;
 }
 /*.dejaVu-icon-strip.fixed{
 	position: fixed;
