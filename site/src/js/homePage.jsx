@@ -111,14 +111,24 @@ var HomePage = React.createClass({
         data = sortedArray;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
+        var availableColumns = [];
         for (var each in sdata) {
             for (column in sdata[each]) {
                 if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
                     if (visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1) {
                         visibleColumns.push(column);
                     }
+                if(availableColumns.indexOf(column) <= -1)    
+                    availableColumns.push(column);
                 }
             }
+        }
+        
+        if(availableColumns.length){
+            hiddenColumns.forEach(function(col, key){
+                if(availableColumns.indexOf(col) <= -1)
+                    hiddenColumns.splice(key, 1);
+            });
         }
 
         //set the combined state
@@ -126,6 +136,7 @@ var HomePage = React.createClass({
             documents: sortedArray,
             infoObj: infoObj,
             visibleColumns: visibleColumns,
+            hiddenColumns: hiddenColumns,
             pageLoading: false
         });
     },
@@ -197,9 +208,20 @@ var HomePage = React.createClass({
             this.setSampleData(update[0]);
         }
     },
-    streamCallback: function(total, fromStream, method) {
+    countTotalRecord: function(total, fromStream, method){
         var totalRecord = this.state.totalRecord;
-        totalRecord = fromStream ? (method == 'index' ? (totalRecord + 1) : totalRecord) : total;
+        if(fromStream) {
+            if(method == 'index')
+                totalRecord += 1;
+            else if(method == 'delete')
+                totalRecord -= 1;
+        }
+        else
+            totalRecord = total
+        return totalRecord;
+    },
+    streamCallback: function(total, fromStream, method) {
+        var totalRecord = this.countTotalRecord(total, fromStream, method);
         this.setState({
             totalRecord: totalRecord
         });
@@ -223,7 +245,7 @@ var HomePage = React.createClass({
             //If filter is applied apply filter data
             if (this.state.filterInfo.active) {
                 var filterInfo = this.state.filterInfo;
-                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value);
+                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
             }
             //Get the data without filter
             else {
@@ -283,6 +305,45 @@ var HomePage = React.createClass({
         setInterval(this.setMap, 60 * 1000);
         setInterval(this.getStreamingTypes, 60 * 1000);
         this.getTotalRecord();
+    },
+    componentDidUpdate: function() {
+        var hiddenColumns = this.state.hiddenColumns;
+        this.hideAttribute(hiddenColumns, 'hide');
+    },
+    removeHidden: function() {
+        var hiddenColumns = this.state.hiddenColumns;
+        this.hideAttribute(hiddenColumns, 'show');
+        var visibleColumns = this.state.visibleColumns.concat(hiddenColumns);
+        this.setState({
+            hiddenColumns: [],
+            visibleColumns: visibleColumns
+        });
+    },
+    hideAttribute: function(Columns, method) {
+        if(method == 'hide') {
+            Columns.forEach(function(col){
+                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+                else {    
+                    document.getElementById(col).style.display = "none";
+                    for (var each in sdata) {
+                        var key = keyGen(sdata[each], col);
+                        document.getElementById(key).style.display = "none"
+                    }
+                }    
+            });
+        }
+        else if(method == 'show') {
+            Columns.forEach(function(col){
+                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+                else {    
+                    document.getElementById(col).style.display = "";
+                    for (var each in sdata) {
+                        var key = keyGen(sdata[each], col);
+                        document.getElementById(key).style.display = ""
+                    }
+                }    
+            });
+        }
     },
     getTotalRecord: function() {
         var $this = this;
@@ -642,8 +703,6 @@ var HomePage = React.createClass({
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
 
-
-
     render: function() {
         var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
         var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
@@ -700,7 +759,9 @@ var HomePage = React.createClass({
                                 getTypeDoc={this.getTypeDoc}
                                 Types={this.state.types}
                                 removeSort = {this.removeSort}
+                                removeHidden = {this.removeHidden}
                                 visibleColumns = {this.state.visibleColumns}
+                                hiddenColumns = {this.state.hiddenColumns}
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
                                 pageLoading={this.state.pageLoading}
