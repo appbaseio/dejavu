@@ -33,7 +33,7 @@ dejavu also supports local filters like column sorting and showing a subset of c
 
 ### Modern UI elements
 
-![Pagination]()
+![Pagination](http://gdurl.com/P6Ay)
 
 It's not uncommon to have thousands of records in a type. dejavu supports an infinite scroll based UI, pagination is so old school.
 
