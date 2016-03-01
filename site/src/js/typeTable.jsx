@@ -14,18 +14,12 @@ var TypeRow = React.createClass({
     componentDidMount: function() {
         var value;
         var intype = this.props.type;
-        chrome.storage.local.get(intype, function (result) {
-            value = result[intype]; 
-            //var value = window.localStorage.getItem(this.props.type);
-            value = value == 'undefined' || typeof value == 'undefined' ? false : value;
-            this.setType(value);
-        }.bind(this));
-
-        //this.setType(value);
+        var value = this.props.checkValue;
+        this.setType(value);
     },
     setType: function(value){
         checked = false;
-        if (value == "true") {
+        if (value) {
             checked = true;
             this.props.watchTypeHandler(this.props.type);
         }
@@ -45,7 +39,9 @@ var TypeRow = React.createClass({
         // every time its checked we update the local storage.
         // window.localStorage.setItem(this.props.type, checked);
         var intype = this.props.type;
-        chrome.storage.local.set({intype: checked});
+        var setObj = {};
+        setObj[intype] = checked;
+        chrome.storage.local.set(setObj);
         this.setState({
             isChecked: checked
         });
@@ -73,15 +69,18 @@ var TypeRow = React.createClass({
 var TypeTable = React.createClass({
     render: function() {
         var types = this.props.Types;
+        var typeCheck = this.props.typeCheck;
         rowObj = [];
         appname = APPNAME;
         for (var type in types) {
-            rowObj.push(<TypeRow
-                         key={type}
-                         type={types[type]}
-                         unwatchTypeHandler={this.props.unwatchTypeHandler}
-                         watchTypeHandler={this.props.watchTypeHandler}
-                         typeInfo={this.props.typeInfo} />);
+            var singleType = types[type];
+                rowObj.push(<TypeRow
+                     key={type}
+                     type={types[type]}
+                     checkValue = {typeCheck[singleType]}
+                     unwatchTypeHandler={this.props.unwatchTypeHandler}
+                     watchTypeHandler={this.props.watchTypeHandler}
+                     typeInfo={this.props.typeInfo} />);
         }
         if (types.length < 1) {
             return (

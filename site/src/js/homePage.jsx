@@ -285,10 +285,21 @@ var HomePage = React.createClass({
             update = update.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
-            this.setState({
-                types: update,
-                connect: true
+            var typeCheck = {};
+            update.forEach(function(v){
+                chrome.storage.local.get(v, function (result) {
+                    var value = result[v];
+                    value = value == 'undefined' || typeof value == 'undefined' ? false : value;
+                    typeCheck[v] = value;
+                });    
             });
+            setTimeout(function(){
+                this.setState({
+                    types: update,
+                    typeCheck: typeCheck,
+                    connect: true
+                });
+            }.bind(this),1000);
         }.bind(this));
     },
     removeType: function(typeName) {
@@ -756,6 +767,7 @@ var HomePage = React.createClass({
                         <div className="typeContainer">
                             <TypeTable
                                 Types={this.state.types}
+                                typeCheck = {this.state.typeCheck}
                                 watchTypeHandler={this.watchStock}
                                 unwatchTypeHandler={this.unwatchStock}
                                 ExportData={this.exportData}
