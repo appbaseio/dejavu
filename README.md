@@ -1,11 +1,13 @@
-DejaVu - a modern ElasticSearch databrowser
+dejaVu - a modern Elasticsearch databrowser
 ====
 
-## Why
+dejaVu fits the unmet need of being a hackable data browser for Elasticsearch. Existing browsers were either built with a legacy UI and had a lacking user experience or used server side rendering (I am looking at you, Kibana).
+
+So we decided to build our own, with a goal of making it 100% client side and using modern UI elements (no page reloads, infinite scrolling, creating filter views). It's available as a github hosted page, chrome extension and as an Elasticsearch plugin.
 
 ## Comparison
 
-|     Features     |                                                    DejaVu                                                    | Elasticsearch-head | Elasticsearch-kopf | Elasticsearch-browser |                                 Kibana                                |
+|     Features     |                                                    dejaVu                                                    | Elasticsearch-head | Elasticsearch-kopf | Elasticsearch-browser |                                 Kibana                                |
 |:----------------:|:------------------------------------------------------------------------------------------------------------:|:------------------:|:------------------:|:---------------------:|:---------------------------------------------------------------------:|
 | Installation     | 100% browser javascript. Also available as a chrome extension and an ES plugin.      | Available as ES plugin and you can also run it on any server from filesystem |  Available as ES plugin and you can also run it on any server from filesystem  | Readme is not updated. available as ES plugin. | A server client setup. Uses an ElasticSearch index to store metadata. |
 | Modern UI        | Built with React, a live-reload based interface.                                                  | Built with jQuery JavaScript Library v1.6.1 - older UI                   | Built with Angular 1.x               | Built with ExtJs - in UI there is only table view, nothing else                      | javascript only                                                                      |
