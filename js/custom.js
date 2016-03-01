@@ -11,7 +11,11 @@ $(document).ready(function() {
 
 	//Video
 	var myVideo = document.getElementById("dejavu-video");
+	myVideo.onended = function() {
+		$('.js-hero').removeClass('play');
+	};
 	var myVideoFlag = false;
+
 	function playPause() {
 		if (myVideo.paused) {
 			$('.js-hero').addClass('play');
@@ -33,7 +37,7 @@ $(document).ready(function() {
 			$('.js-hero').removeClass('play');
 		} else {
 			$('.dejaVu-icon-strip').removeClass('fixed');
-			if(myVideoFlag)
+			if (myVideoFlag)
 				$('.js-hero').addClass('play');
 		}
 	});
