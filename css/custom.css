@@ -42,7 +42,7 @@
     left: 0;
     height: 100%;
     position: absolute;
-    width: auto;
+    width: 100%;
     display: inline-block;
 }
 .hero_content{
