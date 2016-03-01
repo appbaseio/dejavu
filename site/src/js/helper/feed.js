@@ -8,31 +8,41 @@ var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
 
-var config = {
-	url: window.localStorage.getItem('esurl'),
-	appname: window.localStorage.getItem('appname')
-};
+// var config = {
+// 	url: window.localStorage.getItem('esurl'),
+// 	appname: window.localStorage.getItem('appname')
+// };
+var config = {};
 
-var APPNAME = config.appname;
-var URL = config.url;
-var urlsplit = URL.split(':');
-var pwsplit = urlsplit[2].split('@');
-var USERNAME = urlsplit[1].replace('//', '');
-var PASSWORD = pwsplit[0];
-var httpPrefix = URL.split('://');
-var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-var OperationFlag = false;
-var APPURL = URL + '/' + APPNAME;
-init();
+chrome.storage.local.get('esurl', function(result) {
+	init();
+});
 
 function init() {
+	chrome.storage.local.get('esurl', function(result) {
+		config.url = result.esurl;
+		chrome.storage.local.get('appname', function(result1) {
+			config.appname = result1.appname;
 
-	// Instantiating appbase ref with the global configs defined above.
-	appbaseRef = new Appbase({
-		url: URL,
-		appname: APPNAME,
-		username: USERNAME,
-		password: PASSWORD
+			APPNAME = config.appname;
+			URL = config.url;
+			urlsplit = URL.split(':');
+			pwsplit = urlsplit[2].split('@');
+			USERNAME = urlsplit[1].replace('//', '');
+			PASSWORD = pwsplit[0];
+			httpPrefix = URL.split('://');
+			HOST = URL.indexOf('@') != -1 ? httpPrefix[0] + '://' + pwsplit[1] : URL;
+			OperationFlag = false;
+			APPURL = URL + '/' + APPNAME;
+
+			// Instantiating appbase ref with the global configs defined above.
+			appbaseRef = new Appbase({
+				url: URL,
+				appname: APPNAME,
+				username: USERNAME,
+				password: PASSWORD
+			});
+		});
 	});
 }
 
@@ -129,8 +139,7 @@ var feed = (function() {
 			//For update data
 			if (res2._updated) {
 
-			}
-			else if (res2._deleted) {
+			} else if (res2._deleted) {
 				setTotal(0, true, 'delete');
 			}
 			//For Index data
@@ -144,7 +153,7 @@ var feed = (function() {
 	};
 
 	function allowOtherOperation() {
-		setTimeout(function(){
+		setTimeout(function() {
 			OperationFlag = false;
 		}, 500);
 	};
@@ -239,8 +248,10 @@ var feed = (function() {
 
 		},
 		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(function(v){
-				return	{"delete": v};
+			var deleteArray = selectedRows.map(function(v) {
+				return {
+					"delete": v
+				};
 			});
 			console.log(deleteArray);
 
@@ -248,7 +259,7 @@ var feed = (function() {
 				body: deleteArray
 			}).on('data', function(data) {
 				for (data in sdata) {
-					selectedRows.forEach(function(v){
+					selectedRows.forEach(function(v) {
 						if (typeof sdata[data] != 'undefined') {
 							if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
 								delete sdata[data];
@@ -340,7 +351,7 @@ var feed = (function() {
 				case 'has not':
 					var queryMaker = [];
 					var subQuery = analyzed ? 'match' : 'term';
-					
+
 					value.forEach(function(val) {
 						var termObj = {};
 						termObj[columnName] = val.trim();
@@ -394,21 +405,21 @@ var feed = (function() {
 						}
 					};
 					break;
-					
+
 				case 'range':
-                    rangeVal = value[0].split('@');
-                    termObj = {};
-                    termObj[columnName] = {};
-                    termObj[columnName] = {
-                        "gte": rangeVal[0],
-                        "lte": rangeVal[1]
-                    };
-                    queryBody = {
-                        "query": {
-                            "range": termObj
-                        }
-                    };
-                    break;	
+					rangeVal = value[0].split('@');
+					termObj = {};
+					termObj[columnName] = {};
+					termObj[columnName] = {
+						"gte": rangeVal[0],
+						"lte": rangeVal[1]
+					};
+					queryBody = {
+						"query": {
+							"range": termObj
+						}
+					};
+					break;
 			}
 			return queryBody;
 		}

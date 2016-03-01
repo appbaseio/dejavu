@@ -695,13 +695,18 @@ var HomePage = React.createClass({
         var formInfo = $('#init-ES').serializeArray();
         formInfo.forEach(function(v) {
             if(v.name == 'url'){
-                window.localStorage.setItem('esurl',v.value);
+                chrome.storage.local.set({'esurl': v.value});
+                //window.localStorage.setItem('esurl',v.value);
             }
             else{
-                window.localStorage.setItem('appname',v.value);
+                chrome.storage.local.set({'appname': v.value});
+                //window.localStorage.setItem('appname',v.value);
             }
         });
-        window.location.href = "index.html";
+        //window.location.href = "index.html";
+        setTimeout(function(){
+            init();
+        },1000);
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
