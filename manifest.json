@@ -12,7 +12,7 @@
             "scripts": [ "background.js" ]
         }
     },
-    "permissions": ["cookies", "storage", "proxy"],
+    "permissions": ["cookies", "storage", "proxy", "system.display"],
     "manifest_version": 2,
     "offline_enabled":true
 }

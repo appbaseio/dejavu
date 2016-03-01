@@ -21,9 +21,10 @@ chrome.storage.local.get('esurl', function(result) {
 function init() {
 	chrome.storage.local.get('esurl', function(result) {
 		config.url = result.esurl;
+		$('#configUrl').val(config.url);
 		chrome.storage.local.get('appname', function(result1) {
 			config.appname = result1.appname;
-
+			$('#configAppname').val(config.appname);
 			APPNAME = config.appname;
 			URL = config.url;
 			urlsplit = URL.split(':');

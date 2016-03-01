@@ -741,10 +741,10 @@ var HomePage = React.createClass({
                                         </div>
                                         <h1>DejaVu Browser for ElasticSearch</h1>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                            <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
+                                            <input id="configUrl" type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
                                         </div>
                                         <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
+                                            <input id="configAppname" type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
                                         </div>
                                         <div className="submit-btn-container">
                                             <a className={esBtn} onClick={this.initEs}>{esText}</a>

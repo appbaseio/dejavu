@@ -13,19 +13,26 @@ var TypeRow = React.createClass({
     },
     componentDidMount: function() {
         var value;
-        chrome.storage.local.get(this.props.type, function (result) {
-            value = result[this.props.type]; 
+        var intype = this.props.type;
+        chrome.storage.local.get(intype, function (result) {
+            value = result[intype]; 
             //var value = window.localStorage.getItem(this.props.type);
-            checked = false;
-            if (value == "true") {
-                checked = true;
-                this.props.watchTypeHandler(this.props.type);
-            }
-            this.setState({
-                isChecked: checked
-            });
-            this.props.typeInfo.typeCounter();
-        }.bind(this));    
+            value = value == 'undefined' || typeof value == 'undefined' ? false : value;
+            this.setType(value);
+        }.bind(this));
+
+        //this.setType(value);
+    },
+    setType: function(value){
+        checked = false;
+        if (value == "true") {
+            checked = true;
+            this.props.watchTypeHandler(this.props.type);
+        }
+        this.setState({
+            isChecked: checked
+        });
+        this.props.typeInfo.typeCounter();
     },
     unwatch: function() {
         var checked = false;
@@ -38,11 +45,10 @@ var TypeRow = React.createClass({
         // every time its checked we update the local storage.
         // window.localStorage.setItem(this.props.type, checked);
         var intype = this.props.type;
-        chrome.storage.local.set({intype: checked}, function(){
-            this.setState({
-                isChecked: checked
-            });
-        }.bind(this));
+        chrome.storage.local.set({intype: checked});
+        this.setState({
+            isChecked: checked
+        });
     },
     render: function() {
         return (
