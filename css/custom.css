@@ -7,7 +7,7 @@
     width: auto;
 }
 .bg-faded{
-	background: #eee;
+	background: #EBFCFF;
 }
 .dejavu-icon{
 	width: 60px;
@@ -69,11 +69,11 @@
 	text-align: center;
 }
 .js-hero .hero_content {
-	background: rgba(0,0,0,0.50);
-	color: #fff;
+	background: rgba(255,255,255,0.50);
+    color: #00D3FF;
 }
 .js-hero.play .hero_content {
-	background: rgba(0,0,0,0.05);
+	background: rgba(255,255,255,0.05);
 }
 .js-hero .fa-pause,
 .js-hero.play .fa-play{
@@ -119,6 +119,16 @@
 .section-footer .nav-inline{
 	text-align: left;
 }
+.section-footer.bg-inverse{
+	color: #00D3FF;
+	background: #fff;
+}
+.roadmap-btn {
+	color: #000 !important;
+}
+.compare-btn {
+	color: #00D3FF !important;
+}
 .video-play{
 	padding: 20px;
     background: #fff;
@@ -162,4 +172,20 @@
 }
 .section-footer .nav-inline{
 	padding: 0
+}
+
+.bg-img {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: table;
+	opacity: 0.5;
+}
+.bg-img img {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.js-hero.play .bg-img {
+	display: none;
 }
