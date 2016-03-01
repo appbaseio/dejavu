@@ -44,6 +44,10 @@
     position: absolute;
     width: 100%;
     display: inline-block;
+    opacity: 0.05;
+}
+.js-hero.play .hero__background video {
+	opacity: 1;
 }
 .hero_content{
 	position: absolute;
@@ -64,9 +68,12 @@
 	vertical-align: middle;
 	text-align: center;
 }
-.js-hero .hero_content{
+.js-hero .hero_content {
 	background: rgba(0,0,0,0.50);
 	color: #fff;
+}
+.js-hero.play .hero_content {
+	background: rgba(0,0,0,0.05);
 }
 .js-hero .fa-pause,
 .js-hero.play .fa-play{
@@ -119,6 +126,10 @@
     border-radius: 100%;
     width: 66px;
     height: 66px;
+}
+.try-it-btn {
+	background: #fff;
+	color: #000 !important;
 }
 .btn>span.fa-play{
 	margin: 0;
