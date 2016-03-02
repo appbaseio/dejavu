@@ -801,9 +801,9 @@ var HomePage = React.createClass({
                                 reloadData={this.reloadData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">watch video</a> 
+                            <a target="_blank" href="http://appbaseio.github.io/dejaVu">watch video</a> 
                             <span className="text-right pull-right powered_by">
-                                Create your ElasticSearch in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                                Create your ElasticSearch in cloud with&nbsp;<a  target="_blank" href="http://appbase.io">appbase.io</a>
                             </span>  
                             <span className="pull-left github-star">
                                 <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
