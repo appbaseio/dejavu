@@ -1,5 +1,5 @@
 {
-    "name":"dejaVu",
+    "name":"dejavu",
     "version":"0.1",
     "icons":{
         "16":"site/assets/img/icon_16.png",
@@ -14,5 +14,7 @@
     },
     "permissions": ["cookies", "storage", "proxy", "system.display"],
     "manifest_version": 2,
-    "offline_enabled":true
+    "offline_enabled":true,
+    "description": "A modern, open-source data browser for Elasticsearch.",
+    "author": "Farhan Chauhan, appbase.io"
 }
