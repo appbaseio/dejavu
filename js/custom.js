@@ -13,6 +13,7 @@ $(document).ready(function() {
 	var myVideo = document.getElementById("dejavu-video");
 	myVideo.onended = function() {
 		$('.js-hero').removeClass('play');
+		myVideoFlag = false;
 	};
 	var myVideoFlag = false;
 
