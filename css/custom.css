@@ -123,11 +123,11 @@
 	color: #00D3FF;
 	background: #fff;
 }
-.roadmap-btn {
-	color: #000 !important;
+.roadmap-btn,.compare-btn {
+	color: #333 !important;
 }
-.compare-btn {
-	color: #00D3FF !important;
+.highlight-link{
+	color: #00D3FF;
 }
 .video-play{
 	padding: 20px;
@@ -156,7 +156,7 @@
 }
 .p-text{
 	padding: 20px 0;
-	font-size: 20px;
+	font-size: 26px;
 }
 .theme-color{
 	color: #3BC7F6 !important;
@@ -188,4 +188,7 @@
 
 .js-hero.play .bg-img {
 	display: none;
+}
+.small-icon {
+	width: 70px;
 }
