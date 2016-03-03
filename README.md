@@ -7,7 +7,7 @@ So we decided to build our own, with a goal of making it 100% client side and us
 
 ### Elasticsearch plugin - Installation
 
-``bin/plugin -install appbaseio/dejaVu``
+``bin/plugin install appbaseio/dejaVu``
 
 ``Note``: To make sure you enable CORS settings for your ElasticSearch instance, add the following lines in the ES configuration file.
 
@@ -18,6 +18,19 @@ So we decided to build our own, with a goal of making it 100% client side and us
  http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
  http.cors.allow-credentials: true
 ```
+
+After installing the plugin, 
+start elasticsearch service 
+```sh
+elasticsearch
+```
+and visit the following URL to access it.
+
+```sh 
+http://127.0.0.1:9200/_plugin/dejaVu 
+```
+
+``Note:`` If you use Elasticsearch from a different port, the URL would change accordingly.
 
 ## Features
 
