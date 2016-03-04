@@ -2,7 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
-const DATA_SIZE = 20;
+const DATA_SIZE = get_data_size();
 var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
 var getMapFlag = false;
@@ -30,6 +30,15 @@ var OperationFlag = false;
 var APPURL = URL + '/' + APPNAME;
 init();
 
+// Get data size according to window height
+function get_data_size() {
+	var mininum_data_size = 20;
+	var winHeight = $(window).height() - 150;
+	var rowHeight = 51;
+	var min_rows = Math.ceil(winHeight/rowHeight);
+	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
+	return rows;
+}
 function init() {
 
 	// Instantiating appbase ref with the global configs defined above.
