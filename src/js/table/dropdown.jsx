@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var FieldCheckbox = require('./FieldCheckbox.jsx');
+var FieldCheckbox = require('./fieldCheckbox.jsx');
 /*
  * This file contains the utility components, mainly the dropdown menu for
  * selecting which fields to apphear in the table, also the checkboxes component
