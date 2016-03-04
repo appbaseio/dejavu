@@ -3,7 +3,7 @@
 // endpoint.
 // **Configs:** Appname and Credentials
 const HOSTNAME = "scalr.api.appbase.io"
-const DATA_SIZE = 20;
+const DATA_SIZE = get_data_size();
 var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
@@ -19,6 +19,16 @@ parent.globalAppData(function(res) {
     init();
     APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io/' + APPNAME;
 });
+
+// Get data size according to window height
+function get_data_size() {
+    var mininum_data_size = 20;
+    var winHeight = $(window).height() - 150;
+    var rowHeight = 51;
+    var min_rows = Math.ceil(winHeight/rowHeight);
+    var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
+    return rows;
+}
 
 function init() {
     // Instantiating appbase ref with the global configs defined above.
