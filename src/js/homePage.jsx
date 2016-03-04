@@ -31,6 +31,7 @@ var HomePage = React.createClass({
             sortInfo: {
                 active: false
             },
+            connect: false,
             filterInfo: {
                 active: false,
                 applyFilter: this.applyFilter
@@ -60,7 +61,8 @@ var HomePage = React.createClass({
             typeInfo: {
                 count: 0,
                 typeCounter: this.typeCounter
-            }
+            },
+            errorShow: false
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -110,14 +112,24 @@ var HomePage = React.createClass({
         data = sortedArray;
         hiddenColumns = this.state.hiddenColumns;
         var visibleColumns = [];
+        var availableColumns = [];
         for (var each in sdata) {
             for (column in sdata[each]) {
                 if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
                     if (visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1) {
                         visibleColumns.push(column);
                     }
+                if(availableColumns.indexOf(column) <= -1)    
+                    availableColumns.push(column);
                 }
             }
+        }
+        
+        if(availableColumns.length){
+            hiddenColumns.forEach(function(col, key){
+                if(availableColumns.indexOf(col) <= -1)
+                    hiddenColumns.splice(key, 1);
+            });
         }
 
         //set the combined state
@@ -125,6 +137,7 @@ var HomePage = React.createClass({
             documents: sortedArray,
             infoObj: infoObj,
             visibleColumns: visibleColumns,
+            hiddenColumns: hiddenColumns,
             pageLoading: false
         });
     },
@@ -192,15 +205,24 @@ var HomePage = React.createClass({
                     sdata[key] = update[each];
                 }
             }
-            d3 = new Date();
             this.resetData(total);
-            d4 = new Date();
             this.setSampleData(update[0]);
         }
     },
-    streamCallback: function(total, fromStream, method) {
+    countTotalRecord: function(total, fromStream, method){
         var totalRecord = this.state.totalRecord;
-        totalRecord = fromStream ? (method == 'index' ? (totalRecord + 1) : totalRecord) : total;
+        if(fromStream) {
+            if(method == 'index')
+                totalRecord += 1;
+            else if(method == 'delete')
+                totalRecord -= 1;
+        }
+        else
+            totalRecord = total
+        return totalRecord;
+    },
+    streamCallback: function(total, fromStream, method) {
+        var totalRecord = this.countTotalRecord(total, fromStream, method);
         this.setState({
             totalRecord: totalRecord
         });
@@ -254,9 +276,7 @@ var HomePage = React.createClass({
         if (filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
         feed.paginateData(this.state.infoObj.total, function(update) {
-            d2 = new Date();
             this.updateDataOnView(update);
-            d5 = new Date();
         }.bind(this), queryBody);
     },
     // only called on change in types.
@@ -266,7 +286,8 @@ var HomePage = React.createClass({
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
             this.setState({
-                types: update
+                types: update,
+                connect: true
             });
         }.bind(this));
     },
@@ -279,12 +300,53 @@ var HomePage = React.createClass({
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
         this.setMap();
-        setTimeout(this.setMap, 2000)
-        setTimeout(this.getStreamingTypes, 2000);
-        // call every 1 min.
-        setInterval(this.setMap, 60 * 1000);
-        setInterval(this.getStreamingTypes, 60 * 1000);
-        this.getTotalRecord();
+        if(appAuth) {
+            setTimeout(this.setMap, 2000)
+            setTimeout(this.getStreamingTypes, 2000);
+            // call every 1 min.
+            mappingInterval = setInterval(this.setMap, 60 * 1000);
+            streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+            this.getTotalRecord();
+        }
+    },
+    componentDidUpdate: function() {
+        var hiddenColumns = this.state.hiddenColumns;
+        this.hideAttribute(hiddenColumns, 'hide');
+    },
+    removeHidden: function() {
+        var hiddenColumns = this.state.hiddenColumns;
+        this.hideAttribute(hiddenColumns, 'show');
+        var visibleColumns = this.state.visibleColumns.concat(hiddenColumns);
+        this.setState({
+            hiddenColumns: [],
+            visibleColumns: visibleColumns
+        });
+    },
+    hideAttribute: function(Columns, method) {
+        if(method == 'hide') {
+            Columns.forEach(function(col){
+                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+                else {    
+                    document.getElementById(col).style.display = "none";
+                    for (var each in sdata) {
+                        var key = keyGen(sdata[each], col);
+                        document.getElementById(key).style.display = "none"
+                    }
+                }    
+            });
+        }
+        else if(method == 'show') {
+            Columns.forEach(function(col){
+                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+                else {    
+                    document.getElementById(col).style.display = "";
+                    for (var each in sdata) {
+                        var key = keyGen(sdata[each], col);
+                        document.getElementById(key).style.display = ""
+                    }
+                }    
+            });
+        }
     },
     getTotalRecord: function() {
         var $this = this;
@@ -345,6 +407,15 @@ var HomePage = React.createClass({
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
+            }).error(function(xhr){
+                if(xhr.status == 401){
+                    $this.setState({
+                        errorShow: true
+                    }); 
+                    appAuth = false;
+                    clearInterval(mappingInterval);
+                    clearInterval(streamingInterval);
+                }
             });
         }
     },
@@ -431,18 +502,17 @@ var HomePage = React.createClass({
             var objJson = JSON.stringify(convertJson, null, 2);
             $('#setBody').val(objJson);
         }
-    },    
-    userTouchAdd: function(flag){
-        this.userTouchFlag = flag;
     },
     setSampleData: function(update) {
-        var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
-        typeDocSample[update['_type']] = $.extend({}, update);
-        delete typeDocSample[update['_type']]._id;
-        delete typeDocSample[update['_type']]._type;
-        this.setState({
-            typeDocSample: typeDocSample
-        });
+        if(typeof update != 'undefined'){
+            var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
+            typeDocSample[update['_type']] = $.extend({}, update);
+            delete typeDocSample[update['_type']]._id;
+            delete typeDocSample[update['_type']]._type;
+            this.setState({
+                typeDocSample: typeDocSample
+            });
+        }
     },
     //Get the form data in help exportData,
     //Do the test query before exporting data
@@ -620,12 +690,34 @@ var HomePage = React.createClass({
             this.removeSelection();
             this.resetData();
         }.bind(this));
+    },                 
+    initEs:function(){
+        var formInfo = $('#init-ES').serializeArray();
+        formInfo.forEach(function(v) {
+            if(v.name == 'url'){
+                window.localStorage.setItem('esurl',v.value);
+            }
+            else{
+                window.localStorage.setItem('appname',v.value);
+            }
+        });
+        window.location.href = "index.html";
+    },
+    reloadData:function(){
+        this.getStreamingData(subsetESTypes);
+    },
+    userTouchAdd: function(flag){
+        this.userTouchFlag = flag;
+    },
+    closeErrorModal: function(){
+        this.setState({
+            errorShow: false
+        });
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
-
 
     render: function() {
         return (<div>
@@ -658,11 +750,18 @@ var HomePage = React.createClass({
                                 getTypeDoc={this.getTypeDoc}
                                 Types={this.state.types}
                                 removeSort = {this.removeSort}
+                                removeHidden = {this.removeHidden}
                                 visibleColumns = {this.state.visibleColumns}
+                                hiddenColumns = {this.state.hiddenColumns}
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
-                                pageLoading={this.state.pageLoading} />
+                                pageLoading={this.state.pageLoading}
+                                reloadData={this.reloadData} />
                         </div>
+                        <FeatureComponent.ErrorModal 
+                            errorShow={this.state.errorShow}
+                            closeErrorModal = {this.closeErrorModal}>
+                        </FeatureComponent.ErrorModal>
                     </div>
                 </div>);
     }

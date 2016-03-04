@@ -7,6 +7,7 @@ const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD;
 var appbaseRef;
 var getMapFlag = false;
+var appAuth = true;
 var OperationFlag = false;
 parent.globalAppData(function(res) {
     APPNAME = res.appname;
