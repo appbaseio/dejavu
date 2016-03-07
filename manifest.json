@@ -12,7 +12,7 @@
             "scripts": [ "background.js" ]
         }
     },
-    "permissions": ["cookies", "storage", "proxy", "system.display"],
+    "permissions": ["cookies", "storage", "proxy", "system.display", "system.network", "<all_urls>"],
     "manifest_version": 2,
     "offline_enabled":true,
     "description": "A modern, open-source data browser for Elasticsearch.",
