@@ -13,7 +13,7 @@ So we decided to build our own, with a goal of making it 100% client side and us
 
 ```sh
  http.port: 9200
- http.cors.allow-origin: "http://127.0.0.1:1358"
+ http.cors.allow-origin: "http://127.0.0.1:9200"
  http.cors.enabled: true
  http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
  http.cors.allow-credentials: true
@@ -30,7 +30,7 @@ and visit the following URL to access it.
 http://127.0.0.1:9200/_plugin/dejaVu 
 ```
 
-``Note:`` If you use Elasticsearch from a different port, the URL would change accordingly.
+``Note:`` If you use Elasticsearch from a different port, the URL to access and the `http.cors.allow-origin` value in the configuration file would change accordingly.
 
 ## Features
 
