@@ -589,6 +589,14 @@ footer{
     text-overflow: ellipsis;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+    -moz-user-select: text;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+}
+#for-copy {
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text; 
 }
 .appId .appId_appname{
      display: inline-block;
