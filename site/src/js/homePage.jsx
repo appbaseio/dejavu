@@ -310,6 +310,15 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
+        this.init_map_stream();
+    },
+    init_map_stream: function() {
+        try {
+            clearInterval(mappingInterval);
+            clearInterval(streamingInterval);
+        }
+        catch (e) {}
+        
         this.setMap();
         if(appAuth) {
             setTimeout(this.setMap, 2000)
@@ -717,7 +726,11 @@ var HomePage = React.createClass({
         //window.location.href = "index.html";
         setTimeout(function(){
             init();
-        },1000);
+            setTimeout(function(){
+                appAuth = true;
+                this.init_map_stream();
+            }.bind(this),500);
+        }.bind(this),1000);
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
