@@ -789,7 +789,7 @@ var HomePage = React.createClass({
                                 Create your ElasticSearch in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>  
                             <span className="pull-left github-star">
-                                <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameborder="0" scrolling="0" width="120px" height="20px"></iframe>
+                                <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>
                             </span>   
                         </footer>
                         <FeatureComponent.ErrorModal 
