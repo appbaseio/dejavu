@@ -16,7 +16,7 @@ gulp.task('browserify', function() {
         .pipe(gulp.dest('./site/dist'));
 });
 
-gulp.task('compact', function() {
+gulp.task('compact', ['browserify'], function() {
     return gulp.src('site/dist/main.js')
         .pipe(uglify())
         .pipe(rename({
@@ -40,22 +40,18 @@ gulp.task('connect', function () {
         });
 });
 
-gulp.task('watch', ['browserify','connect'], function() {
+gulp.task('watch', ['compact','connect'], function() {
     var live = require('gulp-livereload');
-    live.listen();
-    // gulp.watch([
-    //     'site/src/js/*.js',
-    //     'site/dist/main.js'    
-    // ]).on('change', function (file) {
-    //     live.changed(file.path);
-    // });
-
+    live.listen({port: 35735});
+    gulp.watch([
+        'site/dist/main.min.js'    
+    ]).on('change', function (file) {
+        live.changed(file.path);
+    });
     gulp.watch('site/dist/main.js',['compact']);
-    gulp.watch('site/src/js/*/*.jsx', ['browserify']);
-    gulp.watch('site/src/js/*/*.js', ['browserify']);
-    gulp.watch('site/src/js/*.jsx', ['browserify']);
-    gulp.watch('site/src/js/*.js', ['browserify']);
+    gulp.watch('site/src/js/*/*.jsx', ['compact']);
+    gulp.watch('site/src/js/*.jsx', ['compact']);
 
 });
 
-gulp.task('default', ['browserify']);
+gulp.task('default', ['compact']);

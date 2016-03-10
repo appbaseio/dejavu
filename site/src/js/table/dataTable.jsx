@@ -133,6 +133,7 @@ var DataTable = React.createClass({
                             getTypeDoc={this.props.getTypeDoc}
                             link="true"
                             text="&nbsp;&nbsp;Add new data"
+                            userTouchAdd={this.props.infoObj.userTouchAdd}
                             selectClass="tags-select-big"/>
                           </div>
         }
