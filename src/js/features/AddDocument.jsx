@@ -107,7 +107,8 @@ var AddDocument = React.createClass({
                 body: 'form-group'
             };
         }
-        var btnLinkClass = this.props.link == "true" ? 'add-record-link fa fa-plus' : 'add-record-btn btn btn-primary fa fa-plus';
+        var btnLinkClassSub = this.props.link == "true" ? 'add-record-link fa fa-plus' : 'add-record-btn btn btn-primary fa fa-plus';
+        var btnLinkClass = this.props.types.length ? btnLinkClassSub : 'hide';
         var selectClass = this.props.selectClass + ' tags-select form-control';
 
         return (<div className="add-record-container pd-r10">
