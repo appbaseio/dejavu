@@ -13,6 +13,7 @@ var RemoveFilterButton = require('./RemoveFilterButton.jsx');
 var UpdateDocument = require('./UpdateDocument.jsx');
 var DeleteDocument = require('./DeleteDocument.jsx');
 var ErrorModal = require('./ErrorModal.jsx');
+var ExportasJson = require('./ExportasJson.jsx');
 
 var FeatureComponent = {
     AddDocument: AddDocument,
@@ -23,7 +24,8 @@ var FeatureComponent = {
     RemoveFilterButton: RemoveFilterButton,
     UpdateDocument: UpdateDocument,
     DeleteDocument: DeleteDocument,
-    ErrorModal: ErrorModal
+    ErrorModal: ErrorModal,
+    ExportasJson: ExportasJson
 };
 
 module.exports = FeatureComponent;

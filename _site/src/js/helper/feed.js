@@ -8,6 +8,7 @@ var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
+var exportJsonData = [];
 
 var config = {
 	url: window.localStorage.getItem('esurl'),
@@ -292,6 +293,25 @@ var feed = (function() {
 					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
 				},
 				url: createUrl,
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
+		scrollapi: function(types, queryBody, scroll) {
+			var typesString = types.join(',');
+			var createUrl = HOST + '/' + APPNAME + '/' +typesString+ '/_search?scroll=1m';
+			var scrollUrl = HOST + '/_search/scroll';
+			var finalUrl = scroll ? scrollUrl : createUrl;
+			return $.ajax({
+				type: 'POST',
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: finalUrl,
+				contentType: 'application/json; charset=utf-8',
+    			dataType: 'json',
+				data: JSON.stringify(queryBody),
 				xhrFields: {
 					withCredentials: true
 				}

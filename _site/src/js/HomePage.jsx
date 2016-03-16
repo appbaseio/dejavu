@@ -714,6 +714,42 @@ var HomePage = React.createClass({
             errorShow: false
         });
     },
+    exportJsonData: function() {
+        $('.json-spinner').show();
+        $('#jsonlink').hide();
+
+        var activeQuery = {
+            "query": {
+                "match_all": {}
+            },
+            "size":1000
+        };
+        if (this.state.filterInfo.active) {
+            activeQuery = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+        }
+        this.scrollApi({"activeQuery": activeQuery});
+    },
+    scrollApi: function(info) {
+        feed.scrollapi(subsetESTypes, info.activeQuery, info.scroll).done(function(data){
+            var hits = data.hits.hits;
+            if(hits.length > 999) {
+                exportJsonData = exportJsonData.concat(hits);
+                var scrollObj = {
+                    'scroll': '1m',
+                    'scroll_id': data._scroll_id
+                };
+                this.scrollApi({"activeQuery": scrollObj, "scroll": true});
+            }
+            else {
+                var str = JSON.stringify(exportJsonData, null, 4);
+                var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
+                var link = document.getElementById('jsonlink').href = dataUri;
+                $('.json-spinner').hide();
+                $('#jsonlink').show();
+                exportJsonData = [];
+            }
+        }.bind(this));
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -757,7 +793,8 @@ var HomePage = React.createClass({
                                 signalColor={this.state.signalColor}
                                 signalActive={this.state.signalActive}
                                 signalText={this.state.signalText}
-                                typeInfo={this.state.typeInfo} />
+                                typeInfo={this.state.typeInfo}
+                                exportJsonData= {this.exportJsonData} />
                         </div>
                          <div className="col-xs-12 dataContainer">
                             <DataTable

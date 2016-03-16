@@ -608,6 +608,9 @@ footer{
   left: 0;
   width: 100%;
 }
+.ieButton.withframe {
+  bottom: 30px;
+}
 .feature-list{
   list-style: none;
   list-style-position: outside;
