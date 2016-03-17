@@ -716,7 +716,6 @@ var HomePage = React.createClass({
     },
     exportJsonData: function() {
         $('.json-spinner').show();
-        $('#jsonlink').hide();
 
         var activeQuery = {
             "query": {
@@ -725,27 +724,28 @@ var HomePage = React.createClass({
             "size":1000
         };
         if (this.state.filterInfo.active) {
+            var filterInfo = this.state.filterInfo;
             activeQuery = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
         }
         this.scrollApi({"activeQuery": activeQuery});
     },
     scrollApi: function(info) {
-        feed.scrollapi(subsetESTypes, info.activeQuery, info.scroll).done(function(data){
+        feed.scrollapi(subsetESTypes, info.activeQuery, info.scroll, info.scroll_id).done(function(data){
             var hits = data.hits.hits;
+            exportJsonData = exportJsonData.concat(hits);
             if(hits.length > 999) {
-                exportJsonData = exportJsonData.concat(hits);
                 var scrollObj = {
                     'scroll': '1m',
                     'scroll_id': data._scroll_id
                 };
-                this.scrollApi({"activeQuery": scrollObj, "scroll": true});
+                this.scrollApi({"activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
             }
             else {
                 var str = JSON.stringify(exportJsonData, null, 4);
                 var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
                 var link = document.getElementById('jsonlink').href = dataUri;
                 $('.json-spinner').hide();
-                $('#jsonlink').show();
+                $('#jsonlink').removeClass('hide');
                 exportJsonData = [];
             }
         }.bind(this));

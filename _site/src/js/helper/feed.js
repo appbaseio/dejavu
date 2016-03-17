@@ -298,10 +298,10 @@ var feed = (function() {
 				}
 			});
 		},
-		scrollapi: function(types, queryBody, scroll) {
+		scrollapi: function(types, queryBody, scroll, scroll_id) {
 			var typesString = types.join(',');
-			var createUrl = HOST + '/' + APPNAME + '/' +typesString+ '/_search?scroll=1m';
-			var scrollUrl = HOST + '/_search/scroll';
+			var createUrl = HOST + '/' + APPNAME + '/' +typesString+ '/_search?scroll=5m';
+			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id='+scroll_id;
 			var finalUrl = scroll ? scrollUrl : createUrl;
 			return $.ajax({
 				type: 'POST',

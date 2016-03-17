@@ -31,14 +31,19 @@ var ImportData = React.createClass({
                     </a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
-                        <Modal.Title>Import Data into Appbase <span className="small-span">from JSON, MongoDB</span></Modal.Title>
+                        <Modal.Title>Export data <span className="small-span">in json</span></Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <p>Please wait, while we are loading</p>
-                        
-                        <i className="fa fa-spinner fa-spin json-spinner"></i>
-
-                        <a href="#" id="jsonlink" download="data.json" className="btn btn-success">Download json</a>
+                        <p className="json-spinner"> 
+                            <i className="fa fa-spinner fa-spin"></i>
+                            <span>&nbsp;Please wait, while we are loading</span>
+                        </p>
+                        <a href="#" id="jsonlink"
+                            target="_blank"
+                            download="data.json" 
+                            className="btn btn-success hide">
+                            Download json
+                        </a>
                       </Modal.Body>
                     </Modal>
                   </div>);
