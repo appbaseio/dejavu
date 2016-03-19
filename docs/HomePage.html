@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>HomePage.jsx</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>HomePage.jsx</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>);
+<span class="hljs-keyword">var</span> TypeTable = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./typeTable.jsx'</span>);
+<span class="hljs-keyword">var</span> DataTable = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./table/dataTable.jsx'</span>);
+<span class="hljs-keyword">var</span> FeatureComponent = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./features/featureComponent.jsx'</span>);
+<span class="hljs-keyword">var</span> PureRenderMixin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-addons-pure-render-mixin'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>This is the file which commands the data update/delete/append.
+Any react component that wishes to modify the data state should
+do so by flowing back the data and calling the <code>resetData</code> function
+here. This is sort of like the Darth Vader - Dangerous and
+Commands everything !</p>
+<p>ref: <a href="https://facebook.github.io/react/docs/two-way-binding-helpers.html">https://facebook.github.io/react/docs/two-way-binding-helpers.html</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-keyword">var</span> HomePage = React.createClass({
+    mixins: [PureRenderMixin],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The underlying data structure that holds the documents/records
+is a hashmap with keys as <code>_id + _type</code>(refer to keys.js). Its
+because no two records can have the same _type _id pair, so its
+easy to check if a record already exists.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    getInitialState: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> {
+            documents: [],
+            types: [],
+            signalColor: <span class="hljs-string">''</span>,
+            signalActive: <span class="hljs-string">''</span>,
+            signalText: <span class="hljs-string">''</span>,
+            visibleColumns: [],
+            hiddenColumns: [],
+            sortInfo: {
+                active: <span class="hljs-literal">false</span>
+            },
+            connect: <span class="hljs-literal">false</span>,
+            filterInfo: {
+                active: <span class="hljs-literal">false</span>,
+                applyFilter: <span class="hljs-keyword">this</span>.applyFilter
+            },
+            infoObj: {
+                showing: <span class="hljs-number">0</span>,
+                total: <span class="hljs-number">0</span>,
+                getOnce: <span class="hljs-literal">false</span>,
+                availableTotal: <span class="hljs-number">0</span>,
+                searchTotal: <span class="hljs-number">0</span>,
+                userTouchAdd: <span class="hljs-keyword">this</span>.userTouchAdd
+            },
+            totalRecord: <span class="hljs-number">0</span>,
+            pageLoading: <span class="hljs-literal">false</span>,
+            mappingObj: {},
+            actionOnRecord: {
+                active: <span class="hljs-literal">false</span>,
+                id: <span class="hljs-literal">null</span>,
+                type: <span class="hljs-literal">null</span>,
+                row: <span class="hljs-literal">null</span>,
+                selectedRows: [],
+                selectRecord: <span class="hljs-keyword">this</span>.selectRecord,
+                updateRecord: <span class="hljs-keyword">this</span>.updateRecord,
+                deleteRecord: <span class="hljs-keyword">this</span>.deleteRecord,
+                removeSelection: <span class="hljs-keyword">this</span>.removeSelection
+            },
+            typeInfo: {
+                count: <span class="hljs-number">0</span>,
+                typeCounter: <span class="hljs-keyword">this</span>.typeCounter
+            },
+            errorShow: <span class="hljs-literal">false</span>
+        };
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>The record might have nested json objects. They can’t be shown
+as is since it looks cumbersome in the table. What we do in the
+case of a nested json object is, we replace it with a font-icon
+(in injectLink) which upon clicking shows a Modal with the json
+object it contains.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    flatten: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, callback</span>) </span>{
+        <span class="hljs-keyword">var</span> response = help.flatten(data);
+        <span class="hljs-keyword">return</span> callback(response.data, response.fields);
+    },
+    injectLink: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data, fields</span>) </span>{
+        <span class="hljs-keyword">return</span> data;
+    },
+    deleteRow: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">index</span>) </span>{
+        <span class="hljs-keyword">delete</span> sdata[index];
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>We cannot render a hashmap of documents on the table,
+hence we convert that to a list of documents every time
+there is a delete/update/change. This can be more optimised
+later but it is not that expensive right now, read writes to
+DOM are much more expensive.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    resetData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total</span>) </span>{
+        <span class="hljs-keyword">var</span> sortedArray = [];
+        sdata_values = [];
+
+        <span class="hljs-keyword">for</span> (each <span class="hljs-keyword">in</span> sdata) {
+            sdata_values.push(sdata[each]);
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>if sort is already applied</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.sortInfo.active) {
+            sortedArray = help.sortIt(sdata_values, <span class="hljs-keyword">this</span>.state.sortInfo.column, <span class="hljs-keyword">this</span>.state.sortInfo.reverse);
+
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>by default sort it by typename by passing json field</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">else</span> {
+            sortedArray = help.sortIt(sdata_values, <span class="hljs-string">'json'</span>, <span class="hljs-literal">false</span>);
+        }
+        <span class="hljs-keyword">var</span> infoObj = <span class="hljs-keyword">this</span>.state.infoObj;
+        infoObj.showing = sortedArray.length;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> total != <span class="hljs-string">'undefined'</span>) {
+            infoObj.searchTotal = total;
+        }
+        data = sortedArray;
+        hiddenColumns = <span class="hljs-keyword">this</span>.state.hiddenColumns;
+        <span class="hljs-keyword">var</span> visibleColumns = [];
+        <span class="hljs-keyword">var</span> availableColumns = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> sdata) {
+            <span class="hljs-keyword">for</span> (column <span class="hljs-keyword">in</span> sdata[each]) {
+                <span class="hljs-keyword">if</span> (fixed.indexOf(column) &lt;= <span class="hljs-number">-1</span> &amp;&amp; column != <span class="hljs-string">'_id'</span> &amp;&amp; column != <span class="hljs-string">'_type'</span>) {
+                    <span class="hljs-keyword">if</span> (visibleColumns.indexOf(column) &lt;= <span class="hljs-number">-1</span> &amp;&amp; hiddenColumns.indexOf(column) == <span class="hljs-number">-1</span>) {
+                        visibleColumns.push(column);
+                    }
+                <span class="hljs-keyword">if</span>(availableColumns.indexOf(column) &lt;= <span class="hljs-number">-1</span>)    
+                    availableColumns.push(column);
+                }
+            }
+        }
+        
+        <span class="hljs-keyword">if</span>(availableColumns.length){
+            hiddenColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">col, key</span>)</span>{
+                <span class="hljs-keyword">if</span>(availableColumns.indexOf(col) &lt;= <span class="hljs-number">-1</span>)
+                    hiddenColumns.splice(key, <span class="hljs-number">1</span>);
+            });
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>set the combined state</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.setState({
+            documents: sortedArray,
+            infoObj: infoObj,
+            visibleColumns: visibleColumns,
+            hiddenColumns: hiddenColumns,
+            pageLoading: <span class="hljs-literal">false</span>
+        });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Logic to stream continuous data.
+We call the <code>getData()</code> function in feed.js
+which returns a single json document(record).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    updateDataOnView: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update, total</span>) </span>{
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(update)) {
+            update = <span class="hljs-keyword">this</span>.flatten(update, <span class="hljs-keyword">this</span>.injectLink);
+            <span class="hljs-keyword">var</span> key = rowKeyGen(update);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>If the record already exists in sdata, it should
+either be a delete request or a change to an
+existing record.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (sdata[key]) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>If the update has a <code>_deleted</code> field, apply
+a ‘delete transition’ and then delete
+the record from sdata.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">if</span> (update[<span class="hljs-string">'_deleted'</span>]) {
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> sdata[key]) {
+                        <span class="hljs-keyword">var</span> _key = keyGen(sdata[key], each);
+                        deleteTransition(_key);
+                    }
+                    deleteTransition(key);
+                    <span class="hljs-keyword">this</span>.deleteRow(key);
+                    setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">callback</span>) </span>{
+                        callback();
+                    }.bind(<span class="hljs-literal">null</span>, <span class="hljs-keyword">this</span>.resetData), <span class="hljs-number">1100</span>);
+                }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>If it isn’t a delete, we should find a record
+with the same _type and _id and apply an <code>update
+transition</code> and then update the record in sdata.
+Since sdata is modeled as a hashmap, this is
+trivial.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                <span class="hljs-keyword">else</span> {
+                    sdata[key] = update;
+                    <span class="hljs-keyword">this</span>.resetData();
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> update) {
+                        updateTransition(keyGen(update, each));
+                    }
+                    <span class="hljs-keyword">var</span> key = rowKeyGen(update);
+                    updateTransition(key);
+                }
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>If its a new record, we add it to sdata and then
+apply the <code>new transition</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
+                sdata[key] = update;
+                <span class="hljs-keyword">this</span>.resetData();
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> update) {
+                    <span class="hljs-keyword">var</span> _key = keyGen(update, each);
+                    newTransition(_key);
+                }
+                <span class="hljs-keyword">var</span> _key = rowKeyGen(update);
+                newTransition(_key);
+            }
+            <span class="hljs-keyword">this</span>.setSampleData(update);
+        } <span class="hljs-keyword">else</span> { <span class="hljs-comment">// when update is an array</span>
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each = <span class="hljs-number">0</span>; each &lt; update.length; each++) {
+                update[each] = <span class="hljs-keyword">this</span>.flatten(update[each], <span class="hljs-keyword">this</span>.injectLink);
+                <span class="hljs-keyword">var</span> key = rowKeyGen(update[each]);
+                <span class="hljs-keyword">if</span> (!sdata[key]) {
+                    sdata[key] = update[each];
+                }
+            }
+            <span class="hljs-keyword">this</span>.resetData(total);
+            <span class="hljs-keyword">this</span>.setSampleData(update[<span class="hljs-number">0</span>]);
+        }
+    },
+    countTotalRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total, fromStream, method</span>)</span>{
+        <span class="hljs-keyword">var</span> totalRecord = <span class="hljs-keyword">this</span>.state.totalRecord;
+        <span class="hljs-keyword">if</span>(fromStream) {
+            <span class="hljs-keyword">if</span>(method == <span class="hljs-string">'index'</span>)
+                totalRecord += <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(method == <span class="hljs-string">'delete'</span>)
+                totalRecord -= <span class="hljs-number">1</span>;
+        }
+        <span class="hljs-keyword">else</span>
+            totalRecord = total
+        <span class="hljs-keyword">return</span> totalRecord;
+    },
+    streamCallback: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total, fromStream, method</span>) </span>{
+        <span class="hljs-keyword">var</span> totalRecord = <span class="hljs-keyword">this</span>.countTotalRecord(total, fromStream, method);
+        <span class="hljs-keyword">this</span>.setState({
+            totalRecord: totalRecord
+        });
+    },
+    onEmptySelection: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        OperationFlag = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">var</span> infoObj = <span class="hljs-keyword">this</span>.state.infoObj;
+        infoObj.showing = <span class="hljs-number">0</span>;
+        totalRecord = <span class="hljs-number">0</span>;
+        sdata = {};
+        <span class="hljs-keyword">this</span>.setState({
+            infoObj: infoObj,
+            totalRecord: totalRecord,
+            documents: sdata
+        });
+    },
+    getStreamingData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">types</span>) </span>{
+        <span class="hljs-keyword">if</span> (!OperationFlag) {
+            OperationFlag = <span class="hljs-literal">true</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>If filter is applied apply filter data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.filterInfo.active) {
+                <span class="hljs-keyword">var</span> filterInfo = <span class="hljs-keyword">this</span>.state.filterInfo;
+                <span class="hljs-keyword">this</span>.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
+            }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Get the data without filter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">if</span> (types.length) {
+                    d1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+                    feed.getData(types, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update, fromStream, total</span>) </span>{
+                        <span class="hljs-keyword">if</span>(subsetESTypes.length)
+                            <span class="hljs-keyword">this</span>.updateDataOnView(update, total);
+                        <span class="hljs-keyword">else</span>
+                            <span class="hljs-keyword">this</span>.updateDataOnView([],<span class="hljs-number">0</span>);
+                    }.bind(<span class="hljs-keyword">this</span>), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total, fromStream, method</span>) </span>{
+                        <span class="hljs-keyword">this</span>.streamCallback(total, fromStream, method);
+                    }.bind(<span class="hljs-keyword">this</span>));
+                } <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">this</span>.onEmptySelection();
+                }
+            }
+        } <span class="hljs-keyword">else</span> {
+            setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{ <span class="hljs-keyword">this</span>.getStreamingData(types) }.bind(<span class="hljs-keyword">this</span>), <span class="hljs-number">300</span>);
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>infinite scroll implementation</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    paginateData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> filterInfo = <span class="hljs-keyword">this</span>.state.filterInfo;
+        <span class="hljs-keyword">var</span> queryBody = <span class="hljs-literal">null</span>;
+        d1 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+        <span class="hljs-keyword">if</span> (filterInfo.active)
+            queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+        feed.paginateData(<span class="hljs-keyword">this</span>.state.infoObj.total, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update</span>) </span>{
+            <span class="hljs-keyword">this</span>.updateDataOnView(update);
+        }.bind(<span class="hljs-keyword">this</span>), queryBody);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>only called on change in types.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    getStreamingTypes: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        feed.getTypes(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update</span>) </span>{
+            update = update.sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>) </span>{
+                <span class="hljs-keyword">return</span> a.toLowerCase().localeCompare(b.toLowerCase());
+            });
+            <span class="hljs-keyword">this</span>.setState({
+                types: update,
+                connect: <span class="hljs-literal">true</span>
+            });
+        }.bind(<span class="hljs-keyword">this</span>));
+    },
+    removeType: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">typeName</span>) </span>{
+        feed.deleteData(typeName, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+            <span class="hljs-keyword">this</span>.resetData();
+        }.bind(<span class="hljs-keyword">this</span>));
+    },
+    componentDidMount: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>add a safe delay as app details are fetched from this
+iframe’s parent function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">this</span>.setMap();
+        <span class="hljs-keyword">if</span>(appAuth) {
+            setTimeout(<span class="hljs-keyword">this</span>.setMap, <span class="hljs-number">2000</span>)
+            setTimeout(<span class="hljs-keyword">this</span>.getStreamingTypes, <span class="hljs-number">2000</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>call every 1 min.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            mappingInterval = setInterval(<span class="hljs-keyword">this</span>.setMap, <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>);
+            streamingInterval = setInterval(<span class="hljs-keyword">this</span>.getStreamingTypes, <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>);
+            <span class="hljs-keyword">this</span>.getTotalRecord();
+        }
+    },
+    componentDidUpdate: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> hiddenColumns = <span class="hljs-keyword">this</span>.state.hiddenColumns;
+        <span class="hljs-keyword">this</span>.hideAttribute(hiddenColumns, <span class="hljs-string">'hide'</span>);
+    },
+    removeHidden: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> hiddenColumns = <span class="hljs-keyword">this</span>.state.hiddenColumns;
+        <span class="hljs-keyword">this</span>.hideAttribute(hiddenColumns, <span class="hljs-string">'show'</span>);
+        <span class="hljs-keyword">var</span> visibleColumns = <span class="hljs-keyword">this</span>.state.visibleColumns.concat(hiddenColumns);
+        <span class="hljs-keyword">this</span>.setState({
+            hiddenColumns: [],
+            visibleColumns: visibleColumns
+        });
+    },
+    hideAttribute: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">Columns, method</span>) </span>{
+        <span class="hljs-keyword">if</span>(method == <span class="hljs-string">'hide'</span>) {
+            Columns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">col</span>)</span>{
+                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">document</span>.getElementById(col) == <span class="hljs-literal">null</span> || <span class="hljs-built_in">document</span>.getElementById(col) == <span class="hljs-string">'null'</span>) {}
+                <span class="hljs-keyword">else</span> {    
+                    <span class="hljs-built_in">document</span>.getElementById(col).style.display = <span class="hljs-string">"none"</span>;
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> sdata) {
+                        <span class="hljs-keyword">var</span> key = keyGen(sdata[each], col);
+                        <span class="hljs-built_in">document</span>.getElementById(key).style.display = <span class="hljs-string">"none"</span>
+                    }
+                }    
+            });
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(method == <span class="hljs-string">'show'</span>) {
+            Columns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">col</span>)</span>{
+                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">document</span>.getElementById(col) == <span class="hljs-literal">null</span> || <span class="hljs-built_in">document</span>.getElementById(col) == <span class="hljs-string">'null'</span>) {}
+                <span class="hljs-keyword">else</span> {    
+                    <span class="hljs-built_in">document</span>.getElementById(col).style.display = <span class="hljs-string">""</span>;
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> sdata) {
+                        <span class="hljs-keyword">var</span> key = keyGen(sdata[each], col);
+                        <span class="hljs-built_in">document</span>.getElementById(key).style.display = <span class="hljs-string">""</span>
+                    }
+                }    
+            });
+        }
+    },
+    getTotalRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.state.infoObj.getOnce) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> APPNAME != <span class="hljs-string">'undefined'</span>) {
+                feed.getTotalRecord().on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+                    <span class="hljs-keyword">var</span> infoObj = $<span class="hljs-keyword">this</span>.state.infoObj;
+                    infoObj.getOnce = <span class="hljs-literal">true</span>;
+                    infoObj.availableTotal = data.hits.total;
+                    $<span class="hljs-keyword">this</span>.setState({
+                        infoObj: infoObj
+                    });
+                });
+            } <span class="hljs-keyword">else</span>
+                setTimeout(<span class="hljs-keyword">this</span>.getTotalRecord, <span class="hljs-number">1000</span>);
+        }
+    },
+    watchStock: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">typeName</span>) </span>{
+        <span class="hljs-keyword">this</span>.setState({
+            sortInfo: {
+                active: <span class="hljs-literal">false</span>
+            }
+        });
+        subsetESTypes.push(typeName);
+        <span class="hljs-keyword">this</span>.applyGetStream();
+    },
+    unwatchStock: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">typeName</span>) </span>{
+        <span class="hljs-keyword">this</span>.setState({
+            sortInfo: {
+                active: <span class="hljs-literal">false</span>
+            }
+        });
+        subsetESTypes.splice(subsetESTypes.indexOf(typeName), <span class="hljs-number">1</span>);
+        <span class="hljs-keyword">this</span>.removeType(typeName);
+        <span class="hljs-keyword">this</span>.getStreamingData(subsetESTypes);
+    },
+    typeCounter: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> typeInfo = <span class="hljs-keyword">this</span>.state.typeInfo;
+        typeInfo.count++;
+        <span class="hljs-keyword">this</span>.setState({
+            typeInfo: typeInfo
+        });
+        <span class="hljs-keyword">this</span>.applyGetStream();
+    },
+    applyGetStream: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> typeInfo = <span class="hljs-keyword">this</span>.state.typeInfo;
+        <span class="hljs-keyword">if</span> (typeInfo.count &gt;= <span class="hljs-keyword">this</span>.state.types.length) {
+            <span class="hljs-keyword">this</span>.getStreamingData(subsetESTypes);
+        }
+    },
+    setMap: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">if</span> (APPNAME &amp;&amp; !$(<span class="hljs-string">'.modal-backdrop'</span>).hasClass(<span class="hljs-string">'in'</span>)) {
+            <span class="hljs-keyword">var</span> getMappingObj = feed.getMapping();
+            getMappingObj.done(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+                mappingObjData = data;
+                getMapFlag = <span class="hljs-literal">true</span>;
+                $<span class="hljs-keyword">this</span>.setState({
+                    mappingObj: mappingObjData[APPNAME][<span class="hljs-string">'mappings'</span>]
+                });
+            }).error(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">xhr</span>)</span>{
+                <span class="hljs-keyword">if</span>(xhr.status == <span class="hljs-number">401</span>){
+                    $<span class="hljs-keyword">this</span>.setState({
+                        errorShow: <span class="hljs-literal">true</span>
+                    }); 
+                    appAuth = <span class="hljs-literal">false</span>;
+                    clearInterval(mappingInterval);
+                    clearInterval(streamingInterval);
+                }
+            });
+        }
+    },
+    handleScroll: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+        <span class="hljs-keyword">var</span> scroller = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'table-scroller'</span>);
+        <span class="hljs-keyword">var</span> infoObj = <span class="hljs-keyword">this</span>.state.infoObj;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Plug in a handler which takes care of infinite scrolling</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (subsetESTypes.length &amp;&amp; infoObj.showing &lt; infoObj.searchTotal &amp;&amp; scroller.scrollTop + scroller.offsetHeight &gt;= scroller.scrollHeight - <span class="hljs-number">100</span>) {
+            <span class="hljs-keyword">this</span>.setState({
+                pageLoading: <span class="hljs-literal">true</span>
+            });
+            <span class="hljs-keyword">this</span>.paginateData();
+        }
+    },
+    handleSort: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">item, type, eve</span>) </span>{
+        order = help.getOrder(item);
+        <span class="hljs-keyword">this</span>.setState({
+            sortInfo: {
+                active: <span class="hljs-literal">true</span>,
+                column: item,
+                reverse: order
+            }
+        });
+        <span class="hljs-keyword">var</span> docs = <span class="hljs-keyword">this</span>.state.documents;
+        <span class="hljs-keyword">var</span> sortedArray = help.sortIt(docs, item, order);
+        <span class="hljs-keyword">this</span>.setState({
+            documents: sortedArray
+        });
+    },
+    addRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> form = $(<span class="hljs-string">'#addObjectForm'</span>).serializeArray();
+        <span class="hljs-keyword">this</span>.indexCall(form, <span class="hljs-string">'close-modal'</span>, <span class="hljs-string">'index'</span>);
+    },
+    indexCall: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">form, modalId, method</span>) </span>{
+        <span class="hljs-keyword">var</span> recordObject = {};
+        $.each(form, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">k2, v2</span>) </span>{
+            <span class="hljs-keyword">if</span> (v2.value != <span class="hljs-string">''</span>)
+                recordObject[v2.name] = v2.value;
+        });
+
+        recordObject.body = <span class="hljs-built_in">JSON</span>.parse(recordObject.body);
+        feed.indexData(recordObject, method, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">newTypes</span>) </span>{
+            $(<span class="hljs-string">'.close'</span>).click();
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> newTypes != <span class="hljs-string">'undefined'</span>) {
+                <span class="hljs-keyword">this</span>.setState({
+                    types: newTypes
+                });
+                setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+                    <span class="hljs-keyword">this</span>.setMap();
+                }.bind(<span class="hljs-keyword">this</span>),<span class="hljs-number">500</span>);
+            }
+        }.bind(<span class="hljs-keyword">this</span>));
+    },
+    getTypeDoc: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> selectedType = $(<span class="hljs-string">'#setType'</span>).val();
+        <span class="hljs-keyword">var</span> typeDocSample = <span class="hljs-keyword">this</span>.state.typeDocSample;
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">if</span> (selectedType != <span class="hljs-string">''</span> &amp;&amp; selectedType != <span class="hljs-literal">null</span>) {
+            <span class="hljs-keyword">if</span> (!typeDocSample.hasOwnProperty(selectedType)) {
+
+                feed.getSingleDoc(selectedType, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+                    <span class="hljs-keyword">try</span> {
+                        typeDocSample[selectedType] = data.hits.hits[<span class="hljs-number">0</span>]._source;
+                        $<span class="hljs-keyword">this</span>.setState({
+                            typeDocSample: typeDocSample
+                        });
+                        $<span class="hljs-keyword">this</span>.showSample(typeDocSample[selectedType]);
+                    }
+                    <span class="hljs-keyword">catch</span> (err) {
+                        <span class="hljs-built_in">console</span>.log(err);
+                    }
+                });
+
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">this</span>.showSample(typeDocSample[selectedType]);
+        }
+    },
+    userTouchFlag: <span class="hljs-literal">false</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>If user didn’t touch to textarea only then show the json</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    showSample: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>) </span>{
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.userTouchFlag &amp;&amp; $(<span class="hljs-string">'#setBody'</span>).val().trim() != <span class="hljs-string">''</span>){}
+        <span class="hljs-keyword">else</span>{
+            <span class="hljs-keyword">var</span> convertJson = obj.hasOwnProperty(<span class="hljs-string">'json'</span>) ? obj.json : obj;
+            <span class="hljs-keyword">var</span> objJson = <span class="hljs-built_in">JSON</span>.stringify(convertJson, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>);
+            $(<span class="hljs-string">'#setBody'</span>).val(objJson);
+        }
+    },
+    setSampleData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update</span>) </span>{
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">typeof</span> update != <span class="hljs-string">'undefined'</span>){
+            <span class="hljs-keyword">var</span> typeDocSample = <span class="hljs-keyword">this</span>.state.typeDocSample ? <span class="hljs-keyword">this</span>.state.typeDocSample : {};
+            typeDocSample[update[<span class="hljs-string">'_type'</span>]] = $.extend({}, update);
+            <span class="hljs-keyword">delete</span> typeDocSample[update[<span class="hljs-string">'_type'</span>]]._id;
+            <span class="hljs-keyword">delete</span> typeDocSample[update[<span class="hljs-string">'_type'</span>]]._type;
+            <span class="hljs-keyword">this</span>.setState({
+                typeDocSample: typeDocSample
+            });
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Get the form data in help exportData,
+Do the test query before exporting data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    exportData: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> exportObject = help.exportData();
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> testQuery = feed.testQuery(exportObject.type, exportObject.query);
+        testQuery.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) </span>{
+            <span class="hljs-keyword">if</span> (!res.hasOwnProperty(<span class="hljs-string">'error'</span>))
+                $<span class="hljs-keyword">this</span>.exportQuery(exportObject);
+            <span class="hljs-keyword">else</span> {
+                toastr.error(res.error, <span class="hljs-string">'ES Error : '</span> + res.status, {
+                    timeOut: <span class="hljs-number">5000</span>
+                })
+                $(<span class="hljs-string">'#exportBtn'</span>).removeClass(<span class="hljs-string">'loading'</span>).removeAttr(<span class="hljs-string">'disabled'</span>);
+            }
+
+        }).on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+            toastr.error(err, <span class="hljs-string">'ES Error'</span>, {
+                timeOut: <span class="hljs-number">5000</span>
+            })
+            $(<span class="hljs-string">'#exportBtn'</span>).removeClass(<span class="hljs-string">'loading'</span>).removeAttr(<span class="hljs-string">'disabled'</span>);
+        });
+    },
+    exportQuery: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">exportObject</span>) </span>{
+        <span class="hljs-keyword">var</span> url = <span class="hljs-string">'https://accapi.appbase.io/app/'</span> + APPID + <span class="hljs-string">'/export'</span>;
+
+        $.ajax({
+            type: <span class="hljs-string">"POST"</span>,
+            url: url,
+            data: <span class="hljs-built_in">JSON</span>.stringify(exportObject),
+            contentType: <span class="hljs-string">"application/text"</span>,
+            datatype: <span class="hljs-string">'json'</span>,
+            xhrFields: {
+                withCredentials: <span class="hljs-literal">true</span>
+            },
+            success: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{
+                $(<span class="hljs-string">'#exportBtn'</span>).removeClass(<span class="hljs-string">'loading'</span>).removeAttr(<span class="hljs-string">'disabled'</span>);
+                $(<span class="hljs-string">'#close-export-modal'</span>).click();
+                $(<span class="hljs-string">'.close'</span>).click();
+                toastr.success(<span class="hljs-string">'Data is exported, please check your email : '</span> + PROFILE.email + <span class="hljs-string">'.'</span>);
+            }
+        });
+    },
+    applyFilter: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">typeName, columnName, method, value, analyzed</span>) </span>{
+        filterVal = $.isArray(value) ? value : value.split(<span class="hljs-string">','</span>);
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> filterObj = <span class="hljs-keyword">this</span>.state.filterInfo;
+        filterObj[<span class="hljs-string">'type'</span>] = typeName;
+        filterObj[<span class="hljs-string">'columnName'</span>] = columnName;
+        filterObj[<span class="hljs-string">'method'</span>] = method;
+        filterObj[<span class="hljs-string">'value'</span>] = filterVal;
+        filterObj[<span class="hljs-string">'active'</span>] = <span class="hljs-literal">true</span>;
+        filterObj[<span class="hljs-string">'analyzed'</span>] = analyzed;
+        <span class="hljs-keyword">this</span>.setState({
+            filterInfo: filterObj
+        });
+        <span class="hljs-keyword">if</span> (typeName != <span class="hljs-string">''</span> &amp;&amp; typeName != <span class="hljs-literal">null</span>) {
+            feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update, fromStream, total</span>) </span>{
+                <span class="hljs-keyword">if</span> (!fromStream) {
+                    sdata = [];
+                    $<span class="hljs-keyword">this</span>.resetData(total);
+                }
+                setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+                    <span class="hljs-keyword">if</span> (update != <span class="hljs-literal">null</span>)
+                        $<span class="hljs-keyword">this</span>.updateDataOnView(update);
+                }, <span class="hljs-number">500</span>);
+            }.bind(<span class="hljs-keyword">this</span>), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">total, fromStream, method</span>) </span>{
+                <span class="hljs-keyword">this</span>.streamCallback(total, fromStream, method);
+            }.bind(<span class="hljs-keyword">this</span>));
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">this</span>.onEmptySelection();
+        }
+    },
+    removeFilter: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> obj = {
+            active: <span class="hljs-literal">false</span>,
+            applyFilter: <span class="hljs-keyword">this</span>.applyFilter
+        };
+        <span class="hljs-keyword">this</span>.setState({
+            filterInfo: obj
+        });
+        sdata = [];
+        $<span class="hljs-keyword">this</span>.resetData();
+        setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            $<span class="hljs-keyword">this</span>.getStreamingData(subsetESTypes);
+        }, <span class="hljs-number">500</span>);
+    },
+    removeSort: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> docs = <span class="hljs-keyword">this</span>.state.documents;
+        <span class="hljs-keyword">var</span> sortedArray = help.sortIt(docs, <span class="hljs-string">'_type'</span>, <span class="hljs-literal">false</span>);
+        <span class="hljs-keyword">this</span>.setState({
+            documents: sortedArray
+        });
+        <span class="hljs-keyword">this</span>.setState({
+            sortInfo: {
+                active: <span class="hljs-literal">false</span>
+            }
+        });
+    },
+    columnToggle: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> $<span class="hljs-keyword">this</span> = <span class="hljs-keyword">this</span>;
+        <span class="hljs-keyword">var</span> obj = {
+            toggleIt: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">elementId, checked</span>) </span>{
+                <span class="hljs-keyword">if</span> (!checked) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>visible columns - update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">var</span> visibleColumns = $<span class="hljs-keyword">this</span>.state.visibleColumns.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>)</span>{
+                        <span class="hljs-keyword">if</span> (v != elementId) <span class="hljs-keyword">return</span> v;
+                    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>hidden columns - update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    hiddenColumns = $<span class="hljs-keyword">this</span>.state.hiddenColumns;
+                    <span class="hljs-keyword">var</span> flag = hiddenColumns.indexOf(elementId);
+                    <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">-1</span>) {
+                        hiddenColumns.push(elementId);
+                    }
+                } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>visible columns - update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    visibleColumns = $<span class="hljs-keyword">this</span>.state.visibleColumns;
+                    <span class="hljs-keyword">var</span> flag = visibleColumns.indexOf(elementId);
+                    <span class="hljs-keyword">if</span> (flag == <span class="hljs-number">-1</span>) {
+                        visibleColumns.push(elementId);
+                    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>hidden columns - update</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>                    <span class="hljs-keyword">var</span> hiddenColumns = $<span class="hljs-keyword">this</span>.state.hiddenColumns.filter(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>)</span>{
+                        <span class="hljs-keyword">if</span> (v != elementId) <span class="hljs-keyword">return</span> v;
+                    });
+                }
+                $<span class="hljs-keyword">this</span>.setState({
+                    visibleColumns: visibleColumns,
+                    hiddenColumns: hiddenColumns
+                });
+            },
+            setVisibleColumn: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+
+            }
+        };
+        <span class="hljs-keyword">return</span> obj;
+    },
+    selectRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">id, type, row, currentCheck</span>) </span>{
+        <span class="hljs-keyword">var</span> actionOnRecord = help.selectRecord(<span class="hljs-keyword">this</span>.state.actionOnRecord, id, type, row, currentCheck);
+        <span class="hljs-keyword">this</span>.setState({
+            actionOnRecord: actionOnRecord
+        });
+        <span class="hljs-keyword">this</span>.forceUpdate();
+    },
+    removeSelection: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> actionOnRecord = help.removeSelection(<span class="hljs-keyword">this</span>.state.actionOnRecord);
+        <span class="hljs-keyword">this</span>.setState({
+            actionOnRecord: actionOnRecord
+        });
+        <span class="hljs-keyword">this</span>.forceUpdate();
+        $(<span class="hljs-string">'[name="selectRecord"]'</span>).removeAttr(<span class="hljs-string">'checked'</span>);
+    },
+    updateRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">json</span>) </span>{
+        <span class="hljs-keyword">var</span> form = $(<span class="hljs-string">'#updateObjectForm'</span>).serializeArray();
+        <span class="hljs-keyword">var</span> recordObject = {};
+        <span class="hljs-keyword">this</span>.indexCall(form, <span class="hljs-string">'close-update-modal'</span>, <span class="hljs-string">'update'</span>);
+    },
+    deleteRecord: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        $(<span class="hljs-string">'.loadingBtn'</span>).addClass(<span class="hljs-string">'loading'</span>);
+        feed.deleteRecord(<span class="hljs-keyword">this</span>.state.actionOnRecord.selectedRows, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">update</span>) </span>{
+            $(<span class="hljs-string">'.loadingBtn'</span>).removeClass(<span class="hljs-string">'loading'</span>);
+            $(<span class="hljs-string">'#close-delete-modal'</span>).click();
+            $(<span class="hljs-string">'.close'</span>).click();
+            <span class="hljs-keyword">var</span> infoObj = <span class="hljs-keyword">this</span>.state.infoObj;
+            infoObj.total -= <span class="hljs-keyword">this</span>.state.actionOnRecord.selectedRows.length;
+
+            <span class="hljs-keyword">this</span>.setState({
+                infoObj: infoObj
+            });
+
+            <span class="hljs-keyword">this</span>.removeSelection();
+            <span class="hljs-keyword">this</span>.resetData();
+        }.bind(<span class="hljs-keyword">this</span>));
+    },                 
+    initEs:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">var</span> formInfo = $(<span class="hljs-string">'#init-ES'</span>).serializeArray();
+        formInfo.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">v</span>) </span>{
+            <span class="hljs-keyword">if</span>(v.name == <span class="hljs-string">'url'</span>){
+                <span class="hljs-built_in">window</span>.localStorage.setItem(<span class="hljs-string">'esurl'</span>,v.value);
+            }
+            <span class="hljs-keyword">else</span>{
+                <span class="hljs-built_in">window</span>.localStorage.setItem(<span class="hljs-string">'appname'</span>,v.value);
+            }
+        });
+        <span class="hljs-built_in">window</span>.location.href = <span class="hljs-string">"index.html"</span>;
+    },
+    reloadData:<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">this</span>.getStreamingData(subsetESTypes);
+    },
+    userTouchAdd: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">flag</span>)</span>{
+        <span class="hljs-keyword">this</span>.userTouchFlag = flag;
+    },
+    closeErrorModal: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">this</span>.setState({
+            errorShow: <span class="hljs-literal">false</span>
+        });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>The homepage is built on two children components(which may
+have other children components). TypeTable renders the
+streaming types and DataTable renders the streaming documents.
+main.js ties them together.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">var</span> EsForm = config.url != <span class="hljs-literal">null</span> ? <span class="hljs-string">'col-xs-12 init-ES'</span>: <span class="hljs-string">'col-xs-12 EsBigForm'</span>;
+        <span class="hljs-keyword">var</span> esText = config.url != <span class="hljs-literal">null</span> ? (<span class="hljs-keyword">this</span>.state.connect ? <span class="hljs-string">'Connected'</span>:<span class="hljs-string">'Connect'</span>): <span class="hljs-string">'Start Browsing'</span>;
+        <span class="hljs-keyword">var</span> esBtn = <span class="hljs-keyword">this</span>.state.connect ? <span class="hljs-string">'btn-primary '</span>: <span class="hljs-string">''</span>;
+        esBtn += <span class="hljs-string">'btn btn-default submit-btn'</span>;
+        <span class="hljs-keyword">return</span> (&lt;div&gt;
+                    &lt;div id='modal' /&gt;
+                    &lt;div className="row dejavuContainer"&gt;
+                        &lt;form className={EsForm} id="init-ES"&gt;
+                            &lt;div className="vertical0"&gt;
+                                &lt;div className="vertical1"&gt;
+                                    &lt;div className="esContainer"&gt;
+                                        &lt;div className="img-container"&gt;
+                                            &lt;img src="assets/img/icon.png" /&gt;
+                                        &lt;/div&gt;
+                                        &lt;h1&gt;DejaVu Browser for ElasticSearch&lt;/h1&gt;
+                                        &lt;div className="form-group m-0 col-xs-8 pd-0 pr-5"&gt;
+                                            &lt;input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} /&gt;
+                                        &lt;/div&gt;
+                                        &lt;div className="form-group m-0 col-xs-4 pd-0 pr-5"&gt;
+                                            &lt;input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} /&gt;
+                                        &lt;/div&gt;
+                                        &lt;div className="submit-btn-container"&gt;
+                                            &lt;a className={esBtn} onClick={this.initEs}&gt;{esText}&lt;/a&gt;
+                                        &lt;/div&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;    
+                        &lt;/form&gt;
+                        &lt;div className="typeContainer"&gt;
+                            &lt;TypeTable
+                                Types={this.state.types}
+                                watchTypeHandler={this.watchStock}
+                                unwatchTypeHandler={this.unwatchStock}
+                                ExportData={this.exportData}
+                                signalColor={this.state.signalColor}
+                                signalActive={this.state.signalActive}
+                                signalText={this.state.signalText}
+                                typeInfo={this.state.typeInfo} /&gt;
+                        &lt;/div&gt;
+                         &lt;div className="col-xs-12 dataContainer"&gt;
+                            &lt;DataTable
+                                _data={this.state.documents}
+                                sortInfo={this.state.sortInfo}
+                                filterInfo={this.state.filterInfo}
+                                infoObj={this.state.infoObj}
+                                totalRecord={this.state.totalRecord}
+                                scrollFunction={this.handleScroll}
+                                selectedTypes={subsetESTypes}
+                                handleSort={this.handleSort}
+                                mappingObj={this.state.mappingObj}
+                                removeFilter ={this.removeFilter}
+                                addRecord = {this.addRecord}
+                                getTypeDoc={this.getTypeDoc}
+                                Types={this.state.types}
+                                removeSort = {this.removeSort}
+                                removeHidden = {this.removeHidden}
+                                visibleColumns = {this.state.visibleColumns}
+                                hiddenColumns = {this.state.hiddenColumns}
+                                columnToggle ={this.columnToggle}
+                                actionOnRecord = {this.state.actionOnRecord}
+                                pageLoading={this.state.pageLoading}
+                                reloadData={this.reloadData} /&gt;
+                        &lt;/div&gt;
+                        &lt;footer className="text-center"&gt;
+                            &lt;a href="http://appbaseio.github.io/dejaVu"&gt;watch video&lt;/a&gt; 
+                            &lt;span className="text-right pull-right powered_by"&gt;
+                                Create your ElasticSearch in cloud with&amp;nbsp;&lt;a href="http://appbase.io"&gt;appbase.io&lt;/a&gt;
+                            &lt;/span&gt;  
+                            &lt;span className="pull-left github-star"&gt;
+                                &lt;iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&amp;repo=dejaVu&amp;type=star&amp;count=true" frameBorder="0" scrolling="0" width="120px" height="20px"&gt;&lt;/iframe&gt;
+                            &lt;/span&gt;   
+                        &lt;/footer&gt;
+                        &lt;FeatureComponent.ErrorModal 
+                            errorShow={this.state.errorShow}
+                            closeErrorModal = {this.closeErrorModal}&gt;
+                        &lt;/FeatureComponent.ErrorModal&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;);
+    }
+});
+
+module.exports = HomePage;</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

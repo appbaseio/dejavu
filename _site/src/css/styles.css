@@ -608,6 +608,9 @@ footer{
   left: 0;
   width: 100%;
 }
+.ieButton.withframe {
+  bottom: 30px;
+}
 .feature-list{
   list-style: none;
   list-style-position: outside;
@@ -669,6 +672,9 @@ footer{
 .pageLoading .vertical1{
   display: table-cell;
   vertical-align: middle;
+}
+.export-json-btn img{
+  max-height: 20px;
 }
 .powered_by{
   position: absolute;
