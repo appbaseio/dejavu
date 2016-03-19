@@ -90,13 +90,6 @@ var TypeTable = React.createClass({
                         {rowObj}
                     </ul>
                 </div>
-                <div className="ieButton withframe">
-                    <ul className="feature-list">
-                        <li>
-                            <FeatureComponent.ExportasJson exportJsonData = {this.props.exportJsonData} />
-                        </li>
-                    </ul>
-                </div>
             </div>
         );
     }

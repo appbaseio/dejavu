@@ -25,9 +25,9 @@ var ImportData = React.createClass({
         this.props.exportJsonData();
     },
     render: function() {
-        return (<div>
-                    <a title="export" onClick={this.open} >
-                      <img src="src/img/export.png" /> export
+        return (<div className="pull-left">
+                    <a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
+                      <img src="src/img/export.png" className="img-responsive" />
                     </a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
