@@ -27,7 +27,7 @@ var ImportData = React.createClass({
     render: function() {
         return (<div className="pull-left">
                     <a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
-                      <img src="src/img/export.png" className="img-responsive" />
+                      <i className="fa fa-cloud-download"></i>
                     </a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
