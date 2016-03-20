@@ -673,8 +673,8 @@ footer{
   display: table-cell;
   vertical-align: middle;
 }
-.export-json-btn img{
-  max-height: 20px;
+.export-json-btn{
+  line-height: 21px;
 }
 .powered_by{
   position: absolute;
