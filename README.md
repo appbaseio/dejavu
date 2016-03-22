@@ -40,7 +40,7 @@ http://127.0.0.1:9200/_plugin/dejaVu
 
 ``master`` branch is more suitable for installing dejavu locally. The Elasticsearch site plugin for dejavu uses ``master`` branch.
 
-``chrome-extension`` branch is where we make chrome app related changes.
+``chrome-extension`` branch is where we make chrome app related changes. The main difference in the chrome app is the lack of support for the localStorage API (It has it's own [chrome.storage](https://developer.chrome.com/extensions/storage) API, which is asynchronous in nature).
 
 #### Local Installation
 
