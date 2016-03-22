@@ -1,6 +1,8 @@
 dejaVu - a modern Elasticsearch databrowser
 ====
 
+
+
 dejaVu fits the unmet need of being a hackable data browser for Elasticsearch. Existing browsers were either built with a legacy UI and had a lacking user experience or used server side rendering (I am looking at you, Kibana).
 
 So we decided to build our own, with a goal of making it 100% client side and using modern UI elements (no page reloads, infinite scrolling, creating filter views). It's available as a github hosted page, chrome extension and as an Elasticsearch plugin.
@@ -31,6 +33,30 @@ http://127.0.0.1:9200/_plugin/dejaVu
 ```
 
 ``Note:`` If you use Elasticsearch from a different port, the URL to access and the `http.cors.allow-origin` value in the configuration file would change accordingly.
+
+### Developing
+
+``dev`` branch is the bleeding edge version of dejavu, all new changes go here.
+
+``master`` branch is more suitable for installing dejavu locally. The Elasticsearch site plugin for dejavu uses ``master`` branch.
+
+``chrome-extension`` branch is where we make chrome app related changes.
+
+#### Local Installation
+
+1. git clone https://github.com/appbaseio/dejaVu  
+2. git checkout master
+3. npm install
+4. bower install
+5. gulp watch (runs dejavu on http://localhost:1358)
+
+
+#### Contributing
+
+The source code is under the ``_site/src`` directory.
+You can make pull requests against the ``dev`` branch.
+
+---
 
 ## Features
 
