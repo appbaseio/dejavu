@@ -62,7 +62,8 @@ var HomePage = React.createClass({
                 count: 0,
                 typeCounter: this.typeCounter
             },
-            errorShow: false
+            errorShow: false,
+            errorMessage: null
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -427,15 +428,25 @@ var HomePage = React.createClass({
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
+                $('.full_page_loading').addClass('hide');
             }).error(function(xhr){
                 if(xhr.status == 401){
                     $this.setState({
-                        errorShow: true
+                        errorShow: true,
+                        errorMessage: null
                     }); 
                     appAuth = false;
                     clearInterval(mappingInterval);
                     clearInterval(streamingInterval);
                 }
+                else {
+                    $this.setState({
+                        errorShow: true,
+                        errorMessage: xhr.responseText
+                    });
+                }
+                $('.full_page_loading').addClass('hide');
+                 
             });
         }
     },
@@ -723,8 +734,14 @@ var HomePage = React.createClass({
                 //window.localStorage.setItem('appname',v.value);
             }
         });
-        //window.location.href = "index.html";
         setTimeout(function(){
+            $('.full_page_loading').removeClass('hide');
+            this.setState({
+                types: [],
+                documents: [],
+                totalRecord: 0,
+            });
+
             init();
             setTimeout(function(){
                 appAuth = true;
@@ -740,7 +757,8 @@ var HomePage = React.createClass({
     },
     closeErrorModal: function(){
         this.setState({
-            errorShow: false
+            errorShow: false,
+            errorMessage: null
         });
     },
     exportJsonData: function() {
@@ -861,8 +879,14 @@ var HomePage = React.createClass({
                         </footer>
                         <FeatureComponent.ErrorModal 
                             errorShow={this.state.errorShow}
+                            errorMessage={this.state.errorMessage}
                             closeErrorModal = {this.closeErrorModal}>
                         </FeatureComponent.ErrorModal>
+                        <div className="full_page_loading hide">
+                            <div className="vertical1">
+                                <i className="fa fa-5x fa-spinner fa-spin"></i>
+                            </div> 
+                        </div>
                     </div>
                 </div>);
     }

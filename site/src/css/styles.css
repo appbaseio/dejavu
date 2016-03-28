@@ -658,7 +658,10 @@ footer{
 .checkbox input[type="checkbox"], .checkbox input[type="radio"]{
   cursor: pointer;
 }
-.pageLoading{
+.full_page_loading {
+  display: none;
+}
+.pageLoading, .full_page_loading {
   position: absolute;
   left: 0;
   top: 0;
@@ -669,7 +672,7 @@ footer{
   text-align: center;
   display: table;
 }
-.pageLoading .vertical1{
+.pageLoading .vertical1, .full_page_loading .vertical1{
   display: table-cell;
   vertical-align: middle;
 }

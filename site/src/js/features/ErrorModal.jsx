@@ -16,14 +16,16 @@ var ErrorModal = React.createClass({
     },
     render: function() {
         var errorShow = this.props.errorShow;
+        var defaultMessage = "It looks like your app name, username, password combination doesn't match. Check your url and appname and then connect it again.";
+        var errorMessage = this.props.errorMessage == null ? defaultMessage : errorMessage;
+
         return (<div>
                     <Modal  className="modal-danger" show={errorShow} onHide={this.close}>
                       <Modal.Header closeButton>
                         <Modal.Title>Authentication Error</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        <p>It looks like your app name, username, password combination doesn't match. 
-                        Check your url and appname and then connect it again.</p>
+                        <p>{errorMessage}</p>
                       </Modal.Body>
                     </Modal>
                   </div>);
