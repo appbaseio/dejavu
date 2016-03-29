@@ -18,7 +18,11 @@
     "react": "^0.14.7",
     "react-addons-pure-render-mixin": "^0.14.7",
     "react-bootstrap": "^0.28.2",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "express": "~3.15.2",
+    "gm": "~1.16.0",
+    "phantom": "0.7.2",
+    "marked": "~0.3.2"
   },
   "devDependencies": {
     "babelify": "^7.2.0",
