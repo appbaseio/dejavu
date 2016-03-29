@@ -32,3 +32,7 @@ sh chrome-build.sh
 ```
 
 Test the build locally via unpacked extension and publish it to the chrome store.
+
+### License
+
+[MIT License](https://github.com/appbaseio/dejaVu/blob/dev/LICENSE.md) (c) 2016, Appbase Inc.
