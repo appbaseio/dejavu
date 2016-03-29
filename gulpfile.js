@@ -48,7 +48,7 @@ gulp.task('watch', ['compact','connect'], function() {
     ]).on('change', function (file) {
         live.changed(file.path);
     });
-    gulp.watch('site/dist/main.js',['compact']);
+    //gulp.watch('site/dist/main.js',['compact']);
     gulp.watch('site/src/js/*/*.jsx', ['compact']);
     gulp.watch('site/src/js/*.jsx', ['compact']);
 

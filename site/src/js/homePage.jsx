@@ -295,6 +295,7 @@ var HomePage = React.createClass({
                 });    
             });
             setTimeout(function(){
+                $('.full_page_loading').addClass('hide');
                 this.setState({
                     types: update,
                     typeCheck: typeCheck,
@@ -428,7 +429,6 @@ var HomePage = React.createClass({
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
-                $('.full_page_loading').addClass('hide');
             }).error(function(xhr){
                 if(xhr.status == 401){
                     $this.setState({
@@ -736,10 +736,13 @@ var HomePage = React.createClass({
         });
         setTimeout(function(){
             $('.full_page_loading').removeClass('hide');
+            esTypes = [];
+            subsetESTypes = [];
             this.setState({
                 types: [],
                 documents: [],
                 totalRecord: 0,
+                connect: false
             });
 
             init();
