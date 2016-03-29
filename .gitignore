@@ -2,3 +2,4 @@ node_modules/
 .idea/
 bower_components/
 dist/main.js
+*.DS_STORE
