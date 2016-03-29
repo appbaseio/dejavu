@@ -1,30 +1,38 @@
-Appbase data browser
+dejaVu - a modern Elasticsearch databrowser
 ====
 
-### Installation (for appbase branch)
+### Chrome App Instructions
 
-You need Gulp installed globally:
+Chrome app should be run locally from the ``chrome-extension`` branch or from the github releases.
+
+#### Running Locally
+
+Go to ``chrome://settings``.
+
+![Load unpacked extension](https://i.imgur.com/AK52iP6.png)
+
+Click on "Load unpacked extension..".
+
+![](https://i.imgur.com/uO2WGBW.png)
+
+Select the **dejaVu** directory with the ``chrome-extension`` branch, and you should be good to go!
+
+### Development
+
+``chrome-extension`` branch shares a lot of code with other branches. The main development in dejaVu happens via the ``dev`` branch and is then replicated to other branches. There is some code specific to this branch related to chrome's storage APIs and UI that gets pushed here.
+
+For development instructions, checkout the [developing section](https://github.com/appbaseio/dejaVu/tree/dev#developing) of the ``dev`` branch.
+
+### Publishing
+
+Run the chrome-build.sh, it let's you edit the manifest file and remove unneeded files for publishing (node_modules/, .git/).
 
 ```sh
-$ npm install -g gulp
+sh chrome-build.sh
 ```
 
-```sh
-$ npm install 
-$ bower install
-$ gulp watch
-- open http://127.0.0.1:1358
-```
+Test the build locally via unpacked extension and publish it to the chrome store.
 
-This will start a local webserver running on port 1358 serving dejaVu - data browser
+### License
 
-### Elasticsearch config
-
-To enable CORS
-```sh
- http.port: 9200
- http.cors.allow-origin: "http://127.0.0.1:1358"
- http.cors.enabled: true
- http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
- http.cors.allow-credentials: true
-```
+[MIT License](https://github.com/appbaseio/dejaVu/blob/dev/LICENSE.md) (c) 2016, Appbase Inc.
