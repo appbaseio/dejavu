@@ -78,6 +78,7 @@ var help = {
         return exportObject;
     },
     selectRecord: function(actionOnRecord, id, type, row, currentCheck) {
+        var row = {};
         selectedRows = [];
         $('.rowSelectionCheckbox:checked').each(function(i, v){
             var obj = {
@@ -85,12 +86,16 @@ var help = {
                 _type: $(v).data('type')
             };
             selectedRows.push(obj);
+            if(i === 0) {
+                row = $(v).data('row');
+                delete row.json;
+                actionOnRecord.id = obj._id;
+                actionOnRecord.type = obj._type;
+            }
         });
         actionOnRecord.active = selectedRows.length ? true : false;
-        actionOnRecord.id = id;
-        actionOnRecord.type = type;
-        actionOnRecord.row = JSON.stringify(row.json, null, 4);
         actionOnRecord.selectedRows = selectedRows;
+        actionOnRecord.row = JSON.stringify(row, null, 4);
         return actionOnRecord;
     },
     removeSelection: function(actionOnRecord) {
