@@ -36,7 +36,7 @@ var Cell = React.createClass({
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
         var actionOnRecord = this.props.actionOnRecord;
-
+        var row = JSON.stringify(this.props.row);
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
@@ -69,7 +69,7 @@ var Cell = React.createClass({
             to_display = <div className={appIdClass}>
                             <span className="theme-element selectrow checkbox">
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
-                                 value={_id} data-type={_type} id={radioId} />
+                                 value={_id} data-type={_type} data-row={row} id={radioId} />
                                 <label htmlFor={radioId}></label>
                             </span>
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
