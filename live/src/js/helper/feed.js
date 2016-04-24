@@ -2,6 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
+
 const DATA_SIZE = get_data_size();
 var APPNAME, USERNAME, PASSWORD, URL;
 var appbaseRef;
@@ -12,7 +13,7 @@ var exportJsonData = [];
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] == "true";
-if(!flag_url){
+if(!flag_url || decryptedData.hasOwnProperty('url')){
 	config = {
 		url: window.localStorage.getItem('esurl'),
 		appname: window.localStorage.getItem('appname')
@@ -29,6 +30,10 @@ var httpPrefix = URL.split('://');
 var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
 var OperationFlag = false;
 var APPURL = URL + '/' + APPNAME;
+
+// to store input state
+var input_state = {};
+
 init();
 
 // Get data size according to window height
@@ -40,8 +45,8 @@ function get_data_size() {
 	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
 	return rows;
 }
-function init() {
 
+function init() {
 	// Instantiating appbase ref with the global configs defined above.
 	appbaseRef = new Appbase({
 		url: URL,
@@ -49,6 +54,8 @@ function init() {
 		username: USERNAME,
 		password: PASSWORD
 	});
+	input_state = JSON.parse(JSON.stringify(config));
+	createUrl(input_state);
 }
 
 // vars for tracking current data and types

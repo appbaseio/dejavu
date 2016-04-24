@@ -208,6 +208,11 @@ var HomePage = React.createClass({
             this.resetData(total);
             this.setSampleData(update[0]);
         }
+
+        //Set sort from url
+        if(decryptedData.sortInfo) {
+            this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
+        }
     },
     countTotalRecord: function(total, fromStream, method){
         var totalRecord = this.state.totalRecord;
@@ -301,6 +306,15 @@ var HomePage = React.createClass({
         // iframe's parent function.
         this.setMap();
         if(appAuth) {
+
+            //Set filter from url
+            if(decryptedData.filterInfo) {
+                decryptedData.filterInfo.applyFilter = this.applyFilter;
+                this.setState({
+                    filterInfo: decryptedData.filterInfo
+                });
+            }
+
             setTimeout(this.setMap, 2000)
             setTimeout(this.getStreamingTypes, 2000);
             // call every 1 min.
@@ -365,23 +379,42 @@ var HomePage = React.createClass({
         }
     },
     watchStock: function(typeName) {
+        
+        //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }     
         subsetESTypes.push(typeName);
         this.applyGetStream();
+        input_state.selectedType = subsetESTypes;
+        createUrl(input_state);
     },
     unwatchStock: function(typeName) {
+
+        //Remove sorting while unslecting type
         this.setState({
             sortInfo: {
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
-        this.getStreamingData(subsetESTypes);
+        input_state.selectedType = subsetESTypes;
+        createUrl(input_state);
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
@@ -431,15 +464,26 @@ var HomePage = React.createClass({
             this.paginateData();
         }
     },
-    handleSort: function(item, type, eve) {
-        order = help.getOrder(item);
+    handleSort: function(item, type, eve, order) {
+        if(!order) {
+            order = help.getOrder(item);
+        }
+        var storObj = {
+            active: true,
+            column: item,
+            reverse: order
+        };
         this.setState({
-            sortInfo: {
-                active: true,
-                column: item,
-                reverse: order
-            }
+            sortInfo: storObj
         });
+
+        //Store state of sort
+        if(decryptedData.sortInfo)
+            delete decryptedData.sortInfo;
+        var sort_state = JSON.parse(JSON.stringify(storObj));
+        input_state.sortInfo = sort_state;
+        createUrl(input_state);
+
         var docs = this.state.documents;
         var sortedArray = help.sortIt(docs, item, order);
         this.setState({
@@ -570,6 +614,13 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: filterObj
         });
+        
+        //Store state of filter
+        var filter_state = JSON.parse(JSON.stringify(filterObj));
+        delete filter_state.applyFilter;
+        input_state.filterInfo = filter_state;
+        createUrl(input_state);
+
         if (typeName != '' && typeName != null) {
             feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
                 if (!fromStream) {
@@ -596,6 +647,14 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: obj
         });
+
+
+        //Remove filterinfo from store
+        if(input_state.hasOwnProperty('filterInfo')) {
+            delete input_state.filterInfo;
+            createUrl(input_state);
+        }
+
         sdata = [];
         $this.resetData();
         setTimeout(function() {
@@ -613,6 +672,12 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }
     },
     columnToggle: function() {
         var $this = this;
@@ -714,6 +779,42 @@ var HomePage = React.createClass({
             errorShow: false
         });
     },
+    exportJsonData: function() {
+        $('.json-spinner').show();
+
+        var activeQuery = {
+            "query": {
+                "match_all": {}
+            },
+            "size":1000
+        };
+        if (this.state.filterInfo.active) {
+            var filterInfo = this.state.filterInfo;
+            activeQuery = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+        }
+        this.scrollApi({"activeQuery": activeQuery});
+    },
+    scrollApi: function(info) {
+        feed.scrollapi(subsetESTypes, info.activeQuery, info.scroll, info.scroll_id).done(function(data){
+            var hits = data.hits.hits;
+            exportJsonData = exportJsonData.concat(hits);
+            if(hits.length > 999) {
+                var scrollObj = {
+                    'scroll': '1m',
+                    'scroll_id': data._scroll_id
+                };
+                this.scrollApi({"activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
+            }
+            else {
+                var str = JSON.stringify(exportJsonData, null, 4);
+                var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
+                var link = document.getElementById('jsonlink').href = dataUri;
+                $('.json-spinner').hide();
+                $('#jsonlink').removeClass('hide');
+                exportJsonData = [];
+            }
+        }.bind(this));
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -781,7 +882,8 @@ var HomePage = React.createClass({
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
                                 pageLoading={this.state.pageLoading}
-                                reloadData={this.reloadData} />
+                                reloadData={this.reloadData}
+                                exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
                             <a href="http://appbaseio.github.io/dejaVu">watch video</a> 
