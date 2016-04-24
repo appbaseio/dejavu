@@ -301,6 +301,16 @@ var HomePage = React.createClass({
         // iframe's parent function.
         this.setMap();
         if(appAuth) {
+            
+            //Set filter from url
+            if(decryptedData.filterInfo) {
+                console.log(decryptedData);
+                decryptedData.filterInfo.applyFilter = this.applyFilter;
+                this.setState({
+                    filterInfo: decryptedData.filterInfo
+                });
+            }
+
             setTimeout(this.setMap, 2000)
             setTimeout(this.getStreamingTypes, 2000);
             // call every 1 min.
@@ -573,6 +583,13 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: filterObj
         });
+        
+        //Store state of filter
+        var filter_state = JSON.parse(JSON.stringify(filterObj));
+        delete filter_state.applyFilter;
+        input_state.filterInfo = filter_state;
+        createUrl(input_state);
+
         if (typeName != '' && typeName != null) {
             feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
                 if (!fromStream) {
@@ -599,6 +616,13 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: obj
         });
+
+
+        //Remove filterinfo from store
+        if(input_state.hasOwnProperty('filterinfo')) {
+            delete input_state.filterInfo;
+        }
+
         sdata = [];
         $this.resetData();
         setTimeout(function() {
