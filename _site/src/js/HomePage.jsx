@@ -208,6 +208,11 @@ var HomePage = React.createClass({
             this.resetData(total);
             this.setSampleData(update[0]);
         }
+
+        //Set sort from url
+        if(decryptedData.sortInfo) {
+            this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
+        }
     },
     countTotalRecord: function(total, fromStream, method){
         var totalRecord = this.state.totalRecord;
@@ -301,10 +306,9 @@ var HomePage = React.createClass({
         // iframe's parent function.
         this.setMap();
         if(appAuth) {
-            
+
             //Set filter from url
             if(decryptedData.filterInfo) {
-                console.log(decryptedData);
                 decryptedData.filterInfo.applyFilter = this.applyFilter;
                 this.setState({
                     filterInfo: decryptedData.filterInfo
@@ -375,22 +379,38 @@ var HomePage = React.createClass({
         }
     },
     watchStock: function(typeName) {
+        
+        //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }     
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
         createUrl(input_state);
     },
     unwatchStock: function(typeName) {
+
+        //Remove sorting while unslecting type
         this.setState({
             sortInfo: {
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         input_state.selectedType = subsetESTypes;
@@ -444,15 +464,26 @@ var HomePage = React.createClass({
             this.paginateData();
         }
     },
-    handleSort: function(item, type, eve) {
-        order = help.getOrder(item);
+    handleSort: function(item, type, eve, order) {
+        if(!order) {
+            order = help.getOrder(item);
+        }
+        var storObj = {
+            active: true,
+            column: item,
+            reverse: order
+        };
         this.setState({
-            sortInfo: {
-                active: true,
-                column: item,
-                reverse: order
-            }
+            sortInfo: storObj
         });
+
+        //Store state of sort
+        if(decryptedData.sortInfo)
+            delete decryptedData.sortInfo;
+        var sort_state = JSON.parse(JSON.stringify(storObj));
+        input_state.sortInfo = sort_state;
+        createUrl(input_state);
+
         var docs = this.state.documents;
         var sortedArray = help.sortIt(docs, item, order);
         this.setState({
@@ -619,8 +650,9 @@ var HomePage = React.createClass({
 
 
         //Remove filterinfo from store
-        if(input_state.hasOwnProperty('filterinfo')) {
+        if(input_state.hasOwnProperty('filterInfo')) {
             delete input_state.filterInfo;
+            createUrl(input_state);
         }
 
         sdata = [];
@@ -640,6 +672,12 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+            createUrl(input_state);
+        }
     },
     columnToggle: function() {
         var $this = this;
