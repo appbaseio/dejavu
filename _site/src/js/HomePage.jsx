@@ -372,6 +372,8 @@ var HomePage = React.createClass({
         });
         subsetESTypes.push(typeName);
         this.applyGetStream();
+        input_state.selectedType = subsetESTypes;
+        createUrl(input_state);
     },
     unwatchStock: function(typeName) {
         this.setState({
@@ -381,7 +383,8 @@ var HomePage = React.createClass({
         });
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
-        this.getStreamingData(subsetESTypes);
+        input_state.selectedType = subsetESTypes;
+        createUrl(input_state);
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
