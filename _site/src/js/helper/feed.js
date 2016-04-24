@@ -9,7 +9,6 @@ var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
-
 var config = {
 	url: window.localStorage.getItem('esurl'),
 	appname: window.localStorage.getItem('appname')
@@ -25,6 +24,10 @@ var httpPrefix = URL.split('://');
 var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
 var OperationFlag = false;
 var APPURL = URL + '/' + APPNAME;
+
+// to store input state
+var input_state = {};
+
 init();
 
 // Get data size according to window height
@@ -38,7 +41,6 @@ function get_data_size() {
 }
 
 function init() {
-
 	// Instantiating appbase ref with the global configs defined above.
 	appbaseRef = new Appbase({
 		url: URL,
@@ -46,6 +48,8 @@ function init() {
 		username: USERNAME,
 		password: PASSWORD
 	});
+	input_state = JSON.parse(JSON.stringify(config));
+	createUrl(input_state);
 }
 
 // vars for tracking current data and types
