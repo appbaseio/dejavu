@@ -140,6 +140,11 @@ var HomePage = React.createClass({
             hiddenColumns: hiddenColumns,
             pageLoading: false
         });
+
+        //set url
+        input_state.visibleColumns = visibleColumns;
+        input_state.hiddenColumns = hiddenColumns;
+        createUrl(input_state);
     },
 
     // Logic to stream continuous data.
@@ -315,6 +320,20 @@ var HomePage = React.createClass({
                 });
             }
 
+            //Set hidden columns from url
+            if(decryptedData.hiddenColumns) {
+                this.setState({
+                    hiddenColumns: decryptedData.hiddenColumns
+                });
+            }
+
+            //Set visible columns from url
+            if(decryptedData.visibleColumns) {
+                this.setState({
+                    visibleColumns: decryptedData.visibleColumns
+                });
+            }
+
             setTimeout(this.setMap, 2000)
             setTimeout(this.getStreamingTypes, 2000);
             // call every 1 min.
@@ -331,10 +350,16 @@ var HomePage = React.createClass({
         var hiddenColumns = this.state.hiddenColumns;
         this.hideAttribute(hiddenColumns, 'show');
         var visibleColumns = this.state.visibleColumns.concat(hiddenColumns);
+        
         this.setState({
             hiddenColumns: [],
             visibleColumns: visibleColumns
         });
+
+        //set url
+        input_state.visibleColumns = visibleColumns;
+        input_state.hiddenColumns = [];
+        createUrl(input_state);
     },
     hideAttribute: function(Columns, method) {
         if(method == 'hide') {
@@ -708,10 +733,16 @@ var HomePage = React.createClass({
                         if (v != elementId) return v;
                     });
                 }
+                
                 $this.setState({
                     visibleColumns: visibleColumns,
                     hiddenColumns: hiddenColumns
                 });
+
+                //set url
+                input_state.visibleColumns = visibleColumns;
+                input_state.hiddenColumns = hiddenColumns;
+                createUrl(input_state);
             },
             setVisibleColumn: function() {
 
