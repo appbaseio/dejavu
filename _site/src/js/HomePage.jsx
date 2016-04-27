@@ -2,6 +2,7 @@ var React = require('react');
 var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
 var FeatureComponent = require('./features/featureComponent.jsx');
+var ShareLink = require('./features/ShareLink.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
@@ -856,6 +857,7 @@ var HomePage = React.createClass({
         var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
+        var shareBtn = this.state.connect ? 'share-btn': 'hide';
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -867,6 +869,7 @@ var HomePage = React.createClass({
                                             <img src="assets/img/icon.png" />
                                         </div>
                                         <h1>DejaVu Browser for ElasticSearch</h1>
+                                        <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
                                             <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
                                         </div>

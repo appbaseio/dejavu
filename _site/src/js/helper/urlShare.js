@@ -23,4 +23,21 @@ function getUrl() {
         }
     }
 }
+
+// convertToUrl
+function convertToUrl(type) {
+    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(input_state), secret).toString();
+    var final_url = '';
+    if(type == 'gh-pages') {
+        final_url = 'appbaseio.github.io/dejaVu/live/#?input_state='+ciphertext;
+    }
+    else if(type == 'appbaseio') {
+        final_url = 'https://appbase.io/scalr/'+input_state.appname+'/browser/#?input_state='+ciphertext;
+    }
+    else {
+        final_url = window.location.protocol + '//' + window.location.host +'#?input_state='+ciphertext;
+    }
+    return final_url;
+}
+
 getUrl();
