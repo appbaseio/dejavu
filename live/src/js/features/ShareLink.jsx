@@ -11,7 +11,7 @@ var ShareLink = React.createClass({
     };
   },
   selectText: function() {
-    var url = convertToUrl();
+    var url = convertToUrl('gh-pages');
     this.setState({url: url, copied: ''});
     setTimeout(function() {
       var ele = document.getElementById('for-share');
