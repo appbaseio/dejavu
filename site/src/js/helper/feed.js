@@ -9,6 +9,9 @@ var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
 
+// to store input state
+var input_state = {};
+
 // var config = {
 // 	url: window.localStorage.getItem('esurl'),
 // 	appname: window.localStorage.getItem('appname')
@@ -54,6 +57,7 @@ function init() {
 				username: USERNAME,
 				password: PASSWORD
 			});
+			input_state = JSON.parse(JSON.stringify(config));
 		});
 	});
 }

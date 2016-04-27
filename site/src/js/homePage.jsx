@@ -3,6 +3,7 @@ var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
 var FeatureComponent = require('./features/featureComponent.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
+var ShareLink = require('./features/ShareLink.jsx');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
 // do so by flowing back the data and calling the `resetData` function
@@ -141,6 +142,11 @@ var HomePage = React.createClass({
             hiddenColumns: hiddenColumns,
             pageLoading: false
         });
+
+
+        //set url
+        input_state.visibleColumns = visibleColumns;
+        input_state.hiddenColumns = hiddenColumns;
     },
 
     // Logic to stream continuous data.
@@ -343,6 +349,10 @@ var HomePage = React.createClass({
             hiddenColumns: [],
             visibleColumns: visibleColumns
         });
+
+        //set url
+        input_state.visibleColumns = visibleColumns;
+        input_state.hiddenColumns = [];
     },
     hideAttribute: function(Columns, method) {
         if(method == 'hide') {
@@ -392,8 +402,14 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+
+         //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+        }     
         subsetESTypes.push(typeName);
         this.applyGetStream();
+        input_state.selectedType = subsetESTypes;
     },
     unwatchStock: function(typeName) {
         this.setState({
@@ -401,9 +417,16 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+        }
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
+        input_state.selectedType = subsetESTypes;
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
@@ -464,13 +487,16 @@ var HomePage = React.createClass({
     },
     handleSort: function(item, type, eve) {
         order = help.getOrder(item);
+        var storObj = {
+            active: true,
+            column: item,
+            reverse: order
+        };
         this.setState({
-            sortInfo: {
-                active: true,
-                column: item,
-                reverse: order
-            }
+            sortInfo: storObj
         });
+        var sort_state = JSON.parse(JSON.stringify(storObj));
+        input_state.sortInfo = sort_state;
         var docs = this.state.documents;
         var sortedArray = help.sortIt(docs, item, order);
         this.setState({
@@ -601,6 +627,12 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: filterObj
         });
+
+        //Store state of filter
+        var filter_state = JSON.parse(JSON.stringify(filterObj));
+        delete filter_state.applyFilter;
+        input_state.filterInfo = filter_state;
+
         if (typeName != '' && typeName != null) {
             feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
                 if (!fromStream) {
@@ -627,6 +659,12 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: obj
         });
+
+        //Remove filterinfo from store
+        if(input_state.hasOwnProperty('filterInfo')) {
+            delete input_state.filterInfo;
+        }
+
         sdata = [];
         $this.resetData();
         setTimeout(function() {
@@ -644,6 +682,11 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+
+        //Remove sortInfo from store
+        if(input_state.hasOwnProperty('sortInfo')) {
+            delete input_state.sortInfo;
+        }
     },
     columnToggle: function() {
         var $this = this;
@@ -678,6 +721,11 @@ var HomePage = React.createClass({
                     visibleColumns: visibleColumns,
                     hiddenColumns: hiddenColumns
                 });
+
+
+                //set url
+                input_state.visibleColumns = visibleColumns;
+                input_state.hiddenColumns = hiddenColumns;
             },
             setVisibleColumn: function() {
 
@@ -810,6 +858,8 @@ var HomePage = React.createClass({
         var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
+        var shareBtn = this.state.connect ? 'share-btn': 'hide';
+        
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -821,6 +871,7 @@ var HomePage = React.createClass({
                                             <img src="assets/img/icon.png" />
                                         </div>
                                         <h1>DejaVu Browser for ElasticSearch</h1>
+                                        <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
                                             <input id="configUrl" type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
                                         </div>
