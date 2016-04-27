@@ -74,7 +74,7 @@ var ShareLink = React.createClass({
   componentDidUpdate: function() {},
   render: function() {
     return (  <div className = {this.props.btn} >
-                <OverlayTrigger trigger = "click" onClick = {this.selectText} rootClose placement = "right" overlay = 
+                <OverlayTrigger rootClose trigger = "click" onClick = {this.selectText} placement = "right" overlay = 
                   { 
                     <Popover id="share_pop" className = "nestedJson" >
                       <div className="share_content">
