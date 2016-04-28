@@ -538,24 +538,47 @@ var HomePage = React.createClass({
         });
     },
     exportQuery: function(exportObject) {
-        var url = 'https://accapi.appbase.io/app/' + APPID + '/export';
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: JSON.stringify(exportObject),
-            contentType: "application/text",
-            datatype: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            success: function(data) {
-                $('#exportBtn').removeClass('loading').removeAttr('disabled');
-                $('#close-export-modal').click();
-                $('.close').click();
-                toastr.success('Data is exported, please check your email : ' + PROFILE.email + '.');
+        // var url = 'https://accapi.appbase.io/app/' + APPID + '/export';
+        // $.ajax({
+        //     type: "POST",
+        //     url: url,
+        //     data: JSON.stringify(exportObject),
+        //     contentType: "application/text",
+        //     datatype: 'json',
+        //     xhrFields: {
+        //         withCredentials: true
+        //     },
+        //     success: function(data) {
+        //         $('#exportBtn').removeClass('loading').removeAttr('disabled');
+        //         $('#close-export-modal').click();
+        //         $('.close').click();
+        //         toastr.success('Data is exported, please check your email : ' + PROFILE.email + '.');
+        //     }
+        // });
+        exportJsonData = [];
+        exportObject.query['size'] = 1000;
+        this.scrollApi({type: exportObject.type ,"activeQuery": exportObject});
+    },
+    scrollApi: function(info) {
+        feed.scrollapi(info.type, info.activeQuery.query, info.scroll, info.scroll_id).done(function(data){
+            var hits = data.hits.hits;
+            exportJsonData = exportJsonData.concat(hits);
+            if(hits.length > 999) {
+                var scrollObj = {
+                    'scroll': '1m',
+                    'scroll_id': data._scroll_id
+                };
+                this.scrollApi({"type":info.type, "activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
             }
-        });
+            else {
+                var str = JSON.stringify(exportJsonData, null, 4);
+                var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
+                var link = document.getElementById('jsonlink').href = dataUri;
+                $('#exportBtn').removeClass('loading').removeAttr('disabled');
+                $('#jsonlink').removeClass('hide');
+                exportJsonData = [];
+            }
+        }.bind(this));
     },
     applyFilter: function(typeName, columnName, method, value, analyzed) {
         filterVal = $.isArray(value) ? value : value.split(',');

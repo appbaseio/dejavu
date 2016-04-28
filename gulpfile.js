@@ -28,7 +28,6 @@ gulp.task('compact', function() {
 gulp.task('watch', ['browserify'], function() {
 	gulp.watch('dist/main.js',['compact']);
     gulp.watch('src/js/*/*.jsx', ['browserify']);
-	gulp.watch('src/js/*/*.js', ['browserify']);
 	gulp.watch('src/js/*.jsx', ['browserify']);
 });
 

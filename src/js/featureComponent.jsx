@@ -286,6 +286,12 @@ var ExportData = React.createClass({
               <span className="submitText">Export</span>
               <i className="fa fa-spinner fa-spin"></i>
             </Button>
+            <a href="#" id="jsonlink"
+                target="_blank"
+                download="data.json" 
+                className="btn btn-success hide">
+                Download json
+            </a>
           </Modal.Footer>
         </Modal>
       </div>

@@ -9,6 +9,7 @@ var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
 var OperationFlag = false;
+var exportJsonData = [];
 parent.globalAppData(function(res) {
     APPNAME = res.appname;
     APPID = res.appid;
@@ -282,6 +283,25 @@ var feed = (function() {
                     request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
                 },
                 url: createUrl,
+                xhrFields: {
+                    withCredentials: true
+                }
+            });
+        },
+        scrollapi: function(types, queryBody, scroll, scroll_id) {
+            var typesString = types.join(',');
+            var createUrl = 'https://' + HOSTNAME + '/' + APPNAME + '/' +typesString+ '/_search?scroll=5m';
+            var scrollUrl = 'https://' + HOSTNAME + '/_search/scroll?scroll=5m&scroll_id='+scroll_id;
+            var finalUrl = scroll ? scrollUrl : createUrl;
+            return $.ajax({
+                type: 'POST',
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+                },
+                url: finalUrl,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(queryBody),
                 xhrFields: {
                     withCredentials: true
                 }
