@@ -30,7 +30,6 @@ gulp.task('watch', ['browserify'], function() {
     gulp.watch('src/js/*/*.jsx', ['browserify']);
 	gulp.watch('src/js/*/*.js', ['browserify']);
 	gulp.watch('src/js/*.jsx', ['browserify']);
-	gulp.watch('src/js/*.js', ['browserify']);
 });
 
 gulp.task('default', ['browserify']);
