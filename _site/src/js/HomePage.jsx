@@ -238,7 +238,7 @@ var HomePage = React.createClass({
             totalRecord: totalRecord
         });
     },
-    onEmptySelection: function(){
+    onEmptySelection: function() {
         OperationFlag = false;
         var infoObj = this.state.infoObj;
         infoObj.showing = 0;
