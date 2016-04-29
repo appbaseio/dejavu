@@ -559,8 +559,45 @@ var HomePage = React.createClass({
         exportObject.query['size'] = 1000;
         this.scrollApi({type: exportObject.type ,"activeQuery": exportObject});
     },
+    // scrollApi: function(info) {
+    //     feed.scrollapi(info.type, info.activeQuery.query, info.scroll, info.scroll_id).done(function(data){
+    //         var hits = data.hits.hits;
+    //         exportJsonData = exportJsonData.concat(hits);
+    //         if(hits.length > 999) {
+    //             var scrollObj = {
+    //                 'scroll': '1m',
+    //                 'scroll_id': data._scroll_id
+    //             };
+    //             this.scrollApi({"type":info.type, "activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
+    //         }
+    //         else {
+    //             var str = JSON.stringify(exportJsonData, null, 4);
+    //             var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
+    //             var link = document.getElementById('jsonlink').href = dataUri;
+    //             $('#exportBtn').removeClass('loading').removeAttr('disabled');
+    //             $('#jsonlink').removeClass('hide');
+    //             exportJsonData = [];
+    //         }
+    //     }.bind(this));
+    // },
+
+    exportJsonData: function() {
+        $('.json-spinner').show();
+
+        var activeQuery = {
+            "query": {
+                "match_all": {}
+            },
+            "size":1000
+        };
+        if (this.state.filterInfo.active) {
+            var filterInfo = this.state.filterInfo;
+            activeQuery = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+        }
+        this.scrollApi({"activeQuery": activeQuery});
+    },
     scrollApi: function(info) {
-        feed.scrollapi(info.type, info.activeQuery.query, info.scroll, info.scroll_id).done(function(data){
+        feed.scrollapi(subsetESTypes, info.activeQuery, info.scroll, info.scroll_id).done(function(data){
             var hits = data.hits.hits;
             exportJsonData = exportJsonData.concat(hits);
             if(hits.length > 999) {
@@ -568,13 +605,13 @@ var HomePage = React.createClass({
                     'scroll': '1m',
                     'scroll_id': data._scroll_id
                 };
-                this.scrollApi({"type":info.type, "activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
+                this.scrollApi({"activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
             }
             else {
                 var str = JSON.stringify(exportJsonData, null, 4);
                 var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
                 var link = document.getElementById('jsonlink').href = dataUri;
-                $('#exportBtn').removeClass('loading').removeAttr('disabled');
+                $('.json-spinner').hide();
                 $('#jsonlink').removeClass('hide');
                 exportJsonData = [];
             }
@@ -755,7 +792,9 @@ var HomePage = React.createClass({
                                 signalColor={this.state.signalColor}
                                 signalActive={this.state.signalActive}
                                 signalText={this.state.signalText}
-                                typeInfo={this.state.typeInfo} />
+                                typeInfo={this.state.typeInfo} 
+                                selectedTypes={subsetESTypes}
+                                exportJsonData= {this.exportJsonData} />
                         </div>
                          <div className="col-xs-12 dataContainer">
                             <DataTable
