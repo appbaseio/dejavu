@@ -3,7 +3,6 @@ var decryptedData = {};
 
 // Encrypt
 function createUrl(inputs) {
-    console.log(inputs);
     var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputs), secret).toString();
     window.location.href = '#?input_state=' + ciphertext;
 }

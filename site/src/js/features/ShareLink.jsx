@@ -84,7 +84,7 @@ var ShareLink = React.createClass({
                     </Popover>
                   } >
                 <a href = "javascript:void(0);" className = "btn btn-default" >
-                  <i className = "fa fa-paperclip"> </i> 
+                  <i className = "fa fa-link"> </i> 
                 </a> 
                 </OverlayTrigger> 
               </div>);
