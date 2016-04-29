@@ -1,8 +1,0 @@
-{
-  "name": "toastr",
-  "version": "2.1.2",
-  "main": ["toastr.js", "toastr.css"],
-  "dependencies": {
-		"jquery": ">=1.6.3"
-  }
-}

@@ -5,6 +5,7 @@ var Dropdown = require('./dropdown.jsx');
 
 var Info = React.createClass({
     render: function() {
+        var selectedTypes = this.props.selectedTypes;
         var infoObj = this.props.infoObj;
         var totalRecord = this.props.totalRecord;
         var filterInfo = this.props.filterInfo;
@@ -14,7 +15,7 @@ var Info = React.createClass({
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var hiddenClass = hiddenColumns.length ? 'pull-right text-right pd-r10' : 'hide';
-        var infoObjClass = totalRecord == 0 ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
+        var infoObjClass = !selectedTypes.length ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
         var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';

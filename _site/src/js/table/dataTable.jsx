@@ -166,7 +166,8 @@ var DataTable = React.createClass({
             columnToggle = {this.props.columnToggle}
             actionOnRecord= {this.props.actionOnRecord} 
             reloadData = {this.props.reloadData}
-            exportJsonData = {this.props.exportJsonData} />
+            exportJsonData = {this.props.exportJsonData} 
+            selectedTypes = {this.props.selectedTypes} />
 
             {extraAddBtn}
 
