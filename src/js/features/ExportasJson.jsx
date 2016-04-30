@@ -26,9 +26,9 @@ var ExportasJson = React.createClass({
     },
     render: function() {
         return (<div className="pull-left">
-                    <a title="Export" onClick={this.open} >
-                          <img src="src/img/export.png" alt=""/> Export Data as JSON
-                        </a>
+                    <a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
+                      <i className="fa fa-cloud-download"></i>
+                    </a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
                         <Modal.Title>Export data <span className="small-span">in json</span></Modal.Title>

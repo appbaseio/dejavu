@@ -26,9 +26,10 @@ var Info = React.createClass({
                     <div className=" row">
                         <div className={infoObjClass}>
                             <div className={totalClass}>
+                                <FeatureComponent.ExportasJson exportJsonData = {this.props.exportJsonData} />
                                 <a
                                     href="javascript:void(0);"
-                                    className="btn btn-default themeBtn m-r10"
+                                    className="btn btn-default themeBtn  m-l10 m-r10"
                                     onClick={this.props.reloadData}>
                                     <i className="fa fa-refresh"></i> Reload
                                 </a>

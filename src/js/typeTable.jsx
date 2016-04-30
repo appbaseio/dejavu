@@ -1,6 +1,5 @@
 var React = require('react');
 var FeatureComponent = require('./featureComponent.jsx');
-var ExportasJson = require('./features/featureComponent.jsx').ExportasJson;
 
 // Each row in the types table on the left side.
 var TypeRow = React.createClass({
@@ -61,10 +60,6 @@ var TypeRow = React.createClass({
 var TypeTable = React.createClass({
     render: function() {
         var types = this.props.Types;
-        var selectedType = this.props.selectedTypes;
-        var ExportasJson_comp = selectedType.length ? 
-                                <ExportasJson exportJsonData = {this.props.exportJsonData} /> :
-                                <span></span>;
         rowObj = [];
         appname = APPNAME;
         for (var type in types) {
@@ -99,9 +94,6 @@ var TypeTable = React.createClass({
                     <ul className="feature-list">
                         <li>
                             <FeatureComponent.ImportData />
-                        </li>
-                        <li>
-                            {ExportasJson_comp}
                         </li>
                     </ul>
                 </div>

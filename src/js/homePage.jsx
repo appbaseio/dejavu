@@ -792,9 +792,7 @@ var HomePage = React.createClass({
                                 signalColor={this.state.signalColor}
                                 signalActive={this.state.signalActive}
                                 signalText={this.state.signalText}
-                                typeInfo={this.state.typeInfo} 
-                                selectedTypes={subsetESTypes}
-                                exportJsonData= {this.exportJsonData} />
+                                typeInfo={this.state.typeInfo} />
                         </div>
                          <div className="col-xs-12 dataContainer">
                             <DataTable
@@ -818,7 +816,8 @@ var HomePage = React.createClass({
                                 columnToggle ={this.columnToggle}
                                 actionOnRecord = {this.state.actionOnRecord}
                                 pageLoading={this.state.pageLoading}
-                                reloadData={this.reloadData} />
+                                reloadData={this.reloadData} 
+                                exportJsonData= {this.exportJsonData} />
                         </div>
                         <FeatureComponent.ErrorModal 
                             errorShow={this.state.errorShow}
