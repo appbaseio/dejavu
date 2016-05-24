@@ -4,6 +4,35 @@ var FeatureComponent = require('../features/featureComponent.jsx');
 var Dropdown = require('./dropdown.jsx');
 
 var Info = React.createClass({
+     getInitialState: function() {
+        return {
+            selectToggle: false
+        };
+    },
+    selectToggleChange: function() {
+        var checkFlag;
+        if(this.state.selectToggle) {
+            this.setState({
+                selectToggle: false
+            });
+            checkbox = false;
+        }
+        else {
+            this.setState({
+                selectToggle: true
+            });   
+            checkbox = true;
+        }
+        this.props.actionOnRecord.selectToggleChange(checkbox);
+    },
+    componentDidUpdate: function() {
+        var checkFlag = this.props.actionOnRecord.selectToggle;
+        if(this.state.selectToggle !== checkFlag) {
+            this.setState({
+                selectToggle: checkFlag
+            });
+        }
+    },
     render: function() {
         var selectedTypes = this.props.selectedTypes;
         var infoObj = this.props.infoObj;
@@ -21,7 +50,6 @@ var Info = React.createClass({
         var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
-
         return (<div className="infoRow container">
                     <div className=" row">
                         <div className={infoObjClass}>
@@ -41,6 +69,16 @@ var Info = React.createClass({
                                 </span>
                             </div>
                             <div className={selectionClass}>
+                            <span className="theme-element checkbox pull-left pd-r10 mt-5">
+                                <input
+                                     id='selectToggle'
+                                     type="checkbox"
+                                     key='1'
+                                     checked={this.state.selectToggle}
+                                     onChange={this.selectToggleChange}
+                                     readOnly={false}/>
+                                    <label htmlFor='selectToggle'></label>
+                            </span>
                                 <span className="pull-left pd-r10 info_single">
                                     <strong>{actionOnRecord.selectedRows.length}</strong> selected of total
                                     <strong>&nbsp;{totalRecord}</strong>

@@ -41,7 +41,7 @@ var DataTable = React.createClass({
             for (var each in data) {
                 fullColumns.type = data[each]['_type'];
                 for (column in data[each]) {
-                    if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
+                    if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked') {
                         if (fullColumns.columns.indexOf(column) <= -1) {
                             fullColumns.columns.push(column);
                         }
@@ -94,6 +94,7 @@ var DataTable = React.createClass({
                                 _type={data[row]['_type']}
                                 visibility={visibility}
                                 row={newRow}
+                                _checked={newRow._checked}
                                 actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({

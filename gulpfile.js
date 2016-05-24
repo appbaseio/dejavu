@@ -48,8 +48,8 @@ gulp.task('watch', ['compact','connect'], function() {
     ]).on('change', function (file) {
         live.changed(file.path);
     });
-    gulp.watch('_site/src/js/*/*.jsx', ['compact']);
-    gulp.watch('_site/src/js/*.jsx', ['compact']);
+    gulp.watch('_site/src/js/*/*.jsx', ['browserify']);
+    gulp.watch('_site/src/js/*.jsx', ['browserify']);
 
 });
 
