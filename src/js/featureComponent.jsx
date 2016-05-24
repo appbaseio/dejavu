@@ -321,7 +321,7 @@ var ImportData = React.createClass({
     render: function() {
         return (<div>
                     <a title="Import" onClick={this.open} >
-                      <img src="src/img/import.png" /> Import <span className="small-span">from JSON, MongoDB</span>
+                      <img src="src/img/export.png" /> Import <span className="small-span">from JSON, MongoDB</span>
                     </a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
