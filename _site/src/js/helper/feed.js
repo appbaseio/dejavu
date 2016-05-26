@@ -16,19 +16,20 @@ var config = {
 
 var APPNAME = config.appname;
 var URL = config.url;
-var urlsplit = URL.split(':');
-var pwsplit = urlsplit[2].split('@');
-var USERNAME = urlsplit[1].replace('//', '');
-var PASSWORD = pwsplit[0];
-var httpPrefix = URL.split('://');
-var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-var OperationFlag = false;
-var APPURL = URL + '/' + APPNAME;
+if(URL) {
+	var urlsplit = URL.split(':');
+	var pwsplit = urlsplit[2].split('@');
+	var USERNAME = urlsplit[1].replace('//', '');
+	var PASSWORD = pwsplit[0];
+	var httpPrefix = URL.split('://');
+	var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+	var OperationFlag = false;
+	var APPURL = URL + '/' + APPNAME;
+	// to store input state
+	var input_state = {};
 
-// to store input state
-var input_state = {};
-
-init();
+	init();
+}
 
 // Get data size according to window height
 function get_data_size() {

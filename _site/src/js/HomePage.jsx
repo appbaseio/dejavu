@@ -53,11 +53,13 @@ var HomePage = React.createClass({
                 id: null,
                 type: null,
                 row: null,
+                selectToggle: false,
                 selectedRows: [],
                 selectRecord: this.selectRecord,
                 updateRecord: this.updateRecord,
                 deleteRecord: this.deleteRecord,
-                removeSelection: this.removeSelection
+                removeSelection: this.removeSelection,
+                selectToggleChange: this.selectToggleChange
             },
             typeInfo: {
                 count: 0,
@@ -291,16 +293,20 @@ var HomePage = React.createClass({
         }.bind(this), queryBody);
     },
     // only called on change in types.
-    getStreamingTypes: function() {
-        feed.getTypes(function(update) {
-            update = update.sort(function(a, b) {
-                return a.toLowerCase().localeCompare(b.toLowerCase());
-            });
-            this.setState({
-                types: update,
-                connect: true
-            });
-        }.bind(this));
+   getStreamingTypes: function() {
+        if (typeof APPNAME == 'undefined' || APPNAME == null) {
+            setTimeout(this.getTotalRecord, 1000);
+        } else {
+            feed.getTypes(function(update) {
+                update = update.sort(function(a, b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                });
+                this.setState({
+                    types: update,
+                    connect: true
+                });
+            }.bind(this));
+        }
     },
     removeType: function(typeName) {
         feed.deleteData(typeName, function(data) {
@@ -391,7 +397,9 @@ var HomePage = React.createClass({
     getTotalRecord: function() {
         var $this = this;
         if (!this.state.infoObj.getOnce) {
-            if (typeof APPNAME != 'undefined') {
+            if (typeof APPNAME == 'undefined' || APPNAME == null) {
+                setTimeout(this.getTotalRecord, 1000);
+            } else {
                 feed.getTotalRecord().on('data', function(data) {
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
@@ -400,8 +408,7 @@ var HomePage = React.createClass({
                         infoObj: infoObj
                     });
                 });
-            } else
-                setTimeout(this.getTotalRecord, 1000);
+            }
         }
     },
     watchStock: function(typeName) {
@@ -752,19 +759,28 @@ var HomePage = React.createClass({
         return obj;
     },
     selectRecord: function(id, type, row, currentCheck) {
-        var actionOnRecord = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck);
+        var selection = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck, this.state.documents);
         this.setState({
-            actionOnRecord: actionOnRecord
+            actionOnRecord: selection.actionOnRecord
         });
         this.forceUpdate();
     },
     removeSelection: function() {
-        var actionOnRecord = help.removeSelection(this.state.actionOnRecord);
+        var selection = help.removeSelection(this.state.actionOnRecord, this.state.documents);
+        selection.actionOnRecord.selectToggle = false;
+        this.setState({
+            actionOnRecord: selection.actionOnRecord
+        });
+        this.forceUpdate();
+        $('[name="selectRecord"]').removeAttr('checked');
+    },
+    selectToggleChange: function(checkbox) {
+        var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
+        actionOnRecord.selectToggle = checkbox;
         this.setState({
             actionOnRecord: actionOnRecord
         });
         this.forceUpdate();
-        $('[name="selectRecord"]').removeAttr('checked');
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
