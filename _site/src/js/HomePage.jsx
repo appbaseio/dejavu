@@ -294,15 +294,19 @@ var HomePage = React.createClass({
     },
     // only called on change in types.
     getStreamingTypes: function() {
-        feed.getTypes(function(update) {
-            update = update.sort(function(a, b) {
-                return a.toLowerCase().localeCompare(b.toLowerCase());
-            });
-            this.setState({
-                types: update,
-                connect: true
-            });
-        }.bind(this));
+        if (typeof APPNAME == 'undefined' || APPNAME == null) {
+            setTimeout(this.getTotalRecord, 1000);
+        } else {
+            feed.getTypes(function(update) {
+                update = update.sort(function(a, b) {
+                    return a.toLowerCase().localeCompare(b.toLowerCase());
+                });
+                this.setState({
+                    types: update,
+                    connect: true
+                });
+            }.bind(this));
+        }
     },
     removeType: function(typeName) {
         feed.deleteData(typeName, function(data) {
@@ -393,7 +397,9 @@ var HomePage = React.createClass({
     getTotalRecord: function() {
         var $this = this;
         if (!this.state.infoObj.getOnce) {
-            if (typeof APPNAME != 'undefined') {
+            if (typeof APPNAME == 'undefined' || APPNAME == null) {
+                setTimeout(this.getTotalRecord, 1000);
+            } else {
                 feed.getTotalRecord().on('data', function(data) {
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
@@ -402,8 +408,7 @@ var HomePage = React.createClass({
                         infoObj: infoObj
                     });
                 });
-            } else
-                setTimeout(this.getTotalRecord, 1000);
+            }
         }
     },
     watchStock: function(typeName) {

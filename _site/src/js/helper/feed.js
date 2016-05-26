@@ -16,19 +16,20 @@ var config = {
 
 var APPNAME = config.appname;
 var URL = config.url;
-var urlsplit = URL.split(':');
-var pwsplit = urlsplit[2].split('@');
-var USERNAME = urlsplit[1].replace('//', '');
-var PASSWORD = pwsplit[0];
-var httpPrefix = URL.split('://');
-var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-var OperationFlag = false;
-var APPURL = URL + '/' + APPNAME;
+if(URL) {
+	var urlsplit = URL.split(':');
+	var pwsplit = urlsplit[2].split('@');
+	var USERNAME = urlsplit[1].replace('//', '');
+	var PASSWORD = pwsplit[0];
+	var httpPrefix = URL.split('://');
+	var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+	var OperationFlag = false;
+	var APPURL = URL + '/' + APPNAME;
+	// to store input state
+	var input_state = {};
 
-// to store input state
-var input_state = {};
-
-init();
+	init();
+}
 
 // Get data size according to window height
 function get_data_size() {
@@ -209,7 +210,13 @@ var feed = (function() {
 		},
 		// gets all the types of the current app;
 		getTypes: function(callback) {
-			if (typeof APPNAME != 'undefined') {
+			if (typeof APPNAME == 'undefined' || APPNAME == null) {
+				var $this = this;
+				setTimeout(function() {
+					$this.getTypes(callback);
+				}, 1000);
+			}
+			else {	
 				appbaseRef.getTypes().on('data', function(types) {
 					if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
 						esTypes = types.slice();
@@ -221,11 +228,6 @@ var feed = (function() {
 					clearInterval(streamingInterval);
 					console.log('error in retrieving types: ', err)
 				})
-			} else {
-				var $this = this;
-				setTimeout(function() {
-					$this.getTypes(callback);
-				}, 1000);
 			}
 		},
 		indexData: function(recordObject, method, callback) {
