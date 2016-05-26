@@ -47,7 +47,7 @@ var Info = React.createClass({
         var infoObjClass = !selectedTypes.length ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
-        var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';
+        var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
         return (<div className="infoRow container">
