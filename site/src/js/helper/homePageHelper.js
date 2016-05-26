@@ -47,7 +47,12 @@ var help = {
 
         var a2 = existsOnly.sort($this.dynamicSort(prop, reverse));
         var a2 = $.merge(a2, nonExistsOnly);
-        return a2;
+        var a3 = _.each(a2, function(elm) {
+            if(!elm.hasOwnProperty('_checked')) {
+                elm._checked = false;
+            }
+        })
+        return a3;
     },
     dynamicSort: function(property, reverse) {
         return function(a, b) {
@@ -77,7 +82,7 @@ var help = {
         $('#exportBtn').addClass('loading').attr('disabled', true);
         return exportObject;
     },
-    selectRecord: function(actionOnRecord, id, type, row, currentCheck) {
+    selectRecord: function(actionOnRecord, id, type, row, currentCheck, documents) {
         var row = {};
         selectedRows = [];
         $('.rowSelectionCheckbox:checked').each(function(i, v){
@@ -96,13 +101,35 @@ var help = {
         actionOnRecord.active = selectedRows.length ? true : false;
         actionOnRecord.selectedRows = selectedRows;
         actionOnRecord.row = JSON.stringify(row, null, 4);
-        return actionOnRecord;
+        return {
+            actionOnRecord: actionOnRecord
+        };
     },
     removeSelection: function(actionOnRecord) {
         actionOnRecord.active = false;
         actionOnRecord.id = null;
         actionOnRecord.type = null;
         actionOnRecord.selectedRows = [];
+        return {
+            actionOnRecord: actionOnRecord
+        };
+        return actionOnRecord;
+    },
+    selectAll: function(checked, actionOnRecord, documents) {
+        if(checked) {
+            actionOnRecord.selectedRows = [];
+            _.each(documents, function(ele) {
+                var obj = {
+                    _id: ele._id,
+                    _type: ele._type
+                };
+                actionOnRecord.selectedRows.push(obj);
+            });
+        }
+        else
+            actionOnRecord.selectedRows = this.removeSelection(actionOnRecord);
+        
+        console.log(actionOnRecord.selectedRows);
         return actionOnRecord;
     }
 }
