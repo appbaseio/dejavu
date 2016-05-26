@@ -4,7 +4,37 @@ var FeatureComponent = require('../features/featureComponent.jsx');
 var Dropdown = require('./dropdown.jsx');
 
 var Info = React.createClass({
+    getInitialState: function() {
+        return {
+            selectToggle: false
+        };
+    },
+    selectToggleChange: function() {
+        var checkFlag;
+        if(this.state.selectToggle) {
+            this.setState({
+                selectToggle: false
+            });
+            checkbox = false;
+        }
+        else {
+            this.setState({
+                selectToggle: true
+            });   
+            checkbox = true;
+        }
+        this.props.actionOnRecord.selectToggleChange(checkbox);
+    },
+    componentDidUpdate: function() {
+        var checkFlag = this.props.actionOnRecord.selectToggle;
+        if(this.state.selectToggle !== checkFlag) {
+            this.setState({
+                selectToggle: checkFlag
+            });
+        }
+    },
     render: function() {
+        var selectedTypes = this.props.selectedTypes;
         var infoObj = this.props.infoObj;
         var totalRecord = this.props.totalRecord;
         var filterInfo = this.props.filterInfo;
@@ -14,10 +44,10 @@ var Info = React.createClass({
         var filterClass = filterInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
         var hiddenClass = hiddenColumns.length ? 'pull-right text-right pd-r10' : 'hide';
-        var infoObjClass = totalRecord == 0 ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
+        var infoObjClass = !selectedTypes.length ? "hide" : "pull-left text-left pd-l0 recordTotalRow";
         var sortAscClass = sortInfo.active && sortInfo.reverse ? 'fa fa-sort-alpha-desc' : 'fa fa-sort-alpha-asc';
         var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
-        var selectionClass = actionOnRecord.active ? 'col-xs-12' : 'hide';
+        var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
 
@@ -40,6 +70,16 @@ var Info = React.createClass({
                                 </span>
                             </div>
                             <div className={selectionClass}>
+                            <span className="theme-element checkbox pull-left pd-r10 mt-5">
+                                <input
+                                     id='selectToggle'
+                                     type="checkbox"
+                                     key='1'
+                                     checked={this.state.selectToggle}
+                                     onChange={this.selectToggleChange}
+                                     readOnly={false}/>
+                                    <label htmlFor='selectToggle'></label>
+                            </span>
                                 <span className="pull-left pd-r10 info_single">
                                     <strong>{actionOnRecord.selectedRows.length}</strong> selected of total
                                     <strong>&nbsp;{totalRecord}</strong>
