@@ -52,11 +52,13 @@ var HomePage = React.createClass({
                 id: null,
                 type: null,
                 row: null,
+                selectToggle: false,
                 selectedRows: [],
                 selectRecord: this.selectRecord,
                 updateRecord: this.updateRecord,
                 deleteRecord: this.deleteRecord,
-                removeSelection: this.removeSelection
+                removeSelection: this.removeSelection,
+                selectToggleChange: this.selectToggleChange
             },
             typeInfo: {
                 count: 0,
@@ -715,19 +717,28 @@ var HomePage = React.createClass({
         return obj;
     },
     selectRecord: function(id, type, row, currentCheck) {
-        var actionOnRecord = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck);
+        var selection = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck, this.state.documents);
         this.setState({
-            actionOnRecord: actionOnRecord
+            actionOnRecord: selection.actionOnRecord
         });
         this.forceUpdate();
     },
     removeSelection: function() {
-        var actionOnRecord = help.removeSelection(this.state.actionOnRecord);
+        var selection = help.removeSelection(this.state.actionOnRecord, this.state.documents);
+        selection.actionOnRecord.selectToggle = false;
+        this.setState({
+            actionOnRecord: selection.actionOnRecord
+        });
+        this.forceUpdate();
+        $('[name="selectRecord"]').removeAttr('checked');
+    },
+    selectToggleChange: function(checkbox) {
+        var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
+        actionOnRecord.selectToggle = checkbox;
         this.setState({
             actionOnRecord: actionOnRecord
         });
         this.forceUpdate();
-        $('[name="selectRecord"]').removeAttr('checked');
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();

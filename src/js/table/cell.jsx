@@ -17,6 +17,16 @@ var cellWidth = '250px';
 // **Cell** defines the properties of each cell in the
 // data table.
 var Cell = React.createClass({
+    getInitialState: function() {
+        return {
+            checked: false
+        };
+    },
+    getDefaultProps: function() {
+        return {
+            appIdClass: "appId"
+        }
+    },
     copyId: function() {
         var range = document.createRange();
         var selection = window.getSelection();
@@ -27,17 +37,48 @@ var Cell = React.createClass({
         document.execCommand("copy");
     },
     selectRecord: function(ele) {
+        var checkFlag;
+        if(this.state.checked) {
+            this.setState({
+                checked: false
+            });
+            checkbox = false;
+        }
+        else {
+            this.setState({
+                checked: true
+            });   
+            checkbox = true;
+        }
         _id = this.props._id;
         _type = this.props._type;
         row = this.props.row;
-        this.props.actionOnRecord.selectRecord(_id, _type, row, ele.currentTarget.checked);
+        this.props.actionOnRecord.selectRecord(_id, _type, row, checkFlag);
+    },
+    componentDidUpdate: function() {
+        var self = this;
+        var _id = this.props._id;
+        var checkFlag = false;
+        if(this.props.actionOnRecord.selectedRows.length) {
+            this.props.actionOnRecord.selectedRows.forEach(function(v){
+                if (v._id == _id) 
+                    checkFlag = true;
+            });
+        }
+        else 
+            checkFlag = false;
+        if(this.state.checked !== checkFlag) {
+            this.setState({
+                checked: checkFlag
+            });
+        }
     },
     render: function() {
+        var self = this;
         var OverlayTrigger = ReactBootstrap.OverlayTrigger;
         var Popover = ReactBootstrap.Popover;
         var actionOnRecord = this.props.actionOnRecord;
         var row = JSON.stringify(this.props.row);
-        
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
@@ -60,17 +101,16 @@ var Cell = React.createClass({
         //                         onClick={showJSON.bind(null, data, _type, _id)}>
         //                         <i className="fa fa-external-link" />
         //                     </a>;
-        var appIdClass = "appId";
-        actionOnRecord.selectedRows.forEach(function(v){
-            if (v._id == _id)
-                appIdClass += " showRow";
-        });
+        var appIdClass = 'appId';
+        if(this.state.checked) {
+            appIdClass += " showRow";
+        }
         if (columnName == 'json') {
             prettyData = <Pretty json={data} />
             to_display = <div className={appIdClass}>
                             <span className="theme-element selectrow checkbox">
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
-                                 value={_id} data-type={_type} data-row={row} id={radioId} />
+                                 value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
                                 <label htmlFor={radioId}></label>
                             </span>
                             <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
