@@ -394,13 +394,13 @@ var HomePage = React.createClass({
             });
         }
     },
-    getTotalRecord: function(apply) {
+    getTotalRecord: function() {
         var $this = this;
-        if (!this.state.infoObj.getOnce || apply) {
+        if (!this.state.infoObj.getOnce) {
             if (typeof APPNAME == 'undefined' || APPNAME == null) {
                 setTimeout(this.getTotalRecord, 1000);
             } else {
-                feed.getTotalRecord(subsetESTypes).on('data', function(data) {
+                feed.getTotalRecord().on('data', function(data) {
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
                     infoObj.availableTotal = data.hits.total;
@@ -412,6 +412,11 @@ var HomePage = React.createClass({
                 });
             }
         }
+    },
+    getCount: function() {
+        feed.countStream(subsetESTypes, function(total, fromStream, method) {
+            this.streamCallback(total, fromStream, method);
+        }.bind(this));
     },
     watchStock: function(typeName) {
         
@@ -450,7 +455,7 @@ var HomePage = React.createClass({
         input_state.selectedType = subsetESTypes;
         createUrl(input_state);
         this.watchSelectedRecord();
-        this.getTotalRecord(true);
+        this.getCount();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
