@@ -87,15 +87,14 @@ var help = {
             };
             selectedRows.push(obj);
             if(i === 0) {
-                row = $(v).data('row');
-                delete row.json;
+                row = $(v).data('row').json;
                 actionOnRecord.id = obj._id;
                 actionOnRecord.type = obj._type;
             }
         });
         actionOnRecord.active = selectedRows.length ? true : false;
         actionOnRecord.selectedRows = selectedRows;
-        actionOnRecord.row = JSON.stringify(row, null, 4);
+        // actionOnRecord.row = JSON.stringify(row, null, 4);
         return {
             actionOnRecord: actionOnRecord
         };
