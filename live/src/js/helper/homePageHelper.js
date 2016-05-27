@@ -47,12 +47,7 @@ var help = {
 
         var a2 = existsOnly.sort($this.dynamicSort(prop, reverse));
         var a2 = $.merge(a2, nonExistsOnly);
-        var a3 = _.each(a2, function(elm) {
-            if(!elm.hasOwnProperty('_checked')) {
-                elm._checked = false;
-            }
-        })
-        return a3;
+        return a2;
     },
     dynamicSort: function(property, reverse) {
         return function(a, b) {
