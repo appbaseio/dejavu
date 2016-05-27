@@ -441,6 +441,7 @@ var UpdateDocument = React.createClass({
         this.setState({
             showModal: true
         });
+        this.props.actionOnRecord.getUpdateObj();
     },
     validateInput: function() {
         var validateClass = this.state.validate;
