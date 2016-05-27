@@ -87,8 +87,7 @@ var help = {
             };
             selectedRows.push(obj);
             if(i === 0) {
-                row = $(v).data('row');
-                delete row.json;
+                row = $(v).data('row').json;
                 actionOnRecord.id = obj._id;
                 actionOnRecord.type = obj._type;
             }
