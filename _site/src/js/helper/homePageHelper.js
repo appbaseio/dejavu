@@ -94,7 +94,7 @@ var help = {
         });
         actionOnRecord.active = selectedRows.length ? true : false;
         actionOnRecord.selectedRows = selectedRows;
-        actionOnRecord.row = JSON.stringify(row, null, 4);
+        // actionOnRecord.row = JSON.stringify(row, null, 4);
         return {
             actionOnRecord: actionOnRecord
         };
