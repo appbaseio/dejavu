@@ -384,6 +384,7 @@ var HomePage = React.createClass({
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
+        this.watchSelectedRecord();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
@@ -648,6 +649,7 @@ var HomePage = React.createClass({
         } else {
             this.onEmptySelection();
         }
+        this.removeSelection();
     },
     removeFilter: function() {
         var $this = this;
@@ -663,6 +665,7 @@ var HomePage = React.createClass({
         setTimeout(function() {
             $this.getStreamingData(subsetESTypes);
         }, 500);
+        this.removeSelection();
     },
     removeSort: function() {
         var docs = this.state.documents;
@@ -739,6 +742,22 @@ var HomePage = React.createClass({
             actionOnRecord: actionOnRecord
         });
         this.forceUpdate();
+    },
+    watchSelectedRecord: function() {
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.selectedRows = _.filter(this.state.actionOnRecord.selectedRows, function(row) {
+            var flag = subsetESTypes.indexOf(row._type) === -1 ? false : true;
+            return flag;
+        });
+        if(!actionOnRecord.selectedRows.length) {
+            this.removeSelection();
+        }
+        else {
+            this.setState({
+                actionOnRecord: actionOnRecord
+            });
+            this.forceUpdate();
+        }
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
