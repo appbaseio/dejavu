@@ -187,6 +187,9 @@ var feed = (function() {
 	}
 
 	return {
+		countStream: function(types, setTotal) {
+			countStream(types, setTotal);
+		},
 		// exposes ``applyStreamSearch()`` as ``getData()``
 		getData: function(types, callback, setTotal) {
 			applyStreamSearch(types, callback, false, setTotal);

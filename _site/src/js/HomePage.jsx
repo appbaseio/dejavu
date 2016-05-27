@@ -411,6 +411,11 @@ var HomePage = React.createClass({
             }
         }
     },
+    getCount: function() {
+        feed.countStream(subsetESTypes, function(total, fromStream, method) {
+            this.streamCallback(total, fromStream, method);
+        }.bind(this));
+    },
     watchStock: function(typeName) {
         
         //Remove sorting while slecting new type
@@ -448,6 +453,8 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         input_state.selectedType = subsetESTypes;
         createUrl(input_state);
+        this.watchSelectedRecord();
+        this.getCount();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
@@ -670,6 +677,7 @@ var HomePage = React.createClass({
         } else {
             this.onEmptySelection();
         }
+        this.removeSelection();
     },
     removeFilter: function() {
         var $this = this;
@@ -693,6 +701,7 @@ var HomePage = React.createClass({
         setTimeout(function() {
             $this.getStreamingData(subsetESTypes);
         }, 500);
+        this.removeSelection();
     },
     removeSort: function() {
         var docs = this.state.documents;
@@ -773,6 +782,22 @@ var HomePage = React.createClass({
         });
         this.forceUpdate();
         $('[name="selectRecord"]').removeAttr('checked');
+    },
+    watchSelectedRecord: function() {
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.selectedRows = _.filter(this.state.actionOnRecord.selectedRows, function(row) {
+            var flag = subsetESTypes.indexOf(row._type) === -1 ? false : true;
+            return flag;
+        });
+        if(!actionOnRecord.selectedRows.length) {
+            this.removeSelection();
+        }
+        else {
+            this.setState({
+                actionOnRecord: actionOnRecord
+            });
+            this.forceUpdate();
+        }
     },
     selectToggleChange: function(checkbox) {
         var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
