@@ -394,18 +394,20 @@ var HomePage = React.createClass({
             });
         }
     },
-    getTotalRecord: function() {
+    getTotalRecord: function(apply) {
         var $this = this;
-        if (!this.state.infoObj.getOnce) {
+        if (!this.state.infoObj.getOnce || apply) {
             if (typeof APPNAME == 'undefined' || APPNAME == null) {
                 setTimeout(this.getTotalRecord, 1000);
             } else {
-                feed.getTotalRecord().on('data', function(data) {
+                feed.getTotalRecord(subsetESTypes).on('data', function(data) {
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
                     infoObj.availableTotal = data.hits.total;
+                    var totalRecord = infoObj.availableTotal;
                     $this.setState({
-                        infoObj: infoObj
+                        infoObj: infoObj,
+                        totalRecord: totalRecord
                     });
                 });
             }
@@ -431,7 +433,6 @@ var HomePage = React.createClass({
         createUrl(input_state);
     },
     unwatchStock: function(typeName) {
-
         //Remove sorting while unslecting type
         this.setState({
             sortInfo: {
@@ -448,6 +449,8 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         input_state.selectedType = subsetESTypes;
         createUrl(input_state);
+        this.watchSelectedRecord();
+        this.getTotalRecord(true);
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
@@ -670,6 +673,7 @@ var HomePage = React.createClass({
         } else {
             this.onEmptySelection();
         }
+        this.removeSelection();
     },
     removeFilter: function() {
         var $this = this;
@@ -693,6 +697,7 @@ var HomePage = React.createClass({
         setTimeout(function() {
             $this.getStreamingData(subsetESTypes);
         }, 500);
+        this.removeSelection();
     },
     removeSort: function() {
         var docs = this.state.documents;
@@ -781,6 +786,22 @@ var HomePage = React.createClass({
             actionOnRecord: actionOnRecord
         });
         this.forceUpdate();
+    },
+    watchSelectedRecord: function() {
+        var actionOnRecord = this.state.actionOnRecord;
+        actionOnRecord.selectedRows = _.filter(this.state.actionOnRecord.selectedRows, function(row) {
+            var flag = subsetESTypes.indexOf(row._type) === -1 ? false : true;
+            return flag;
+        });
+        if(!actionOnRecord.selectedRows.length) {
+            this.removeSelection();
+        }
+        else {
+            this.setState({
+                actionOnRecord: actionOnRecord
+            });
+            this.forceUpdate();
+        }
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();

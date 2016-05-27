@@ -15,6 +15,7 @@ gulp.task('browserify', function() {
     return b.bundle()
         .pipe(source('main.js'))
         .pipe(gulp.dest('./_site/dist'))
+         .pipe(connect.reload());
 });
 
 gulp.task('compact', ['browserify'], function() {
@@ -36,13 +37,8 @@ gulp.task('connect', function() {
 });
 
 gulp.task('watch', ['compact','connect'], function() {
-    gulp.watch([
-        '_site/dist/main.min.js'    
-    ]).on('change', function (file) {
-    });
     gulp.watch('_site/src/js/*/*.jsx', ['compact']);
     gulp.watch('_site/src/js/*.jsx', ['compact']);
-
 });
 
 gulp.task('default', ['compact']);

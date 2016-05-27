@@ -331,12 +331,12 @@ var feed = (function() {
 				body: queryBody
 			});
 		},
-		getTotalRecord: function() {
+		getTotalRecord: function(type) {
 			// get historical data
 			return appbaseRef.search({
 				from: 0,
 				size: 0,
-				type: [],
+				type: type,
 				body: {
 					query: {
 						match_all: {}
