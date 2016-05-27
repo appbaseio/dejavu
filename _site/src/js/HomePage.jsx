@@ -59,7 +59,8 @@ var HomePage = React.createClass({
                 updateRecord: this.updateRecord,
                 deleteRecord: this.deleteRecord,
                 removeSelection: this.removeSelection,
-                selectToggleChange: this.selectToggleChange
+                selectToggleChange: this.selectToggleChange,
+                getUpdateObj: this.getUpdateObj
             },
             typeInfo: {
                 count: 0,
@@ -807,6 +808,17 @@ var HomePage = React.createClass({
             });
             this.forceUpdate();
         }
+    },
+    getUpdateObj: function() {
+        var actionOnRecord = this.state.actionOnRecord;
+        var current_selected_row = actionOnRecord.selectedRows[0];
+        var current_row = _.filter(this.state.documents, function(ele) {
+            return ele._type == current_selected_row._type && ele._id == current_selected_row._id;
+        });
+        actionOnRecord.row = JSON.stringify(current_row[0].json, null, 4);
+        this.setState({
+            actionOnRecord: actionOnRecord
+        });
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
