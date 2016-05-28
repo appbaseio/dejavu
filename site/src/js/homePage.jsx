@@ -400,9 +400,11 @@ var HomePage = React.createClass({
         }
     },
     getCount: function() {
-        feed.countStream(subsetESTypes, function(total, fromStream, method) {
-            this.streamCallback(total, fromStream, method);
-        }.bind(this));
+        if(subsetESTypes.length) {
+            feed.countStream(subsetESTypes, function(total, fromStream, method) {
+                this.streamCallback(total, fromStream, method);
+            }.bind(this));
+        }
     },
     watchStock: function(typeName) {
         this.setState({
