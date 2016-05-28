@@ -412,15 +412,7 @@ var HomePage = React.createClass({
             }
         }
     },
-    getCount: function() {
-        if(subsetESTypes.length) {
-            feed.countStream(subsetESTypes, function(total, fromStream, method) {
-                this.streamCallback(total, fromStream, method);
-            }.bind(this));
-        }
-    },
-    watchStock: function(typeName) {
-        
+    watchStock: function(typeName) {    
         //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
@@ -439,7 +431,6 @@ var HomePage = React.createClass({
         createUrl(input_state);
     },
     unwatchStock: function(typeName) {
-
         //Remove sorting while unslecting type
         this.setState({
             sortInfo: {
@@ -457,7 +448,7 @@ var HomePage = React.createClass({
         input_state.selectedType = subsetESTypes;
         createUrl(input_state);
         this.watchSelectedRecord();
-        this.getCount();
+        this.applyGetStream();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
