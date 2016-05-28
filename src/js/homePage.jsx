@@ -386,6 +386,7 @@ var HomePage = React.createClass({
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
         this.watchSelectedRecord();
+        this.applyGetStream();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
