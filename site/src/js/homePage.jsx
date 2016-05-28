@@ -399,13 +399,6 @@ var HomePage = React.createClass({
                 setTimeout(this.getTotalRecord, 1000);
         }
     },
-    getCount: function() {
-        if(subsetESTypes.length) {
-            feed.countStream(subsetESTypes, function(total, fromStream, method) {
-                this.streamCallback(total, fromStream, method);
-            }.bind(this));
-        }
-    },
     watchStock: function(typeName) {
         this.setState({
             sortInfo: {
@@ -438,7 +431,7 @@ var HomePage = React.createClass({
         this.getStreamingData(subsetESTypes);
         input_state.selectedType = subsetESTypes;
         this.watchSelectedRecord();
-        this.getCount();
+        this.applyGetStream();
     },
     typeCounter: function() {
         var typeInfo = this.state.typeInfo;
