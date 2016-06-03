@@ -491,11 +491,11 @@ var HomePage = React.createClass({
         var infoObj = this.state.infoObj;
 
         // Plug in a handler which takes care of infinite scrolling
-        if (subsetESTypes.length && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100) {
-            this.setState({
-                pageLoading: true
-            });
-            this.paginateData();
+        if (subsetESTypes.length && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100 && !this.state.pageLoading) {
+                this.setState({
+                    pageLoading: true
+                });
+                this.paginateData();
         }
     },
     handleSort: function(item, type, eve, order) {
