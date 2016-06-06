@@ -867,7 +867,7 @@ var HomePage = React.createClass({
                 window.localStorage.setItem('appname',v.value);
             }
         });
-        window.location.href = "index.html#?input_state";
+        window.location.href = "#?input_state=''";
         location.reload();
     },
     reloadData:function(){
