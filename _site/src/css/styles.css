@@ -821,6 +821,9 @@ iframe{
   width: 80%;
   margin-left: 10%;
 }
+.select2-container--default .select2-selection--multiple {
+  border-color: #ccc;
+}
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{
