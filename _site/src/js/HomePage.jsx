@@ -334,6 +334,7 @@ var HomePage = React.createClass({
             input_state = JSON.parse(JSON.stringify(config));
             createUrl(input_state);
         }
+        this.setApps();
     },
     afterConnect: function() {
         if(appAuth) {
@@ -492,7 +493,7 @@ var HomePage = React.createClass({
             getMappingObj.done(function(data) {
                 mappingObjData = data;
                 if(!getMapFlag) {
-                    $this.setApps();
+                    $this.setApps(true);
                     getMapFlag = true;
                 }
                 $this.setState({
@@ -967,7 +968,7 @@ var HomePage = React.createClass({
         }
         return apps;
     },
-    setApps: function() {
+    setApps: function(authFlag) {
         var app = {
             url: config.url,
             appname: config.appname
@@ -980,7 +981,7 @@ var HomePage = React.createClass({
                 }
             })
         }
-        if(app.url) {
+        if(app.url && authFlag) {
             historicApps.push(app); 
         }
         this.setState({
