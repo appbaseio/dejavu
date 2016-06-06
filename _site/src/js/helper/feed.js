@@ -49,8 +49,6 @@ function init() {
 		username: USERNAME,
 		password: PASSWORD
 	});
-	input_state = JSON.parse(JSON.stringify(config));
-	createUrl(input_state);
 }
 
 // vars for tracking current data and types

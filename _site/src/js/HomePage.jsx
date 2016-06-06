@@ -70,7 +70,8 @@ var HomePage = React.createClass({
             errorShow: false,
             historicApps: [],
             url: '',
-            appname: ''
+            appname: '',
+            splash: true
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -318,11 +319,25 @@ var HomePage = React.createClass({
             this.resetData();
         }.bind(this));
     },
+    componentWillMount: function() {
+        if(window.location.href.indexOf('#?input_state') !== -1) {
+            this.setState({
+                splash: false
+            });
+        }
+    },
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
-        this.setMap();
+        if(!this.state.splash) {
+            this.afterConnect();
+            input_state = JSON.parse(JSON.stringify(config));
+            createUrl(input_state);
+        }
         this.setApps();
+    },
+    afterConnect: function() {
+        this.setMap();
         if(appAuth) {
             //Set filter from url
             if(decryptedData.filterInfo) {
@@ -852,7 +867,8 @@ var HomePage = React.createClass({
                 window.localStorage.setItem('appname',v.value);
             }
         });
-        window.location.href = "index.html";
+        window.location.href = "index.html#?input_state";
+        location.reload();
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
@@ -937,7 +953,9 @@ var HomePage = React.createClass({
     },
     setConfig: function(url) {
         this.setState({ url: url});
-        this.initEs();
+        this.setState({
+            connect: false
+        });
     },
     valChange: function(event) {
         this.setState({ url: event.target.value});
@@ -948,8 +966,8 @@ var HomePage = React.createClass({
     //main.js ties them together.
 
     render: function() {
-        var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
-        var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
+        var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
+        var esText = !this.state.splash ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
         var shareBtn = this.state.connect ? 'share-btn': 'hide';
@@ -967,7 +985,7 @@ var HomePage = React.createClass({
                                         <h1>DejaVu Browser for ElasticSearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <AppSelect setConfig={this.setConfig} apps={this.state.historicApps} />
+                                            <AppSelect splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
                                         </div>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
                                             <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"

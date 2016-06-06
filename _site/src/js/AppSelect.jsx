@@ -6,66 +6,76 @@ var AppSelect = React.createClass({
     getInitialState: function() {
         return {
             selectVal: null,
-            apps: null
+            apps: null,
+            searchValue: '',
+            setAppClass: 'hide'
         };
     },
-    componentDidUpdate: function() {
-        //apply select2 for auto complete
-        if(typeof this.props.apps != 'undefined') {
-            if (!this.state.apps) {
-                this.applySelect();
-            }
-            else if(this.state.apps && this.props.apps.length !== this.state.apps.length) {
-                this.applySelect();
-            }
+    componentDidMount: function() {
+        console.log(this.props.splash);
+        if(!this.props.splash) {
+            this.setState({
+                searchValue: config.appname
+            });
         }
     },
-    applySelect: function(ele) {
-        var $this = this;
-        var $eventSelect = $(".setApp");
+    handleInput: function(event) {
         this.setState({
-            apps: this.props.apps
+            searchValue: event.target.value
         });
-        try {
-            $eventSelect.select2('destroy').html('');
-        } catch (e) {
+    },
+    focusInput: function() {
+        if(this.props.apps.length) {
+            this.setState({
+                setAppClass: 'show'
+            });
         }
-        $eventSelect.select2({
-            tags: true,
-            maximumSelectionLength: 1,
-            placeholder: 'Type app name and hit enter..'
+    },
+    blurInput: function() {
+        setTimeout(function() {
+            this.setState({
+                setAppClass: 'hide'
+            });
+        }.bind(this), 300);
+    },
+    selectOption: function(appname) {
+        this.setState({
+            searchValue: appname
         });
-        $eventSelect.on("select2:select", function(e) {
-            try {
-                var val = $eventSelect.select2().val();
-                if(val && val.length) {
-                    var app_config = this.props.apps.filter(function(app, index) {
-                        if(app.appname === val[0]) {
-                            return {
-                                appname: app.appname,
-                                url: app.url
-                            };
-                        }
-                    });
-                    if(app_config.length && app_config[0].url) {
-                        this.props.setConfig(app_config[0].url);
-                    }
-                }
-            } catch(e) {}
-        }.bind(this));
+        var app_config = this.props.apps.filter(function(app, index) {
+            if(app.appname === appname) {
+                return {
+                    appname: app.appname,
+                    url: app.url
+                };
+            }
+        });
+        if(app_config.length && app_config[0].url) {
+            this.props.setConfig(app_config[0].url);
+        }
     },
     render: function() {
-        var options = this.props.apps.map(function(app, index) {
-            var opt = <option key={index}>{app.appname}</option>;
-            if(app.appname === config.appname) {
-                opt = <option key={index} selected>{app.appname}</option>;
-            }
-            return opt;
-        });
-        return (<div>
-                   <select id="setApp" className='setApp col-xs-12' multiple="multiple" name="apps">
+        var optionsArr = this.props.apps.filter(function(app, index) {
+           return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1) 
+        }.bind(this));
+
+        var options = optionsArr.map(function(app, index) {
+            return opt = <li key={index} onClick={this.selectOption.bind(this, app.appname)}>{app.appname}</li>;
+        }.bind(this));
+
+        var searchValue = this.state.searchValue;
+        var setAppClass = options.length == 0 ? 'hide' : 'autolist setApp col-xs-12 '+this.state.setAppClass; 
+        return (<div className="autocomplete">
+                    <input className="search form-control"
+                        type="text" 
+                        value={searchValue} 
+                        name="appname"
+                        placeholder="Type appname"
+                        onChange={this.handleInput}
+                        onFocus={this.focusInput} onBlur={this.blurInput}/>
+                    <ul id="setApp" className={setAppClass} name="apps">
                         {options}
-                    </select>
+                    </ul>
                 </div>
                 );
     }
