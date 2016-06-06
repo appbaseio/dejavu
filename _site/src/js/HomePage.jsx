@@ -1029,13 +1029,15 @@ var HomePage = React.createClass({
                                         </div>
                                         <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
-                                        <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
-                                        </div>
-                                        <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                            <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
-                                                value={url} 
-                                                onChange={this.valChange}  {...opts} />
+                                        <div className="col-xs-12 col-sm-8 col-sm-offset-2">
+                                            <div className="form-group m-0 col-xs-4 pd-0 pr-5">
+                                                <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
+                                            </div>
+                                            <div className="form-group m-0 col-xs-8 pd-0 pr-5">
+                                                <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
+                                                    value={url} 
+                                                    onChange={this.valChange}  {...opts} />
+                                            </div>
                                         </div>
                                         <div className="submit-btn-container">
                                             <a className={esBtn} onClick={this.connectPlayPause}>
