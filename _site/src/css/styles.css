@@ -837,6 +837,6 @@ iframe{
 .greyBtn{
   color: #6e8593;
 }
-.autocomplete .autolist {
+.autocomplete .autolist, .select2-container--default.select2-container--focus .select2-selection--multiple {
   border-color: #3BC7F6;
 }
