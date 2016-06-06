@@ -463,6 +463,16 @@ var feed = (function() {
 						}
 					};
 					break;
+
+				case 'term': 
+					termObj = {};
+					termObj[columnName] = value[0].trim();
+					queryBody = {
+						"query": {
+							"term": termObj
+						}
+					};
+				break;	
 			}
 			return queryBody;
 		}
