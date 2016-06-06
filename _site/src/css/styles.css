@@ -188,6 +188,7 @@ footer{
   padding-right: 5px;
   border-top: 1px solid #ddd;
   border-bottom: 0;
+  z-index: 99999999;
 }
 .init-ES .submit-btn{
   position: absolute;
