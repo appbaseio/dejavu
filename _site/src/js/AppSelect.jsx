@@ -25,7 +25,7 @@ var AppSelect = React.createClass({
         });
     },
     focusInput: function() {
-        if(this.props.apps.length) {
+        if(this.props.apps.length && !this.props.connect) {
             this.setState({
                 setAppClass: 'show'
             });
@@ -55,6 +55,10 @@ var AppSelect = React.createClass({
         }
     },
     render: function() {
+        var opts = {};
+        if(this.props.connect) {
+            opts['readOnly'] = 'readOnly';
+        }
         var optionsArr = this.props.apps.filter(function(app, index) {
            return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1) 
         }.bind(this));
@@ -72,7 +76,7 @@ var AppSelect = React.createClass({
                         name="appname"
                         placeholder="Type appname"
                         onChange={this.handleInput}
-                        onFocus={this.focusInput} onBlur={this.blurInput}/>
+                        onFocus={this.focusInput} onBlur={this.blurInput} {...opts}/>
                     <ul id="setApp" className={setAppClass} name="apps">
                         {options}
                     </ul>

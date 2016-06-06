@@ -813,6 +813,10 @@ iframe{
   cursor: pointer;
   padding: 6px 12px;
 }
+.ib {
+  display: inline-block;
+  padding-right: 10px;
+}
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{

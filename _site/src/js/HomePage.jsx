@@ -860,6 +860,9 @@ var HomePage = React.createClass({
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
         formInfo.forEach(function(v) {
+            if(v.value === '') {
+                reloadFlag = false;
+            }
             if(v.name == 'url'){
                 window.localStorage.setItem('esurl',v.value);
             }
@@ -867,8 +870,39 @@ var HomePage = React.createClass({
                 window.localStorage.setItem('appname',v.value);
             }
         });
-        window.location.href = "#?input_state=''";
         location.reload();
+    },
+    connectPlayPause: function() {
+        var reloadFlag = true;
+        var formInfo = $('#init-ES').serializeArray();
+        formInfo.forEach(function(v) {
+            if(v.value.trim() === '') {
+                reloadFlag = false;
+            }
+        });
+        if(!reloadFlag) {
+            alert('Url or appname should not be empty.');
+        } else {
+            var connectToggle = this.state.connect ? false: true;
+            window.location.href = "#?input_state=''";
+            subsetESTypes = [];
+            this.setState({
+                connect: connectToggle,
+                documents: [],
+                types: [],
+                infoObj: {
+                    showing: 0,
+                    total: 0,
+                    getOnce: false,
+                    availableTotal: 0,
+                    searchTotal: 0,
+                    userTouchAdd: this.userTouchAdd
+                }
+            });
+            if(connectToggle) {
+                this.initEs();
+            }
+        }
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
@@ -967,11 +1001,19 @@ var HomePage = React.createClass({
 
     render: function() {
         var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
-        var esText = !this.state.splash ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
+        var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
         var shareBtn = this.state.connect ? 'share-btn': 'hide';
         var url = this.state.url;
+        var opts = {};
+        var playClass = 'ib fa fa-play';
+        var pauseClass = 'hide fa fa-pause';
+        if(this.state.connect) {
+            opts['readOnly'] = 'readOnly';
+            playClass = 'hide fa fa-play';
+            pauseClass = 'ib fa fa-pause';
+        }
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -985,15 +1027,19 @@ var HomePage = React.createClass({
                                         <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <AppSelect splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
+                                            <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
                                         </div>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
                                             <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
                                                 value={url} 
-                                                onChange={this.valChange} />
+                                                onChange={this.valChange}  {...opts} />
                                         </div>
                                         <div className="submit-btn-container">
-                                            <a className={esBtn} onClick={this.initEs}>{esText}</a>
+                                            <a className={esBtn} onClick={this.connectPlayPause}>
+                                                <i className={playClass}></i>
+                                                <i className={pauseClass}></i>
+                                                {esText}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
