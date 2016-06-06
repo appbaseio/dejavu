@@ -817,6 +817,10 @@ iframe{
   display: inline-block;
   padding-right: 10px;
 }
+.EsBigForm .splashIn {
+  width: 80%;
+  margin-left: 10%;
+}
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{
