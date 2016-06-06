@@ -982,7 +982,7 @@ var HomePage = React.createClass({
                                         <div className="img-container">
                                             <img src="assets/img/icon.png" />
                                         </div>
-                                        <h1>DejaVu Browser for ElasticSearch</h1>
+                                        <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-4 pd-0 pr-5">
                                             <AppSelect splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
