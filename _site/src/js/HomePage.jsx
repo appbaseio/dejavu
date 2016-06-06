@@ -885,22 +885,24 @@ var HomePage = React.createClass({
         } else {
             var connectToggle = this.state.connect ? false: true;
             window.location.href = "#?input_state=''";
-            subsetESTypes = [];
-            this.setState({
-                connect: connectToggle,
-                documents: [],
-                types: [],
-                infoObj: {
-                    showing: 0,
-                    total: 0,
-                    getOnce: false,
-                    availableTotal: 0,
-                    searchTotal: 0,
-                    userTouchAdd: this.userTouchAdd
-                }
-            });
             if(connectToggle) {
                 this.initEs();
+            }
+            else {
+                subsetESTypes = [];
+                this.setState({
+                    connect: connectToggle,
+                    documents: [],
+                    types: [],
+                    infoObj: {
+                        showing: 0,
+                        total: 0,
+                        getOnce: false,
+                        availableTotal: 0,
+                        searchTotal: 0,
+                        userTouchAdd: this.userTouchAdd
+                    }
+                });
             }
         }
     },
