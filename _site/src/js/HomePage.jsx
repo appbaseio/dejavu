@@ -334,10 +334,8 @@ var HomePage = React.createClass({
             input_state = JSON.parse(JSON.stringify(config));
             createUrl(input_state);
         }
-        this.setApps();
     },
     afterConnect: function() {
-        this.setMap();
         if(appAuth) {
             //Set filter from url
             if(decryptedData.filterInfo) {
@@ -493,7 +491,10 @@ var HomePage = React.createClass({
             var getMappingObj = feed.getMapping();
             getMappingObj.done(function(data) {
                 mappingObjData = data;
-                getMapFlag = true;
+                if(!getMapFlag) {
+                    $this.setApps();
+                    getMapFlag = true;
+                }
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
