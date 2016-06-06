@@ -3,6 +3,7 @@ var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
 var FeatureComponent = require('./features/featureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
+var AppSelect = require('./AppSelect.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
@@ -66,7 +67,10 @@ var HomePage = React.createClass({
                 count: 0,
                 typeCounter: this.typeCounter
             },
-            errorShow: false
+            errorShow: false,
+            historicApps: [],
+            url: '',
+            appname: ''
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -318,8 +322,8 @@ var HomePage = React.createClass({
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
         this.setMap();
+        this.setApps();
         if(appAuth) {
-
             //Set filter from url
             if(decryptedData.filterInfo) {
                 decryptedData.filterInfo.applyFilter = this.applyFilter;
@@ -348,6 +352,10 @@ var HomePage = React.createClass({
             mappingInterval = setInterval(this.setMap, 60 * 1000);
             streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
             this.getTotalRecord();
+
+            this.setState({
+                url: config.url
+            });
         }
     },
     componentDidUpdate: function() {
@@ -893,6 +901,47 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
+    getApps: function() {
+        var apps = window.localStorage.getItem('historicApps');
+        if(apps) {
+            try {
+                apps = JSON.parse(apps);
+            } catch(e) {
+                apps = [];
+            }
+        } else {
+            apps = [];
+        }
+        return apps;
+    },
+    setApps: function() {
+        var app = {
+            url: config.url,
+            appname: config.appname
+        };
+        var historicApps = this.getApps();
+        if(historicApps && historicApps.length) {
+            historicApps.forEach(function(old_app, index) {
+                if(old_app.appname === app.appname) {
+                    historicApps.splice(index, 1);
+                }
+            })
+        }
+        if(app.url) {
+            historicApps.push(app); 
+        }
+        this.setState({
+            historicApps: historicApps
+        });
+        window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+    },
+    setConfig: function(url) {
+        this.setState({ url: url});
+        this.initEs();
+    },
+    valChange: function(event) {
+        this.setState({ url: event.target.value});
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -904,6 +953,7 @@ var HomePage = React.createClass({
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
         var shareBtn = this.state.connect ? 'share-btn': 'hide';
+        var url = this.state.url;
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -917,10 +967,12 @@ var HomePage = React.createClass({
                                         <h1>DejaVu Browser for ElasticSearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                            <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
+                                            <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
+                                                value={url} 
+                                                onChange={this.valChange} />
                                         </div>
                                         <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <input type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
+                                            <AppSelect setConfig={this.setConfig} apps={this.state.historicApps} />
                                         </div>
                                         <div className="submit-btn-container">
                                             <a className={esBtn} onClick={this.initEs}>{esText}</a>
