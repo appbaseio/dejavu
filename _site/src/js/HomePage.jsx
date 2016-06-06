@@ -974,15 +974,17 @@ var HomePage = React.createClass({
             appname: config.appname
         };
         var historicApps = this.getApps();
-        if(historicApps && historicApps.length) {
-            historicApps.forEach(function(old_app, index) {
-                if(old_app.appname === app.appname) {
-                    historicApps.splice(index, 1);
-                }
-            })
-        }
-        if(app.url && authFlag) {
-            historicApps.push(app); 
+        if(authFlag) {
+            if(historicApps && historicApps.length) {
+                historicApps.forEach(function(old_app, index) {
+                    if(old_app.appname === app.appname) {
+                        historicApps.splice(index, 1);
+                    }
+                })
+            }
+            if(app.url) {
+                historicApps.push(app); 
+            }
         }
         this.setState({
             historicApps: historicApps
