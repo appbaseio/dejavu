@@ -123,15 +123,16 @@ var Cell = React.createClass({
                         </div>;
             tdClass = 'column_width';
         } else {
-            if (typeof data !== 'string') {
-                if (typeof data !== 'number') {
-                    prettyData = <Pretty json={data} />
-                    to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-                                    <a href="javascript:void(0);"  className="bracketIcon">
-                                    </a>
-                                </OverlayTrigger>
-                    tdClass = 'column_width';
-                }
+              if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean') {
+                prettyData = <Pretty json={data} />
+                to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                                <a href="javascript:void(0);"  className="bracketIcon">
+                                </a>
+                            </OverlayTrigger>
+                tdClass = 'column_width';
+            }
+            if(typeof data === 'boolean') {
+                to_display = to_display+'';
             }
         }
         return <td
