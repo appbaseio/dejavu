@@ -3,6 +3,7 @@ var TypeTable = require('./typeTable.jsx');
 var DataTable = require('./table/dataTable.jsx');
 var FeatureComponent = require('./features/featureComponent.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
+var AppSelect = require('./AppSelect.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
@@ -67,7 +68,11 @@ var HomePage = React.createClass({
                 typeCounter: this.typeCounter
             },
             errorShow: false,
-            errorMessage: null
+            errorMessage: null,
+            historicApps: [],
+            url: '',
+            appname: '',
+            splash: true
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -318,10 +323,22 @@ var HomePage = React.createClass({
             this.resetData();
         }.bind(this));
     },
+    componentWillMount: function() {
+        if(window.location.href.indexOf('#?input_state') !== -1) {
+            this.setState({
+                splash: false
+            });
+        }
+    },
     componentDidMount: function() {
         // add a safe delay as app details are fetched from this
         // iframe's parent function.
-        this.init_map_stream();
+        if(!this.state.splash) {
+            this.init_map_stream();
+            // input_state = JSON.parse(JSON.stringify(config));
+            // createUrl(input_state);
+        }
+        this.setApps();
     },
     init_map_stream: function() {
         try {
@@ -330,7 +347,7 @@ var HomePage = React.createClass({
         }
         catch (e) {}
         
-        this.setMap();
+        // this.setMap();
         if(appAuth) {
             setTimeout(this.setMap, 2000)
             setTimeout(this.getStreamingTypes, 2000);
@@ -453,7 +470,10 @@ var HomePage = React.createClass({
             var getMappingObj = feed.getMapping();
             getMappingObj.done(function(data) {
                 mappingObjData = data;
-                getMapFlag = true;
+                if(!getMapFlag) {
+                    $this.setApps(true);
+                    getMapFlag = true;
+                }
                 $this.setState({
                     mappingObj: mappingObjData[APPNAME]['mappings']
                 });
@@ -826,10 +846,12 @@ var HomePage = React.createClass({
             }
         });
         setTimeout(function(){
+            getMapFlag = false;
             $('.full_page_loading').removeClass('hide');
             esTypes = [];
             subsetESTypes = [];
             this.setState({
+                splash: false,
                 types: [],
                 documents: [],
                 totalRecord: 0,
@@ -842,6 +864,40 @@ var HomePage = React.createClass({
                 this.init_map_stream();
             }.bind(this),500);
         }.bind(this),1000);
+    },
+    connectPlayPause: function() {
+        var reloadFlag = true;
+        var formInfo = $('#init-ES').serializeArray();
+        formInfo.forEach(function(v) {
+            if(v.value.trim() === '') {
+                reloadFlag = false;
+            }
+        });
+        if(!reloadFlag) {
+            alert('Url or appname should not be empty.');
+        } else {
+            var connectToggle = this.state.connect ? false: true;
+            window.location.href = "#?input_state=''";
+            if(connectToggle) {
+                this.initEs();
+            }
+            else {
+                subsetESTypes = [];
+                this.setState({
+                    connect: connectToggle,
+                    documents: [],
+                    types: [],
+                    infoObj: {
+                        showing: 0,
+                        total: 0,
+                        getOnce: false,
+                        availableTotal: 0,
+                        searchTotal: 0,
+                        userTouchAdd: this.userTouchAdd
+                    }
+                });
+            }
+        }
     },
     reloadData:function(){
         this.getStreamingData(subsetESTypes);
@@ -891,18 +947,75 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
+    getApps: function(cb) {
+        chrome.storage.local.get('historicApps', cb);
+    },
+    setApps: function(authFlag) {
+        var app = {
+            url: config.url,
+            appname: config.appname
+        };
+        this.getApps(getAppsCb);
+        var self = this;
+        function getAppsCb(result) {
+            var apps = result.historicApps;  
+            if(apps) {
+                try {
+                    apps = JSON.parse(apps);
+                } catch(e) {
+                    apps = [];
+                }
+            } else {
+                apps = [];
+            }
+            var historicApps = apps;
+            if(authFlag) {
+                if(historicApps && historicApps.length) {
+                    historicApps.forEach(function(old_app, index) {
+                        if(old_app.appname === app.appname) {
+                            historicApps.splice(index, 1);
+                        }
+                    })
+                }
+                if(app.url) {
+                    historicApps.push(app); 
+                }
+            }
+            self.setState({
+                historicApps: historicApps
+            });
+            chrome.storage.local.set({'historicApps': JSON.stringify(historicApps)});
+        };
+    },
+    setConfig: function(url) {
+        this.setState({ url: url});
+        this.setState({
+            connect: false
+        });
+    },
+    valChange: function(event) {
+        this.setState({ url: event.target.value});
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
     //main.js ties them together.
 
     render: function() {
-        var EsForm = config.url != null ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
-        var esText = config.url != null ? (this.state.connect ? 'Connected':'Connect'): 'Start Browsing';
+        var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
+        var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
         esBtn += 'btn btn-default submit-btn';
         var shareBtn = this.state.connect ? 'share-btn': 'hide';
-        
+        var url = this.state.url;
+        var opts = {};
+        var playClass = 'ib fa fa-play';
+        var pauseClass = 'hide fa fa-pause';
+        if(this.state.connect) {
+            opts['readOnly'] = 'readOnly';
+            playClass = 'hide fa fa-play';
+            pauseClass = 'ib fa fa-pause';
+        }
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -913,16 +1026,24 @@ var HomePage = React.createClass({
                                         <div className="img-container">
                                             <img src="assets/img/icon.png" />
                                         </div>
-                                        <h1>DejaVu Browser for ElasticSearch</h1>
+                                        <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
                                         <ShareLink btn={shareBtn}> </ShareLink>
-                                        <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                            <input id="configUrl" type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io" defaultValue={config.url} />
-                                        </div>
-                                        <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                            <input id="configAppname" type="text" className="form-control" name="appname" placeholder="Index name to browse data from" defaultValue={config.appname} />
+                                        <div className="splashIn">
+                                            <div className="form-group m-0 col-xs-4 pd-0 pr-5">
+                                                <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
+                                            </div>
+                                            <div className="form-group m-0 col-xs-8 pd-0 pr-5">
+                                                <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
+                                                    value={url} 
+                                                    onChange={this.valChange}  {...opts} />
+                                            </div>
                                         </div>
                                         <div className="submit-btn-container">
-                                            <a className={esBtn} onClick={this.initEs}>{esText}</a>
+                                            <a className={esBtn} onClick={this.connectPlayPause}>
+                                                <i className={playClass}></i>
+                                                <i className={pauseClass}></i>
+                                                {esText}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

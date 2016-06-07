@@ -84,12 +84,9 @@ var feed = (function() {
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			// get historical data
-			appbaseRef.search({
-				type: types,
-				from: 0,
-				size: Math.max(dataSize, DATA_SIZE),
-				body: queryBody
-			}).on('data', function(res) {
+			var typesString = types.join(',');
+			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
+			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
 					if (res.hits.hits.length == 0) {
 						callback(null, false, 0);
@@ -100,10 +97,10 @@ var feed = (function() {
 					console.log(err);
 				}
 				allowOtherOperation();
-			}).on('error', function(err) {
-				console.log("caught a retrieval error", err);
+			}, function() {
 				allowOtherOperation();
-			})
+			});
+
 
 			// Counter stream
 			countStream(types, setTotal);
@@ -174,6 +171,32 @@ var feed = (function() {
 		}, 500);
 	};
 
+
+	// ajax call instead of appbase search, to use preference in search query
+	function applyAppbaseSearch(finalUrl, queryBody, cb_succes, cb_error) {
+		$.ajax({
+			type: 'POST',
+			beforeSend: function(request) {
+				request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+			},
+			url: finalUrl,
+			contentType: 'application/json; charset=utf-8',
+			dataType: 'json',
+			data: JSON.stringify(queryBody),
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function(res) {
+				cb_succes(res);
+			},
+			error: function(xhr) {
+				if(cb_error) {
+					cb_error();
+				}
+			}
+		});
+	}
+
 	// paginate and show new results when user scrolls
 	// to the bottom of the existing results.
 	function paginationSearch(typeName, from, callback, queryBody) {
@@ -184,14 +207,11 @@ var feed = (function() {
 				}
 			}
 		var queryBody = queryBody ? queryBody : defaultQueryBody;
-		appbaseRef.search({
-			type: typeName,
-			from: from,
-			size: DATA_SIZE,
-			body: queryBody
-		}).on('data', function(res) {
+		var typesString = typeName.join(',');
+		var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE;
+		applyAppbaseSearch(finalUrl, queryBody, function(res) {
 			callback(res.hits.hits);
-		})
+		});
 	}
 
 	return {
@@ -458,6 +478,16 @@ var feed = (function() {
 						}
 					};
 					break;
+
+				case 'term': 
+					termObj = {};
+					termObj[columnName] = value[0].trim();
+					queryBody = {
+						"query": {
+							"term": termObj
+						}
+					};
+				break;	
 			}
 			return queryBody;
 		}
