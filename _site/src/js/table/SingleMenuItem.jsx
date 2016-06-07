@@ -10,14 +10,18 @@ var SingleMenuItem = React.createClass({
         };
     },
     changeFilter: function(e) {
-        var filterField = e.currentTarget.value;
-        this.props.changeFilter(filterField, this.state.filterValue);
-        var key = filterKeyGen(this.props.columnField, this.props.val);
-        var keyInput = key + '-input';
-        setTimeout(function(){
-            $('#' + keyInput).focus();
-        }, 300);
-        //this.setState({filterField:filterField});
+       if(this.props.val != 'true' && this.props.val != 'false') {
+            var filterField = e.currentTarget.value;
+            this.props.changeFilter(filterField, this.state.filterValue);
+            var key = filterKeyGen(this.props.columnField, this.props.val);
+            var keyInput = key + '-input';
+            setTimeout(function(){
+                $('#' + keyInput).focus();
+            }, 300);
+        }
+        else {
+            this.props.changeFilter('term', e.currentTarget.value);
+        }
     },
     valChange: function(e) {
         var filterValue = e.currentTarget.value;
@@ -46,8 +50,12 @@ var SingleMenuItem = React.createClass({
         var keyInput = key + '-input';
         var keyInputRange = key + '-inputRange';
         
-        var searchElement = this.props.val == 'range' ?
-                            (<div className="searchElement">
+        var searchElement = (<div className="searchElement">
+                                <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+                            </div>);
+        
+        if(this.props.val == 'range') {
+            searchElement = (<div className="searchElement">
                                 <input id={keyInput} 
                                     className="form-control" 
                                     type="text" 
@@ -58,10 +66,10 @@ var SingleMenuItem = React.createClass({
                                     type="text" 
                                     placeholder="ending date" 
                                     onKeyUp={this.rangeChange.bind(null, key)} />
-                            </div>) :
-                            (<div className="searchElement">
-                                <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
-                            </div>);
+                            </div>)  
+        } else if(this.props.val == 'true' || this.props.val == 'false' ) {
+            searchElement = <span></span>;
+        }
         
         return (<div className={singleItemClass}>
                     <div className="theme-element radio">

@@ -17,6 +17,12 @@ var FilterDropdown = React.createClass({
             filterValue: value
         });
     },
+    boolFilter: function(value) {
+        this.setState({
+            filterField: 'term',
+            filterValue: value
+        });
+    },
     getFilterVal: function(val) {
         this.setState({
             filterValue: val
@@ -64,6 +70,17 @@ var FilterDropdown = React.createClass({
                                         <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
                                     </div>
                                 </Dropdown.Menu>
+            );
+
+
+        var booleanFilter = (
+            <Dropdown.Menu className="menuItems pull-right">
+                                    <SingleMenuItem boolFilter={this.boolFilter}  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="true" />
+                                    <SingleMenuItem boolFilter={this.boolFilter}  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="false" />
+                                    <div className="singleItem">
+                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
+                                    </div>
+                                </Dropdown.Menu>
         );
 
         var FilterMenuItems = '';
@@ -83,6 +100,9 @@ var FilterDropdown = React.createClass({
             case 'date':
                 FilterMenuItems = dateFilter;
                 break;
+            case 'boolean': 
+                FilterMenuItems = booleanFilter;
+            break;    
             default:
                 datatype = null;
                 break;
