@@ -29,21 +29,29 @@ var DataTable = React.createClass({
             if ($this.props.infoObj.showing != 0) {
                 fixed = ['json'];
                 columns = ['json'];
+                initial_final_cols = [{column: 'json', type: ''}];
             } else {
                 fixed = [];
                 columns = [];
+                initial_final_cols = [];
             }
 
             fullColumns = {
                 type: '',
-                columns: columns
+                columns: columns,
+                final_cols: initial_final_cols
             }
             for (var each in data) {
                 fullColumns.type = data[each]['_type'];
                 for (column in data[each]) {
-                    if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
+                    if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked') {
                         if (fullColumns.columns.indexOf(column) <= -1) {
                             fullColumns.columns.push(column);
+                            var obj = {
+                                type: data[each]['_type'],
+                                column: column
+                            };
+                            fullColumns.final_cols.push(obj);
                         }
                     }
                 }
@@ -94,6 +102,7 @@ var DataTable = React.createClass({
                                 _type={data[row]['_type']}
                                 visibility={visibility}
                                 row={newRow}
+                                _checked={newRow._checked}
                                 actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({
@@ -101,9 +110,9 @@ var DataTable = React.createClass({
                 'row': renderRow
             });
         }
-        var renderColumns = fullColumns.columns.map(function(item) {
-            return (<Column _item={item} key={item}
-                        _type={fullColumns.type}
+        var renderColumns = fullColumns.final_cols.map(function(item) {
+            return (<Column _item={item.column} key={item.column}
+                        _type={item.type}
                         _sortInfo={$this.props.sortInfo}
                         handleSort={$this.props.handleSort}
                         mappingObj={$this.props.mappingObj}

@@ -4,7 +4,7 @@ var FeatureComponent = require('../features/featureComponent.jsx');
 var Dropdown = require('./dropdown.jsx');
 
 var Info = React.createClass({
-    getInitialState: function() {
+     getInitialState: function() {
         return {
             selectToggle: false
         };
@@ -50,7 +50,6 @@ var Info = React.createClass({
         var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
-
         return (<div className="infoRow container">
                     <div className=" row">
                         <div className={infoObjClass}>

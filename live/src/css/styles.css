@@ -188,6 +188,7 @@ footer{
   padding-right: 5px;
   border-top: 1px solid #ddd;
   border-bottom: 0;
+  z-index: 99999999;
 }
 .init-ES .submit-btn{
   position: absolute;
@@ -223,7 +224,7 @@ footer{
 }
 .EsBigForm .esContainer{
   margin: 0 auto 15px auto;
-  max-width: 700px;  
+  max-width: 768px;  
 }
 .EsBigForm h1{
   display: block;
@@ -785,6 +786,48 @@ iframe{
 .modal.modal-danger .close{
   color: #FF8484;
 }
+
+.autocomplete {
+  position: relative;
+  width: 100%;
+  z-index: 999;
+  text-align: left;
+}
+.autocomplete .search {
+  width: 100%;
+}
+.autocomplete .autolist {
+  list-style: none;
+  position: absolute;
+  left: 0;
+  top: 35px;
+  background: #fff;
+  width: 100%;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid;
+  padding: 0;
+  border-radius: 4px;
+}
+.autocomplete .autolist li {
+  cursor: pointer;
+  padding: 6px 12px;
+}
+.ib {
+  display: inline-block;
+  padding-right: 10px;
+}
+.EsBigForm .splashIn {
+  width: 80%;
+  margin-left: 10%;
+}
+.select2-container--default .select2-selection--multiple {
+  border-color: #ccc;
+}
+.EsBigForm .esContainer{
+  margin: 0 auto 15px auto;
+  max-width: 768px;  
+}
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{
@@ -794,8 +837,10 @@ iframe{
 .theme-element.radio label::after{
   background: #3BC7F6;
 }
-.btn-primary{
+.btn-primary,
+.autocomplete .autolist li:hover{
   background: #3BC7F6;
+  color: #fff;
   border-color: transparent;
 }
 .btn-primary:hover,
@@ -807,4 +852,6 @@ iframe{
 .greyBtn{
   color: #6e8593;
 }
-
+.autocomplete .autolist, .select2-container--default.select2-container--focus .select2-selection--multiple {
+  border-color: #3BC7F6;
+}

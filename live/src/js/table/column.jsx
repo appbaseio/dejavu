@@ -55,7 +55,7 @@ var Column = React.createClass({
         catch(err) {
             console.log(err);
         }
-
+        // console.log(type, item);
         //Allow sorting if item is not the first column
         //here first column is  json = type/id
         var sortIcon = item == 'json' ? <span></span> : <span className="sortIcon"  onClick={this.sortingInit}>
