@@ -41,8 +41,27 @@ var TypeRow = React.createClass({
         var intype = this.props.type;
         var setObj = {};
         setObj[intype] = checked;
-        chrome.storage.local.set(setObj);
-        this.setState({
+
+        chrome.storage.local.get('types', function(result) {
+            var types = result.types;    
+            try {
+                types = JSON.parse(types);
+            } catch(e) {
+                types = []
+            }
+            if(checked) {
+                types.push(intype);
+            } else {
+                types.forEach(function(val, index) {
+                    if(val == intype) {
+                        types.splice(index, 1);
+                    }
+                })
+            }
+            chrome.storage.local.set({'types': types});
+        });
+        
+         this.setState({
             isChecked: checked
         });
     },

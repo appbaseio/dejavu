@@ -301,6 +301,23 @@ var HomePage = React.createClass({
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
             var typeCheck = {};
+            chrome.storage.local.get('types', function (result) {
+                    var types = result.types;
+                    var value = false;
+                    try {
+                        types = JSON.parse(types);
+                        update.forEach(function(v){
+                            var value = types.indexOf(v) !== -1 ? true : false;
+                            typeCheck[v] = value;
+                        });
+                    } catch(e) {
+                        update.forEach(function(v){
+                            var value = false;
+                        });
+                    }
+                    value = value == 'undefined' || typeof value == 'undefined' ? false : value;
+                    typeCheck[v] = value;
+                });
             update.forEach(function(v){
                 chrome.storage.local.get(v, function (result) {
                     var value = result[v];
@@ -995,6 +1012,12 @@ var HomePage = React.createClass({
     },
     valChange: function(event) {
         this.setState({ url: event.target.value});
+    },   
+    hideUrlChange: function() {
+        var hideUrl = this.state.hideUrl ? false : true;
+        this.setState({
+            hideUrl: hideUrl
+        });
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -1016,6 +1039,9 @@ var HomePage = React.createClass({
             playClass = 'hide fa fa-play';
             pauseClass = 'ib fa fa-pause';
         }
+        var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
+        var hideUrlText = this.state.hideUrl ? 'Show' : 'Hide';
+        
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -1032,10 +1058,18 @@ var HomePage = React.createClass({
                                             <div className="form-group m-0 col-xs-4 pd-0 pr-5">
                                                 <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
                                             </div>
-                                            <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                                <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
-                                                    value={url} 
-                                                    onChange={this.valChange}  {...opts} />
+                                            <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+                                                <div className="url-container">
+                                                    <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
+                                                        value={url} 
+                                                        onChange={this.valChange}  {...opts} />
+                                                    <span className={hideUrl}>
+                                                        <a className="btn btn-default"
+                                                            onClick={this.hideUrlChange}>
+                                                            {hideUrlText}
+                                                        </a>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="submit-btn-container">

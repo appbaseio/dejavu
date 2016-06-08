@@ -13,13 +13,15 @@ function getUrl() {
     if (ciphertext.length > 1) {
         var bytes = CryptoJS.AES.decrypt(ciphertext[1], secret);
         decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        window.localStorage.setItem('esurl', decryptedData.url);
-        window.localStorage.setItem('appname', decryptedData.appname);
-        if (decryptedData.selectedType && decryptedData.selectedType.length) {
-            decryptedData.selectedType.forEach(function(type) {
-                window.localStorage.setItem(type, true);
-            });
-        }
+        chrome.storage.local.set({'esurl': decryptedData.url});
+        chrome.storage.local.set({'appname': decryptedData.appname});
+        var types;
+        try {
+            types = JSON.stringify(decryptedData.selectedType);
+        } catch(e) {
+            types = JSON.stringify([]);
+        }  
+        chrome.storage.local.set({'types': types});
     }
 }
 
