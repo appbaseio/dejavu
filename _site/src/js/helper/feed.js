@@ -9,10 +9,17 @@ var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
-var config = {
-	url: window.localStorage.getItem('esurl'),
-	appname: window.localStorage.getItem('appname')
-};
+
+
+//If default = true then take it from config.js
+var browse_url = window.location.href;
+var flag_url = browse_url.split('?default=')[1] == "true";
+if(!flag_url || decryptedData.hasOwnProperty('url')){
+	config = {
+		url: window.localStorage.getItem('esurl'),
+		appname: window.localStorage.getItem('appname')
+	};
+}
 
 var APPNAME = config.appname;
 var URL = config.url;

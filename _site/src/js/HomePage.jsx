@@ -321,7 +321,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     componentWillMount: function() {
-        if(window.location.href.indexOf('#?input_state') !== -1) {
+        if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
             this.setState({
                 splash: false
             });
@@ -1046,8 +1046,8 @@ var HomePage = React.createClass({
                                             <div className="form-group m-0 col-xs-4 pd-0 pr-5">
                                                 <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
                                             </div>
-                                            <div className="col-xs-8 pd-0 pr-5">
-                                                <div className="form-group m-0 pd-0 url-container">
+                                            <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+                                                <div className="url-container">
                                                     <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
                                                         value={url} 
                                                         onChange={this.valChange}  {...opts} />
