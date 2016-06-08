@@ -43,7 +43,15 @@ var TypeRow = React.createClass({
         } catch(e) {
             types = []
         }
-        types.push(this.props.type);
+        if(checked) {
+            types.push(this.props.type);
+        } else {
+            types.forEach(function(val, index) {
+                if(val == this.props.type) {
+                    types.splice(index, 1);
+                }
+            }.bind(this));
+        }
         window.localStorage.setItem('types', JSON.stringify(types));
         this.setState({
             isChecked: checked
