@@ -37,12 +37,14 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         // every time its checked we update the local storage.
-        var types = window.localStorage.getItem('types');
+        var types = [];
+        var typesJson = window.localStorage.getItem('types');
           try {
-            types = JSON.parse(types);
+            types = JSON.parse(typesJson);
         } catch(e) {
             types = []
         }
+        types = types == null ? [] : types;
         if(checked) {
             types.push(this.props.type);
         } else {
