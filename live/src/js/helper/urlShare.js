@@ -3,7 +3,6 @@ var decryptedData = {};
 
 // Encrypt
 function createUrl(inputs) {
-    console.log(inputs);
     var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputs), secret).toString();
     window.location.href = '#?input_state=' + ciphertext;
 }
@@ -16,11 +15,14 @@ function getUrl() {
         decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         window.localStorage.setItem('esurl', decryptedData.url);
         window.localStorage.setItem('appname', decryptedData.appname);
-        if (decryptedData.selectedType && decryptedData.selectedType.length) {
-            decryptedData.selectedType.forEach(function(type) {
-                window.localStorage.setItem(type, true);
-            });
-        }
+        var types;
+        try {
+            types = JSON.stringify(decryptedData.selectedType);
+        } catch(e) {
+            types = JSON.stringify([]);
+        }  
+        types = types == null ? [] : types;
+        window.localStorage.setItem('types', types);
     }
 }
 
