@@ -824,6 +824,28 @@ iframe{
 .select2-container--default .select2-selection--multiple {
   border-color: #ccc;
 }
+.url-container {
+  position: relative;
+}
+.hide-url {
+  position: absolute;
+  width: auto;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  height: 100%;
+  display: block;
+  text-align: right;
+  border-radius: 4px;
+  background: #ddd;
+  border: 1px solid #ccc;
+}
+.hide-url .btn {
+  margin-top: -1px;
+}
+.hide-url.expand {
+  width: 100%;
+}
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{

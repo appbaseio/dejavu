@@ -15,11 +15,13 @@ function getUrl() {
         decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         window.localStorage.setItem('esurl', decryptedData.url);
         window.localStorage.setItem('appname', decryptedData.appname);
-        if (decryptedData.selectedType && decryptedData.selectedType.length) {
-            decryptedData.selectedType.forEach(function(type) {
-                window.localStorage.setItem(type, true);
-            });
-        }
+        var types;
+        try {
+            types = JSON.stringify(decryptedData.selectedType);
+        } catch(e) {
+            types = JSON.stringify([]);
+        }  
+        window.localStorage.setItem('types', types);
     }
 }
 
