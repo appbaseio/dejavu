@@ -43,6 +43,7 @@ var TypeRow = React.createClass({
         } catch(e) {
             types = []
         }
+        types = types == null ? [] : types;
         if(checked) {
             types.push(this.props.type);
         } else {

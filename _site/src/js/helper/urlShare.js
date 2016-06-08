@@ -21,6 +21,7 @@ function getUrl() {
         } catch(e) {
             types = JSON.stringify([]);
         }  
+        types = types == null ? [] : types;
         window.localStorage.setItem('types', types);
     }
 }
