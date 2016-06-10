@@ -37,6 +37,12 @@ label {
 .mt-5{
   margin-top: 5px;
 }
+.mb-10{
+    margin-bottom: 10px;
+ }
+ .mb-25{
+    margin-bottom: 25px;
+ }
 .clearfix{
   clear: both;
 }
@@ -201,6 +207,7 @@ footer{
   width: 20px;
 }
 .init-ES h1,
+.init-ES h4,
 .init-ES .img-container{
   display: none;
 }
@@ -228,7 +235,7 @@ footer{
 }
 .EsBigForm h1{
   display: block;
-  margin:-44px 0 30px 0;
+  margin:-44px 0 15px 0;
 }
 .EsBigForm .submit-btn-container{
   float: left;
@@ -823,10 +830,6 @@ iframe{
 }
 .select2-container--default .select2-selection--multiple {
   border-color: #ccc;
-}
-.EsBigForm .esContainer{
-  margin: 0 auto 15px auto;
-  max-width: 768px;  
 }
 .url-container {
   position: relative;
