@@ -74,7 +74,7 @@ var AppSelect = React.createClass({
                         type="text" 
                         value={searchValue} 
                         name="appname"
-                        placeholder="Type appname"
+                        placeholder="Appname (aka index) goes here"
                         onChange={this.handleInput}
                         onFocus={this.focusInput} onBlur={this.blurInput} {...opts}/>
                     <ul id="setApp" className={setAppClass} name="apps">

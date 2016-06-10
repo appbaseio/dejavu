@@ -1039,9 +1039,10 @@ var HomePage = React.createClass({
             playClass = 'hide fa fa-play';
             pauseClass = 'ib fa fa-pause';
         }
+        var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
-        var hideUrlText = this.state.hideUrl ? 'Show' : 'Hide';
-        
+        var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
+       
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -1052,7 +1053,10 @@ var HomePage = React.createClass({
                                         <div className="img-container">
                                             <img src="assets/img/icon.png" />
                                         </div>
-                                        <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
+                                        <div>
+                                            <h1>Déjà vu</h1>
+                                            <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
+                                        </div>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="splashIn">
                                             <div className="form-group m-0 col-xs-4 pd-0 pr-5">
@@ -1060,10 +1064,11 @@ var HomePage = React.createClass({
                                             </div>
                                             <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
                                                 <div className="url-container">
-                                                    <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
+                                                    <input type="text" className="form-control" name="url" 
+                                                        placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
                                                         value={url} 
                                                         onChange={this.valChange}  {...opts} />
-                                                    <span className={hideUrl}>
+                                                    <span className={hideUrl}  style={hideEye}>
                                                         <a className="btn btn-default"
                                                             onClick={this.hideUrlChange}>
                                                             {hideUrlText}
@@ -1121,9 +1126,9 @@ var HomePage = React.createClass({
                                 exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
-                            <a target="_blank" href="http://appbaseio.github.io/dejaVu">watch video</a> 
+                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a> 
                             <span className="text-right pull-right powered_by">
-                                Create your ElasticSearch in cloud with&nbsp;<a  target="_blank" href="http://appbase.io">appbase.io</a>
+                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>  
                             <span className="pull-left github-star">
                                 <a href="https://github.com/appbaseio/dejaVu" target="_blank">
