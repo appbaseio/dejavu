@@ -365,6 +365,20 @@ var feed = (function() {
 				}
 			});
 		},
+		getIndices: function() {
+			var es_host = window.location.href.split('/_plugin')[0];
+            var createUrl = es_host + '/_stats/indices';
+			return $.ajax({
+				type: 'GET',
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: createUrl,
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
 			applyStreamSearch(typeName, callback, queryBody, setTotal);

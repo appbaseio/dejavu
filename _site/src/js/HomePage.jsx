@@ -321,7 +321,8 @@ var HomePage = React.createClass({
         }.bind(this));
     },  
     componentWillMount: function() {
-        if(window.location.href.indexOf('#?input_state') !== -1) {
+        this.apply_other();
+        if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
             this.setState({
                 splash: false
             });
@@ -336,6 +337,34 @@ var HomePage = React.createClass({
             createUrl(input_state);
         }
         this.setApps();
+    },
+    apply_other: function() {
+        if(typeof BRANCH != 'undefined') {
+            if(BRANCH === 'master') {
+                this.setIndices();
+            }
+        }
+    },
+    setIndices: function() {
+        feed.getIndices().then(function (data) {
+            var es_host = window.location.href.split('/_plugin')[0];
+            var historicApps = this.getApps();
+            for(indice in data.indices) {
+                var index_of_historic = historicApps.indexOf(indice);
+                if(index_of_historic !== -1) {
+                    historicApps.splice(index_of_historic, 1);
+                }
+                var obj = {
+                    appname: indice,
+                    url: es_host
+                };
+                historicApps.push(obj);
+            }
+            this.setState({
+                historicApps: historicApps,
+                url: es_host
+            });
+        }.bind(this));
     },
     afterConnect: function() {
         if(appAuth) {
