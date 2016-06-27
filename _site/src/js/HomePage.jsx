@@ -339,7 +339,11 @@ var HomePage = React.createClass({
         this.setApps();
     },
     apply_other: function() {
-        this.setIndices();    
+        if(typeof BRANCH != 'undefined') {
+            if(BRANCH === 'master') {
+                this.setIndices();
+            }
+        }
     },
     setIndices: function() {
         feed.getIndices().then(function (data) {
