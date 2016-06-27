@@ -350,9 +350,12 @@ var HomePage = React.createClass({
             var es_host = window.location.href.split('/_plugin')[0];
             var historicApps = this.getApps();
             for(indice in data.indices) {
-                var index_of_historic = historicApps.indexOf(indice);
-                if(index_of_historic !== -1) {
-                    historicApps.splice(index_of_historic, 1);
+                if(historicApps && historicApps.length) {
+                    historicApps.forEach(function(old_app, index) {
+                        if(old_app.appname === indice) {
+                            historicApps.splice(index, 1);
+                        }
+                    })
                 }
                 var obj = {
                     appname: indice,
