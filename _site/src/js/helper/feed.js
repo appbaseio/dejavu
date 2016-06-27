@@ -235,23 +235,27 @@ var feed = (function() {
 		},
 		// gets all the types of the current app;
 		getTypes: function(callback) {
-			if (typeof APPNAME == 'undefined' || APPNAME == null) {
-				var $this = this;
-				setTimeout(function() {
-					$this.getTypes(callback);
-				}, 1000);
-			} else {
+			if (typeof APPNAME != 'undefined') {
 				appbaseRef.getTypes().on('data', function(types) {
-					if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-						esTypes = types.slice();
+					if(types.length) {
+						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+							esTypes = types.slice();
+							if (callback !== null)
+								callback(types);
+						}
+					} else {
 						if (callback !== null)
 							callback(types);
 					}
 				}).on('error', function(err) {
-					console.log(err);
 					clearInterval(streamingInterval);
 					console.log('error in retrieving types: ', err)
 				})
+			} else {
+				var $this = this;
+				setTimeout(function() {
+					$this.getTypes(callback);
+				}, 1000);
 			}
 		},
 		indexData: function(recordObject, method, callback) {
