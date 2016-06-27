@@ -364,6 +364,7 @@ var HomePage = React.createClass({
                 historicApps: historicApps,
                 url: es_host
             });
+            window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
         }.bind(this));
     },
     afterConnect: function() {
