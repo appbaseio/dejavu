@@ -373,6 +373,20 @@ var feed = (function() {
 				}
 			});
 		},
+		getIndices: function() {
+			var HOST1 = 'http://localhost:9200';
+			var createUrl = HOST1 + '/_stats/indices';
+			return $.ajax({
+				type: 'GET',
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: createUrl,
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
 			applyStreamSearch(typeName, callback, queryBody, setTotal);
