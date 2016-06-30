@@ -243,10 +243,15 @@ var feed = (function() {
 		getTypes: function(callback) {
 			if (typeof APPNAME != 'undefined') {
 				appbaseRef.getTypes().on('data', function(types) {
-					if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-						esTypes = types.slice();
+					if(types.length) {
+						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+							esTypes = types.slice();
+							if (callback !== null)
+								callback(types);
+						}
+					} else {
 						if (callback !== null)
-							callback(types);
+  							callback(types);
 					}
 				}).on('error', function(err) {
 					console.log(err);
