@@ -12,11 +12,16 @@ var TypeRow = React.createClass({
         };
     },
     componentDidMount: function() {
-        var value = window.localStorage.getItem(this.props.type);
+        var types = window.localStorage.getItem('types');
         checked = false;
-        if (value == "true") {
-            checked = true;
-            this.props.watchTypeHandler(this.props.type);
+        try {
+            types = JSON.parse(types);
+            if (types.indexOf(this.props.type) !== -1) {
+                checked = true;
+                this.props.watchTypeHandler(this.props.type);
+            }
+        } catch(e) {
+
         }
         this.setState({
             isChecked: checked
@@ -32,7 +37,23 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         // every time its checked we update the local storage.
-        window.localStorage.setItem(this.props.type, checked);
+        var types = window.localStorage.getItem('types');
+          try {
+            types = JSON.parse(types);
+        } catch(e) {
+            types = []
+        }
+        types = types == null ? [] : types;
+        if(checked) {
+            types.push(this.props.type);
+        } else {
+            types.forEach(function(val, index) {
+                if(val == this.props.type) {
+                    types.splice(index, 1);
+                }
+            }.bind(this));
+        }
+        window.localStorage.setItem('types', JSON.stringify(types));
         this.setState({
             isChecked: checked
         });

@@ -71,7 +71,8 @@ var HomePage = React.createClass({
             historicApps: [],
             url: '',
             appname: '',
-            splash: true
+            splash: true,
+            hideUrl: false
         };
     },
     //The record might have nested json objects. They can't be shown
@@ -128,12 +129,12 @@ var HomePage = React.createClass({
                     if (visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1) {
                         visibleColumns.push(column);
                     }
-                if(availableColumns.indexOf(column) <= -1)    
+                if(availableColumns.indexOf(column) <= -1)
                     availableColumns.push(column);
                 }
             }
         }
-        
+
         if(availableColumns.length){
             hiddenColumns.forEach(function(col, key){
                 if(availableColumns.indexOf(col) <= -1)
@@ -320,7 +321,8 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     componentWillMount: function() {
-        if(window.location.href.indexOf('#?input_state') !== -1) {
+        this.apply_other();
+        if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
             this.setState({
                 splash: false
             });
@@ -335,6 +337,34 @@ var HomePage = React.createClass({
             createUrl(input_state);
         }
         this.setApps();
+    },
+    apply_other: function() {
+        if(typeof BRANCH != 'undefined') {
+            if(BRANCH === 'master') {
+                this.setIndices();
+            }
+        }
+    },
+    setIndices: function() {
+        feed.getIndices().then(function (data) {
+            var es_host = window.location.href.split('/_plugin')[0];
+            var historicApps = this.getApps();
+            for(indice in data.indices) {
+                var index_of_historic = historicApps.indexOf(indice);
+                if(index_of_historic !== -1) {
+                    historicApps.splice(index_of_historic, 1);
+                }
+                var obj = {
+                    appname: indice,
+                    url: es_host
+                };
+                historicApps.push(obj);
+            }
+            this.setState({
+                historicApps: historicApps,
+                url: es_host
+            });
+        }.bind(this));
     },
     afterConnect: function() {
         if(appAuth) {
@@ -380,7 +410,7 @@ var HomePage = React.createClass({
         var hiddenColumns = this.state.hiddenColumns;
         this.hideAttribute(hiddenColumns, 'show');
         var visibleColumns = this.state.visibleColumns.concat(hiddenColumns);
-        
+
         this.setState({
             hiddenColumns: [],
             visibleColumns: visibleColumns
@@ -395,25 +425,25 @@ var HomePage = React.createClass({
         if(method == 'hide') {
             Columns.forEach(function(col){
                 if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {    
+                else {
                     document.getElementById(col).style.display = "none";
                     for (var each in sdata) {
                         var key = keyGen(sdata[each], col);
                         document.getElementById(key).style.display = "none"
                     }
-                }    
+                }
             });
         }
         else if(method == 'show') {
             Columns.forEach(function(col){
                 if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {    
+                else {
                     document.getElementById(col).style.display = "";
                     for (var each in sdata) {
                         var key = keyGen(sdata[each], col);
                         document.getElementById(key).style.display = ""
                     }
-                }    
+                }
             });
         }
     },
@@ -434,7 +464,7 @@ var HomePage = React.createClass({
             }
         }
     },
-    watchStock: function(typeName) {    
+    watchStock: function(typeName) {
         //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
@@ -446,7 +476,7 @@ var HomePage = React.createClass({
         if(input_state.hasOwnProperty('sortInfo')) {
             delete input_state.sortInfo;
             createUrl(input_state);
-        }     
+        }
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
@@ -503,7 +533,7 @@ var HomePage = React.createClass({
                 if(xhr.status == 401){
                     $this.setState({
                         errorShow: true
-                    }); 
+                    });
                     appAuth = false;
                     clearInterval(mappingInterval);
                     clearInterval(streamingInterval);
@@ -549,8 +579,13 @@ var HomePage = React.createClass({
             documents: sortedArray
         });
     },
-    addRecord: function() {
+    addRecord: function(editorref) {
         var form = $('#addObjectForm').serializeArray();
+        var obj = {
+            name: 'body',
+            value: editorref.getValue().trim()
+        };
+        form.push(obj);
         this.indexCall(form, 'close-modal', 'index');
     },
     indexCall: function(form, modalId, method) {
@@ -559,7 +594,6 @@ var HomePage = React.createClass({
             if (v2.value != '')
                 recordObject[v2.name] = v2.value;
         });
-
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
@@ -573,7 +607,7 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
-    getTypeDoc: function() {
+    getTypeDoc: function(editorref) {
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
@@ -586,24 +620,24 @@ var HomePage = React.createClass({
                         $this.setState({
                             typeDocSample: typeDocSample
                         });
-                        $this.showSample(typeDocSample[selectedType]);
+                        $this.showSample(typeDocSample[selectedType], editorref);
                     }
                     catch (err) {
                         console.log(err);
                     }
                 });
 
-            } else this.showSample(typeDocSample[selectedType]);
+            } else this.showSample(typeDocSample[selectedType], editorref);
         }
     },
     userTouchFlag: false,
     //If user didn't touch to textarea only then show the json
-    showSample: function(obj) {
-        if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
+    showSample: function(obj, editorref) {
+        if(this.userTouchFlag && editorref.getValue().trim() != ''){}
         else{
             var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
             var objJson = JSON.stringify(convertJson, null, 2);
-            $('#setBody').val(objJson);
+            editorref.setValue(objJson);
         }
     },
     setSampleData: function(update) {
@@ -673,7 +707,7 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: filterObj
         });
-        
+
         //Store state of filter
         var filter_state = JSON.parse(JSON.stringify(filterObj));
         delete filter_state.applyFilter;
@@ -769,7 +803,7 @@ var HomePage = React.createClass({
                         if (v != elementId) return v;
                     });
                 }
-                
+
                 $this.setState({
                     visibleColumns: visibleColumns,
                     hiddenColumns: hiddenColumns
@@ -839,6 +873,11 @@ var HomePage = React.createClass({
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
+        var obj = {
+            name: 'body',
+            value: json
+        };
+        form.push(obj);
         var recordObject = {};
         this.indexCall(form, 'close-update-modal', 'update');
     },
@@ -858,7 +897,7 @@ var HomePage = React.createClass({
             this.removeSelection();
             this.resetData();
         }.bind(this));
-    },                 
+    },
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
         formInfo.forEach(function(v) {
@@ -983,7 +1022,7 @@ var HomePage = React.createClass({
                 })
             }
             if(app.url) {
-                historicApps.push(app); 
+                historicApps.push(app);
             }
         }
         this.setState({
@@ -999,6 +1038,12 @@ var HomePage = React.createClass({
     },
     valChange: function(event) {
         this.setState({ url: event.target.value});
+    },
+    hideUrlChange: function() {
+        var hideUrl = this.state.hideUrl ? false : true;
+        this.setState({
+            hideUrl: hideUrl
+        });
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -1020,6 +1065,10 @@ var HomePage = React.createClass({
             playClass = 'hide fa fa-play';
             pauseClass = 'ib fa fa-pause';
         }
+        var hideEye = {'display': this.state.splash ? 'none': 'block'};
+        var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
+        var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
+
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -1030,16 +1079,27 @@ var HomePage = React.createClass({
                                         <div className="img-container">
                                             <img src="assets/img/icon.png" />
                                         </div>
-                                        <h1>Dejavu - the missing Web UI for Elasticsearch</h1>
+                                        <div>
+                                          <h1>Déjà vu</h1>
+                                          <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
+                                        </div>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="splashIn">
                                             <div className="form-group m-0 col-xs-4 pd-0 pr-5">
                                                 <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
                                             </div>
-                                            <div className="form-group m-0 col-xs-8 pd-0 pr-5">
-                                                <input type="text" className="form-control" name="url" placeholder="ElasticSearch Cluster URL: https://username:password@scalr.api.appbase.io"
-                                                    value={url} 
-                                                    onChange={this.valChange}  {...opts} />
+                                            <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+                                                <div className="url-container">
+                                                    <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+                                                        value={url}
+                                                        onChange={this.valChange}  {...opts} />
+                                                      <span className={hideUrl} style={hideEye}>
+                                                        <a className="btn btn-default"
+                                                            onClick={this.hideUrlChange}>
+                                                            {hideUrlText}
+                                                        </a>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="submit-btn-container">
@@ -1051,7 +1111,7 @@ var HomePage = React.createClass({
                                         </div>
                                     </div>
                                 </div>
-                            </div>    
+                            </div>
                         </form>
                         <div className="typeContainer">
                             <TypeTable
@@ -1090,15 +1150,15 @@ var HomePage = React.createClass({
                                 exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">watch video</a> 
+                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a>
                             <span className="text-right pull-right powered_by">
-                                Create your ElasticSearch in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-                            </span>  
+                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                            </span>
                             <span className="pull-left github-star">
                                 <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>
-                            </span>   
+                            </span>
                         </footer>
-                        <FeatureComponent.ErrorModal 
+                        <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>
                         </FeatureComponent.ErrorModal>

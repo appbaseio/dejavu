@@ -38,7 +38,7 @@ var AddDocument = React.createClass({
             $this.setState({
                 validate: validateClass
             });
-            $this.props.getTypeDoc();
+            $this.props.getTypeDoc($this.editorref);
         });
     },
     close: function() {
@@ -57,6 +57,24 @@ var AddDocument = React.createClass({
         this.setState({
             showModal: true
         });
+        setTimeout(function() {
+            var options = {
+                lineNumbers: true,
+                mode: "javascript",
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                showCursorWhenSelecting: true,
+                tabSize: 2,
+                extraKeys: {
+                  "Ctrl-Q": function(cm) {
+                    cm.foldCode(cm.getCursor());
+                  }
+                },
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            };
+            this.editorref = CodeMirror.fromTextArea(document.getElementById('setBody'), options);
+        }.bind(this), 300);
     },
     getType: function() {
         var typeList = this.props.types.map(function(type) {
@@ -71,12 +89,12 @@ var AddDocument = React.createClass({
         var validateClass = this.state.validate;
         validateClass.touch = true;
         validateClass.type = document.getElementById('setType').value == '' ? false : true;
-        validateClass.body = this.IsJsonString(document.getElementById('setBody').value);
+        validateClass.body = this.IsJsonString(this.editorref.getValue());
         this.setState({
             validate: validateClass
         });
         if (validateClass.type && validateClass.body)
-            this.props.addRecord();
+            this.props.addRecord(this.editorref);
     },
     IsJsonString: function(str) {
         try {
@@ -108,11 +126,10 @@ var AddDocument = React.createClass({
             };
         }
         var btnLinkClassSub = this.props.link == "true" ? 'add-record-link fa fa-plus' : 'add-record-btn btn btn-primary fa fa-plus';
-        var btnLinkClass = this.props.types.length ? btnLinkClassSub : 'hide';
         var selectClass = this.props.selectClass + ' tags-select form-control';
 
         return (<div className="add-record-container pd-r10">
-                    <a href="javascript:void(0);" className={btnLinkClass}  title="Add" onClick={this.open} >{btnText}</a>
+                    <a href="javascript:void(0);" className={btnLinkClassSub}  title="Add" onClick={this.open} >{btnText}</a>
                     <Modal show={this.state.showModal} onHide={this.close}>
                       <Modal.Header closeButton>
                         <Modal.Title>Add Data</Modal.Title>
@@ -140,7 +157,7 @@ var AddDocument = React.createClass({
                             <div className="col-sm-9">
                               <textarea id="setBody" className="form-control" rows="10" name="body"
                                 onClick={this.userTouch.bind(null, true)}
-                                onFocus={this.userTouch.bind(null, true)}></textarea>
+                                onFocus={this.userTouch.bind(null, true)} ></textarea>
                                <span className="help-block">
                                   A data document is stored as a JSON object.
                                 </span>

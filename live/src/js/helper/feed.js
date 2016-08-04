@@ -10,6 +10,7 @@ var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
 
+
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] == "true";
@@ -22,16 +23,15 @@ if(!flag_url || decryptedData.hasOwnProperty('url')){
 
 var APPNAME = config.appname;
 var URL = config.url;
-if(URL) {
+if (URL) {
 	var urlsplit = URL.split(':');
 	var pwsplit = urlsplit[2].split('@');
 	var USERNAME = urlsplit[1].replace('//', '');
 	var PASSWORD = pwsplit[0];
 	var httpPrefix = URL.split('://');
-	var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+	var HOST = URL.indexOf('@') != -1 ? httpPrefix[0] + '://' + pwsplit[1] : URL;
 	var OperationFlag = false;
 	var APPURL = URL + '/' + APPNAME;
-
 	// to store input state
 	var input_state = {};
 
@@ -43,7 +43,7 @@ function get_data_size() {
 	var mininum_data_size = 20;
 	var winHeight = $(window).height() - 150;
 	var rowHeight = 51;
-	var min_rows = Math.ceil(winHeight/rowHeight);
+	var min_rows = Math.ceil(winHeight / rowHeight);
 	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
 	return rows;
 }
@@ -68,6 +68,7 @@ var feed = (function() {
 
 	// applies a searchStream() query on a particular ``type``
 	// to establish a continuous query connection.
+	// use applyAppbaseSearch to get the data
 	function applyStreamSearch(types, callback, queryBody, setTotal) {
 		if (types !== null) {
 			var defaultQueryBody = {
@@ -79,7 +80,6 @@ var feed = (function() {
 
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
-			// get historical data
 			var typesString = types.join(',');
 			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
@@ -147,8 +147,7 @@ var feed = (function() {
 			//For update data
 			if (res2._updated) {
 
-			}
-			else if (res2._deleted) {
+			} else if (res2._deleted) {
 				setTotal(0, true, 'delete');
 			}
 			//For Index data
@@ -162,11 +161,10 @@ var feed = (function() {
 	};
 
 	function allowOtherOperation() {
-		setTimeout(function(){
+		setTimeout(function() {
 			OperationFlag = false;
 		}, 500);
 	};
-
 
 	// ajax call instead of appbase search, to use preference in search query
 	function applyAppbaseSearch(finalUrl, queryBody, cb_succes, cb_error) {
@@ -212,8 +210,8 @@ var feed = (function() {
 
 	return {
 		countStream: function(types, setTotal) {
- 			countStream(types, setTotal);
- 		},
+			countStream(types, setTotal);
+		},
 		// exposes ``applyStreamSearch()`` as ``getData()``
 		getData: function(types, callback, setTotal) {
 			applyStreamSearch(types, callback, false, setTotal);
@@ -239,10 +237,15 @@ var feed = (function() {
 		getTypes: function(callback) {
 			if (typeof APPNAME != 'undefined') {
 				appbaseRef.getTypes().on('data', function(types) {
-					if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-						esTypes = types.slice();
+					if(types.length) {
+						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+							esTypes = types.slice();
+							if (callback !== null)
+								callback(types);
+						}
+					} else {
 						if (callback !== null)
-							callback(types);
+  							callback(types);
 					}
 				}).on('error', function(err) {
 					console.log(err);
@@ -283,8 +286,8 @@ var feed = (function() {
 
 		},
 		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(function(v){
-				return	{"delete": v};
+			var deleteArray = selectedRows.map(function(v) {
+				return { "delete": v };
 			});
 			console.log(deleteArray);
 
@@ -292,7 +295,7 @@ var feed = (function() {
 				body: deleteArray
 			}).on('data', function(data) {
 				for (data in sdata) {
-					selectedRows.forEach(function(v){
+					selectedRows.forEach(function(v) {
 						if (typeof sdata[data] != 'undefined') {
 							if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
 								delete sdata[data];
@@ -332,8 +335,8 @@ var feed = (function() {
 		},
 		scrollapi: function(types, queryBody, scroll, scroll_id) {
 			var typesString = types.join(',');
-			var createUrl = HOST + '/' + APPNAME + '/' +typesString+ '/_search?scroll=5m';
-			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id='+scroll_id;
+			var createUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?scroll=5m';
+			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id=' + scroll_id;
 			var finalUrl = scroll ? scrollUrl : createUrl;
 			return $.ajax({
 				type: 'POST',
@@ -342,7 +345,7 @@ var feed = (function() {
 				},
 				url: finalUrl,
 				contentType: 'application/json; charset=utf-8',
-    			dataType: 'json',
+				dataType: 'json',
 				data: JSON.stringify(queryBody),
 				xhrFields: {
 					withCredentials: true
@@ -368,6 +371,20 @@ var feed = (function() {
 					query: {
 						match_all: {}
 					}
+				}
+			});
+		},
+		getIndices: function() {
+			var HOST1 = 'http://localhost:9200';
+			var createUrl = HOST1 + '/_stats/indices';
+			return $.ajax({
+				type: 'GET',
+				beforeSend: function(request) {
+					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: createUrl,
+				xhrFields: {
+					withCredentials: true
 				}
 			});
 		},
@@ -403,7 +420,7 @@ var feed = (function() {
 				case 'has not':
 					var queryMaker = [];
 					var subQuery = analyzed ? 'match' : 'term';
-					
+
 					value.forEach(function(val) {
 						var termObj = {};
 						termObj[columnName] = val.trim();
@@ -457,23 +474,23 @@ var feed = (function() {
 						}
 					};
 					break;
-					
-				case 'range':
-                    rangeVal = value[0].split('@');
-                    termObj = {};
-                    termObj[columnName] = {};
-                    termObj[columnName] = {
-                        "gte": rangeVal[0],
-                        "lte": rangeVal[1]
-                    };
-                    queryBody = {
-                        "query": {
-                            "range": termObj
-                        }
-                    };
-                    break;	
 
-                case 'term': 
+				case 'range':
+					rangeVal = value[0].split('@');
+					termObj = {};
+					termObj[columnName] = {};
+					termObj[columnName] = {
+						"gte": rangeVal[0],
+						"lte": rangeVal[1]
+					};
+					queryBody = {
+						"query": {
+							"range": termObj
+						}
+					};
+					break;
+
+				case 'term': 
 					termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
