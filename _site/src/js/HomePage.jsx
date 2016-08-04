@@ -873,6 +873,11 @@ var HomePage = React.createClass({
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
+        var obj = {
+            name: 'body',
+            value: json
+        };
+        form.push(obj);
         var recordObject = {};
         this.indexCall(form, 'close-update-modal', 'update');
     },
