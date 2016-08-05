@@ -8,6 +8,7 @@
     "underscore": "~1.8.3",
     "bootstrap": "~3.3.6",
     "font-awesome": "~4.5.0",
-    "toastr": "~2.1.2"
+    "toastr": "~2.1.2",
+    "codemirror": "^5.17.0"
   }
 }

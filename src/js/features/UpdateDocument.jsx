@@ -35,17 +35,35 @@ var UpdateDocument = React.createClass({
         this.setState({
             showModal: true
         });
+        setTimeout(function() {
+            var options = {
+                lineNumbers: true,
+                mode: "javascript",
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                showCursorWhenSelecting: true,
+                tabSize: 2,
+                extraKeys: {
+                  "Ctrl-Q": function(cm) {
+                    cm.foldCode(cm.getCursor());
+                  }
+                },
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+            };
+            this.editorref = CodeMirror.fromTextArea(document.getElementById('setBodyUpdate'), options);
+        }.bind(this), 300);
         this.props.actionOnRecord.getUpdateObj();
     },
     validateInput: function() {
         var validateClass = this.state.validate;
         validateClass.touch = true;
-        validateClass.body = this.IsJsonString(document.getElementById('setBodyUpdate').value);
+        validateClass.body = this.IsJsonString(this.editorref.getValue());
         this.setState({
             validate: validateClass
         });
         if (validateClass.body) {
-            var updateJson = document.getElementById('setBodyUpdate').value;
+            var updateJson = this.editorref.getValue();
             this.props.actionOnRecord.updateRecord(updateJson);
         }
     },

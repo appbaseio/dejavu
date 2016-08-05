@@ -451,8 +451,13 @@ var HomePage = React.createClass({
             documents: sortedArray
         });
     },
-    addRecord: function() {
+    addRecord: function(editorref) {
         var form = $('#addObjectForm').serializeArray();
+        var obj = {
+            name: 'body',
+            value: editorref.getValue().trim()
+        };
+        form.push(obj);
         this.indexCall(form, 'close-modal', 'index');
     },
     indexCall: function(form, modalId, method) {
@@ -475,7 +480,7 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
-    getTypeDoc: function() {
+    getTypeDoc: function(editorref) {
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
@@ -488,24 +493,24 @@ var HomePage = React.createClass({
                         $this.setState({
                             typeDocSample: typeDocSample
                         });
-                        $this.showSample(typeDocSample[selectedType]);
+                        $this.showSample(typeDocSample[selectedType], editorref);
                     }
                     catch (err) {
                         console.log(err);
                     }
                 });
 
-            } else this.showSample(typeDocSample[selectedType]);
+            } else this.showSample(typeDocSample[selectedType], editorref);
         }
     },
     userTouchFlag: false,
     //If user didn't touch to textarea only then show the json
-    showSample: function(obj) {
-        if(this.userTouchFlag && $('#setBody').val().trim() != ''){}
+    showSample: function(obj, editorref) {
+        if(this.userTouchFlag && editorref.getValue().trim() != ''){}
         else{
             var convertJson = obj.hasOwnProperty('json') ? obj.json : obj;
             var objJson = JSON.stringify(convertJson, null, 2);
-            $('#setBody').val(objJson);
+            editorref.setValue(objJson);
         }
     },
     setSampleData: function(update) {
@@ -774,6 +779,11 @@ var HomePage = React.createClass({
     },
     updateRecord: function(json) {
         var form = $('#updateObjectForm').serializeArray();
+        var obj = {
+            name: 'body',
+            value: json
+        };
+        form.push(obj);
         var recordObject = {};
         this.indexCall(form, 'close-update-modal', 'update');
     },

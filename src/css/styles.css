@@ -688,13 +688,47 @@ body{
 .modal.modal-danger .close{
   color: #FF8484;
 }
+
+.loadingBar {
+  position: relative;
+  display: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 800;
+  transform: translateX(100%);
+  &.top-0 {
+    top: 0;
+  }
+}
+.pageLoading .loadingBar {
+  display: block;
+  animation: shift-rightwards 0.5s ease-in-out infinite;
+  animation-delay: .2s
+}
+@keyframes shift-rightwards {
+  0% {
+    transform: translateX(-100%)
+  }
+  40% {
+    transform: translateX(0)
+  }
+  60% {
+    transform: translateX(0)
+  }
+  100% {
+    transform: translateX(100%)
+  }
+}
+
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{
   background: #3BC7F6;
   color: #fff;
 }
-.theme-element.radio label::after{
+.theme-element.radio label::after, .loadingBar{
   background: #3BC7F6;
 }
 .btn-primary{
