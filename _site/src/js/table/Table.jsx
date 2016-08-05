@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var Dropdown = require('./DropDown.jsx');
+var Dropdown = require('./Dropdown.jsx');
 var FeatureComponent = require('../features/FeatureComponent.jsx');
 var FilterDropdown = require('./FilterDropdown.jsx');
 var PageLoading = require('./PageLoading.jsx');
