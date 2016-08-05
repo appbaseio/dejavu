@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var FilterDropdown = require('./filterDropdown.jsx');
+var FilterDropdown = require('./FilterDropdown.jsx');
 
 var cellWidth = '250px';
 var OverlayTrigger = ReactBootstrap.OverlayTrigger;

@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var FeatureComponent = require('../features/featureComponent.jsx');
-var Dropdown = require('./dropdown.jsx');
+var FeatureComponent = require('../features/FeatureComponent.jsx');
+var Dropdown = require('./Dropdown.jsx');
 
 var Info = React.createClass({
      getInitialState: function() {
