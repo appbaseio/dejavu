@@ -9,6 +9,7 @@ var Column = require('./Column.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 var Pretty = FeatureComponent.Pretty;
 var Cell = require('./Cell.jsx');
+
 // row/column manipulation functions.
 // We decided to roll our own as existing
 // libs with React.JS were missing critical
