@@ -1,3 +1,4 @@
 node_modules/
-.idea/
 dist/main.js
+site
+_site
