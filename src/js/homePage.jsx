@@ -373,6 +373,7 @@ var HomePage = React.createClass({
                 active: false
             }
         });
+        window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
     },
@@ -484,7 +485,7 @@ var HomePage = React.createClass({
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null) {
+        if (selectedType != '' && selectedType != null && typeDocSample) {
             if (!typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
