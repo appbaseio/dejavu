@@ -470,8 +470,7 @@ var HomePage = React.createClass({
             }
         }
     },
-    watchStock: function(typeName) {
-        
+    watchStock: function(typeName) {  
         //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
@@ -484,6 +483,7 @@ var HomePage = React.createClass({
             delete input_state.sortInfo;
             createUrl(input_state);
         }     
+        window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
@@ -619,7 +619,7 @@ var HomePage = React.createClass({
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null) {
+        if (selectedType != '' && selectedType != null && typeDocSample) {
             if (!typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
