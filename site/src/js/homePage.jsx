@@ -461,7 +461,6 @@ var HomePage = React.createClass({
         if(input_state.hasOwnProperty('sortInfo')) {
             delete input_state.sortInfo;
         }
-        window.stop();
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
