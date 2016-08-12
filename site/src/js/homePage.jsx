@@ -444,6 +444,7 @@ var HomePage = React.createClass({
         if(input_state.hasOwnProperty('sortInfo')) {
             delete input_state.sortInfo;
         }     
+        window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
@@ -460,6 +461,7 @@ var HomePage = React.createClass({
         if(input_state.hasOwnProperty('sortInfo')) {
             delete input_state.sortInfo;
         }
+        window.stop();
         subsetESTypes.splice(subsetESTypes.indexOf(typeName), 1);
         this.removeType(typeName);
         this.getStreamingData(subsetESTypes);
@@ -578,7 +580,7 @@ var HomePage = React.createClass({
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null) {
+        if (selectedType != '' && selectedType != null && typeDocSample) {
             if (!typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
