@@ -477,6 +477,7 @@ var HomePage = React.createClass({
             delete input_state.sortInfo;
             createUrl(input_state);
         }
+        window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
@@ -611,8 +612,8 @@ var HomePage = React.createClass({
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null) {
-            if (!typeDocSample.hasOwnProperty(selectedType)) {
+        if (selectedType != '' && selectedType != null && typeDocSample) {
+            if (typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
                     try {
