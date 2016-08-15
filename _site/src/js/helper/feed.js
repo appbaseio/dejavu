@@ -371,7 +371,7 @@ var feed = (function() {
 			});
 		},
 		getIndices: function() {
-			var es_host = window.location.href.split('/_plugin')[0];
+			var es_host = window.location.protocol + "//" + window.location.host;
             var createUrl = es_host + '/_stats/indices';
 			return $.ajax({
 				type: 'GET',
