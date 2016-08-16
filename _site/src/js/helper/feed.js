@@ -371,18 +371,31 @@ var feed = (function() {
 			});
 		},
 		getIndices: function() {
-			var es_host = window.location.protocol + "//" + window.location.host;
-            var createUrl = es_host + '/_stats/indices';
-			return $.ajax({
-				type: 'GET',
-				beforeSend: function(request) {
-					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
-				},
-				url: createUrl,
-				xhrFields: {
-					withCredentials: true
-				}
-			});
+			var es_host = document.URL.split('/_plugin/')[0];
+			var createUrl = es_host + '/_stats/indices';
+			
+			// if username is available
+			if(USERNAME) {
+				return $.ajax({
+					type: 'GET',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+					},
+					url: createUrl,
+					xhrFields: {
+						withCredentials: true
+					}
+				});
+			}
+			else {
+				return $.ajax({
+					type: 'GET',
+					url: createUrl,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			}
 		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
