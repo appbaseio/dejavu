@@ -17,18 +17,22 @@ var config = {
 var APPNAME = config.appname;
 var URL = config.url;
 if(URL) {
-	var urlsplit = URL.split(':');
-	var pwsplit = urlsplit[2].split('@');
-	var USERNAME = urlsplit[1].replace('//', '');
-	var PASSWORD = pwsplit[0];
-	var httpPrefix = URL.split('://');
-	var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-	var OperationFlag = false;
-	var APPURL = URL + '/' + APPNAME;
-	// to store input state
-	var input_state = {};
+	try {
+		var urlsplit = URL.split(':');
+		var pwsplit = urlsplit[2].split('@');
+		var USERNAME = urlsplit[1].replace('//', '');
+		var PASSWORD = pwsplit[0];
+		var httpPrefix = URL.split('://');
+		var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+		var OperationFlag = false;
+		var APPURL = URL + '/' + APPNAME;
+		// to store input state
+		var input_state = {};
 
-	init();
+		init();
+	} catch(e) {
+		console.log(e);
+	}
 }
 
 // Get data size according to window height
