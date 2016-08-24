@@ -347,7 +347,7 @@ var HomePage = React.createClass({
     },
     setIndices: function() {
         feed.getIndices().then(function (data) {
-            var es_host = window.location.href.split('/_plugin')[0];
+            var es_host = document.URL.split('/_plugin/')[0];
             var historicApps = this.getApps();
             for(indice in data.indices) {
                 if(historicApps && historicApps.length) {
