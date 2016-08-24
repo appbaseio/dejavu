@@ -26,16 +26,15 @@ if(URL) {
 		var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
 		var OperationFlag = false;
 		var APPURL = URL + '/' + APPNAME;
+		// to store input state
+		var input_state = {};
+		init();
 	} catch(e) {
 		console.log(e);
 		var HOST = document.URL.split('/_plugin/')[0];
 		var OperationFlag = false;
 		var APPURL = URL + '/' + APPNAME;
 	}
-		// to store input state
-		var input_state = {};
-
-		init();
 }
 
 // Get data size according to window height
