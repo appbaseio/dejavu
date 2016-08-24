@@ -34,9 +34,12 @@ if(URL) {
 		var HOST = document.URL.split('/_plugin/')[0];
 		var OperationFlag = false;
 		var APPURL = URL + '/' + APPNAME;
+		USERNAME = 'test';
+		PASSWORD = 'test';
+		var input_state = {};
+		init();
 	}
 }
-
 // Get data size according to window height
 function get_data_size() {
 	var mininum_data_size = 20;
