@@ -1,7 +1,7 @@
 var React = require('react');
-var TypeTable = require('./typeTable.jsx');
-var DataTable = require('./table/dataTable.jsx');
-var FeatureComponent = require('./features/featureComponent.jsx');
+var TypeTable = require('./TypeTable.jsx');
+var DataTable = require('./table/DataTable.jsx');
+var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
@@ -129,12 +129,12 @@ var HomePage = React.createClass({
                     if (visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1) {
                         visibleColumns.push(column);
                     }
-                if(availableColumns.indexOf(column) <= -1)    
+                if(availableColumns.indexOf(column) <= -1)
                     availableColumns.push(column);
                 }
             }
         }
-        
+
         if(availableColumns.length){
             hiddenColumns.forEach(function(col, key){
                 if(availableColumns.indexOf(col) <= -1)
@@ -300,7 +300,7 @@ var HomePage = React.createClass({
         }.bind(this), queryBody);
     },
     // only called on change in types.
-   getStreamingTypes: function() {
+    getStreamingTypes: function() {
         if (typeof APPNAME == 'undefined' || APPNAME == null) {
             setTimeout(this.getTotalRecord, 1000);
         } else {
@@ -319,7 +319,7 @@ var HomePage = React.createClass({
         feed.deleteData(typeName, function(data) {
             this.resetData();
         }.bind(this));
-    },  
+    },
     componentWillMount: function() {
         this.apply_other();
         if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
@@ -345,30 +345,34 @@ var HomePage = React.createClass({
             }
         }
     },
+    // BRANCH: MASTER
     setIndices: function() {
-        feed.getIndices().then(function (data) {
-            var es_host = document.URL.split('/_plugin/')[0];
-            var historicApps = this.getApps();
-            for(indice in data.indices) {
-                if(historicApps && historicApps.length) {
-                    historicApps.forEach(function(old_app, index) {
-                        if(old_app.appname === indice) {
-                            historicApps.splice(index, 1);
-                        }
-                    })
+        var es_host = document.URL.split('/_plugin/')[0];
+        var getIndices = feed.getIndices(es_host);
+        if(getIndices) {
+            getIndices.then(function (data) {
+                var historicApps = this.getApps();
+                for(indice in data.indices) {
+                    if(historicApps && historicApps.length) {
+                        historicApps.forEach(function(old_app, index) {
+                            if(old_app.appname === indice) {
+                                historicApps.splice(index, 1);
+                            }
+                        })
+                    }
+                    var obj = {
+                        appname: indice,
+                        url: es_host
+                    };
+                    historicApps.push(obj);
                 }
-                var obj = {
-                    appname: indice,
+                this.setState({
+                    historicApps: historicApps,
                     url: es_host
-                };
-                historicApps.push(obj);
-            }
-            this.setState({
-                historicApps: historicApps,
-                url: es_host
-            });
-            window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
-        }.bind(this));
+                });
+                window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+            }.bind(this));
+        }
     },
     afterConnect: function() {
         if(appAuth) {
@@ -414,7 +418,7 @@ var HomePage = React.createClass({
         var hiddenColumns = this.state.hiddenColumns;
         this.hideAttribute(hiddenColumns, 'show');
         var visibleColumns = this.state.visibleColumns.concat(hiddenColumns);
-        
+
         this.setState({
             hiddenColumns: [],
             visibleColumns: visibleColumns
@@ -429,25 +433,25 @@ var HomePage = React.createClass({
         if(method == 'hide') {
             Columns.forEach(function(col){
                 if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {    
+                else {
                     document.getElementById(col).style.display = "none";
                     for (var each in sdata) {
                         var key = keyGen(sdata[each], col);
                         document.getElementById(key).style.display = "none"
                     }
-                }    
+                }
             });
         }
         else if(method == 'show') {
             Columns.forEach(function(col){
                 if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {    
+                else {
                     document.getElementById(col).style.display = "";
                     for (var each in sdata) {
                         var key = keyGen(sdata[each], col);
                         document.getElementById(key).style.display = ""
                     }
-                }    
+                }
             });
         }
     },
@@ -461,16 +465,14 @@ var HomePage = React.createClass({
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
                     infoObj.availableTotal = data.hits.total;
-                    var totalRecord = infoObj.availableTotal;
                     $this.setState({
-                        infoObj: infoObj,
-                        totalRecord: totalRecord
+                        infoObj: infoObj
                     });
                 });
             }
         }
     },
-    watchStock: function(typeName) {  
+    watchStock: function(typeName) {
         //Remove sorting while slecting new type
         this.setState({
             sortInfo: {
@@ -482,7 +484,7 @@ var HomePage = React.createClass({
         if(input_state.hasOwnProperty('sortInfo')) {
             delete input_state.sortInfo;
             createUrl(input_state);
-        }     
+        }
         window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
@@ -540,7 +542,7 @@ var HomePage = React.createClass({
                 if(xhr.status == 401){
                     $this.setState({
                         errorShow: true
-                    }); 
+                    });
                     appAuth = false;
                     clearInterval(mappingInterval);
                     clearInterval(streamingInterval);
@@ -553,11 +555,11 @@ var HomePage = React.createClass({
         var infoObj = this.state.infoObj;
 
         // Plug in a handler which takes care of infinite scrolling
-        if (subsetESTypes.length && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100) {
-            this.setState({
-                pageLoading: true
-            });
-            this.paginateData();
+        if (subsetESTypes.length && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100 && !this.state.pageLoading) {
+                this.setState({
+                    pageLoading: true
+                });
+                this.paginateData();
         }
     },
     handleSort: function(item, type, eve, order) {
@@ -601,7 +603,6 @@ var HomePage = React.createClass({
             if (v2.value != '')
                 recordObject[v2.name] = v2.value;
         });
-
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
@@ -620,7 +621,7 @@ var HomePage = React.createClass({
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
         if (selectedType != '' && selectedType != null && typeDocSample) {
-            if (!typeDocSample.hasOwnProperty(selectedType)) {
+            if (typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
                     try {
@@ -715,7 +716,7 @@ var HomePage = React.createClass({
         this.setState({
             filterInfo: filterObj
         });
-        
+
         //Store state of filter
         var filter_state = JSON.parse(JSON.stringify(filterObj));
         delete filter_state.applyFilter;
@@ -811,7 +812,7 @@ var HomePage = React.createClass({
                         if (v != elementId) return v;
                     });
                 }
-                
+
                 $this.setState({
                     visibleColumns: visibleColumns,
                     hiddenColumns: hiddenColumns
@@ -844,14 +845,6 @@ var HomePage = React.createClass({
         this.forceUpdate();
         $('[name="selectRecord"]').removeAttr('checked');
     },
-    selectToggleChange: function(checkbox) {
-        var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
-        actionOnRecord.selectToggle = checkbox;
-        this.setState({
-            actionOnRecord: actionOnRecord
-        });
-        this.forceUpdate();
-    },
     watchSelectedRecord: function() {
         var actionOnRecord = this.state.actionOnRecord;
         actionOnRecord.selectedRows = _.filter(this.state.actionOnRecord.selectedRows, function(row) {
@@ -867,6 +860,14 @@ var HomePage = React.createClass({
             });
             this.forceUpdate();
         }
+    },
+    selectToggleChange: function(checkbox) {
+        var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
+        actionOnRecord.selectToggle = checkbox;
+        this.setState({
+            actionOnRecord: actionOnRecord
+        });
+        this.forceUpdate();
     },
     getUpdateObj: function() {
         var actionOnRecord = this.state.actionOnRecord;
@@ -905,18 +906,55 @@ var HomePage = React.createClass({
             this.removeSelection();
             this.resetData();
         }.bind(this));
-    },                 
+    },
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
+        var temp_config = {
+            url: '',
+            appname: ''
+        };
         formInfo.forEach(function(v) {
+            if(v.value === '') {
+                reloadFlag = false;
+            }
             if(v.name == 'url'){
-                window.localStorage.setItem('esurl',v.value);
+                temp_config.url = v.value;
             }
             else{
-                window.localStorage.setItem('appname',v.value);
+                temp_config.appname = v.value;
             }
         });
-        location.reload();
+
+        if(typeof BRANCH != 'undefined'  && BRANCH === 'master') {
+            checkIndex();
+        } else {
+            letsConnect();
+        }
+
+        // BRANCH: MASTER
+        // check if index exists or not, and create index if not exists
+        function checkIndex() {
+            feed.checkIndex(temp_config.url, temp_config.appname).done(function(data) {
+                console.log(data);
+                letsConnect();
+            }).error(function(xhr){
+                if(xhr.status === 404){
+                    var r = confirm('Index not found, Do you want to create index '+temp_config.appname+'?');
+                    if(r) {
+                        feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
+                            letsConnect();
+                        });
+                    }
+                } else {
+                    letsConnect();
+                }
+            });
+        }
+        function letsConnect() {
+            window.localStorage.setItem('esurl',temp_config.url);
+            window.localStorage.setItem('appname',temp_config.appname);
+            location.reload();
+        }
     },
     connectPlayPause: function() {
         var reloadFlag = true;
@@ -1027,7 +1065,7 @@ var HomePage = React.createClass({
                 })
             }
             if(app.url) {
-                historicApps.push(app); 
+                historicApps.push(app);
             }
         }
         this.setState({
@@ -1073,6 +1111,7 @@ var HomePage = React.createClass({
         var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
         var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
+
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -1084,8 +1123,8 @@ var HomePage = React.createClass({
                                             <img src="assets/img/icon.png" />
                                         </div>
                                         <div>
-                                            <h1>Déjà vu</h1>
-                                            <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
+                                          <h1>Déjà vu</h1>
+                                          <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
                                         </div>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="splashIn">
@@ -1094,11 +1133,10 @@ var HomePage = React.createClass({
                                             </div>
                                             <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
                                                 <div className="url-container">
-                                                    <input type="text" className="form-control" name="url" 
-                                                        placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-                                                        value={url} 
+                                                    <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+                                                        value={url}
                                                         onChange={this.valChange}  {...opts} />
-                                                    <span className={hideUrl}  style={hideEye}>
+                                                      <span className={hideUrl} style={hideEye}>
                                                         <a className="btn btn-default"
                                                             onClick={this.hideUrlChange}>
                                                             {hideUrlText}
@@ -1116,7 +1154,7 @@ var HomePage = React.createClass({
                                         </div>
                                     </div>
                                 </div>
-                            </div>    
+                            </div>
                         </form>
                         <div className="typeContainer">
                             <TypeTable
@@ -1155,15 +1193,15 @@ var HomePage = React.createClass({
                                 exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a> 
+                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a>
                             <span className="text-right pull-right powered_by">
                                 Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-                            </span>  
+                            </span>
                             <span className="pull-left github-star">
                                 <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>
-                            </span>   
+                            </span>
                         </footer>
-                        <FeatureComponent.ErrorModal 
+                        <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>
                         </FeatureComponent.ErrorModal>

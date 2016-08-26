@@ -9,10 +9,17 @@ var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
-var config = {
-	url: window.localStorage.getItem('esurl'),
-	appname: window.localStorage.getItem('appname')
-};
+
+
+//If default = true then take it from config.js
+var browse_url = window.location.href;
+var flag_url = browse_url.split('?default=')[1] == "true";
+if(!flag_url || decryptedData.hasOwnProperty('url')){
+	config = {
+		url: window.localStorage.getItem('esurl'),
+		appname: window.localStorage.getItem('appname')
+	};
+}
 
 var APPNAME = config.appname;
 var URL = config.url;
@@ -40,12 +47,13 @@ if(URL) {
 		init();
 	}
 }
+
 // Get data size according to window height
 function get_data_size() {
 	var mininum_data_size = 20;
 	var winHeight = $(window).height() - 150;
 	var rowHeight = 51;
-	var min_rows = Math.ceil(winHeight/rowHeight);
+	var min_rows = Math.ceil(winHeight / rowHeight);
 	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
 	return rows;
 }
@@ -70,6 +78,7 @@ var feed = (function() {
 
 	// applies a searchStream() query on a particular ``type``
 	// to establish a continuous query connection.
+	// use applyAppbaseSearch to get the data
 	function applyStreamSearch(types, callback, queryBody, setTotal) {
 		if (types !== null) {
 			var defaultQueryBody = {
@@ -81,7 +90,6 @@ var feed = (function() {
 
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
-			// get historical data
 			var typesString = types.join(',');
 			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
@@ -98,7 +106,6 @@ var feed = (function() {
 			}, function() {
 				allowOtherOperation();
 			});
-
 
 			// Counter stream
 			countStream(types, setTotal);
@@ -150,8 +157,7 @@ var feed = (function() {
 			//For update data
 			if (res2._updated) {
 
-			}
-			else if (res2._deleted) {
+			} else if (res2._deleted) {
 				setTotal(0, true, 'delete');
 			}
 			//For Index data
@@ -165,7 +171,7 @@ var feed = (function() {
 	};
 
 	function allowOtherOperation() {
-		setTimeout(function(){
+		setTimeout(function() {
 			OperationFlag = false;
 		}, 500);
 	};
@@ -195,7 +201,6 @@ var feed = (function() {
 		});
 	}
 
-
 	// paginate and show new results when user scrolls
 	// to the bottom of the existing results.
 	function paginationSearch(typeName, from, callback, queryBody) {
@@ -215,8 +220,8 @@ var feed = (function() {
 
 	return {
 		countStream: function(types, setTotal) {
- 			countStream(types, setTotal);
- 		},
+			countStream(types, setTotal);
+		},
 		// exposes ``applyStreamSearch()`` as ``getData()``
 		getData: function(types, callback, setTotal) {
 			applyStreamSearch(types, callback, false, setTotal);
@@ -291,8 +296,8 @@ var feed = (function() {
 
 		},
 		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(function(v){
-				return	{"delete": v};
+			var deleteArray = selectedRows.map(function(v) {
+				return { "delete": v };
 			});
 			console.log(deleteArray);
 
@@ -300,7 +305,7 @@ var feed = (function() {
 				body: deleteArray
 			}).on('data', function(data) {
 				for (data in sdata) {
-					selectedRows.forEach(function(v){
+					selectedRows.forEach(function(v) {
 						if (typeof sdata[data] != 'undefined') {
 							if (sdata[data]._type == v._type && sdata[data]._id == v._id) {
 								delete sdata[data];
@@ -340,8 +345,8 @@ var feed = (function() {
 		},
 		scrollapi: function(types, queryBody, scroll, scroll_id) {
 			var typesString = types.join(',');
-			var createUrl = HOST + '/' + APPNAME + '/' +typesString+ '/_search?scroll=5m';
-			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id='+scroll_id;
+			var createUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?scroll=5m';
+			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id=' + scroll_id;
 			var finalUrl = scroll ? scrollUrl : createUrl;
 			return $.ajax({
 				type: 'POST',
@@ -350,7 +355,7 @@ var feed = (function() {
 				},
 				url: finalUrl,
 				contentType: 'application/json; charset=utf-8',
-    			dataType: 'json',
+				dataType: 'json',
 				data: JSON.stringify(queryBody),
 				xhrFields: {
 					withCredentials: true
@@ -379,16 +384,79 @@ var feed = (function() {
 				}
 			});
 		},
-		getIndices: function() {
-			var es_host = document.URL.split('/_plugin/')[0];
-			var createUrl = es_host + '/_stats/indices';	
-			return $.ajax({
-				type: 'GET',
-				url: createUrl,
-				xhrFields: {
-					withCredentials: true
-				}
-			});
+		getIndices: function(url) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/_stats/indices';
+				return $.ajax({
+					type: 'GET',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		checkIndex: function(url, appname) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/'+appname;
+				return $.ajax({
+					type: 'GET',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		createIndex: function(url, appname) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/'+appname;
+				return $.ajax({
+					type: 'POST',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		filterUrl: function(url) {
+			if (url) {
+				var obj = {
+					USERNAME: 'test',
+					PASSWORD: 'test',
+					URL: url
+				};
+				var urlsplit = url.split(':');
+				var pwsplit = urlsplit[2].split('@');
+				try {
+					obj.USERNAME = urlsplit[1].replace('//', '');
+					obj.PASSWORD = pwsplit[0];
+					var httpPrefix = url.split('://');
+					obj.URL = url.indexOf('@') != -1 ? httpPrefix[0] + '://' + pwsplit[1] : url;
+				} catch(e) {}
+				return obj;
+			} else {
+				return null;
+			}
 		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
@@ -422,7 +490,7 @@ var feed = (function() {
 				case 'has not':
 					var queryMaker = [];
 					var subQuery = analyzed ? 'match' : 'term';
-					
+
 					value.forEach(function(val) {
 						var termObj = {};
 						termObj[columnName] = val.trim();
@@ -476,23 +544,23 @@ var feed = (function() {
 						}
 					};
 					break;
-					
-				case 'range':
-                    rangeVal = value[0].split('@');
-                    termObj = {};
-                    termObj[columnName] = {};
-                    termObj[columnName] = {
-                        "gte": rangeVal[0],
-                        "lte": rangeVal[1]
-                    };
-                    queryBody = {
-                        "query": {
-                            "range": termObj
-                        }
-                    };
-                    break;	
 
-                case 'term': 
+				case 'range':
+					rangeVal = value[0].split('@');
+					termObj = {};
+					termObj[columnName] = {};
+					termObj[columnName] = {
+						"gte": rangeVal[0],
+						"lte": rangeVal[1]
+					};
+					queryBody = {
+						"query": {
+							"range": termObj
+						}
+					};
+					break;
+
+				case 'term': 
 					termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
