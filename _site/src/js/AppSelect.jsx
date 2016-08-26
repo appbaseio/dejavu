@@ -23,6 +23,9 @@ var AppSelect = React.createClass({
         this.setState({
             searchValue: event.target.value
         });
+        if(this.props.appnameCb) {
+            this.props.appnameCb(event.target.value);
+        }
     },
     focusInput: function() {
         if(this.props.apps.length && !this.props.connect) {
@@ -60,7 +63,7 @@ var AppSelect = React.createClass({
             opts['readOnly'] = 'readOnly';
         }
         var optionsArr = this.props.apps.filter(function(app, index) {
-           return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1) 
+           return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1)
         }.bind(this));
 
         var options = optionsArr.map(function(app, index) {
@@ -68,11 +71,11 @@ var AppSelect = React.createClass({
         }.bind(this));
 
         var searchValue = this.state.searchValue;
-        var setAppClass = options.length == 0 ? 'hide' : 'autolist setApp col-xs-12 '+this.state.setAppClass; 
+        var setAppClass = options.length == 0 ? 'hide' : 'autolist setApp col-xs-12 '+this.state.setAppClass;
         return (<div className="autocomplete">
                     <input className="search form-control"
-                        type="text" 
-                        value={searchValue} 
+                        type="text"
+                        value={searchValue}
                         name="appname"
                         placeholder="Appname (aka index) goes here"
                         onChange={this.handleInput}

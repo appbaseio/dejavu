@@ -30,9 +30,13 @@ var HomePage = React.createClass({
             signalText: '',
             visibleColumns: [],
             hiddenColumns: [],
+            indices: [],
             sortInfo: {
                 active: false
             },
+            app_match_flag: true,
+            show_index_info: false,
+            current_appname: '',
             connect: false,
             filterInfo: {
                 active: false,
@@ -352,6 +356,7 @@ var HomePage = React.createClass({
         if(getIndices) {
             getIndices.then(function (data) {
                 var historicApps = this.getApps();
+                var indices = [];
                 for(indice in data.indices) {
                     if(historicApps && historicApps.length) {
                         historicApps.forEach(function(old_app, index) {
@@ -364,15 +369,30 @@ var HomePage = React.createClass({
                         appname: indice,
                         url: es_host
                     };
+                    indices.push(indice);
                     historicApps.push(obj);
                 }
                 this.setState({
                     historicApps: historicApps,
-                    url: es_host
+                    url: es_host,
+                    es_host: es_host,
+                    indices: indices
                 });
                 window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
             }.bind(this));
         }
+    },
+    appnameCb: function(appname) {
+        var app_match = this.state.indices.filter(function(indice) {
+            return indice ===  appname;
+        });
+        var app_match_flag = app_match.length ? true : false;
+        var show_index_info = this.state.url === this.state.es_host ? true : false; 
+        this.setState({
+            app_match_flag: app_match_flag,
+            current_appname: appname,
+            show_index_info: show_index_info
+        });
     },
     afterConnect: function() {
         if(appAuth) {
@@ -939,12 +959,9 @@ var HomePage = React.createClass({
                 letsConnect();
             }).error(function(xhr){
                 if(xhr.status === 404){
-                    var r = confirm('Index not found, Do you want to create index '+temp_config.appname+'?');
-                    if(r) {
-                        feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
-                            letsConnect();
-                        });
-                    }
+                    feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
+                        letsConnect();
+                    });
                 } else {
                     letsConnect();
                 }
@@ -1081,6 +1098,7 @@ var HomePage = React.createClass({
     },
     valChange: function(event) {
         this.setState({ url: event.target.value});
+        this.appnameCb(this.state.current_appname);
     },
     hideUrlChange: function() {
         var hideUrl = this.state.hideUrl ? false : true;
@@ -1111,7 +1129,10 @@ var HomePage = React.createClass({
         var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
         var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
-
+        var index_create_text = '';
+        if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
+            index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
+        }
         return (<div>
                     <div id='modal' />
                     <div className="row dejavuContainer">
@@ -1125,11 +1146,16 @@ var HomePage = React.createClass({
                                         <div>
                                           <h1>Déjà vu</h1>
                                           <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
+                                          {index_create_text}
                                         </div>
                                         <ShareLink btn={shareBtn}> </ShareLink>
                                         <div className="splashIn">
                                             <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                                <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
+                                                <AppSelect connect={this.state.connect}
+                                                 splash={this.state.splash}
+                                                 setConfig={this.setConfig}
+                                                 apps={this.state.historicApps}
+                                                 appnameCb={this.appnameCb}  />
                                             </div>
                                             <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
                                                 <div className="url-container">
