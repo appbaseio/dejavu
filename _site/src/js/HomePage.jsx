@@ -1129,7 +1129,7 @@ var HomePage = React.createClass({
         var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
         var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
-        var index_create_text = '';
+        var index_create_text = (<div className="mb-30 col-xs-12"></div>);
         if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
             index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
         }
@@ -1145,7 +1145,7 @@ var HomePage = React.createClass({
                                         </div>
                                         <div>
                                           <h1>Déjà vu</h1>
-                                          <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
+                                          <h4 className="mb-5">The missing Web UI for Elasticsearch</h4>
                                           {index_create_text}
                                         </div>
                                         <ShareLink btn={shareBtn}> </ShareLink>
