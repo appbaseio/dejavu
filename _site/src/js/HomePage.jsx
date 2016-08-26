@@ -345,26 +345,34 @@ var HomePage = React.createClass({
             }
         }
     },
+    // BRANCH: MASTER
     setIndices: function() {
-        feed.getIndices().then(function (data) {
-            var es_host = window.location.href.split('/_plugin')[0];
-            var historicApps = this.getApps();
-            for(indice in data.indices) {
-                var index_of_historic = historicApps.indexOf(indice);
-                if(index_of_historic !== -1) {
-                    historicApps.splice(index_of_historic, 1);
+        var es_host = document.URL.split('/_plugin/')[0];
+        var getIndices = feed.getIndices(es_host);
+        if(getIndices) {
+            getIndices.then(function (data) {
+                var historicApps = this.getApps();
+                for(indice in data.indices) {
+                    if(historicApps && historicApps.length) {
+                        historicApps.forEach(function(old_app, index) {
+                            if(old_app.appname === indice) {
+                                historicApps.splice(index, 1);
+                            }
+                        })
+                    }
+                    var obj = {
+                        appname: indice,
+                        url: es_host
+                    };
+                    historicApps.push(obj);
                 }
-                var obj = {
-                    appname: indice,
+                this.setState({
+                    historicApps: historicApps,
                     url: es_host
-                };
-                historicApps.push(obj);
-            }
-            this.setState({
-                historicApps: historicApps,
-                url: es_host
-            });
-        }.bind(this));
+                });
+                window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+            }.bind(this));
+        }
     },
     afterConnect: function() {
         if(appAuth) {
@@ -901,18 +909,52 @@ var HomePage = React.createClass({
     },
     initEs:function(){
         var formInfo = $('#init-ES').serializeArray();
+        var temp_config = {
+            url: '',
+            appname: ''
+        };
         formInfo.forEach(function(v) {
             if(v.value === '') {
                 reloadFlag = false;
             }
             if(v.name == 'url'){
-                window.localStorage.setItem('esurl',v.value);
+                temp_config.url = v.value;
             }
             else{
-                window.localStorage.setItem('appname',v.value);
+                temp_config.appname = v.value;
             }
         });
-        location.reload();
+
+        if(typeof BRANCH != 'undefined'  && BRANCH === 'master') {
+            checkIndex();
+        } else {
+            letsConnect();
+        }
+
+        // BRANCH: MASTER
+        // check if index exists or not, and create index if not exists
+        function checkIndex() {
+            feed.checkIndex(temp_config.url, temp_config.appname).done(function(data) {
+                console.log(data);
+                letsConnect();
+            }).error(function(xhr){
+                if(xhr.status === 404){
+                    var r = confirm('Index not found, Do you want to create index '+temp_config.appname+'?');
+                    if(r) {
+                        feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
+                            letsConnect();
+                        });
+                    }
+                } else {
+                    letsConnect();
+                }
+            });
+        }
+        function letsConnect() {
+            window.localStorage.setItem('esurl',temp_config.url);
+            window.localStorage.setItem('appname',temp_config.appname);
+            location.reload();
+        }
     },
     connectPlayPause: function() {
         var reloadFlag = true;

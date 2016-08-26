@@ -23,19 +23,29 @@ if(!flag_url || decryptedData.hasOwnProperty('url')){
 
 var APPNAME = config.appname;
 var URL = config.url;
-if (URL) {
-	var urlsplit = URL.split(':');
-	var pwsplit = urlsplit[2].split('@');
-	var USERNAME = urlsplit[1].replace('//', '');
-	var PASSWORD = pwsplit[0];
-	var httpPrefix = URL.split('://');
-	var HOST = URL.indexOf('@') != -1 ? httpPrefix[0] + '://' + pwsplit[1] : URL;
-	var OperationFlag = false;
-	var APPURL = URL + '/' + APPNAME;
-	// to store input state
-	var input_state = {};
-
-	init();
+if(URL) {
+	try {
+		var urlsplit = URL.split(':');
+		var pwsplit = urlsplit[2].split('@');
+		var USERNAME = urlsplit[1].replace('//', '');
+		var PASSWORD = pwsplit[0];
+		var httpPrefix = URL.split('://');
+		var HOST =  URL.indexOf('@') != -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+		var OperationFlag = false;
+		var APPURL = URL + '/' + APPNAME;
+		// to store input state
+		var input_state = {};
+		init();
+	} catch(e) {
+		console.log(e);
+		var HOST = document.URL.split('/_plugin/')[0];
+		var OperationFlag = false;
+		var APPURL = URL + '/' + APPNAME;
+		USERNAME = 'test';
+		PASSWORD = 'test';
+		var input_state = {};
+		init();
+	}
 }
 
 // Get data size according to window height
@@ -374,19 +384,79 @@ var feed = (function() {
 				}
 			});
 		},
-		getIndices: function() {
-			var HOST1 = 'http://localhost:9200';
-			var createUrl = HOST1 + '/_stats/indices';
-			return $.ajax({
-				type: 'GET',
-				beforeSend: function(request) {
-					request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
-				},
-				url: createUrl,
-				xhrFields: {
-					withCredentials: true
-				}
-			});
+		getIndices: function(url) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/_stats/indices';
+				return $.ajax({
+					type: 'GET',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		checkIndex: function(url, appname) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/'+appname;
+				return $.ajax({
+					type: 'GET',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		createIndex: function(url, appname) {
+			var temp_config = this.filterUrl(url);
+			if(temp_config) {
+				temp_config.URL += '/'+appname;
+				return $.ajax({
+					type: 'POST',
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Basic " + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					},
+					url: temp_config.URL,
+					xhrFields: {
+						withCredentials: true
+					}
+				});	
+			} else {
+				return null;
+			}
+		},
+		filterUrl: function(url) {
+			if (url) {
+				var obj = {
+					USERNAME: 'test',
+					PASSWORD: 'test',
+					URL: url
+				};
+				var urlsplit = url.split(':');
+				var pwsplit = urlsplit[2].split('@');
+				try {
+					obj.USERNAME = urlsplit[1].replace('//', '');
+					obj.PASSWORD = pwsplit[0];
+					var httpPrefix = url.split('://');
+					obj.URL = url.indexOf('@') != -1 ? httpPrefix[0] + '://' + pwsplit[1] : url;
+				} catch(e) {}
+				return obj;
+			} else {
+				return null;
+			}
 		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
