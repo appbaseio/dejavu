@@ -265,9 +265,9 @@ var feed = (function() {
   							callback(types);
 					}
 				}).error(function(xhr){
-					console.log(err);
+					console.log(xhr);
 					clearInterval(streamingInterval);
-					console.log('error in retrieving types: ', err)
+					console.log('error in retrieving types: ', xhr)
 				});
 			} else {
 				var $this = this;
