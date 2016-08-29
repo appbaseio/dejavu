@@ -1129,7 +1129,7 @@ var HomePage = React.createClass({
         var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
         var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
-        var index_create_text = (<div className="mb-30 col-xs-12"></div>);
+        var index_create_text = (<div className="index-create-info col-xs-12"></div>);
         if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
             index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
         }

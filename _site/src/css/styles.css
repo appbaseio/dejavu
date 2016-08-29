@@ -702,6 +702,9 @@ footer{
 .export-json-btn{
   line-height: 21px;
 }
+.EsBigForm .index-create-info {
+  margin-bottom: 28px;
+}
 .powered_by{
   position: absolute;
   right: 5px;
