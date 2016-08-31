@@ -140,6 +140,8 @@ var feed = (function() {
 			}
 		}).on('data', function(res) {
 			setTotal(res.hits.total);
+		}).on('error', function(res) {
+			console.log("caught an error", res);
 		});
 
 		//Stop old stream
@@ -288,6 +290,9 @@ var feed = (function() {
 					} else {
 						callback();
 					}
+					callback();
+				}).on('error', function(err) {
+					console.log(err);
 				});
 			} else {
 				var doc = recordObject.body;
@@ -298,6 +303,8 @@ var feed = (function() {
 				appbaseRef.update(recordObject).on('data', function(res) {
 					if (callback)
 						callback();
+				}).on('error', function(err) {
+					callback(err);
 				});
 			}
 
@@ -321,6 +328,8 @@ var feed = (function() {
 					});
 				}
 				callback(sdata);
+			}).on('error', function(err) {
+				callback(err);
 			});
 		},
 		getSingleDoc: function(type, callback) {
@@ -335,6 +344,8 @@ var feed = (function() {
 				}
 			}).on('data', function(data) {
 				callback(data);
+			}).on('error', function(err) {
+				callback(err);
 			});
 		},
 		getMapping: function() {

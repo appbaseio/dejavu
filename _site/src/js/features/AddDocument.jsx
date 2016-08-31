@@ -92,9 +92,11 @@ var AddDocument = React.createClass({
         validateClass.body = this.IsJsonString(this.editorref.getValue());
         this.setState({
             validate: validateClass
+        }, function() {
+            if (validateClass.type && validateClass.body) {
+                this.props.addRecord(this.editorref);
+            }
         });
-        if (validateClass.type && validateClass.body)
-            this.props.addRecord(this.editorref);
     },
     IsJsonString: function(str) {
         try {
