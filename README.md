@@ -4,7 +4,7 @@ dejaVu - the missing web UI for elasticsearch
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejaVu/dev/LICENSE.md)
 [![GitHub stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejaVu/stargazers)
 
-dejaVu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or use server side page rendering (I am looking at you, Kibana).
+dejaVu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
 Thus started the journey of dejaVu, with a goal of 100% client side rendering and usage of modern UI elements (zero page reloads, infinite scrolling, filtered views). It's available as a github hosted page, chrome app and as an Elasticsearch plugin.
 
