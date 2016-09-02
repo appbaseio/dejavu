@@ -288,6 +288,11 @@ var HomePage = React.createClass({
             update = update.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
+            subsetESTypes.forEach(function(type) {
+                if(update.indexOf(type) === -1) {
+                    this.unwatchStock(type);
+                }
+            }.bind(this));
             this.setState({
                 types: update,
                 connect: true
@@ -471,6 +476,7 @@ var HomePage = React.createClass({
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
+            this.getStreamingTypes();
             if (typeof newTypes != 'undefined') {
                 this.setState({
                     types: newTypes
@@ -480,6 +486,10 @@ var HomePage = React.createClass({
                 }.bind(this),500);
             }
         }.bind(this));
+        setTimeout(function() {
+            $('.close').click();
+            this.getStreamingTypes();
+        }.bind(this), 2000);
     },
     getTypeDoc: function(editorref) {
         var selectedType = $('#setType').val();
@@ -803,6 +813,9 @@ var HomePage = React.createClass({
 
             this.removeSelection();
             this.resetData();
+            setTimeout(function() {
+                this.getStreamingTypes();
+            }.bind(this), 1000);
         }.bind(this));
     },                 
     initEs:function(){

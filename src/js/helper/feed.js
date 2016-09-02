@@ -197,15 +197,29 @@ var feed = (function() {
         // gets all the types of the current app;
         getTypes: function(callback) {
             if (typeof APPNAME != 'undefined') {
-                appbaseRef.getTypes().on('data', function(types) {
-                    if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-                        esTypes = types.slice();
+                this.filterType().done(function(data) {
+                    var buckets = data.aggregations.count_by_type.buckets;
+                    var types = buckets.filter(function(bucket) {
+                        return bucket.doc_count > 0;
+                    });
+                    var types = types.map(function(bucket) {
+                        return bucket.key;
+                    });
+                    if(types.length) {
+                        if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+                            esTypes = types.slice();
+                            if (callback !== null)
+                                callback(types);
+                        }
+                    } else {
                         if (callback !== null)
                             callback(types);
                     }
-                }).on('error', function(err) {
-                    console.log('error in retrieving types: ', err)
-                })
+                }).error(function(xhr){
+                    console.log(xhr);
+                    clearInterval(streamingInterval);
+                    console.log('error in retrieving types: ', xhr)
+                });
             } else {
                 var $this = this;
                 setTimeout(function() {
@@ -283,6 +297,32 @@ var feed = (function() {
                     request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
                 },
                 url: createUrl,
+                xhrFields: {
+                    withCredentials: true
+                }
+            });
+        },
+        filterType: function() {
+            var APPURL = 'https://' + HOSTNAME + '/' + APPNAME;
+            var createUrl = APPURL + '/_search?search_type=count';
+            var queryBody = {
+                "aggs": {
+                    "count_by_type": {
+                        "terms": {
+                            "field": "_type"
+                        }
+                    }
+                }
+            };
+            return $.ajax({
+                type: 'POST',
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "Basic " + btoa(USERNAME + ':' + PASSWORD));
+                },
+                url: createUrl,
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(queryBody),
                 xhrFields: {
                     withCredentials: true
                 }
