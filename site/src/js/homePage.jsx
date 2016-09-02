@@ -300,6 +300,11 @@ var HomePage = React.createClass({
             update = update.sort(function(a, b) {
                 return a.toLowerCase().localeCompare(b.toLowerCase());
             });
+            subsetESTypes.forEach(function(type) {
+                if(update.indexOf(type) === -1) {
+                    this.unwatchStock(type);
+                }
+            }.bind(this));
             var typeCheck = {};
             chrome.storage.local.get('types', function (result) {
                     var types = result.types;
