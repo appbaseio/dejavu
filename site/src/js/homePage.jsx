@@ -565,6 +565,7 @@ var HomePage = React.createClass({
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
+            this.getStreamingTypes();
             if (typeof newTypes != 'undefined') {
                 this.setState({
                     types: newTypes
@@ -574,6 +575,10 @@ var HomePage = React.createClass({
                 }.bind(this),500);
             }
         }.bind(this));
+         setTimeout(function() {
+            $('.close').click();
+            this.getStreamingTypes();
+        }.bind(this), 2000);
     },
     getTypeDoc: function(editorref) {
         var selectedType = $('#setType').val();
@@ -859,6 +864,9 @@ var HomePage = React.createClass({
 
             this.removeSelection();
             this.resetData();
+            setTimeout(function() {
+                this.getStreamingTypes();
+            }.bind(this), 1000);
         }.bind(this));
     },                 
     initEs:function(){
