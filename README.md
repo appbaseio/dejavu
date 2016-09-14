@@ -1,8 +1,9 @@
 dejaVu - the missing web UI for elasticsearch
 ====
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejaVu/dev/LICENSE.md)
-[![GitHub stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejaVu/stargazers)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejaVu/dev/LICENSE.md)
+[![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
+[![GitHub Stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejaVu/stargazers)
 
 dejaVu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
