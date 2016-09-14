@@ -16,7 +16,7 @@ function getDataSize() {
 }
 
 const DATA_SIZE = getDataSize();
-var APPNAME, USERNAME, PASSWORD, URL;
+var APPNAME, USERNAME, PASSWORD, URL, OperationFlag, APPURL, input_state;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
@@ -43,29 +43,29 @@ if(!flag_url || decryptedData.hasOwnProperty('url')){
 	};
 }
 
-var APPNAME = config.appname;
-var URL = config.url;
+APPNAME = config.appname;
+URL = config.url;
 if(URL) {
 	try {
 		var urlsplit = URL.split(':');
 		var pwsplit = urlsplit[2].split('@');
-		var USERNAME = urlsplit[1].replace('//', '');
-		var PASSWORD = pwsplit[0];
+		USERNAME = urlsplit[1].replace('//', '');
+		PASSWORD = pwsplit[0];
 		var httpPrefix = URL.split('://');
-		var HOST =  URL.indexOf('@') !== -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-		var OperationFlag = false;
-		var APPURL = URL + '/' + APPNAME;
+		HOST =  URL.indexOf('@') !== -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+		OperationFlag = false;
+		APPURL = URL + '/' + APPNAME;
 		// to store input state
-		var input_state = {};
+		input_state = {};
 		init();
 	} catch(e) {
 		console.log(e);
 		var HOST = document.URL.split('/_plugin/')[0];
-		var OperationFlag = false;
-		var APPURL = URL + '/' + APPNAME;
+		OperationFlag = false;
+		APPURL = URL + '/' + APPNAME;
 		USERNAME = 'test';
 		PASSWORD = 'test';
-		var input_state = {};
+		input_state = {};
 		init();
 	}
 }
@@ -107,7 +107,7 @@ var feed = (function() {
 		}).on('data', function(res2) {
 			//For update data
 			if (res2._updated) {
-
+				console.log('Updated');
 			} else if (res2._deleted) {
 				setTotal(0, true, 'delete');
 			}
@@ -187,11 +187,17 @@ var feed = (function() {
 			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
+					var hits, flag, total;
 					if (res.hits.hits.length === 0) {
-						callback(null, false, 0);
+						hits = null;
+						flag = false;
+						total = 0;
 					} else {
-						callback(res.hits.hits, false, res.hits.total);
+						hits = res.hits.hits;
+						flag = false;
+						total = res.hits.total;
 					}
+					callback(hits, flag, total);
 				} catch (err) {
 					console.log(err);
 				}
@@ -263,12 +269,12 @@ var feed = (function() {
 						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
 							esTypes = types.slice();
 							if (callback !== null) {
-								callback(types);
+								return callback(types);
 							}
 						}
 					} else {
 						if (callback !== null) {
-  							callback(types);
+  							return callback(types);
 						}
 					}
 				}).error(function(xhr){
@@ -290,11 +296,11 @@ var feed = (function() {
 					if (esTypes.indexOf(res._type) === -1) {
 						self.getTypes(function(newTypes) {
 							if (callback) {
-								callback(newTypes);
+								return callback(newTypes);
 							}
 						});
 					} else {
-						callback();
+						return callback();
 					}
 				});
 			} else {
@@ -305,7 +311,7 @@ var feed = (function() {
 				console.log(recordObject);
 				appbaseRef.update(recordObject).on('data', function() {
 					if (callback) {
-						callback();
+						return callback();
 					}
 				});
 			}
@@ -330,8 +336,10 @@ var feed = (function() {
 			appbaseRef.bulk({
 				body: deleteArray
 			}).on('data', function(data) {
-				for (data in sdata) {
-					deleteData(sdata, data);
+				for (var data in sdata) {
+					if (sdata.hasOwnProperty(data)) {
+						deleteData(sdata, data);
+					}
 				}
 				callback(sdata);
 			});
@@ -363,6 +371,21 @@ var feed = (function() {
 				}
 			});
 		},
+		applyQuery: function(url, queryBody) {
+			return $.ajax({
+				type: 'POST',
+				beforeSend: function(request) {
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: url,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				data: JSON.stringify(queryBody),
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
 		filterType: function() {
 			var createUrl = HOST + '/' + APPNAME + '/_search?search_type=count';
 			var queryBody = {
@@ -374,38 +397,14 @@ var feed = (function() {
 			        }
 			    }
 			};
-			return $.ajax({
-				type: 'POST',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
-				},
-				url: createUrl,
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
-				data: JSON.stringify(queryBody),
-				xhrFields: {
-					withCredentials: true
-				}
-			});
+			return this.applyQuery(createUrl, queryBody);
 		},
 		scrollapi: function(types, queryBody, scroll, scroll_id) {
 			var typesString = types.join(',');
 			var createUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?scroll=5m';
 			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id=' + scroll_id;
 			var finalUrl = scroll ? scrollUrl : createUrl;
-			return $.ajax({
-				type: 'POST',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
-				},
-				url: finalUrl,
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
-				data: JSON.stringify(queryBody),
-				xhrFields: {
-					withCredentials: true
-				}
-			});
+			return this.applyQuery(finalUrl, queryBody);
 		},
 		testQuery: function(types, queryBody) {
 			// get historical data
@@ -448,29 +447,17 @@ var feed = (function() {
 			}
 		},
 		checkIndex: function(url, appname) {
+			this.executeIndexOperation(url, appname);
+		},
+		createIndex: function(url, appname) {
+			this.executeIndexOperation(url, appname);
+		},
+		executeIndexOperation: function(url, appname) {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/'+appname;
 				return $.ajax({
 					type: 'GET',
-					beforeSend: function(request) {
-						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
-					},
-					url: temp_config.URL,
-					xhrFields: {
-						withCredentials: true
-					}
-				});	
-			} else {
-				return null;
-			}
-		},
-		createIndex: function(url, appname) {
-			var temp_config = this.filterUrl(url);
-			if(temp_config) {
-				temp_config.URL += '/'+appname;
-				return $.ajax({
-					type: 'POST',
 					beforeSend: function(request) {
 						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
 					},
@@ -497,7 +484,9 @@ var feed = (function() {
 					obj.PASSWORD = pwsplit[0];
 					var httpPrefix = url.split('://');
 					obj.URL = url.indexOf('@') !== -1 ? httpPrefix[0] + '://' + pwsplit[1] : url;
-				} catch(e) {}
+				} catch(e) {
+					console.log(e);
+				}
 				return obj;
 			} else {
 				return null;
@@ -512,17 +501,35 @@ var feed = (function() {
 			var queryBody = {};
 			var queryMaker = [];
 			var subQuery;
+
+			function setQuery() {
+				subQuery = analyzed ? 'match' : 'term';
+				value.forEach(function(val) {
+					var termObj = {};
+					termObj[columnName] = val.trim();
+					var obj = {};
+					obj[subQuery] = termObj;
+					queryMaker.push(obj);
+				});
+				return queryMaker;
+			}
+
+			function gtLtQuery(method) {
+				termObj = {};
+				termObj[columnName] = {};
+				termObj[columnName][method] = value[0];
+				queryBody = {
+					'query': {
+						'range': termObj
+					}
+				};
+				return termObj;
+			}
+
 			switch (method) {
 				case 'has':
 					//If field is analyzed use MATCH else term
-					subQuery = analyzed ? 'match' : 'term';
-					value.forEach(function(val) {
-						var termObj = {};
-						termObj[columnName] = val.trim();
-						var obj = {};
-						obj[subQuery] = termObj;
-						queryMaker.push(obj);
-					});
+					queryMaker = setQuery();
 					queryBody = {
 						'query': {
 							'bool': {
@@ -534,15 +541,7 @@ var feed = (function() {
 					break;
 
 				case 'has not':
-					subQuery = analyzed ? 'match' : 'term';
-
-					value.forEach(function(val) {
-						var termObj = {};
-						termObj[columnName] = val.trim();
-						var obj = {};
-						obj[subQuery] = termObj;
-						queryMaker.push(obj);
-					});
+					queryMaker = setQuery();
 					queryBody = {
 						'query': {
 							'bool': {
@@ -564,29 +563,11 @@ var feed = (function() {
 					break;
 
 				case 'greater than':
-					termObj = {};
-					termObj[columnName] = {};
-					termObj[columnName] = {
-						'gte': value[0]
-					};
-					queryBody = {
-						'query': {
-							'range': termObj
-						}
-					};
+					termObj = gtLtQuery('gte');
 					break;
 
 				case 'less than':
-					termObj = {};
-					termObj[columnName] = {};
-					termObj[columnName] = {
-						'lte': value[0]
-					};
-					queryBody = {
-						'query': {
-							'range': termObj
-						}
-					};
+					termObj = gtLtQuery('lte');
 					break;
 
 				case 'range':
