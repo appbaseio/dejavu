@@ -5,6 +5,7 @@ var reactify = require('reactify');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var connect = require('gulp-connect');
+var jshint = require('gulp-jshint');
 
 gulp.task('browserify', function() {
     var b = browserify({
@@ -26,6 +27,14 @@ gulp.task('compact', ['browserify'], function() {
         }))    
         .pipe(gulp.dest('_site/dist'))
         .pipe(connect.reload());
+});
+
+gulp.task('jshint', function() {
+    return gulp.src('_site/src/js/**/*.js')
+        .pipe(jshint({
+            "camelcase": false
+        }))
+        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('connect', function() {
