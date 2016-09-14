@@ -60,15 +60,19 @@ var FilterDropdown = React.createClass({
                 }
                 return currentItem;
             };
-            availableValues = availableValues.map(function(value) {
+            var newAvailableValues = availableValues.map(function(value) {
                 return filterRender(value);
             });
-            return (<Dropdown.Menu className="menuItems pull-right">
-                        {availableValues}
-                        <div className="singleItem">
-                            <button className='btn btn-info col-xs-12' onClick={self.applyFilter}>Apply</button>
-                        </div>
-                    </Dropdown.Menu>)
+            if(newAvailableValues.length) {
+                return (<Dropdown.Menu className="menuItems pull-right">
+                            {newAvailableValues}
+                            <div className="singleItem">
+                                <button className='btn btn-info col-xs-12' onClick={self.applyFilter}>Apply</button>
+                            </div>
+                        </Dropdown.Menu>);
+            } else {
+                return null;
+            }
         }
 
         var stringFilter = createDropItem('string', ['search', 'has', 'has not']);
