@@ -1,11 +1,12 @@
-dejaVu - a modern Elasticsearch databrowser
+dejaVu - the missing web UI for elasticsearch
 ====
 
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejaVu/dev/LICENSE.md)
+[![GitHub stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejaVu/stargazers)
 
+dejaVu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
-dejaVu fits the unmet need of being a hackable data browser for Elasticsearch. Existing browsers were either built with a legacy UI and had a lacking user experience or used server side rendering (I am looking at you, Kibana).
-
-So we decided to build our own, with a goal of making it 100% client side and using modern UI elements (no page reloads, infinite scrolling, creating filter views). It's available as a github hosted page, chrome extension and as an Elasticsearch plugin.
+Thus started the journey of dejaVu, with a goal of 100% client side rendering and usage of modern UI elements (zero page reloads, infinite scrolling, filtered views). It's available as a github hosted page, chrome app and as an Elasticsearch plugin.
 
 ### Elasticsearch plugin - Installation
 
