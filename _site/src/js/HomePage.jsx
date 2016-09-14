@@ -38,14 +38,7 @@ var HomePage = React.createClass({
                 active: false,
                 applyFilter: this.applyFilter
             },
-            infoObj: {
-                showing: 0,
-                total: 0,
-                getOnce: false,
-                availableTotal: 0,
-                searchTotal: 0,
-                userTouchAdd: this.userTouchAdd
-            },
+            infoObj: this.resetInfoObj(),
             totalRecord: 0,
             pageLoading: false,
             mappingObj: {},
@@ -74,6 +67,16 @@ var HomePage = React.createClass({
             splash: true,
             hideUrl: false
         };
+    },
+    resetInfoObj: function() {
+        return {
+            showing: 0,
+            total: 0,
+            getOnce: false,
+            availableTotal: 0,
+            searchTotal: 0,
+            userTouchAdd: this.userTouchAdd
+        }
     },
     //The record might have nested json objects. They can't be shown
     //as is since it looks cumbersome in the table. What we do in the
@@ -435,30 +438,17 @@ var HomePage = React.createClass({
         createUrl(input_state);
     },
     hideAttribute: function(Columns, method) {
-        if(method == 'hide') {
-            Columns.forEach(function(col){
-                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {
-                    document.getElementById(col).style.display = "none";
-                    for (var each in sdata) {
-                        var key = keyGen(sdata[each], col);
-                        document.getElementById(key).style.display = "none"
-                    }
+        var value = method === 'hide' ? "none" : "";
+        Columns.forEach(function(col){
+            if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+            else {
+                document.getElementById(col).style.display = value;
+                for (var each in sdata) {
+                    var key = keyGen(sdata[each], col);
+                    document.getElementById(key).style.display = value
                 }
-            });
-        }
-        else if(method == 'show') {
-            Columns.forEach(function(col){
-                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {
-                    document.getElementById(col).style.display = "";
-                    for (var each in sdata) {
-                        var key = keyGen(sdata[each], col);
-                        document.getElementById(key).style.display = ""
-                    }
-                }
-            });
-        }
+            }
+        });
     },
     getTotalRecord: function() {
         var $this = this;
@@ -991,14 +981,7 @@ var HomePage = React.createClass({
                     connect: connectToggle,
                     documents: [],
                     types: [],
-                    infoObj: {
-                        showing: 0,
-                        total: 0,
-                        getOnce: false,
-                        availableTotal: 0,
-                        searchTotal: 0,
-                        userTouchAdd: this.userTouchAdd
-                    }
+                    infoObj: this.resetInfoObj()
                 });
             }
         }
