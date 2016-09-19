@@ -696,6 +696,9 @@ footer{
 .export-json-btn{
   line-height: 21px;
 }
+.EsBigForm .index-create-info {
+  margin-bottom: 28px;
+}
 .powered_by{
   position: absolute;
   right: 5px;
@@ -911,4 +914,7 @@ iframe{
 }
 .autocomplete .autolist, .select2-container--default.select2-container--focus .select2-selection--multiple {
   border-color: #3BC7F6;
+}
+.danger-text {
+  color: #FF8484; 
 }

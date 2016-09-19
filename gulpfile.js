@@ -72,6 +72,11 @@ gulp.task('customcss', function() {
         .pipe(gulp.dest('_site/dist/css'));
 });
 
+
+gulp.task('cssChanges',['customcss'], function() {
+    connect.reload();
+});
+
 gulp.task('vendorjs', function() {
     return gulp.src(files.js.vendor)
         .pipe(concat('vendor.min.js'))
@@ -127,6 +132,7 @@ gulp.task('compact',['browserify'], function() {
 gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch('_site/src/js/*/*.jsx', ['compact']);
     gulp.watch('_site/src/js/*.jsx', ['compact']);
+    gulp.watch(files.css.custom, ['cssChanges']);
 });
 
 gulp.task('default', ['bundle', 'compact']);

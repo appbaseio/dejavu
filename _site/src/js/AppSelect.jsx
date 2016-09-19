@@ -13,7 +13,7 @@ var AppSelect = React.createClass({
     },
     componentDidMount: function() {
         console.log(this.props.splash);
-        if(!this.props.splash && config) {
+        if(!this.props.splash) {
             this.setState({
                 searchValue: config.appname
             });
@@ -23,6 +23,9 @@ var AppSelect = React.createClass({
         this.setState({
             searchValue: event.target.value
         });
+        if(this.props.appnameCb) {
+            this.props.appnameCb(event.target.value);
+        }
     },
     focusInput: function() {
         if(this.props.apps.length && !this.props.connect) {

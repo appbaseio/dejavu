@@ -451,10 +451,10 @@ var feed = (function() {
 			}
 		},
 		checkIndex: function(url, appname) {
-			this.executeIndexOperation(url, appname);
+			return this.executeIndexOperation(url, appname);
 		},
 		createIndex: function(url, appname) {
-			this.executeIndexOperation(url, appname);
+			return this.executeIndexOperation(url, appname);
 		},
 		executeIndexOperation: function(url, appname) {
 			var temp_config = this.filterUrl(url);
