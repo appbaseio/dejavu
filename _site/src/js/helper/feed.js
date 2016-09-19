@@ -16,7 +16,7 @@ function getDataSize() {
 }
 
 const DATA_SIZE = getDataSize();
-var APPNAME, USERNAME, PASSWORD, URL, OperationFlag, APPURL, input_state;
+var APPNAME, USERNAME, PASSWORD, URL, OperationFlag, APPURL, input_state, HOST;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
@@ -36,37 +36,53 @@ function init() {
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
-if(!flag_url || decryptedData.hasOwnProperty('url')){
-	config = {
-		url: window.storageService.getItem('esurl'),
-		appname: window.storageService.getItem('appname')
-	};
+
+if(BRANCH !== 'chrome') {
+	if(!flag_url || decryptedData.hasOwnProperty('url')){
+		config = {
+			url: storageService.getItem('esurl'),
+			appname: storageService.getItem('appname')
+		};
+	}
+	beforeInit();
+} else {
+	storageService.getItem('esurl', function(result) {
+		config.url = result.esurl;
+		$('#configUrl').val(config.url);
+		storageService.getItem('appname', function(result1) {
+			config.appname = result1.appname;
+			$('#configAppname').val(config.appname);
+			beforeInit();
+		});
+	});
 }
 
-APPNAME = config.appname;
-URL = config.url;
-if(URL) {
-	try {
-		var urlsplit = URL.split(':');
-		var pwsplit = urlsplit[2].split('@');
-		USERNAME = urlsplit[1].replace('//', '');
-		PASSWORD = pwsplit[0];
-		var httpPrefix = URL.split('://');
-		HOST =  URL.indexOf('@') !== -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-		OperationFlag = false;
-		APPURL = URL + '/' + APPNAME;
-		// to store input state
-		input_state = {};
-		init();
-	} catch(e) {
-		console.log(e);
-		var HOST = document.URL.split('/_plugin/')[0];
-		OperationFlag = false;
-		APPURL = URL + '/' + APPNAME;
-		USERNAME = 'test';
-		PASSWORD = 'test';
-		input_state = {};
-		init();
+function beforeInit() {
+	APPNAME = config.appname;
+	URL = config.url;
+	if(URL) {
+		try {
+			var urlsplit = URL.split(':');
+			var pwsplit = urlsplit[2].split('@');
+			USERNAME = urlsplit[1].replace('//', '');
+			PASSWORD = pwsplit[0];
+			var httpPrefix = URL.split('://');
+			HOST =  URL.indexOf('@') !== -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
+			OperationFlag = false;
+			APPURL = URL + '/' + APPNAME;
+			// to store input state
+			input_state = {};
+			init();
+		} catch(e) {
+			console.log(e);
+			HOST = document.URL.split('/_plugin/')[0];
+			OperationFlag = false;
+			APPURL = URL + '/' + APPNAME;
+			USERNAME = 'test';
+			PASSWORD = 'test';
+			input_state = {};
+			init();
+		}
 	}
 }
 
@@ -180,7 +196,6 @@ var feed = (function() {
 				}
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
-
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			var typesString = types.join(',');

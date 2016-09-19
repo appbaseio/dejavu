@@ -11,7 +11,6 @@ var concat = require('gulp-concat');
 var files = {
     css: {
         vendor: [
-            '_site/bower_components/bootstrap/dist/css/bootstrap.min.css',
             '_site/bower_components/font-awesome/css/font-awesome.min.css',
             '_site/bower_components/toastr/toastr.min.css',
             '_site/vendors/highlight/highlight.min.css',
@@ -19,7 +18,8 @@ var files = {
             '_site/vendors/awesome-bootstrap-checkbox/checkbox.css',
             '_site/bower_components/codemirror/addon/dialog/dialog.css',
             '_site/bower_components/codemirror/lib/codemirror.css',
-            '_site/bower_components/codemirror/addon/fold/foldgutter.css'
+            '_site/bower_components/codemirror/addon/fold/foldgutter.css',
+            '_site/bower_components/bootstrap/dist/css/bootstrap.min.css'
         ],
         custom: ['_site/src/css/*.css']
     },
@@ -44,7 +44,20 @@ var files = {
         custom: [
             
         ]
-    }
+    },
+    folders: {
+        assets: '_site/assets/**/*',
+        dist: '_site/dist/**/*',
+        src: '_site/src/**/*',
+        vendors: '_site/vendors/**/*',
+        buttons: '_site/buttons/**/*'
+    },
+    moveFiles: [
+        '_site/index.html',
+        '_site/config.js',
+        'manifest.json',
+        'background.js'
+    ]
 };
 
 gulp.task('browserify', function() {
@@ -133,6 +146,16 @@ gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch('_site/src/js/*/*.jsx', ['compact']);
     gulp.watch('_site/src/js/*.jsx', ['compact']);
     gulp.watch(files.css.custom, ['cssChanges']);
+});
+
+gulp.task('chromeBuild', ['bundle', 'compact'], function() {
+    var folders_length = Object.keys(files.folders).length;
+    for(folder in files.folders) {
+        gulp.src(files.folders[folder])
+            .pipe(gulp.dest('./dejavu-unpacked/'+folder));   
+    }
+    gulp.src(files.moveFiles)
+        .pipe(gulp.dest('./dejavu-unpacked'));
 });
 
 gulp.task('default', ['bundle', 'compact']);

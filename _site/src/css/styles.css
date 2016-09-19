@@ -868,7 +868,7 @@ iframe{
     top: 0;
   }
 }
-.pageLoading .loadingBar {
+.pageLoading .loadingBar, .full_page_loading .loadingBar  {
   display: block;
   animation: shift-rightwards 0.5s ease-in-out infinite;
   animation-delay: .2s

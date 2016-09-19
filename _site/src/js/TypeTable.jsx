@@ -12,16 +12,34 @@ var TypeRow = React.createClass({
         };
     },
     componentDidMount: function() {
-        var types = window.storageService.getItem('types');
-        checked = false;
-        try {
-            types = JSON.parse(types);
-            if (types.indexOf(this.props.type) !== -1) {
-                checked = true;
-                this.props.watchTypeHandler(this.props.type);
-            }
-        } catch(e) {
+        if(BRANCH !== 'chrome') {
+            var types = window.storageService.getItem('types');
+            checked = false;
+            try {
+                types = JSON.parse(types);
+                if (types.indexOf(this.props.type) !== -1) {
+                    checked = true;
+                    this.props.watchTypeHandler(this.props.type);
+                }
+            } catch(e) {
 
+            }
+            this.setState({
+                isChecked: checked
+            });
+            this.props.typeInfo.typeCounter();
+        } else {
+            var value;
+            var intype = this.props.type;
+            var value = this.props.checkValue;
+            this.setType(value);
+        }
+    },
+    setType: function(value){
+        checked = false;
+        if (value) {
+            checked = true;
+            this.props.watchTypeHandler(this.props.type);
         }
         this.setState({
             isChecked: checked
@@ -29,6 +47,14 @@ var TypeRow = React.createClass({
         this.props.typeInfo.typeCounter();
     },
     unwatch: function() {
+        // every time its checked we update the local storage.
+        if(BRANCH !== 'chrome') {
+            this.justUnwatch();
+        } else {
+           this.chromeUnwatch();
+        }
+    },
+    justUnwatch: function() {
         var checked = false;
         if (this.state.isChecked) {
             this.props.unwatchTypeHandler(this.props.type);
@@ -39,6 +65,64 @@ var TypeRow = React.createClass({
         // every time its checked we update the local storage.
         var types = window.storageService.getItem('types');
           try {
+            types = JSON.parse(types);
+        } catch(e) {
+            types = []
+        }
+        types = types == null ? [] : types;
+        if(checked) {
+            types.push(this.props.type);
+        } else {
+            types.forEach(function(val, index) {
+                if(val == this.props.type) {
+                    types.splice(index, 1);
+                }
+            }.bind(this));
+        }
+        window.storageService.setItem('types', JSON.stringify(types));
+        this.setState({
+            isChecked: checked
+        });
+    },
+    chromeUnwatch: function() {
+        var checked = false;
+        if (this.state.isChecked) {
+            this.props.unwatchTypeHandler(this.props.type);
+        } else {
+            checked = true;
+            this.props.watchTypeHandler(this.props.type);
+        }
+
+        // every time its checked we update the local storage.
+        // window.localStorage.setItem(this.props.type, checked);
+        var intype = this.props.type;
+        var setObj = {};
+        setObj[intype] = checked;
+
+        storageService.getItem('types', function(result) {
+            var types = result.types;    
+            try {
+                types = JSON.parse(types);
+            } catch(e) {
+                types = []
+            }
+            if(checked) {
+                types.push(intype);
+            } else {
+                types.forEach(function(val, index) {
+                    if(val == intype) {
+                        types.splice(index, 1);
+                    }
+                })
+            }
+            storageService.setItem({'types': types});
+        });  
+        this.setState({
+            isChecked: checked
+        });
+    },
+    setUnwatch: function(types) {
+        try {
             types = JSON.parse(types);
         } catch(e) {
             types = []
@@ -81,15 +165,24 @@ var TypeRow = React.createClass({
 var TypeTable = React.createClass({
     render: function() {
         var types = this.props.Types;
+        var typeCheck = this.props.typeCheck;
+        var checkValue;
+        if(typeCheck && typeCheck[singleType]) {
+            checkValue = {
+                checkValue: typeCheck[singleType]
+            };
+        } 
         rowObj = [];
         appname = APPNAME;
         for (var type in types) {
-            rowObj.push(<TypeRow
-                         key={type}
-                         type={types[type]}
-                         unwatchTypeHandler={this.props.unwatchTypeHandler}
-                         watchTypeHandler={this.props.watchTypeHandler}
-                         typeInfo={this.props.typeInfo} />);
+            var singleType = types[type];
+                rowObj.push(<TypeRow
+                     key={type}
+                     type={types[type]}
+                     {...checkValue}
+                     unwatchTypeHandler={this.props.unwatchTypeHandler}
+                     watchTypeHandler={this.props.watchTypeHandler}
+                     typeInfo={this.props.typeInfo} />);
         }
         if (types.length < 1) {
             return (

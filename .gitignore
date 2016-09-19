@@ -1,4 +1,6 @@
 _site/bower_components
 node_modules/
-.idea/
-*.DS_Store
+dist
+_site/bower_components/
+_site/dist/
+dejavu-unpacked/

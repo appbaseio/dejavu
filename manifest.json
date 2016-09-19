@@ -1,19 +1,20 @@
 {
-    "name":"dejaVu",
-    "version":"0.1",
+    "name":"dejavu",
+    "version":"0.7.3",
     "icons":{
         "16":"assets/img/icon_16.png",
         "32":"assets/img/icon_32.png",
         "48":"assets/img/icon_48.png",
         "128":"assets/img/icon_128.png"
     },
-
-    "app":{
-        "launch":{
-            "local_path":"_site/index.html"
+    "app": {
+        "background": {
+            "scripts": [ "background.js" ]
         }
     },
-    "permissions": ["cookies", "storage", "http://*/*", "https://*/*"],
+    "permissions": ["storage", "system.display", "system.network", "<all_urls>"],
     "manifest_version": 2,
-    "offline_enabled":true
+    "offline_enabled":true,
+    "description": "The missing Web UI for Elasticsearch.",
+    "author": "Farhan Chauhan, appbase.io"
 }
