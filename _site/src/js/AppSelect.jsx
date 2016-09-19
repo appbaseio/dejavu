@@ -13,7 +13,7 @@ var AppSelect = React.createClass({
     },
     componentDidMount: function() {
         console.log(this.props.splash);
-        if(!this.props.splash) {
+        if(!this.props.splash && config) {
             this.setState({
                 searchValue: config.appname
             });

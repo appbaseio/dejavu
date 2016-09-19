@@ -34,7 +34,7 @@ var Info = React.createClass({
         }
     },
     render: function() {
-        var selectedTypes = this.props.selectedTypes;
+        var selectedTypes = this.props.selectedTypes ? this.props.selectedTypes : [];
         var infoObj = this.props.infoObj;
         var totalRecord = this.props.totalRecord;
         var filterInfo = this.props.filterInfo;

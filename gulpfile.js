@@ -5,7 +5,47 @@ var reactify = require('reactify');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var connect = require('gulp-connect');
-var jshint = require('gulp-jshint');
+var minifyCSS = require('gulp-minify-css');
+var concat = require('gulp-concat');
+
+var files = {
+    css: {
+        vendor: [
+            '_site/bower_components/bootstrap/dist/css/bootstrap.min.css',
+            '_site/bower_components/font-awesome/css/font-awesome.min.css',
+            '_site/bower_components/toastr/toastr.min.css',
+            '_site/vendors/highlight/highlight.min.css',
+            '_site/bower_components/select2/dist/css/select2.min.css',
+            '_site/vendors/awesome-bootstrap-checkbox/checkbox.css',
+            '_site/bower_components/codemirror/addon/dialog/dialog.css',
+            '_site/bower_components/codemirror/lib/codemirror.css',
+            '_site/bower_components/codemirror/addon/fold/foldgutter.css'
+        ],
+        custom: ['_site/src/css/*.css']
+    },
+    js: {
+        vendor: [
+            '_site/bower_components/underscore/underscore-min.js',
+            '_site/bower_components/appbase-js/browser/appbase.min.js',
+            '_site/bower_components/jquery/dist/jquery.min.js',
+            '_site/bower_components/bootstrap/dist/js/bootstrap.min.js',
+            '_site/bower_components/toastr/toastr.min.js',
+            '_site/bower_components/crypto-js/crypto-js.js',
+            '_site/bower_components/codemirror/lib/codemirror.js',
+            '_site/bower_components/codemirror/addon/edit/matchbrackets.js',
+            '_site/bower_components/codemirror/addon/edit/closebrackets.js',
+            '_site/bower_components/codemirror/addon/fold/foldcode.js',
+            '_site/bower_components/codemirror/addon/fold/foldgutter.js',
+            '_site/bower_components/codemirror/addon/fold/brace-fold.js',
+            '_site/bower_components/codemirror/mode/javascript/javascript.js',
+            '_site/bower_components/select2/dist/js/select2.full.min.js',
+            '_site/bower_components/highlightjs/highlight.pack.min.js'
+        ],
+        custom: [
+            
+        ]
+    }
+};
 
 gulp.task('browserify', function() {
     var b = browserify({
@@ -19,22 +59,43 @@ gulp.task('browserify', function() {
          .pipe(connect.reload());
 });
 
-gulp.task('compact', ['browserify'], function() {
-    return gulp.src('_site/dist/main.js')
-        .pipe(uglify())
-        .pipe(rename({
-          suffix: '.min'
-        }))    
-        .pipe(gulp.dest('_site/dist'))
-        .pipe(connect.reload());
+gulp.task('vendorcss', function() {
+    return gulp.src(files.css.vendor)
+        .pipe(concat('vendor.min.css'))
+        .pipe(gulp.dest('_site/dist/css'));
 });
 
-gulp.task('jshint', function() {
-    return gulp.src('_site/src/js/**/*.js')
-        .pipe(jshint({
-            "camelcase": false
-        }))
-        .pipe(jshint.reporter('default'));
+gulp.task('customcss', function() {
+    return gulp.src(files.css.custom)
+        .pipe(minifyCSS())
+        .pipe(concat('style.min.css'))
+        .pipe(gulp.dest('_site/dist/css'));
+});
+
+gulp.task('vendorjs', function() {
+    return gulp.src(files.js.vendor)
+        .pipe(concat('vendor.min.js'))
+        .pipe(gulp.dest('_site/dist/js'));
+});
+
+gulp.task('customjs', function() {
+    return gulp.src(files.js.custom)
+        .pipe(concat('custom.js'))
+        .pipe(gulp.dest('dist/js'))
+        .pipe(uglify())
+        .pipe(concat('custom.min.js'))
+        .pipe(gulp.dest('_site/dist/js'));
+});
+
+gulp.task('moveCss', function() {
+    return gulp.src(['_site/bower_components/bootstrap/dist/css/bootstrap.min.css.map'])
+        .pipe(gulp.dest('_site/dist/css'));
+});
+
+gulp.task('moveFonts', function() {
+    return gulp.src(['_site/bower_components/bootstrap/dist/fonts/*', 
+        '_site/bower_components/font-awesome/fonts/*'])
+        .pipe(gulp.dest('_site/dist/fonts'));
 });
 
 gulp.task('connect', function() {
@@ -43,6 +104,22 @@ gulp.task('connect', function() {
     livereload: true,
     port: 1358
   });
+});
+
+gulp.task('compact', ['browserify',
+    'customcss', 
+    'vendorcss', 
+    'vendorjs', 
+    'customjs',  
+    'moveCss',
+    'moveFonts'], function() {
+    return gulp.src('_site/dist/main.js')
+        .pipe(uglify())
+        .pipe(rename({
+          suffix: '.min'
+        }))    
+        .pipe(gulp.dest('_site/dist'))
+        .pipe(connect.reload());
 });
 
 gulp.task('watch', ['compact','connect'], function() {

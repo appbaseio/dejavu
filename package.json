@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "babel-preset-react": "^6.3.13",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.4",
     "react": "^0.14.7",
     "react-addons-pure-render-mixin": "^0.14.7",
     "react-bootstrap": "^0.28.2",
