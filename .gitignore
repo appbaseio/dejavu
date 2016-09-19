@@ -3,3 +3,4 @@ node_modules/
 bower_components/
 dist/main.js
 _site
+dejavu-unpacked
