@@ -1133,15 +1133,6 @@ var HomePage = React.createClass({
     },
     getApps: function(cb) {
         var apps = storageService.getItem('historicApps');
-        if(apps) {
-            try {
-                apps = JSON.parse(apps);
-            } catch(e) {
-                apps = [];
-            }
-        } else {
-            apps = [];
-        }
         cb({historicApps: apps});
     },
     setApps: function(authFlag) {
@@ -1152,11 +1143,21 @@ var HomePage = React.createClass({
             storageService.getItem('historicApps', getAppsCb);
         }
         function getAppsCb(result) {
-            var historicApps = result.historicApps;
+            var apps = result.historicApps;
+            if(apps) {
+                try {
+                    apps = JSON.parse(apps);
+                } catch(e) {
+                    apps = [];
+                }
+            } else {
+                apps = [];
+            }
             var app = {
                 url: config.url,
                 appname: config.appname
             };  
+            var historicApps = apps;
             if(authFlag) {
                 if(historicApps && historicApps.length) {
                     historicApps.forEach(function(old_app, index) {
