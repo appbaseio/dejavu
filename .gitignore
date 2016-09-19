@@ -1,4 +1,4 @@
 node_modules/
 dist
-_site/app/bower_components/
-_site/app/dist/
+_site/bower_components/
+_site/dist/
