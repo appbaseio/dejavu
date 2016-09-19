@@ -317,12 +317,50 @@ var HomePage = React.createClass({
                         this.unwatchStock(type);
                     }
                 }.bind(this));
-                this.setState({
-                    types: update,
-                    connect: true
-                });
+                if(BRANCH !== 'chrome') {
+                    this.setState({
+                        types: update,
+                        connect: true
+                    });
+                } else {
+                    this.setChromeTypes(update);
+                }
             }.bind(this));
         }
+    },
+    // only for chrome branch
+    setChromeTypes: function(update) {
+        var typeCheck = {};
+        storageService.getItem('types', function (result) {
+                var types = result.types;
+                var value = false;
+                try {
+                    types = JSON.parse(types);
+                    update.forEach(function(v){
+                        var value = types.indexOf(v) !== -1 ? true : false;
+                        typeCheck[v] = value;
+                    });
+                } catch(e) {
+                    update.forEach(function(v){
+                        var value = false;
+                    });
+                }
+            });
+        update.forEach(function(v){
+            storageService.getItem(v, function (result) {
+                var value = result[v];
+                value = value == 'undefined' || typeof value == 'undefined' ? false : value;
+                typeCheck[v] = value;
+            });    
+        });
+        setTimeout(function(){
+            $('.full_page_loading').addClass('hide');
+            this.setState({
+                types: update,
+                typeCheck: typeCheck,
+                connect: true
+            });
+        }.bind(this),1000);
     },
     removeType: function(typeName) {
         feed.deleteData(typeName, function(data) {
@@ -344,8 +382,28 @@ var HomePage = React.createClass({
             this.afterConnect();
             input_state = JSON.parse(JSON.stringify(config));
             createUrl(input_state);
+            if(BRANCH === 'chrome') {
+                this.init_map_stream();
+            }
         }
         this.setApps();
+    },
+    init_map_stream: function() {
+        try {
+            clearInterval(mappingInterval);
+            clearInterval(streamingInterval);
+        }
+        catch (e) {}
+        
+        // this.setMap();
+        if(appAuth) {
+            setTimeout(this.setMap, 2000)
+            setTimeout(this.getStreamingTypes, 2000);
+            // call every 1 min.
+            mappingInterval = setInterval(this.setMap, 60 * 1000);
+            streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+            this.getTotalRecord();
+        }
     },
     apply_other: function() {
         if(typeof BRANCH !== 'undefined' && BRANCH === 'master') {
@@ -381,7 +439,7 @@ var HomePage = React.createClass({
                     es_host: es_host,
                     indices: indices
                 });
-                window.storageService.setItem('historicApps', JSON.stringify(historicApps));
+                storageService.setItem('historicApps', JSON.stringify(historicApps));
             }.bind(this));
         }
     },
@@ -928,6 +986,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     initEs:function(){
+        var self = this;
         var formInfo = $('#init-ES').serializeArray();
         var temp_config = {
             url: '',
@@ -971,9 +1030,31 @@ var HomePage = React.createClass({
             });
         }
         function letsConnect() {
-            window.storageService.setItem('esurl',temp_config.url);
-            window.storageService.setItem('appname',temp_config.appname);
-            location.reload();
+            storageService.setItem('esurl',temp_config.url);
+            storageService.setItem('appname',temp_config.appname);
+            if(BRANCH !== 'chrome') {
+                location.reload();
+            } else {
+                setTimeout(function(){
+                    getMapFlag = false;
+                    $('.full_page_loading').removeClass('hide');
+                    esTypes = [];
+                    subsetESTypes = [];
+                    self.setState({
+                        splash: false,
+                        types: [],
+                        documents: [],
+                        totalRecord: 0,
+                        connect: false
+                    });
+
+                    beforeInit();
+                    setTimeout(function(){
+                        appAuth = true;
+                        self.init_map_stream();
+                    },500);
+                },1000);
+            }
         }
     },
     connectPlayPause: function() {
@@ -1050,8 +1131,8 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
-    getApps: function() {
-        var apps = window.storageService.getItem('historicApps');
+    getApps: function(cb) {
+        var apps = storageService.getItem('historicApps');
         if(apps) {
             try {
                 apps = JSON.parse(apps);
@@ -1061,30 +1142,38 @@ var HomePage = React.createClass({
         } else {
             apps = [];
         }
-        return apps;
+        cb({historicApps: apps});
     },
     setApps: function(authFlag) {
-        var app = {
-            url: config.url,
-            appname: config.appname
-        };
-        var historicApps = this.getApps();
-        if(authFlag) {
-            if(historicApps && historicApps.length) {
-                historicApps.forEach(function(old_app, index) {
-                    if(old_app.appname === app.appname) {
-                        historicApps.splice(index, 1);
-                    }
-                })
-            }
-            if(app.url) {
-                historicApps.push(app);
-            }
+        var self = this;
+        if(BRANCH !== 'chrome') {
+            this.getApps(getAppsCb);
+        } else {
+            storageService.getItem('historicApps', getAppsCb);
         }
-        this.setState({
-            historicApps: historicApps
-        });
-        window.storageService.setItem('historicApps', JSON.stringify(historicApps));
+        function getAppsCb(result) {
+            var historicApps = result.historicApps;
+            var app = {
+                url: config.url,
+                appname: config.appname
+            };  
+            if(authFlag) {
+                if(historicApps && historicApps.length) {
+                    historicApps.forEach(function(old_app, index) {
+                        if(old_app.appname === app.appname) {
+                            historicApps.splice(index, 1);
+                        }
+                    })
+                }
+                if(app.url) {
+                    historicApps.push(app); 
+                }
+            }
+            self.setState({
+                historicApps: historicApps
+            });
+            storageService.setItem('historicApps', JSON.stringify(historicApps));
+        };
     },
     setConfig: function(url) {
         this.setState({ url: url});
@@ -1127,6 +1216,12 @@ var HomePage = React.createClass({
         var index_create_text = (<div className="index-create-info col-xs-12"></div>);
         if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
             index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
+        }
+        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
+        if(BRANCH === 'chrome') {
+            githubStar = (<a href="https://github.com/appbaseio/dejaVu" target="_blank">
+                            <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
+                        </a>);
         }
 
         return (<div>
@@ -1221,13 +1316,18 @@ var HomePage = React.createClass({
                                 Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>
                             <span className="pull-left github-star">
-                                <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>
+                                {githubStar}
                             </span>
                         </footer>
                         <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>
                         </FeatureComponent.ErrorModal>
+                        <div className="full_page_loading hide">
+                            <div className="loadingBar"></div>
+                            <div className="vertical1">             
+                            </div> 
+                        </div>
                     </div>
                 </div>);
     }
