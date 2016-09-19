@@ -36,26 +36,11 @@ var UpdateDocument = React.createClass({
             showModal: true
         });
         setTimeout(function() {
-            var options = {
-                lineNumbers: true,
-                mode: "javascript",
-                autoCloseBrackets: true,
-                matchBrackets: true,
-                showCursorWhenSelecting: true,
-                tabSize: 2,
-                extraKeys: {
-                  "Ctrl-Q": function(cm) {
-                    cm.foldCode(cm.getCursor());
-                  }
-                },
-                foldGutter: true,
-                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-            };
-            this.editorref = CodeMirror.fromTextArea(document.getElementById('setBodyUpdate'), options);
+            this.editorref = help.setCodeMirror('setBodyUpdate');
         }.bind(this), 300);
         this.props.actionOnRecord.getUpdateObj();
     },
-    validateInput: function() {
+    validateInputCheck: function() {
         var validateClass = this.state.validate;
         validateClass.touch = true;
         validateClass.body = this.IsJsonString(this.editorref.getValue());
@@ -124,7 +109,7 @@ var UpdateDocument = React.createClass({
             </form>
           </Modal.Body>
           <Modal.Footer>
-            <Button bsStyle="warning" onClick={this.validateInput}>Update</Button>
+            <Button bsStyle="warning" onClick={this.validateInputCheck}>Update</Button>
           </Modal.Footer>
         </Modal>
       </div>

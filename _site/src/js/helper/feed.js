@@ -197,11 +197,12 @@ var feed = (function() {
 						flag = false;
 						total = res.hits.total;
 					}
-					callback(hits, flag, total);
+					allowOtherOperation();
+					return callback(hits, flag, total);
 				} catch (err) {
+					allowOtherOperation();
 					console.log(err);
 				}
-				allowOtherOperation();
 			}, function() {
 				allowOtherOperation();
 			});
@@ -336,9 +337,9 @@ var feed = (function() {
 			appbaseRef.bulk({
 				body: deleteArray
 			}).on('data', function(data) {
-				for (var data in sdata) {
-					if (sdata.hasOwnProperty(data)) {
-						deleteData(sdata, data);
+				for (var record in sdata) {
+					if (sdata.hasOwnProperty(record)) {
+						deleteData(sdata, record);
 					}
 				}
 				callback(sdata);
@@ -381,6 +382,18 @@ var feed = (function() {
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
 				data: JSON.stringify(queryBody),
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
+		applyGetQuery: function(temp_config) {
+			return $.ajax({
+				type: 'GET',
+				beforeSend: function(request) {
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+				},
+				url: temp_config.URL,
 				xhrFields: {
 					withCredentials: true
 				}
@@ -432,16 +445,7 @@ var feed = (function() {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/_stats/indices';
-				return $.ajax({
-					type: 'GET',
-					beforeSend: function(request) {
-						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
-					},
-					url: temp_config.URL,
-					xhrFields: {
-						withCredentials: true
-					}
-				});	
+				return this.applyGetQuery(temp_config);	
 			} else {
 				return null;
 			}
@@ -456,16 +460,7 @@ var feed = (function() {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/'+appname;
-				return $.ajax({
-					type: 'GET',
-					beforeSend: function(request) {
-						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
-					},
-					url: temp_config.URL,
-					xhrFields: {
-						withCredentials: true
-					}
-				});	
+				return this.applyGetQuery(temp_config);	
 			} else {
 				return null;
 			}
@@ -526,30 +521,25 @@ var feed = (function() {
 				return termObj;
 			}
 
+			function createHasQuery(queryMaker) {
+				var boolQuery = {
+					'minimum_should_match': 1
+				}
+				var boolType = method === 'has' ? 'must': 'must_not';
+				boolQuery[boolType] = queryMaker;
+				return {
+					'query': {
+						'bool': boolQuery
+					}
+				};
+			}
+
 			switch (method) {
 				case 'has':
+				case 'has not':
 					//If field is analyzed use MATCH else term
 					queryMaker = setQuery();
-					queryBody = {
-						'query': {
-							'bool': {
-								'must': queryMaker,
-								'minimum_should_match': 1
-							}
-						}
-					};
-					break;
-
-				case 'has not':
-					queryMaker = setQuery();
-					queryBody = {
-						'query': {
-							'bool': {
-								'must_not': queryMaker,
-								'minimum_should_match': 1
-							}
-						}
-					};
+					queryBody = createHasQuery(queryMaker);
 					break;
 
 				case 'search':
