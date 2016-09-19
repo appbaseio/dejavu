@@ -58,22 +58,7 @@ var AddDocument = React.createClass({
             showModal: true
         });
         setTimeout(function() {
-            var options = {
-                lineNumbers: true,
-                mode: "javascript",
-                autoCloseBrackets: true,
-                matchBrackets: true,
-                showCursorWhenSelecting: true,
-                tabSize: 2,
-                extraKeys: {
-                  "Ctrl-Q": function(cm) {
-                    cm.foldCode(cm.getCursor());
-                  }
-                },
-                foldGutter: true,
-                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
-            };
-            this.editorref = CodeMirror.fromTextArea(document.getElementById('setBody'), options);
+            this.editorref = help.setCodeMirror('setBody');
         }.bind(this), 300);
     },
     getType: function() {
@@ -92,11 +77,9 @@ var AddDocument = React.createClass({
         validateClass.body = this.IsJsonString(this.editorref.getValue());
         this.setState({
             validate: validateClass
-        }, function() {
-            if (validateClass.type && validateClass.body) {
-                this.props.addRecord(this.editorref);
-            }
         });
+        if (validateClass.type && validateClass.body)
+            this.props.addRecord(this.editorref);
     },
     IsJsonString: function(str) {
         try {

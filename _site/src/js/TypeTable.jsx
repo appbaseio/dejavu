@@ -1,5 +1,5 @@
 var React = require('react');
-var FeatureComponent = require('./features/featureComponent.jsx');
+var FeatureComponent = require('./features/FeatureComponent.jsx');
 
 // Each row in the types table on the left side.
 var TypeRow = React.createClass({
@@ -12,7 +12,7 @@ var TypeRow = React.createClass({
         };
     },
     componentDidMount: function() {
-        var types = window.localStorage.getItem('types');
+        var types = window.storageService.getItem('types');
         checked = false;
         try {
             types = JSON.parse(types);
@@ -37,10 +37,9 @@ var TypeRow = React.createClass({
             this.props.watchTypeHandler(this.props.type);
         }
         // every time its checked we update the local storage.
-        var types = [];
-        var typesJson = window.localStorage.getItem('types');
+        var types = window.storageService.getItem('types');
           try {
-            types = JSON.parse(typesJson);
+            types = JSON.parse(types);
         } catch(e) {
             types = []
         }
@@ -54,7 +53,7 @@ var TypeRow = React.createClass({
                 }
             }.bind(this));
         }
-        window.localStorage.setItem('types', JSON.stringify(types));
+        window.storageService.setItem('types', JSON.stringify(types));
         this.setState({
             isChecked: checked
         });

@@ -1,15 +1,15 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var Dropdown = require('./dropdown.jsx');
-var FeatureComponent = require('../features/featureComponent.jsx');
-var FilterDropdown = require('./filterDropdown.jsx');
-var PageLoading = require('./pageLoading.jsx');
+var Dropdown = require('./Dropdown.jsx');
+var FeatureComponent = require('../features/FeatureComponent.jsx');
+var FilterDropdown = require('./FilterDropdown.jsx');
+var PageLoading = require('./PageLoading.jsx');
 var Info = require('./Info.jsx');
-var Column = require('./column.jsx');
+var Column = require('./Column.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 var Pretty = FeatureComponent.Pretty;
-var Cell = require('./cell.jsx');
-var Table = require('./table.jsx');
+var Cell = require('./Cell.jsx');
+var Table = require('./Table.jsx');
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -102,6 +102,7 @@ var DataTable = React.createClass({
                                 _type={data[row]['_type']}
                                 visibility={visibility}
                                 row={newRow}
+                                _checked={newRow._checked}
                                 actionOnRecord={$this.props.actionOnRecord}/>);
             }
             rows.push({

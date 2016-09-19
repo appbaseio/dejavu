@@ -1,10 +1,10 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var FeatureComponent = require('../features/featureComponent.jsx');
-var Dropdown = require('./dropdown.jsx');
+var FeatureComponent = require('../features/FeatureComponent.jsx');
+var Dropdown = require('./Dropdown.jsx');
 
 var Info = React.createClass({
-    getInitialState: function() {
+     getInitialState: function() {
         return {
             selectToggle: false
         };
@@ -34,7 +34,7 @@ var Info = React.createClass({
         }
     },
     render: function() {
-        var selectedTypes = this.props.selectedTypes;
+        var selectedTypes = this.props.selectedTypes ? this.props.selectedTypes : [];
         var infoObj = this.props.infoObj;
         var totalRecord = this.props.totalRecord;
         var filterInfo = this.props.filterInfo;
@@ -50,7 +50,6 @@ var Info = React.createClass({
         var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 
         var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
-
         return (<div className="infoRow container">
                     <div className=" row">
                         <div className={infoObjClass}>

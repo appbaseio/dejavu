@@ -10,7 +10,7 @@ var SingleMenuItem = React.createClass({
         };
     },
     changeFilter: function(e) {
-       if(this.props.val != 'true' && this.props.val != 'false') {
+        if(this.props.val != 'true' && this.props.val != 'false') {
             var filterField = e.currentTarget.value;
             this.props.changeFilter(filterField, this.state.filterValue);
             var key = filterKeyGen(this.props.columnField, this.props.val);
@@ -49,7 +49,6 @@ var SingleMenuItem = React.createClass({
         var key = filterKeyGen(this.props.columnField, this.props.val);
         var keyInput = key + '-input';
         var keyInputRange = key + '-inputRange';
-        
         var searchElement = (<div className="searchElement">
                                 <input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
                             </div>);
@@ -70,6 +69,7 @@ var SingleMenuItem = React.createClass({
         } else if(this.props.val == 'true' || this.props.val == 'false' ) {
             searchElement = <span></span>;
         }
+                            
         
         return (<div className={singleItemClass}>
                     <div className="theme-element radio">

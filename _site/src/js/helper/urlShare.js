@@ -13,8 +13,8 @@ function getUrl() {
     if (ciphertext.length > 1) {
         var bytes = CryptoJS.AES.decrypt(ciphertext[1], secret);
         decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        window.localStorage.setItem('esurl', decryptedData.url);
-        window.localStorage.setItem('appname', decryptedData.appname);
+        window.storageService.setItem('esurl', decryptedData.url);
+        window.storageService.setItem('appname', decryptedData.appname);
         var types;
         try {
             types = JSON.stringify(decryptedData.selectedType);
@@ -22,7 +22,7 @@ function getUrl() {
             types = JSON.stringify([]);
         }  
         types = types == null ? [] : types;
-        window.localStorage.setItem('types', types);
+        window.storageService.setItem('types', types);
     }
 }
 
