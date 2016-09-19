@@ -106,13 +106,15 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('compact', ['browserify',
+gulp.task('bundle', [
     'customcss', 
     'vendorcss', 
     'vendorjs', 
     'customjs',  
     'moveCss',
-    'moveFonts'], function() {
+    'moveFonts']);
+
+gulp.task('compact',['browserify'], function() {
     return gulp.src('_site/dist/main.js')
         .pipe(uglify())
         .pipe(rename({
@@ -122,9 +124,9 @@ gulp.task('compact', ['browserify',
         .pipe(connect.reload());
 });
 
-gulp.task('watch', ['compact','connect'], function() {
+gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch('_site/src/js/*/*.jsx', ['compact']);
     gulp.watch('_site/src/js/*.jsx', ['compact']);
 });
 
-gulp.task('default', ['compact']);
+gulp.task('default', ['bundle', 'compact']);

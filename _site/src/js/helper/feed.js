@@ -38,8 +38,8 @@ var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
 if(!flag_url || decryptedData.hasOwnProperty('url')){
 	config = {
-		url: window.localStorage.getItem('esurl'),
-		appname: window.localStorage.getItem('appname')
+		url: window.storageService.getItem('esurl'),
+		appname: window.storageService.getItem('appname')
 	};
 }
 

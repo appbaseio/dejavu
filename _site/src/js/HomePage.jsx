@@ -5,6 +5,7 @@ var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
+
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
 // do so by flowing back the data and calling the `resetData` function
@@ -378,7 +379,7 @@ var HomePage = React.createClass({
                     historicApps: historicApps,
                     url: es_host
                 });
-                window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+                window.storageService.setItem('historicApps', JSON.stringify(historicApps));
             }.bind(this));
         }
     },
@@ -954,8 +955,8 @@ var HomePage = React.createClass({
             });
         }
         function letsConnect() {
-            window.localStorage.setItem('esurl',temp_config.url);
-            window.localStorage.setItem('appname',temp_config.appname);
+            window.storageService.setItem('esurl',temp_config.url);
+            window.storageService.setItem('appname',temp_config.appname);
             location.reload();
         }
     },
@@ -1034,7 +1035,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     getApps: function() {
-        var apps = window.localStorage.getItem('historicApps');
+        var apps = window.storageService.getItem('historicApps');
         if(apps) {
             try {
                 apps = JSON.parse(apps);
@@ -1067,7 +1068,7 @@ var HomePage = React.createClass({
         this.setState({
             historicApps: historicApps
         });
-        window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+        window.storageService.setItem('historicApps', JSON.stringify(historicApps));
     },
     setConfig: function(url) {
         this.setState({ url: url});
