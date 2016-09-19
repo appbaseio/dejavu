@@ -2,5 +2,7 @@ node_modules/
 .idea/
 bower_components/
 dist/main.js
-_site
 dejavu-unpacked
+dist
+_site/bower_components/
+_site/dist/
