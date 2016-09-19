@@ -348,10 +348,8 @@ var HomePage = React.createClass({
         this.setApps();
     },
     apply_other: function() {
-        if(typeof BRANCH != 'undefined') {
-            if(BRANCH === 'master') {
-                this.setIndices();
-            }
+        if(typeof BRANCH !== 'undefined' && BRANCH === 'master') {
+            this.setIndices();
         }
     },
     // BRANCH: MASTER
