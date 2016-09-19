@@ -149,13 +149,15 @@ gulp.task('watch', ['bundle', 'compact','connect'], function() {
 });
 
 gulp.task('chromeBuild', ['bundle', 'compact'], function() {
-    var folders_length = Object.keys(files.folders).length;
-    for(folder in files.folders) {
-        gulp.src(files.folders[folder])
-            .pipe(gulp.dest('./dejavu-unpacked/'+folder));   
-    }
-    gulp.src(files.moveFiles)
-        .pipe(gulp.dest('./dejavu-unpacked'));
+    setTimeout(function() {
+        var folders_length = Object.keys(files.folders).length;
+        for(folder in files.folders) {
+            gulp.src(files.folders[folder])
+                .pipe(gulp.dest('./dejavu-unpacked/'+folder));   
+        }
+        gulp.src(files.moveFiles)
+            .pipe(gulp.dest('./dejavu-unpacked'));
+        }, 1000);
 });
 
 gulp.task('default', ['bundle', 'compact']);

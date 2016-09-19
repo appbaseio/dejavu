@@ -1,4 +1,4 @@
-const BRANCH = 'dev';
+const BRANCH = 'chrome';
 var config = {
 	"hostname": "scalr.api.appbase.io",
 	"appname": "moviedb",
