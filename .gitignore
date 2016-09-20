@@ -1,4 +1,5 @@
 node_modules/
-.idea/
-bower_components/
-dist/main.js
+dist
+_site/bower_components/
+_site/dist/
+dejavu-unpacked/
