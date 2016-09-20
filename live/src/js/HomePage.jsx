@@ -1,10 +1,11 @@
 var React = require('react');
-var TypeTable = require('./typeTable.jsx');
-var DataTable = require('./table/dataTable.jsx');
-var FeatureComponent = require('./features/featureComponent.jsx');
+var TypeTable = require('./TypeTable.jsx');
+var DataTable = require('./table/DataTable.jsx');
+var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
+
 // This is the file which commands the data update/delete/append.
 // Any react component that wishes to modify the data state should
 // do so by flowing back the data and calling the `resetData` function
@@ -38,14 +39,7 @@ var HomePage = React.createClass({
                 active: false,
                 applyFilter: this.applyFilter
             },
-            infoObj: {
-                showing: 0,
-                total: 0,
-                getOnce: false,
-                availableTotal: 0,
-                searchTotal: 0,
-                userTouchAdd: this.userTouchAdd
-            },
+            infoObj: this.resetInfoObj(),
             totalRecord: 0,
             pageLoading: false,
             mappingObj: {},
@@ -74,6 +68,16 @@ var HomePage = React.createClass({
             splash: true,
             hideUrl: false
         };
+    },
+    resetInfoObj: function() {
+        return {
+            showing: 0,
+            total: 0,
+            getOnce: false,
+            availableTotal: 0,
+            searchTotal: 0,
+            userTouchAdd: this.userTouchAdd
+        }
     },
     //The record might have nested json objects. They can't be shown
     //as is since it looks cumbersome in the table. What we do in the
@@ -308,12 +312,55 @@ var HomePage = React.createClass({
                 update = update.sort(function(a, b) {
                     return a.toLowerCase().localeCompare(b.toLowerCase());
                 });
-                this.setState({
-                    types: update,
-                    connect: true
-                });
+                subsetESTypes.forEach(function(type) {
+                    if(update.indexOf(type) === -1) {
+                        this.unwatchStock(type);
+                    }
+                }.bind(this));
+                if(BRANCH !== 'chrome') {
+                    this.setState({
+                        types: update,
+                        connect: true
+                    });
+                } else {
+                    this.setChromeTypes(update);
+                }
             }.bind(this));
         }
+    },
+    // only for chrome branch
+    setChromeTypes: function(update) {
+        var typeCheck = {};
+        storageService.getItem('types', function (result) {
+                var types = result.types;
+                var value = false;
+                try {
+                    types = JSON.parse(types);
+                    update.forEach(function(v){
+                        var value = types.indexOf(v) !== -1 ? true : false;
+                        typeCheck[v] = value;
+                    });
+                } catch(e) {
+                    update.forEach(function(v){
+                        var value = false;
+                    });
+                }
+            });
+        update.forEach(function(v){
+            storageService.getItem(v, function (result) {
+                var value = result[v];
+                value = value == 'undefined' || typeof value == 'undefined' ? false : value;
+                typeCheck[v] = value;
+            });    
+        });
+        setTimeout(function(){
+            $('.full_page_loading').addClass('hide');
+            this.setState({
+                types: update,
+                typeCheck: typeCheck,
+                connect: true
+            });
+        }.bind(this),1000);
     },
     removeType: function(typeName) {
         feed.deleteData(typeName, function(data) {
@@ -322,49 +369,97 @@ var HomePage = React.createClass({
     },
     componentWillMount: function() {
         this.apply_other();
-        if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+        if(BRANCH === 'appbase') {
             this.setState({
                 splash: false
             });
+        } else {
+            if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+                this.setState({
+                    splash: false
+                });
+            }
         }
     },
     componentDidMount: function() {
-        // add a safe delay as app details are fetched from this
-        // iframe's parent function.
         if(!this.state.splash) {
             this.afterConnect();
             input_state = JSON.parse(JSON.stringify(config));
             createUrl(input_state);
+            if(BRANCH === 'chrome') {
+                this.init_map_stream();
+            }
         }
         this.setApps();
     },
-    apply_other: function() {
-        if(typeof BRANCH != 'undefined') {
-            if(BRANCH === 'master') {
-                this.setIndices();
-            }
+    init_map_stream: function() {
+        try {
+            clearInterval(mappingInterval);
+            clearInterval(streamingInterval);
+        }
+        catch (e) {}
+        
+        // this.setMap();
+        if(appAuth) {
+            setTimeout(this.setMap, 2000)
+            setTimeout(this.getStreamingTypes, 2000);
+            // call every 1 min.
+            mappingInterval = setInterval(this.setMap, 60 * 1000);
+            streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+            this.getTotalRecord();
         }
     },
+    apply_other: function() {
+        if(typeof BRANCH !== 'undefined' && BRANCH === 'master') {
+            this.setIndices();
+        }
+    },
+    // BRANCH: MASTER
     setIndices: function() {
-        feed.getIndices().then(function (data) {
-            var es_host = window.location.href.split('/_plugin')[0];
-            var historicApps = this.getApps();
-            for(indice in data.indices) {
-                var index_of_historic = historicApps.indexOf(indice);
-                if(index_of_historic !== -1) {
-                    historicApps.splice(index_of_historic, 1);
+        var es_host = document.URL.split('/_plugin/')[0];
+        var getIndices = feed.getIndices(es_host);
+        if(getIndices) {
+            getIndices.then(function (data) {
+                var historicApps = this.getApps();
+                var indices = [];
+                for(indice in data.indices) {
+                    if(historicApps && historicApps.length) {
+                        historicApps.forEach(function(old_app, index) {
+                            if(old_app.appname === indice) {
+                                historicApps.splice(index, 1);
+                            }
+                        })
+                    }
+                    var obj = {
+                        appname: indice,
+                        url: es_host
+                    };
+                    indices.push(indice);
+                    historicApps.push(obj);
                 }
-                var obj = {
-                    appname: indice,
-                    url: es_host
-                };
-                historicApps.push(obj);
-            }
-            this.setState({
-                historicApps: historicApps,
-                url: es_host
+                this.setState({
+                    historicApps: historicApps,
+                    url: es_host,
+                    es_host: es_host,
+                    indices: indices
+                });
+                storageService.setItem('historicApps', JSON.stringify(historicApps));
+            }.bind(this));
+        }
+    },
+    appnameCb: function(appname) {
+        if(this.state.indices) {
+            var app_match = this.state.indices.filter(function(indice) {
+                return indice ===  appname;
             });
-        }.bind(this));
+            var app_match_flag = app_match.length ? true : false;
+            var show_index_info = this.state.url === this.state.es_host ? true : false; 
+            this.setState({
+                app_match_flag: app_match_flag,
+                current_appname: appname,
+                show_index_info: show_index_info
+            });
+        }
     },
     afterConnect: function() {
         if(appAuth) {
@@ -422,30 +517,17 @@ var HomePage = React.createClass({
         createUrl(input_state);
     },
     hideAttribute: function(Columns, method) {
-        if(method == 'hide') {
-            Columns.forEach(function(col){
-                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {
-                    document.getElementById(col).style.display = "none";
-                    for (var each in sdata) {
-                        var key = keyGen(sdata[each], col);
-                        document.getElementById(key).style.display = "none"
-                    }
+        var value = method === 'hide' ? "none" : "";
+        Columns.forEach(function(col){
+            if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
+            else {
+                document.getElementById(col).style.display = value;
+                for (var each in sdata) {
+                    var key = keyGen(sdata[each], col);
+                    document.getElementById(key).style.display = value
                 }
-            });
-        }
-        else if(method == 'show') {
-            Columns.forEach(function(col){
-                if(document.getElementById(col) == null || document.getElementById(col) == 'null') {}
-                else {
-                    document.getElementById(col).style.display = "";
-                    for (var each in sdata) {
-                        var key = keyGen(sdata[each], col);
-                        document.getElementById(key).style.display = ""
-                    }
-                }
-            });
-        }
+            }
+        });
     },
     getTotalRecord: function() {
         var $this = this;
@@ -477,6 +559,7 @@ var HomePage = React.createClass({
             delete input_state.sortInfo;
             createUrl(input_state);
         }
+        window.stop();
         subsetESTypes.push(typeName);
         this.applyGetStream();
         input_state.selectedType = subsetESTypes;
@@ -597,6 +680,7 @@ var HomePage = React.createClass({
         recordObject.body = JSON.parse(recordObject.body);
         feed.indexData(recordObject, method, function(newTypes) {
             $('.close').click();
+            this.getStreamingTypes();
             if (typeof newTypes != 'undefined') {
                 this.setState({
                     types: newTypes
@@ -606,13 +690,17 @@ var HomePage = React.createClass({
                 }.bind(this),500);
             }
         }.bind(this));
+        setTimeout(function() {
+            $('.close').click();
+            this.getStreamingTypes();
+        }.bind(this), 2000);
     },
     getTypeDoc: function(editorref) {
         var selectedType = $('#setType').val();
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null) {
-            if (!typeDocSample.hasOwnProperty(selectedType)) {
+        if (selectedType != '' && selectedType != null && typeDocSample) {
+            if (typeDocSample.hasOwnProperty(selectedType)) {
 
                 feed.getSingleDoc(selectedType, function(data) {
                     try {
@@ -896,22 +984,82 @@ var HomePage = React.createClass({
 
             this.removeSelection();
             this.resetData();
+            setTimeout(function() {
+                this.getStreamingTypes();
+            }.bind(this), 1000);
         }.bind(this));
     },
     initEs:function(){
+        var self = this;
         var formInfo = $('#init-ES').serializeArray();
+        var temp_config = {
+            url: '',
+            appname: ''
+        };
         formInfo.forEach(function(v) {
             if(v.value === '') {
                 reloadFlag = false;
             }
             if(v.name == 'url'){
-                window.localStorage.setItem('esurl',v.value);
+                temp_config.url = v.value;
             }
             else{
-                window.localStorage.setItem('appname',v.value);
+                temp_config.appname = v.value;
             }
         });
-        location.reload();
+
+        if(typeof BRANCH != 'undefined'  && BRANCH === 'master') {
+            checkIndex();
+        } else {
+            letsConnect();
+        }
+
+        // BRANCH: MASTER
+        // check if index exists or not, and create index if not exists
+        function checkIndex() {
+            feed.checkIndex(temp_config.url, temp_config.appname).done(function(data) {
+                console.log(data);
+                letsConnect();
+            }).error(function(xhr){
+                if(xhr.status === 404){
+                    var r = confirm('Index not found, Do you want to create index '+temp_config.appname+'?');
+                    if(r) {
+                        feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
+                            letsConnect();
+                        });
+                    }
+                } else {
+                    letsConnect();
+                }
+            });
+        }
+        function letsConnect() {
+            storageService.setItem('esurl',temp_config.url);
+            storageService.setItem('appname',temp_config.appname);
+            if(BRANCH !== 'chrome') {
+                location.reload();
+            } else {
+                setTimeout(function(){
+                    getMapFlag = false;
+                    $('.full_page_loading').removeClass('hide');
+                    esTypes = [];
+                    subsetESTypes = [];
+                    self.setState({
+                        splash: false,
+                        types: [],
+                        documents: [],
+                        totalRecord: 0,
+                        connect: false
+                    });
+
+                    beforeInit();
+                    setTimeout(function(){
+                        appAuth = true;
+                        self.init_map_stream();
+                    },500);
+                },1000);
+            }
+        }
     },
     connectPlayPause: function() {
         var reloadFlag = true;
@@ -935,14 +1083,7 @@ var HomePage = React.createClass({
                     connect: connectToggle,
                     documents: [],
                     types: [],
-                    infoObj: {
-                        showing: 0,
-                        total: 0,
-                        getOnce: false,
-                        availableTotal: 0,
-                        searchTotal: 0,
-                        userTouchAdd: this.userTouchAdd
-                    }
+                    infoObj: this.resetInfoObj()
                 });
             }
         }
@@ -994,41 +1135,50 @@ var HomePage = React.createClass({
             }
         }.bind(this));
     },
-    getApps: function() {
-        var apps = window.localStorage.getItem('historicApps');
-        if(apps) {
-            try {
-                apps = JSON.parse(apps);
-            } catch(e) {
-                apps = [];
-            }
-        } else {
-            apps = [];
-        }
-        return apps;
+    getApps: function(cb) {
+        var apps = storageService.getItem('historicApps');
+        cb({historicApps: apps});
     },
     setApps: function(authFlag) {
-        var app = {
-            url: config.url,
-            appname: config.appname
-        };
-        var historicApps = this.getApps();
-        if(authFlag) {
-            if(historicApps && historicApps.length) {
-                historicApps.forEach(function(old_app, index) {
-                    if(old_app.appname === app.appname) {
-                        historicApps.splice(index, 1);
-                    }
-                })
-            }
-            if(app.url) {
-                historicApps.push(app);
-            }
+        var self = this;
+        if(BRANCH !== 'chrome') {
+            this.getApps(getAppsCb);
+        } else {
+            storageService.getItem('historicApps', getAppsCb);
         }
-        this.setState({
-            historicApps: historicApps
-        });
-        window.localStorage.setItem('historicApps', JSON.stringify(historicApps));
+        function getAppsCb(result) {
+            var apps = result.historicApps;
+            if(apps) {
+                try {
+                    apps = JSON.parse(apps);
+                } catch(e) {
+                    apps = [];
+                }
+            } else {
+                apps = [];
+            }
+            var app = {
+                url: config.url,
+                appname: config.appname
+            };  
+            var historicApps = apps;
+            if(authFlag) {
+                if(historicApps && historicApps.length) {
+                    historicApps.forEach(function(old_app, index) {
+                        if(old_app.appname === app.appname) {
+                            historicApps.splice(index, 1);
+                        }
+                    })
+                }
+                if(app.url) {
+                    historicApps.push(app); 
+                }
+            }
+            self.setState({
+                historicApps: historicApps
+            });
+            storageService.setItem('historicApps', JSON.stringify(historicApps));
+        };
     },
     setConfig: function(url) {
         this.setState({ url: url});
@@ -1051,6 +1201,7 @@ var HomePage = React.createClass({
     //main.js ties them together.
 
     render: function() {
+        var self = this;
         var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
         var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
@@ -1068,51 +1219,76 @@ var HomePage = React.createClass({
         var hideEye = {'display': this.state.splash ? 'none': 'block'};
         var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
         var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
-
-        return (<div>
-                    <div id='modal' />
-                    <div className="row dejavuContainer">
-                        <form className={EsForm} id="init-ES">
-                            <div className="vertical0">
-                                <div className="vertical1">
-                                    <div className="esContainer">
-                                        <div className="img-container">
-                                            <img src="assets/img/icon.png" />
-                                        </div>
-                                        <div>
-                                          <h1>Déjà vu</h1>
-                                          <h4 className="mb-25">The missing Web UI for Elasticsearch</h4>
-                                        </div>
-                                        <ShareLink btn={shareBtn}> </ShareLink>
-                                        <div className="splashIn">
-                                            <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                                <AppSelect connect={this.state.connect} splash={this.state.splash} setConfig={this.setConfig} apps={this.state.historicApps} />
-                                            </div>
-                                            <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
-                                                <div className="url-container">
-                                                    <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-                                                        value={url}
-                                                        onChange={this.valChange}  {...opts} />
-                                                      <span className={hideUrl} style={hideEye}>
-                                                        <a className="btn btn-default"
-                                                            onClick={this.hideUrlChange}>
-                                                            {hideUrlText}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="submit-btn-container">
-                                            <a className={esBtn} onClick={this.connectPlayPause}>
-                                                <i className={playClass}></i>
-                                                <i className={pauseClass}></i>
-                                                {esText}
-                                            </a>
+        var index_create_text = (<div className="index-create-info col-xs-12"></div>);
+        if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
+            index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
+        }
+        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
+        if(BRANCH === 'chrome') {
+            githubStar = (<a href="https://github.com/appbaseio/dejaVu" target="_blank">
+                            <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
+                        </a>);
+        }
+        function initialForm() {
+            var form = null;
+            if(BRANCH !== 'appbase') {
+                form = (
+                <form className={EsForm} id="init-ES">
+                    <div className="vertical0">
+                        <div className="vertical1">
+                            <div className="esContainer">
+                                <div className="img-container">
+                                    <img src="assets/img/icon.png" />
+                                </div>
+                                <div>
+                                  <h1>Déjà vu</h1>
+                                  <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
+                                  {index_create_text}
+                                </div>
+                                <ShareLink btn={shareBtn}> </ShareLink>
+                                <div className="splashIn">
+                                    <div className="form-group m-0 col-xs-4 pd-0 pr-5">
+                                        <AppSelect 
+                                            connect={self.state.connect} 
+                                            splash={self.state.splash} 
+                                            setConfig={self.setConfig} 
+                                            apps={self.state.historicApps} 
+                                            appnameCb={self.appnameCb} />
+                                    </div>
+                                    <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+                                        <div className="url-container">
+                                            <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+                                                value={url}
+                                                onChange={self.valChange}  {...opts} />
+                                              <span className={hideUrl} style={hideEye}>
+                                                <a className="btn btn-default"
+                                                    onClick={self.hideUrlChange}>
+                                                    {hideUrlText}
+                                                </a>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                                <div className="submit-btn-container">
+                                    <a className={esBtn} onClick={self.connectPlayPause}>
+                                        <i className={playClass}></i>
+                                        <i className={pauseClass}></i>
+                                        {esText}
+                                    </a>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                </form>);
+            }
+            return form;
+        }
+        var dejavuForm = initialForm();
+        var containerClass = 'row dejavuContainer '+BRANCH;
+        return (<div>
+                    <div id='modal' />
+                    <div className={containerClass}>
+                        {dejavuForm}
                         <div className="typeContainer">
                             <TypeTable
                                 Types={this.state.types}
@@ -1155,13 +1331,18 @@ var HomePage = React.createClass({
                                 Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>
                             <span className="pull-left github-star">
-                                <iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>
+                                {githubStar}
                             </span>
                         </footer>
                         <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>
                         </FeatureComponent.ErrorModal>
+                        <div className="full_page_loading hide">
+                            <div className="loadingBar"></div>
+                            <div className="vertical1">             
+                            </div> 
+                        </div>
                     </div>
                 </div>);
     }

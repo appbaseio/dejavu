@@ -1,11 +1,17 @@
 {
-  "name": "Dejavu",
-  "homepage": "https://appbaseio.github.io/dejaVu",
-  "authors": [
-    "Farhan Chauhan (appbaseio)"
-  ],
-  "description": "dejaVu - a modern Elasticsearch databrowser.",
+  "name": "dejaVu",
   "dependencies": {
-    "font-awesome": "~4.5.0"
+    "appbase-js": "latest",
+    "jquery": "~2.1.4",
+    "react": "~0.14.0",
+    "react-bootstrap": "~0.25.1",
+    "underscore": "~1.8.3",
+    "bootstrap": "~3.3.6",
+    "font-awesome": "~4.5.0",
+    "toastr": "~2.1.2",
+    "crypto-js": "^3.1.6",
+    "codemirror": "^5.17.0",
+    "highlightjs": "^9.6.0",
+    "select2": "~4.0.1"
   }
 }

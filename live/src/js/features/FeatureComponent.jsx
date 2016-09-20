@@ -6,7 +6,6 @@ var Button = require('react-bootstrap/lib/Button');
 var ReactBootstrap = require('react-bootstrap');
 var AddDocument = require('./AddDocument.jsx');
 var ImportData = require('./ImportData.jsx');
-var ExportData = require('./ExportData.jsx');
 var Pretty = require('./Pretty.jsx');
 var SignalCircle = require('./SignalCircle.jsx');
 var RemoveFilterButton = require('./RemoveFilterButton.jsx');
@@ -18,7 +17,6 @@ var ExportasJson = require('./ExportasJson.jsx');
 var FeatureComponent = {
     AddDocument: AddDocument,
     ImportData: ImportData,
-    ExportData: ExportData,
     Pretty: Pretty,
     SignalCircle: SignalCircle,
     RemoveFilterButton: RemoveFilterButton,

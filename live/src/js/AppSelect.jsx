@@ -23,6 +23,9 @@ var AppSelect = React.createClass({
         this.setState({
             searchValue: event.target.value
         });
+        if(this.props.appnameCb) {
+            this.props.appnameCb(event.target.value);
+        }
     },
     focusInput: function() {
         if(this.props.apps.length && !this.props.connect) {

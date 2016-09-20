@@ -39,49 +39,46 @@ var FilterDropdown = React.createClass({
         var Dropdown = ReactBootstrap.Dropdown;
         var datatype = this.props.datatype;
         var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
-        var stringFilter = (
-            <Dropdown.Menu className="menuItems pull-right pd-0">
-                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="search" />
-                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has" />
-                                    <SingleMenuItem columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="has not" />
-                                    <div className="singleItem">
-                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
-                                    </div>
-                                </Dropdown.Menu>
-        );
+        var self = this;
+        
+        function createDropItem(method, availableValues) {
+            function filterRender(value) {
+                var currentItem;
+                switch(method) {
+                    case 'boolean':
+                        currentItem = (<SingleMenuItem boolFilter={self.boolFilter}  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={self.props.datatype} getFilterVal={self.getFilterVal} val={value} />);
+                    break;
+                    case 'date':
+                        currentItem = (<SingleMenuItem  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={datatype} getFilterVal={self.getFilterVal} val={value} />);
+                    break;
+                    case 'string':
+                        currentItem = (<SingleMenuItem columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
+                    break;
+                    case 'number':
+                        currentItem = (<SingleMenuItem  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
+                    break;
+                }
+                return currentItem;
+            };
+            var newAvailableValues = availableValues.map(function(value) {
+                return filterRender(value);
+            });
+            if(newAvailableValues.length) {
+                return (<Dropdown.Menu className="menuItems pull-right">
+                            {newAvailableValues}
+                            <div className="singleItem">
+                                <button className='btn btn-info col-xs-12' onClick={self.applyFilter}>Apply</button>
+                            </div>
+                        </Dropdown.Menu>);
+            } else {
+                return null;
+            }
+        }
 
-        var numberFilter = (
-            <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} getFilterVal={this.getFilterVal} val="less than" />
-                                    <div className="singleItem">
-                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
-                                    </div>
-                                </Dropdown.Menu>
-        );
-
-
-        var dateFilter = (
-            <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="greater than" />
-                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="less than" />
-                                    <SingleMenuItem  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="range" />
-                                    <div className="singleItem">
-                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
-                                    </div>
-                                </Dropdown.Menu>
-            );
-
-
-        var booleanFilter = (
-            <Dropdown.Menu className="menuItems pull-right">
-                                    <SingleMenuItem boolFilter={this.boolFilter}  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="true" />
-                                    <SingleMenuItem boolFilter={this.boolFilter}  columnField={this.props.columnField} filterField={this.state.filterField} changeFilter={this.changeFilter} datatype={datatype} getFilterVal={this.getFilterVal} val="false" />
-                                    <div className="singleItem">
-                                        <button className='btn btn-info col-xs-12' onClick={this.applyFilter}>Apply</button>
-                                    </div>
-                                </Dropdown.Menu>
-        );
+        var stringFilter = createDropItem('string', ['search', 'has', 'has not']);
+        var numberFilter = createDropItem('number', ['greater than', 'less than']);
+        var dateFilter = createDropItem('date', ['greater than', 'less than', 'range']);
+        var booleanFilter = createDropItem('boolean', ['true', 'false']);
 
         var FilterMenuItems = '';
 

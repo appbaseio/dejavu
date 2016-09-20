@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactBootstrap = require('react-bootstrap');
-var FeatureComponent = require('../features/featureComponent.jsx');
-var Dropdown = require('./dropdown.jsx');
+var FeatureComponent = require('../features/FeatureComponent.jsx');
+var Dropdown = require('./Dropdown.jsx');
 
 var Info = React.createClass({
      getInitialState: function() {
@@ -34,7 +34,7 @@ var Info = React.createClass({
         }
     },
     render: function() {
-        var selectedTypes = this.props.selectedTypes;
+        var selectedTypes = this.props.selectedTypes ? this.props.selectedTypes : [];
         var infoObj = this.props.infoObj;
         var totalRecord = this.props.totalRecord;
         var filterInfo = this.props.filterInfo;

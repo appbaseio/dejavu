@@ -256,12 +256,18 @@ footer{
   z-index: 2;
   padding-top: 44px;
 }
+.dejavuContainer.appbase .typeContainer {
+  padding-top: 0;
+}
 .dataContainer{
   height: 100%;
   overflow: hidden;
   position: absolute;
   width: 100%;
   padding: 44px 0 44px 270px;
+}
+.dejavuContainer.appbase .dataContainer {
+  padding: 0 0 44px 270px;
 }
 .highlight-tip {
   background: #f5e79e;
@@ -696,6 +702,9 @@ footer{
 .export-json-btn{
   line-height: 21px;
 }
+.EsBigForm .index-create-info {
+  margin-bottom: 28px;
+}
 .powered_by{
   position: absolute;
   right: 5px;
@@ -865,7 +874,7 @@ iframe{
     top: 0;
   }
 }
-.pageLoading .loadingBar {
+.pageLoading .loadingBar, .full_page_loading .loadingBar  {
   display: block;
   animation: shift-rightwards 0.5s ease-in-out infinite;
   animation-delay: .2s
@@ -911,4 +920,7 @@ iframe{
 }
 .autocomplete .autolist, .select2-container--default.select2-container--focus .select2-selection--multiple {
   border-color: #3BC7F6;
+}
+.danger-text {
+  color: #FF8484; 
 }
