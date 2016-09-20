@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>modal.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="app.html">
+                  app.js
+                </a>
+              
+                
+                <a class="source" href="dropdown.html">
+                  dropdown.js
+                </a>
+              
+                
+                <a class="source" href="feed.html">
+                  feed.js
+                </a>
+              
+                
+                <a class="source" href="keys.html">
+                  keys.js
+                </a>
+              
+                
+                <a class="source" href="main.html">
+                  main.js
+                </a>
+              
+                
+                <a class="source" href="modal.html">
+                  modal.js
+                </a>
+              
+                
+                <a class="source" href="table.html">
+                  table.js
+                </a>
+              
+                
+                <a class="source" href="transitions.html">
+                  transitions.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>modal.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This is for the copy-to-clipboard</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Expire = React.createClass({
+  getDefaultProps: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> {delay: <span class="hljs-number">1000</span>};
+  },
+  getInitialState: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> {visible: <span class="hljs-literal">true</span>};
+  },
+  componentWillReceiveProps: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">nextProps</span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>reset the timer if children are changed</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (nextProps.children !== <span class="hljs-keyword">this</span>.props.children) {
+      <span class="hljs-keyword">this</span>.setTimer();
+      <span class="hljs-keyword">this</span>.setState({visible: <span class="hljs-literal">true</span>});
+    }
+  },
+  handleClick: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">this</span>.setTimer();
+    <span class="hljs-keyword">var</span> apply = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'for-copy'</span>);
+    execCommandOnElement(apply, <span class="hljs-string">"copy"</span>);
+
+  },
+  setTimer: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>clear any existing timer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._timer != <span class="hljs-literal">null</span> ? clearTimeout(<span class="hljs-keyword">this</span>._timer) : <span class="hljs-literal">null</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>hide for <code>delay</code> milliseconds</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.setState({visible: <span class="hljs-literal">false</span>});
+    <span class="hljs-keyword">this</span>._timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+      <span class="hljs-keyword">this</span>.setState({visible: <span class="hljs-literal">true</span>});
+      <span class="hljs-keyword">this</span>._timer = <span class="hljs-literal">null</span>;
+    }.bind(<span class="hljs-keyword">this</span>), <span class="hljs-keyword">this</span>.props.delay);
+  },
+  render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.state.visible 
+           ? <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">a</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">i</span> 
+                    <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.handleClick}</span>
+                    <span class="hljs-attribute">className</span>=<span class="hljs-value">'fa copy-board text-center fa-clipboard'</span> 
+                    <span class="hljs-attribute">id</span>=<span class="hljs-value">'normal-clipboard-before'</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+             <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+           : <span class="hljs-tag">&lt;<span class="hljs-title">i</span> 
+              <span class="hljs-attribute">className</span>=<span class="hljs-value">'fa fa-check'</span> 
+              <span class="hljs-attribute">id</span>=<span class="hljs-value">'normal-clipboard-after'</span>/&gt;</span>;</span>
+  }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Prettify the json body i.e. embed that into
+a code block so that highlightjs recognises it.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> Pretty = React.createClass({
+    componentDidMount: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">var</span> current = React.findDOMNode(<span class="hljs-keyword">this</span>);
+        hljs.highlightBlock(current);    
+    },
+    render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span>  ( <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">pre</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"custom-json-body"</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">code</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"json"</span>&gt;</span>
+                        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'for-copy'</span>&gt;</span>{JSON.stringify(this.props.json, null, 1)}<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">code</span>&gt;</span>
+                  <span class="hljs-tag">&lt;/<span class="hljs-title">pre</span>&gt;</span>
+                )</span>;
+    }
+});
+
+<span class="hljs-keyword">var</span> Modal = React.createClass({
+    getInitialState: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">var</span> showing = {};
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">var</span> each <span class="hljs-keyword">in</span> <span class="hljs-keyword">this</span>.props.show){</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>we don’t show _id, _type in the JSON body
+we show in the header.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span>([<span class="hljs-string">'json'</span>, <span class="hljs-string">'_id'</span>, <span class="hljs-string">'_type'</span>].indexOf(each) &lt;= -<span class="hljs-number">1</span>){
+                showing[each] = <span class="hljs-keyword">this</span>.props.show[each]; 
+            }
+        }
+        <span class="hljs-keyword">return</span> {showing: showing};
+    },
+    hideModal: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        React.unmountComponentAtNode(<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'modal'</span>));
+    },
+    render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{
+        <span class="hljs-keyword">var</span> Modal = ReactBootstrap.Modal;
+            Button = ReactBootstrap.Button;
+        <span class="hljs-keyword">return</span> (
+            <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">Modal</span> 
+            {<span class="hljs-attribute">...this.props</span>}
+            <span class="hljs-attribute">bsSize</span>=<span class="hljs-value">'medium'</span>
+            <span class="hljs-attribute">onHide</span>=<span class="hljs-value">{this.hideModal}</span>
+            &gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Modal.Body</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">h4</span>&gt;</span>
+                        {this.props._type}
+                        <span class="hljs-tag">&lt;<span class="hljs-title">br</span>/&gt;</span>
+                        {this.props._id}
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">h4</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Expire</span> <span class="hljs-attribute">delay</span>=<span class="hljs-value">{2000}</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.copytext}</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'copy-json'</span>/&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">p</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'modal-body'</span>&gt;</span>
+                        <span class="hljs-tag">&lt;<span class="hljs-title">Pretty</span> <span class="hljs-attribute">json</span>=<span class="hljs-value">{this.state.showing}</span> /&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">Modal.Body</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Modal.Footer</span>&gt;</span>
+                  <span class="hljs-tag">&lt;<span class="hljs-title">Button</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.hideModal}</span>&gt;</span>Close<span class="hljs-tag">&lt;/<span class="hljs-title">Button</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">Modal.Footer</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">Modal</span>&gt;</span>
+        )</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>This stuff is for knowing the kind of browser and applying the
+copy-to-clipboard functionality accordingly.
+I had to write so much of stupid code because we have just too many browsers.
+Cmon’n guys it wasn’t just the IE’s fault. Okay fine, it was just that.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> execCommandOnElement = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">el, commandName, value</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value == <span class="hljs-string">"undefined"</span>) {
+        value = <span class="hljs-literal">null</span>;
+    }
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.getSelection != <span class="hljs-string">"undefined"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Non-IE case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> sel = <span class="hljs-built_in">window</span>.getSelection();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Save the current selection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> savedRanges = [];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, len = sel.rangeCount; i &lt; len; ++i) {
+            savedRanges[i] = sel.getRangeAt(i).cloneRange();
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Temporarily enable designMode so that
+document.execCommand() will work</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">document</span>.designMode = <span class="hljs-string">"on"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Select the element’s content</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        sel = <span class="hljs-built_in">window</span>.getSelection();
+        <span class="hljs-keyword">var</span> range = <span class="hljs-built_in">document</span>.createRange();
+        range.selectNodeContents(el);
+        sel.removeAllRanges();
+        sel.addRange(range);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Execute the command</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">document</span>.execCommand(commandName, <span class="hljs-literal">false</span>, value);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Disable designMode</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-built_in">document</span>.designMode = <span class="hljs-string">"off"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Restore the previous selection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        sel = <span class="hljs-built_in">window</span>.getSelection();
+        sel.removeAllRanges();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, len = savedRanges.length; i &lt; len; ++i) {
+            sel.addRange(savedRanges[i]);
+        }
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">document</span>.body.createTextRange != <span class="hljs-string">"undefined"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>IE case</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> textRange = <span class="hljs-built_in">document</span>.body.createTextRange();
+        textRange.moveToElementText(el);
+        textRange.execCommand(commandName, <span class="hljs-literal">false</span>, value);
+    }
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
