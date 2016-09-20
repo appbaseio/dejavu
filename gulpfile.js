@@ -165,7 +165,7 @@ gulp.task('ghpagesBuild', ['bundle', 'compact'], function() {
             .pipe(gulp.dest('./live/'+folder));   
     }
     gulp.src(files.moveFiles)
-        .pipe(gulp.dest('./dejavu-unpacked'));
+        .pipe(gulp.dest('./live'));
 });
 
 gulp.task('default', ['bundle', 'compact']);
