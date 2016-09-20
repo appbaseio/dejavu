@@ -36,7 +36,8 @@ function init() {
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
-if(BRANCH !== 'chrome') {
+
+if(BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
 	if(!flag_url || decryptedData.hasOwnProperty('url')){
 		config = {
 			url: storageService.getItem('esurl'),
@@ -44,7 +45,22 @@ if(BRANCH !== 'chrome') {
 		};
 	}
 	beforeInit();
-} else {
+} else if(BRANCH === 'appbase') {
+	parent.globalAppData(function(res) {
+	    APPNAME = res.appname;
+	    USERNAME = res.username;
+	    PASSWORD = res.password;
+	    APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io';
+	    storageService.setItem('esurl', APPURL);
+		storageService.setItem('appname', APPNAME);
+		config = {
+			url: APPURL,
+			appname: APPNAME
+		};
+		beforeInit();
+	});
+} 
+else {
 	storageService.getItem('esurl', function(result) {
 		config.url = result.esurl;
 		$('#configUrl').val(config.url);

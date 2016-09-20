@@ -369,15 +369,19 @@ var HomePage = React.createClass({
     },
     componentWillMount: function() {
         this.apply_other();
-        if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+        if(BRANCH === 'appbase') {
             this.setState({
                 splash: false
             });
+        } else {
+            if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+                this.setState({
+                    splash: false
+                });
+            }
         }
     },
     componentDidMount: function() {
-        // add a safe delay as app details are fetched from this
-        // iframe's parent function.
         if(!this.state.splash) {
             this.afterConnect();
             input_state = JSON.parse(JSON.stringify(config));
@@ -1197,6 +1201,7 @@ var HomePage = React.createClass({
     //main.js ties them together.
 
     render: function() {
+        var self = this;
         var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
         var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
         var esBtn = this.state.connect ? 'btn-primary ': '';
@@ -1224,57 +1229,66 @@ var HomePage = React.createClass({
                             <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
                         </a>);
         }
-
-        return (<div>
-                    <div id='modal' />
-                    <div className="row dejavuContainer">
-                        <form className={EsForm} id="init-ES">
-                            <div className="vertical0">
-                                <div className="vertical1">
-                                    <div className="esContainer">
-                                        <div className="img-container">
-                                            <img src="assets/img/icon.png" />
-                                        </div>
-                                        <div>
-                                          <h1>Déjà vu</h1>
-                                          <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
-                                          {index_create_text}
-                                        </div>
-                                        <ShareLink btn={shareBtn}> </ShareLink>
-                                        <div className="splashIn">
-                                            <div className="form-group m-0 col-xs-4 pd-0 pr-5">
-                                                <AppSelect 
-                                                    connect={this.state.connect} 
-                                                    splash={this.state.splash} 
-                                                    setConfig={this.setConfig} 
-                                                    apps={this.state.historicApps} 
-                                                    appnameCb={this.appnameCb} />
-                                            </div>
-                                            <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
-                                                <div className="url-container">
-                                                    <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-                                                        value={url}
-                                                        onChange={this.valChange}  {...opts} />
-                                                      <span className={hideUrl} style={hideEye}>
-                                                        <a className="btn btn-default"
-                                                            onClick={this.hideUrlChange}>
-                                                            {hideUrlText}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="submit-btn-container">
-                                            <a className={esBtn} onClick={this.connectPlayPause}>
-                                                <i className={playClass}></i>
-                                                <i className={pauseClass}></i>
-                                                {esText}
-                                            </a>
+        function initialForm() {
+            var form = null;
+            if(BRANCH !== 'appbase') {
+                form = (
+                <form className={EsForm} id="init-ES">
+                    <div className="vertical0">
+                        <div className="vertical1">
+                            <div className="esContainer">
+                                <div className="img-container">
+                                    <img src="assets/img/icon.png" />
+                                </div>
+                                <div>
+                                  <h1>Déjà vu</h1>
+                                  <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
+                                  {index_create_text}
+                                </div>
+                                <ShareLink btn={shareBtn}> </ShareLink>
+                                <div className="splashIn">
+                                    <div className="form-group m-0 col-xs-4 pd-0 pr-5">
+                                        <AppSelect 
+                                            connect={self.state.connect} 
+                                            splash={self.state.splash} 
+                                            setConfig={self.setConfig} 
+                                            apps={self.state.historicApps} 
+                                            appnameCb={self.appnameCb} />
+                                    </div>
+                                    <div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+                                        <div className="url-container">
+                                            <input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+                                                value={url}
+                                                onChange={self.valChange}  {...opts} />
+                                              <span className={hideUrl} style={hideEye}>
+                                                <a className="btn btn-default"
+                                                    onClick={self.hideUrlChange}>
+                                                    {hideUrlText}
+                                                </a>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                                <div className="submit-btn-container">
+                                    <a className={esBtn} onClick={self.connectPlayPause}>
+                                        <i className={playClass}></i>
+                                        <i className={pauseClass}></i>
+                                        {esText}
+                                    </a>
+                                </div>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                </form>);
+            }
+            return form;
+        }
+        var dejavuForm = initialForm();
+        var containerClass = 'row dejavuContainer '+BRANCH;
+        return (<div>
+                    <div id='modal' />
+                    <div className={containerClass}>
+                        {dejavuForm}
                         <div className="typeContainer">
                             <TypeTable
                                 Types={this.state.types}

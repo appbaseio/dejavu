@@ -256,12 +256,18 @@ footer{
   z-index: 2;
   padding-top: 44px;
 }
+.dejavuContainer.appbase .typeContainer {
+  padding-top: 0;
+}
 .dataContainer{
   height: 100%;
   overflow: hidden;
   position: absolute;
   width: 100%;
   padding: 44px 0 44px 270px;
+}
+.dejavuContainer.appbase .dataContainer {
+  padding: 0 0 44px 270px;
 }
 .highlight-tip {
   background: #f5e79e;
