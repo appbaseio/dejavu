@@ -6,3 +6,4 @@ dejavu-unpacked
 dist
 _site/bower_components/
 _site/dist/
+*.log
