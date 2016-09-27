@@ -44,20 +44,15 @@ function convertToUrl(type) {
 
 function mirageLink() {
     var obj = {};
-    var ciphertext = window.location.href.split('#?input_state=');
-    if (ciphertext.length > 1) {
-        var bytes = CryptoJS.AES.decrypt(ciphertext[1], secret);
-        decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        if(decryptedData) {
-            decryptedData.selectedType = decryptedData.selectedType ? decryptedData.selectedType : [];
-            obj = {
-                config: {
-                    url: decryptedData.url,
-                    appname: decryptedData.appname
-                },
-                selectedTypes: decryptedData.selectedType
-            };
-        }
+    if(input_state) {
+        input_state.selectedType = input_state.selectedType ? input_state.selectedType : [];
+        obj = {
+            config: {
+                url: input_state.url,
+                appname: input_state.appname
+            },
+            selectedTypes: input_state.selectedType
+        };
     }
     var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(obj), 'e').toString();
     var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
