@@ -1,3 +1,4 @@
 node_modules/
 site
 dejavu-unpacked/
+*.log

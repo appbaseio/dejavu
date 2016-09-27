@@ -185,8 +185,12 @@ body{
   background: #eee;
   padding: 5px;
   padding-right: 130px;
-  padding-left: 47px;
+  padding-left: 200px;
   border-bottom: 1px solid #ddd;
+}
+.mirage_link {
+  position: absolute;
+  left: 47px;
 }
 footer{
   top: auto;
