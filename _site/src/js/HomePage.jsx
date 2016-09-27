@@ -1195,6 +1195,10 @@ var HomePage = React.createClass({
             hideUrl: hideUrl
         });
     },
+    composeQuery: function() {
+        var link = mirageLink();
+        window.open(link, '_blank');
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -1229,6 +1233,12 @@ var HomePage = React.createClass({
                             <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
                         </a>);
         }
+        var composeQuery;
+        if(this.state.connect) {
+            composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
+                                    <i className="fa fa-external-link"></i> Compose Query 
+                                </a>);
+        }
         function initialForm() {
             var form = null;
             if(BRANCH !== 'appbase') {
@@ -1246,6 +1256,7 @@ var HomePage = React.createClass({
                                   {index_create_text}
                                 </div>
                                 <ShareLink btn={shareBtn}> </ShareLink>
+                                {composeQuery}
                                 <div className="splashIn">
                                     <div className="form-group m-0 col-xs-4 pd-0 pr-5">
                                         <AppSelect 

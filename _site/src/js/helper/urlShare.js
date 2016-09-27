@@ -42,4 +42,27 @@ function convertToUrl(type) {
     return final_url;
 }
 
+function mirageLink() {
+    var obj = {};
+    var ciphertext = window.location.href.split('#?input_state=');
+    if (ciphertext.length > 1) {
+        var bytes = CryptoJS.AES.decrypt(ciphertext[1], secret);
+        decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        if(decryptedData) {
+            decryptedData.selectedType = decryptedData.selectedType ? decryptedData.selectedType : [];
+            obj = {
+                config: {
+                    url: decryptedData.url,
+                    appname: decryptedData.appname
+                },
+                selectedTypes: decryptedData.selectedType
+            };
+        }
+    }
+    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(obj), 'e').toString();
+    var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
+    return final_url;
+}
+
+
 getUrl();
