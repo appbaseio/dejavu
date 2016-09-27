@@ -86,7 +86,10 @@ function beforeInit() {
 			OperationFlag = false;
 			APPURL = URL + '/' + APPNAME;
 			// to store input state
-			input_state = {};
+			input_state = {
+				url: URL,
+				appname: APPNAME
+			};
 			init();
 		} catch(e) {
 			console.log(e);
@@ -95,7 +98,10 @@ function beforeInit() {
 			APPURL = URL + '/' + APPNAME;
 			USERNAME = 'test';
 			PASSWORD = 'test';
-			input_state = {};
+			input_state = {
+				url: URL,
+				appname: APPNAME
+			};
 			init();
 		}
 	}
