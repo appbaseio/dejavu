@@ -42,4 +42,22 @@ function convertToUrl(type) {
     return final_url;
 }
 
+function mirageLink() {
+    var obj = {};
+    if(input_state) {
+        input_state.selectedType = input_state.selectedType ? input_state.selectedType : [];
+        obj = {
+            config: {
+                url: input_state.url,
+                appname: input_state.appname
+            },
+            selectedTypes: input_state.selectedType
+        };
+    }
+    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(obj), 'e').toString();
+    var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
+    return final_url;
+}
+
+
 getUrl();
