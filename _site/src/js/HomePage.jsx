@@ -1236,7 +1236,7 @@ var HomePage = React.createClass({
         var composeQuery;
         if(this.state.connect) {
             composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
-                                    <i className="fa fa-external-link"></i> Compose Query 
+                                 Query View <i className="fa fa-external-link"></i>
                                 </a>);
         }
         function initialForm() {
