@@ -39,7 +39,9 @@ var files = {
             '_site/bower_components/codemirror/addon/fold/brace-fold.js',
             '_site/bower_components/codemirror/mode/javascript/javascript.js',
             '_site/bower_components/select2/dist/js/select2.full.min.js',
-            '_site/bower_components/highlightjs/highlight.pack.min.js'
+            '_site/bower_components/highlightjs/highlight.pack.min.js',
+            '_site/bower_components/lzma/src/lzma.js',
+            '_site/bower_components/urlsafe-base64/app.js'
         ],
         custom: [
             
@@ -116,6 +118,11 @@ gulp.task('moveFonts', function() {
         .pipe(gulp.dest('_site/dist/fonts'));
 });
 
+gulp.task('moveJs', function() {
+    return gulp.src(['_site/bower_components/lzma/src/lzma_worker.js'])
+        .pipe(gulp.dest('_site/dist/vendor'));
+});
+
 gulp.task('connect', function() {
   connect.server({
     root: '_site',
@@ -130,7 +137,8 @@ gulp.task('bundle', [
     'vendorjs', 
     'customjs',  
     'moveCss',
-    'moveFonts']);
+    'moveFonts',
+    'moveJs']);
 
 gulp.task('compact',['browserify'], function() {
     return gulp.src('_site/dist/main.js')
