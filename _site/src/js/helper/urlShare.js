@@ -1,6 +1,8 @@
 var secret = 'dejvu';
 var decryptedData = {};
-
+if(!JSONURL) {
+    JSONURL =  new LZMA("../../../dist/vendor/lzma_worker.js");
+}
 // Encrypt
 function createUrl(inputs) {
     var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputs), secret).toString();
