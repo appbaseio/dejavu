@@ -1,0 +1,13 @@
+{
+  "name": "urlsafe-base64",
+  "homepage": "https://github.com/farhan687/urlsafe-base64",
+  "_release": "851218a684",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "851218a684a876ab60ad3682adca8b2381a51f0f"
+  },
+  "_source": "https://github.com/farhan687/urlsafe-base64.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/farhan687/urlsafe-base64.git"
+}

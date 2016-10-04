@@ -1196,8 +1196,13 @@ var HomePage = React.createClass({
         });
     },
     composeQuery: function() {
-        var link = mirageLink();
-        window.open(link, '_blank');
+        mirageLink(function(error, link) {
+            if(link) {
+                window.open(link, '_blank');
+            } else {
+                console.log(error);
+            }
+        });
     },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
@@ -1236,7 +1241,7 @@ var HomePage = React.createClass({
         var composeQuery;
         if(this.state.connect) {
             composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
-                                 Query View <i className="fa fa-external-link"></i>
+                                 Query View <i className="fa fa-external-link-square"></i>
                                 </a>);
         }
         function initialForm() {

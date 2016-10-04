@@ -42,7 +42,7 @@ function convertToUrl(type) {
     return final_url;
 }
 
-function mirageLink() {
+function mirageLink(cb) {
     var obj = {};
     if(input_state) {
         input_state.selectedType = input_state.selectedType ? input_state.selectedType : [];
@@ -54,10 +54,31 @@ function mirageLink() {
             selectedTypes: input_state.selectedType
         };
     }
-    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(obj), 'e').toString();
-    var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
-    return final_url;
+    var data = JSON.stringify(obj);
+    compress(obj, compressCb.bind(this));
+    function compressCb(error, ciphertext) {
+        if(!error) {
+            var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
+            return cb(null, final_url);
+        } else {
+            return cb(error);
+        }
+    }
 }
 
-
+function compress(jsonInput, cb) {
+    if(!jsonInput) {
+        return cb('Input should not be empty');
+    } else {
+    var packed = JSON.stringify(jsonInput);
+        JSONURL.compress(packed, 9, function(res, error) {
+          try {
+            var result = SafeEncode.buffer(res);
+            cb(null, SafeEncode.encode(result));   
+          } catch(e) {
+            cb(e);
+          }
+        });
+    }
+}
 getUrl();
