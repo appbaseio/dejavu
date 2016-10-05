@@ -1,6 +1,5 @@
 _site/bower_components
 node_modules/
-dist
 _site/bower_components/
 dejavu-unpacked/
 *.log
