@@ -217,7 +217,6 @@ var feed = (function() {
 				}
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
-
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			var typesString = types.join(',');
@@ -424,9 +423,10 @@ var feed = (function() {
 				}
 			});
 		},
-		applyGetQuery: function(temp_config) {
+		applyGetQuery: function(temp_config, ajaxType) {
+			var ajaxType = ajaxType ? ajaxType : 'GET'; 
 			return $.ajax({
-				type: 'GET',
+				type: ajaxType,
 				beforeSend: function(request) {
 					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
 				},
@@ -497,7 +497,8 @@ var feed = (function() {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/'+appname;
-				return this.applyGetQuery(temp_config);	
+				console.log(temp_config);
+				return this.applyGetQuery(temp_config, 'POST');	
 			} else {
 				return null;
 			}
