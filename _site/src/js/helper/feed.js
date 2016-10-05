@@ -516,7 +516,14 @@ var feed = (function() {
 					obj.USERNAME = urlsplit[1].replace('//', '');
 					obj.PASSWORD = pwsplit[0];
 					var httpPrefix = url.split('://');
-					obj.URL = url.indexOf('@') !== -1 ? httpPrefix[0] + '://' + pwsplit[1] : url;
+					if(url.indexOf('@') !== -1) {
+						obj.URL = httpPrefix[0] + '://' + pwsplit[1];
+						if(urlsplit[3]) {
+							obj.URL += ':'+urlsplit[3];
+						}
+					} else {
+						obj.URL = url;
+					}
 				} catch(e) {
 					console.log(e);
 				}
