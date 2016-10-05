@@ -420,30 +420,50 @@ var HomePage = React.createClass({
         var getIndices = feed.getIndices(es_host);
         if(getIndices) {
             getIndices.then(function (data) {
-                var historicApps = this.getApps();
-                var indices = [];
-                for(indice in data.indices) {
-                    if(historicApps && historicApps.length) {
-                        historicApps.forEach(function(old_app, index) {
-                            if(old_app.appname === indice) {
-                                historicApps.splice(index, 1);
-                            }
-                        })
+                this.getApps(getAppsCb.bind(this));
+                function getAppsCb(res) {
+                    var historicApps = res.historicApps;
+                    if(historicApps) {
+                        try {
+                            historicApps = JSON.parse(apps);
+                        } catch(e) {
+                            historicApps = [];
+                        }
+                    } else {
+                        historicApps = [];
                     }
-                    var obj = {
-                        appname: indice,
-                        url: es_host
-                    };
-                    indices.push(indice);
-                    historicApps.push(obj);
-                }
-                this.setState({
-                    historicApps: historicApps,
-                    url: es_host,
-                    es_host: es_host,
-                    indices: indices
-                });
-                storageService.setItem('historicApps', JSON.stringify(historicApps));
+                    var indices = [];
+                    for(indice in data.indices) {
+                        if(historicApps && historicApps.length) {
+                            historicApps.forEach(function(old_app, index) {
+                                if(old_app.appname === indice) {
+                                    historicApps.splice(index, 1);
+                                }
+                            })
+                        }
+                        var obj = {
+                            appname: indice,
+                            url: es_host
+                        };
+                        indices.push(indice);
+                        historicApps.push(obj);
+                    }
+                    // default app is no app found
+                    if(!historicApps.length) {
+                        var obj = {
+                            appname: 'sampleapp',
+                            url: es_host
+                        };
+                        historicApps.push(obj);
+                    }
+                    this.setState({
+                        historicApps: historicApps,
+                        url: es_host,
+                        es_host: es_host,
+                        indices: indices
+                    });
+                    storageService.setItem('historicApps', JSON.stringify(historicApps));
+                };
             }.bind(this));
         }
     },
@@ -1022,12 +1042,9 @@ var HomePage = React.createClass({
                 letsConnect();
             }).error(function(xhr){
                 if(xhr.status === 404){
-                    var r = confirm('Index not found, Do you want to create index '+temp_config.appname+'?');
-                    if(r) {
-                        feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
-                            letsConnect();
-                        });
-                    }
+                    feed.createIndex(temp_config.url, temp_config.appname).done(function(data) {
+                        letsConnect();
+                    });
                 } else {
                     letsConnect();
                 }

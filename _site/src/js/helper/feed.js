@@ -423,9 +423,10 @@ var feed = (function() {
 				}
 			});
 		},
-		applyGetQuery: function(temp_config) {
+		applyGetQuery: function(temp_config, ajaxType) {
+			var ajaxType = ajaxType ? ajaxType : 'GET'; 
 			return $.ajax({
-				type: 'GET',
+				type: ajaxType,
 				beforeSend: function(request) {
 					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
 				},
@@ -496,7 +497,8 @@ var feed = (function() {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/'+appname;
-				return this.applyGetQuery(temp_config);	
+				console.log(temp_config);
+				return this.applyGetQuery(temp_config, 'POST');	
 			} else {
 				return null;
 			}
