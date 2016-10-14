@@ -59,12 +59,15 @@ var AppSelect = React.createClass({
     },
     render: function() {
         var opts = {};
+        var optionsArr = [];
         if(this.props.connect) {
             opts['readOnly'] = 'readOnly';
         }
-        var optionsArr = this.props.apps.filter(function(app, index) {
-           return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1)
-        }.bind(this));
+        if(this.props.apps && this.props.apps.length) {
+            optionsArr = this.props.apps.filter(function(app, index) {
+               return this.state.searchValue === '' || (this.state.searchValue !== '' && app.appname.toUpperCase().indexOf(this.state.searchValue.toUpperCase()) !== -1)
+            }.bind(this));
+        }
 
         var options = optionsArr.map(function(app, index) {
             return opt = <li key={index} onClick={this.selectOption.bind(this, app.appname)}>{app.appname}</li>;
