@@ -119,7 +119,8 @@ gulp.task('moveFonts', function() {
 });
 
 gulp.task('moveJs', function() {
-    return gulp.src(['_site/bower_components/lzma/src/lzma_worker.js'])
+    return gulp.src(['_site/bower_components/lzma/src/lzma_worker.js',
+        '_site/vendors/JSONURL.js'])
         .pipe(gulp.dest('_site/dist/vendor'));
 });
 
