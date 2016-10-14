@@ -1056,6 +1056,7 @@ var HomePage = React.createClass({
             if(BRANCH !== 'chrome') {
                 location.reload();
             } else {
+                config = temp_config;
                 setTimeout(function(){
                     getMapFlag = false;
                     $('.full_page_loading').removeClass('hide');
