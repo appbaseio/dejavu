@@ -1,6 +1,5 @@
 var secret = 'dejvu';
 var decryptedData = {};
-const JSONURL = new LZMA("../../../dist/vendor/lzma_worker.js");
 
 // Encrypt
 function createUrl(inputs) {

@@ -33,6 +33,37 @@ function init() {
 	});
 }
 
+// parse the url and detect username, password
+function filterUrl(url) {
+	if (url) {
+        var obj = {
+            username: 'test',
+            password: 'test',
+            url: url
+        };
+        var urlsplit = url.split(':');
+        try {
+            obj.username = urlsplit[1].replace('//', '');
+            var httpPrefix = url.split('://');
+            if(urlsplit[2]) {
+                var pwsplit = urlsplit[2].split('@');
+                obj.password = pwsplit[0];
+                if(url.indexOf('@') !== -1) {
+                    obj.url = httpPrefix[0] + '://' + pwsplit[1];
+                    if(urlsplit[3]) {
+                        obj.url += ':'+urlsplit[3];
+                    }
+                }
+            }
+        } catch(e) {
+            console.log(e);
+        }
+        return obj;
+    } else {
+        return null;
+    }
+}
+
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
@@ -76,34 +107,20 @@ function beforeInit() {
 	APPNAME = config.appname;
 	URL = config.url;
 	if(URL) {
-		try {
-			var urlsplit = URL.split(':');
-			var pwsplit = urlsplit[2].split('@');
-			USERNAME = urlsplit[1].replace('//', '');
-			PASSWORD = pwsplit[0];
-			var httpPrefix = URL.split('://');
-			HOST =  URL.indexOf('@') !== -1 ? httpPrefix[0]+'://'+pwsplit[1] : URL;
-			OperationFlag = false;
-			APPURL = URL + '/' + APPNAME;
-			// to store input state
-			input_state = {
-				url: URL,
-				appname: APPNAME
-			};
-			init();
-		} catch(e) {
-			console.log(e);
-			HOST = document.URL.split('/_plugin/')[0];
-			OperationFlag = false;
-			APPURL = URL + '/' + APPNAME;
-			USERNAME = 'test';
-			PASSWORD = 'test';
-			input_state = {
-				url: URL,
-				appname: APPNAME
-			};
-			init();
-		}
+		var parsedUrl = filterUrl(URL);
+		USERNAME = parsedUrl.username;
+		PASSWORD = parsedUrl.password;
+		URL = parsedUrl.url;
+		HOST = parsedUrl.url;
+		APPURL = URL + '/' + APPNAME;
+		OperationFlag = false;
+			
+		// to store input state
+		input_state = {
+			url: URL,
+			appname: APPNAME
+		};
+		init();
 	}
 }
 
@@ -217,7 +234,6 @@ var feed = (function() {
 				}
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
-
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			var typesString = types.join(',');
@@ -424,9 +440,10 @@ var feed = (function() {
 				}
 			});
 		},
-		applyGetQuery: function(temp_config) {
+		applyGetQuery: function(temp_config, ajaxType) {
+			var ajaxType = ajaxType ? ajaxType : 'GET'; 
 			return $.ajax({
-				type: 'GET',
+				type: ajaxType,
 				beforeSend: function(request) {
 					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
 				},
@@ -497,32 +514,14 @@ var feed = (function() {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
 				temp_config.URL += '/'+appname;
-				return this.applyGetQuery(temp_config);	
+				console.log(temp_config);
+				return this.applyGetQuery(temp_config, 'POST');	
 			} else {
 				return null;
 			}
 		},
 		filterUrl: function(url) {
-			if (url) {
-				var obj = {
-					USERNAME: 'test',
-					PASSWORD: 'test',
-					URL: url
-				};
-				var urlsplit = url.split(':');
-				var pwsplit = urlsplit[2].split('@');
-				try {
-					obj.USERNAME = urlsplit[1].replace('//', '');
-					obj.PASSWORD = pwsplit[0];
-					var httpPrefix = url.split('://');
-					obj.URL = url.indexOf('@') !== -1 ? httpPrefix[0] + '://' + pwsplit[1] : url;
-				} catch(e) {
-					console.log(e);
-				}
-				return obj;
-			} else {
-				return null;
-			}
+			return filterUrl(url);
 		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
