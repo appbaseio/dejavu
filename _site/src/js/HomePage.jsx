@@ -1068,7 +1068,6 @@ var HomePage = React.createClass({
                         totalRecord: 0,
                         connect: false
                     });
-
                     beforeInit();
                     setTimeout(function(){
                         appAuth = true;
