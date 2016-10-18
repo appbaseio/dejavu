@@ -498,7 +498,7 @@ var feed = (function() {
 		getIndices: function(url) {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
-				temp_config.URL += '/_stats/indices';
+				temp_config.url += '/_stats/indices';
 				return this.applyGetQuery(temp_config);	
 			} else {
 				return null;
@@ -513,7 +513,7 @@ var feed = (function() {
 		executeIndexOperation: function(url, appname) {
 			var temp_config = this.filterUrl(url);
 			if(temp_config) {
-				temp_config.URL += '/'+appname;
+				temp_config.url += '/'+appname;
 				console.log(temp_config);
 				return this.applyGetQuery(temp_config, 'POST');	
 			} else {
