@@ -445,9 +445,9 @@ var feed = (function() {
 			return $.ajax({
 				type: ajaxType,
 				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.USERNAME + ':' + temp_config.PASSWORD));
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.username + ':' + temp_config.password));
 				},
-				url: temp_config.URL,
+				url: temp_config.url,
 				xhrFields: {
 					withCredentials: true
 				}
