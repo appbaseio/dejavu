@@ -1,17 +1,17 @@
-dejaVu - the missing web UI for elasticsearch
+dejavu - the missing web UI for elasticsearch
 ====
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejaVu/dev/LICENSE.md)
-[![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
-[![GitHub Stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejaVu/stargazers)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)
+[![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejavu)
+[![GitHub Stars](https://img.shields.io/github/stars/appbaseio/dejaVu.svg)](https://github.com/appbaseio/dejavu/stargazers)
 
-dejaVu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
+dejavu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
-Thus started the journey of dejaVu, with a goal of 100% client side rendering and usage of modern UI elements (zero page reloads, infinite scrolling, filtered views). It's available as a github hosted page, chrome app and as an Elasticsearch plugin.
+Thus started the journey of dejavu, with a goal of 100% client side rendering and usage of modern UI elements (zero page reloads, infinite scrolling, filtered views). It's available as a github hosted page, chrome app and as an Elasticsearch plugin.
 
 ### Elasticsearch plugin - Installation
 
-``bin/plugin install appbaseio/dejaVu``
+``bin/plugin install appbaseio/dejavu``
 
 ``Note``: To make sure you enable CORS settings for your ElasticSearch instance, add the following lines in the ES configuration file.
 
@@ -31,7 +31,7 @@ elasticsearch
 and visit the following URL to access it.
 
 ```sh 
-http://127.0.0.1:9200/_plugin/dejaVu 
+http://127.0.0.1:9200/_plugin/dejavu 
 ```
 
 ``Note:`` If you use Elasticsearch from a different port, the URL to access and the `http.cors.allow-origin` value in the configuration file would change accordingly.
@@ -46,7 +46,7 @@ http://127.0.0.1:9200/_plugin/dejaVu
 
 #### Local Installation
 
-1. git clone https://github.com/appbaseio/dejaVu  
+1. git clone https://github.com/appbaseio/dejavu  
 2. git checkout master
 3. npm install
 4. bower install
@@ -90,7 +90,7 @@ dejavu uses a websockets based API and subscribes for data changes for the curre
 
 ## Comparison with other data browsers
 
-|     Features     |                                                    dejaVu                                                    | ES-head | ES-kopf | ES-browser |                                 Kibana                                |
+|     Features     |                                                    dejavu                                                    | ES-head | ES-kopf | ES-browser |                                 Kibana                                |
 |:----------------:|:------------------------------------------------------------------------------------------------------------:|:------------------:|:------------------:|:---------------------:|:---------------------------------------------------------------------:|
 | Installation     | Chrome app, Elasticsearch plugin, static page      | Elasticsearch plugin, static page | Elasticsearch plugin, static page  | Elasticsearch plugin (doesn't work with v2.0 and above) | Elasticsearch plugin |
 | Modern UI        | Built with React v0.14.0, uses a live-reload interface.                                                  | Built with jQuery v1.6.1, slightly stodgy | Built with Angular 1.x | Built with ExtJs, but a bit stodgy | Built with Node.JS, Hapi, Jade                                                                     |
