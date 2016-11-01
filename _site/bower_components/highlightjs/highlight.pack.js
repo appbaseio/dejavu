@@ -1,4 +1,4 @@
-/*! highlight.js v9.6.0 | BSD3 License | git.io/hljslicense */
+/*! highlight.js v9.7.0 | BSD3 License | git.io/hljslicense */
 (function(factory) {
 
   // Find the global object for export to both the browser and web workers.
@@ -1405,9 +1405,9 @@ hljs.registerLanguage('cpp', function(hljs) {
   var NUMBERS = {
     className: 'number',
     variants: [
-      { begin: '\\b(0b[01\'_]+)' },
-      { begin: '\\b([\\d\'_]+(\\.[\\d\'_]*)?|\\.[\\d\'_]+)(u|U|l|L|ul|UL|f|F|b|B)' },
-      { begin: '(-?)(\\b0[xX][a-fA-F0-9\'_]+|(\\b[\\d\'_]+(\\.[\\d\'_]*)?|\\.[\\d\'_]+)([eE][-+]?[\\d\'_]+)?)' }
+      { begin: '\\b(0b[01\']+)' },
+      { begin: '\\b([\\d\']+(\\.[\\d\']*)?|\\.[\\d\']+)(u|U|l|L|ul|UL|f|F|b|B)' },
+      { begin: '(-?)(\\b0[xX][a-fA-F0-9\']+|(\\b[\\d\']+(\\.[\\d\']*)?|\\.[\\d\']+)([eE][-+]?[\\d\']+)?)' }
     ],
     relevance: 0
   };
@@ -3641,16 +3641,16 @@ hljs.registerLanguage('cs', function(hljs) {
   var KEYWORDS = {
     keyword:
       // Normal keywords.
-      'abstract as base bool break byte case catch char checked const continue decimal dynamic ' +
+      'abstract as base bool break byte case catch char checked const continue decimal ' +
       'default delegate do double else enum event explicit extern finally fixed float ' +
-      'for foreach goto if implicit in int interface internal is lock long when ' +
+      'for foreach goto if implicit in int interface internal is lock long ' +
       'object operator out override params private protected public readonly ref sbyte ' +
       'sealed short sizeof stackalloc static string struct switch this try typeof ' +
-      'uint ulong unchecked unsafe ushort using virtual volatile void while async ' +
+      'uint ulong unchecked unsafe ushort using virtual void volatile while ' +
       'nameof ' +
       // Contextual keywords.
-      'ascending descending from get group into join let orderby partial select set value var ' +
-      'where yield',
+      'add alias ascending async await by descending dynamic equals from get global group into join ' +
+      'let on orderby partial remove select set value var where yield',
     literal:
       'null false true'
   };
@@ -3710,7 +3710,7 @@ hljs.registerLanguage('cs', function(hljs) {
     ]
   };
 
-  var TYPE_IDENT_RE = hljs.IDENT_RE + '(<' + hljs.IDENT_RE + '>)?(\\[\\])?';
+  var TYPE_IDENT_RE = hljs.IDENT_RE + '(<' + hljs.IDENT_RE + '(\\s*,\\s*' + hljs.IDENT_RE + ')*>)?(\\[\\])?';
   return {
     aliases: ['csharp'],
     keywords: KEYWORDS,
@@ -4406,7 +4406,11 @@ hljs.registerLanguage('delphi', function(hljs) {
     'xorwrite goto near function end div overload object unit begin string on inline repeat until ' +
     'destructor write message program with read initialization except default nil if case cdecl in ' +
     'downto threadvar of try pascal const external constructor type public then implementation ' +
-    'finally published procedure';
+    'finally published procedure absolute reintroduce operator as is abstract alias assembler ' +
+    'bitpacked break continue cppdecl cvar enumerator experimental platform deprecated ' +
+    'unimplemented dynamic export far16 forward generic helper implements interrupt iochecks ' +
+    'local name nodefault noreturn nostackframe oldfpccall otherwise saveregisters softfloat ' +
+    'specialize strict unaligned varargs ';
   var COMMENT_MODES = [
     hljs.C_LINE_COMMENT_MODE,
     hljs.COMMENT(
@@ -4603,28 +4607,21 @@ hljs.registerLanguage('dockerfile', function(hljs) {
   return {
     aliases: ['docker'],
     case_insensitive: true,
-    keywords: 'from maintainer cmd expose add copy entrypoint volume user workdir onbuild run env label',
+    keywords: 'from maintainer expose env user onbuild',
     contains: [
       hljs.HASH_COMMENT_MODE,
+      hljs.APOS_STRING_MODE,
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
       {
-        keywords: 'run cmd entrypoint volume add copy workdir onbuild label',
-        begin: /^ *(onbuild +)?(run|cmd|entrypoint|volume|add|copy|workdir|label) +/,
+        beginKeywords: 'run cmd entrypoint volume add copy workdir label healthcheck',
         starts: {
           end: /[^\\]\n/,
           subLanguage: 'bash'
         }
-      },
-      {
-        keywords: 'from maintainer expose env user onbuild',
-        begin: /^ *(onbuild +)?(from|maintainer|expose|env|user|onbuild) +/, end: /[^\\]\n/,
-        contains: [
-          hljs.APOS_STRING_MODE,
-          hljs.QUOTE_STRING_MODE,
-          hljs.NUMBER_MODE,
-          hljs.HASH_COMMENT_MODE
-        ]
       }
-    ]
+    ],
+    illegal: '</'
   }
 });
 
@@ -5155,6 +5152,9 @@ hljs.registerLanguage('ruby', function(hljs) {
         // \B in the beginning suppresses recognition of ?-sequences where ?
         // is the last character of a preceding identifier, as in: `func?4`
         begin: /\B\?(\\\d{1,3}|\\x[A-Fa-f0-9]{1,2}|\\u[A-Fa-f0-9]{4}|\\?\S)\b/
+      },
+      {
+        begin: /<<(-?)\w+$/, end: /^\s*\w+$/,
       }
     ]
   };
@@ -7272,28 +7272,66 @@ hljs.registerLanguage('java', function(hljs) {
 });
 
 hljs.registerLanguage('javascript', function(hljs) {
+  var IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
+  var KEYWORDS = {
+    keyword:
+      'in of if for while finally var new function do return void else break catch ' +
+      'instanceof with throw case default try this switch continue typeof delete ' +
+      'let yield const export super debugger as async await static ' +
+      // ECMAScript 6 modules import
+      'import from as'
+    ,
+    literal:
+      'true false null undefined NaN Infinity',
+    built_in:
+      'eval isFinite isNaN parseFloat parseInt decodeURI decodeURIComponent ' +
+      'encodeURI encodeURIComponent escape unescape Object Function Boolean Error ' +
+      'EvalError InternalError RangeError ReferenceError StopIteration SyntaxError ' +
+      'TypeError URIError Number Math Date String RegExp Array Float32Array ' +
+      'Float64Array Int16Array Int32Array Int8Array Uint16Array Uint32Array ' +
+      'Uint8Array Uint8ClampedArray ArrayBuffer DataView JSON Intl arguments require ' +
+      'module console window document Symbol Set Map WeakSet WeakMap Proxy Reflect ' +
+      'Promise'
+  };
+  var EXPRESSIONS;
+  var NUMBER = {
+    className: 'number',
+    variants: [
+      { begin: '\\b(0[bB][01]+)' },
+      { begin: '\\b(0[oO][0-7]+)' },
+      { begin: hljs.C_NUMBER_RE }
+    ],
+    relevance: 0
+  };
+  var SUBST = {
+    className: 'subst',
+    begin: '\\$\\{', end: '\\}',
+    keywords: KEYWORDS,
+    contains: []  // defined later
+  };
+  var TEMPLATE_STRING = {
+    className: 'string',
+    begin: '`', end: '`',
+    contains: [
+      hljs.BACKSLASH_ESCAPE,
+      SUBST
+    ]
+  };
+  SUBST.contains = [
+    hljs.APOS_STRING_MODE,
+    hljs.QUOTE_STRING_MODE,
+    TEMPLATE_STRING,
+    NUMBER,
+    hljs.REGEXP_MODE
+  ]
+  var PARAMS_CONTAINS = SUBST.contains.concat([
+    hljs.C_BLOCK_COMMENT_MODE,
+    hljs.C_LINE_COMMENT_MODE
+  ]);
+
   return {
     aliases: ['js', 'jsx'],
-    keywords: {
-      keyword:
-        'in of if for while finally var new function do return void else break catch ' +
-        'instanceof with throw case default try this switch continue typeof delete ' +
-        'let yield const export super debugger as async await static ' +
-        // ECMAScript 6 modules import
-        'import from as'
-      ,
-      literal:
-        'true false null undefined NaN Infinity',
-      built_in:
-        'eval isFinite isNaN parseFloat parseInt decodeURI decodeURIComponent ' +
-        'encodeURI encodeURIComponent escape unescape Object Function Boolean Error ' +
-        'EvalError InternalError RangeError ReferenceError StopIteration SyntaxError ' +
-        'TypeError URIError Number Math Date String RegExp Array Float32Array ' +
-        'Float64Array Int16Array Int32Array Int8Array Uint16Array Uint32Array ' +
-        'Uint8Array Uint8ClampedArray ArrayBuffer DataView JSON Intl arguments require ' +
-        'module console window document Symbol Set Map WeakSet WeakMap Proxy Reflect ' +
-        'Promise'
-    },
+    keywords: KEYWORDS,
     contains: [
       {
         className: 'meta',
@@ -7306,27 +7344,19 @@ hljs.registerLanguage('javascript', function(hljs) {
       },
       hljs.APOS_STRING_MODE,
       hljs.QUOTE_STRING_MODE,
-      { // template string
-        className: 'string',
-        begin: '`', end: '`',
-        contains: [
-          hljs.BACKSLASH_ESCAPE,
-          {
-            className: 'subst',
-            begin: '\\$\\{', end: '\\}'
-          }
-        ]
-      },
+      TEMPLATE_STRING,
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      {
-        className: 'number',
-        variants: [
-          { begin: '\\b(0[bB][01]+)' },
-          { begin: '\\b(0[oO][0-7]+)' },
-          { begin: hljs.C_NUMBER_RE }
-        ],
-        relevance: 0
+      NUMBER,
+      { // object attr container
+        begin: /[{,]\s*/, relevance: 0,
+        contains: [
+          {
+            begin: IDENT_RE + '\\s*:', returnBegin: true,
+            relevance: 0,
+            contains: [{className: 'attr', begin: IDENT_RE, relevance: 0}]
+          }
+        ]
       },
       { // "value" container
         begin: '(' + hljs.RE_STARTERS_RE + '|\\b(case|return|throw)\\b)\\s*',
@@ -7335,12 +7365,42 @@ hljs.registerLanguage('javascript', function(hljs) {
           hljs.C_LINE_COMMENT_MODE,
           hljs.C_BLOCK_COMMENT_MODE,
           hljs.REGEXP_MODE,
+          {
+            className: 'function',
+            begin: '(\\(.*?\\)|' + IDENT_RE + ')\\s*=>', returnBegin: true,
+            end: '\\s*=>',
+            contains: [
+              {
+                className: 'params',
+                variants: [
+                  {
+                    begin: IDENT_RE
+                  },
+                  {
+                    begin: /\(\s*\)/,
+                  },
+                  {
+                    begin: /\(/, end: /\)/,
+                    excludeBegin: true, excludeEnd: true,
+                    keywords: KEYWORDS,
+                    contains: PARAMS_CONTAINS
+                  }
+                ]
+              }
+            ]
+          },
           { // E4X / JSX
             begin: /</, end: /(\/\w+|\w+\/)>/,
             subLanguage: 'xml',
             contains: [
               {begin: /<\w+\s*\/>/, skip: true},
-              {begin: /<\w+/, end: /(\/\w+|\w+\/)>/, skip: true, contains: ['self']}
+              {
+                begin: /<\w+/, end: /(\/\w+|\w+\/)>/, skip: true,
+                contains: [
+                  {begin: /<\w+\s*\/>/, skip: true},
+                  'self'
+                ]
+              }
             ]
           }
         ],
@@ -7350,16 +7410,13 @@ hljs.registerLanguage('javascript', function(hljs) {
         className: 'function',
         beginKeywords: 'function', end: /\{/, excludeEnd: true,
         contains: [
-          hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][0-9A-Za-z$_]*/}),
+          hljs.inherit(hljs.TITLE_MODE, {begin: IDENT_RE}),
           {
             className: 'params',
             begin: /\(/, end: /\)/,
             excludeBegin: true,
             excludeEnd: true,
-            contains: [
-              hljs.C_LINE_COMMENT_MODE,
-              hljs.C_BLOCK_COMMENT_MODE
-            ]
+            contains: PARAMS_CONTAINS
           }
         ],
         illegal: /\[|%/
@@ -8061,12 +8118,12 @@ hljs.registerLanguage('less', function(hljs) {
     variants: [{
       begin: '[\\.#:&\\[>]', end: '[;{}]'  // mixin calls end with ';'
       }, {
-      begin: INTERP_IDENT_RE + '[^;]*{',
-      end: '{'
+      begin: INTERP_IDENT_RE, end: '{'
     }],
     returnBegin: true,
     returnEnd:   true,
     illegal: '[<=\'$"]',
+    relevance: 0,
     contains: [
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
@@ -11919,8 +11976,6 @@ hljs.registerLanguage('ruleslanguage', function(hljs) {
 
 hljs.registerLanguage('rust', function(hljs) {
   var NUM_SUFFIX = '([uif](8|16|32|64|size))\?';
-  var BLOCK_COMMENT = hljs.inherit(hljs.C_BLOCK_COMMENT_MODE);
-  BLOCK_COMMENT.contains.push('self');
   var KEYWORDS =
     'alignof as be box break const continue crate do else enum extern ' +
     'false fn for if impl in let loop match mod mut offsetof once priv ' +
@@ -11956,7 +12011,7 @@ hljs.registerLanguage('rust', function(hljs) {
     illegal: '</',
     contains: [
       hljs.C_LINE_COMMENT_MODE,
-      BLOCK_COMMENT,
+      hljs.COMMENT('/\\*', '\\*/', {contains: ['self']}),
       hljs.inherit(hljs.QUOTE_STRING_MODE, {begin: /b?"/, illegal: null}),
       {
         className: 'string',
@@ -14851,8 +14906,8 @@ hljs.registerLanguage('vhdl', function(hljs) {
     case_insensitive: true,
     keywords: {
       keyword:
-        'abs access after alias all and architecture array assert attribute begin block ' +
-        'body buffer bus case component configuration constant context cover disconnect ' +
+        'abs access after alias all and architecture array assert assume assume_guarantee attribute ' +
+        'begin block body buffer bus case component configuration constant context cover disconnect ' +
         'downto default else elsif end entity exit fairness file for force function generate ' +
         'generic group guarded if impure in inertial inout is label library linkage literal ' +
         'loop map mod nand new next nor not null of on open or others out package port ' +
@@ -14861,14 +14916,19 @@ hljs.registerLanguage('vhdl', function(hljs) {
         'severity shared signal sla sll sra srl strong subtype then to transport type ' +
         'unaffected units until use variable vmode vprop vunit wait when while with xnor xor',
       built_in:
-        'boolean bit character severity_level integer time delay_length natural positive ' +
-        'string bit_vector file_open_kind file_open_status std_ulogic std_ulogic_vector ' +
+        'boolean bit character ' +
+        'integer time delay_length natural positive ' +
+        'string bit_vector file_open_kind file_open_status ' +
         'std_logic std_logic_vector unsigned signed boolean_vector integer_vector ' +
-        'real_vector time_vector'
+        'std_ulogic std_ulogic_vector unresolved_unsigned u_unsigned unresolved_signed u_signed' +
+        'real_vector time_vector',
+      literal:
+        'false true note warning error failure ' +  // severity_level
+        'line text side width'                      // textio
     },
     illegal: '{',
     contains: [
-      hljs.C_BLOCK_COMMENT_MODE,        // VHDL-2008 block commenting.
+      hljs.C_BLOCK_COMMENT_MODE,      // VHDL-2008 block commenting.
       hljs.COMMENT('--', '$'),
       hljs.QUOTE_STRING_MODE,
       {
@@ -14877,7 +14937,7 @@ hljs.registerLanguage('vhdl', function(hljs) {
         relevance: 0
       },
       {
-        className: 'literal',
+        className: 'string',
         begin: '\'(U|X|0|1|Z|W|L|H|-)\'',
         contains: [hljs.BACKSLASH_ESCAPE]
       },

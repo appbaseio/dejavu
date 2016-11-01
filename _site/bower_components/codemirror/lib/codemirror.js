@@ -3533,8 +3533,8 @@
     on(inp, "keyup", function(e) { onKeyUp.call(cm, e); });
     on(inp, "keydown", operation(cm, onKeyDown));
     on(inp, "keypress", operation(cm, onKeyPress));
-    on(inp, "focus", bind(onFocus, cm));
-    on(inp, "blur", bind(onBlur, cm));
+    on(inp, "focus", function (e) { onFocus(cm, e); });
+    on(inp, "blur", function (e) { onBlur(cm, e); });
   }
 
   function dragDropChanged(cm, value, old) {
@@ -4262,12 +4262,12 @@
     }, 100);
   }
 
-  function onFocus(cm) {
+  function onFocus(cm, e) {
     if (cm.state.delayingBlurEvent) cm.state.delayingBlurEvent = false;
 
     if (cm.options.readOnly == "nocursor") return;
     if (!cm.state.focused) {
-      signal(cm, "focus", cm);
+      signal(cm, "focus", cm, e);
       cm.state.focused = true;
       addClass(cm.display.wrapper, "CodeMirror-focused");
       // This test prevents this from firing when a context
@@ -4281,11 +4281,11 @@
     }
     restartBlink(cm);
   }
-  function onBlur(cm) {
+  function onBlur(cm, e) {
     if (cm.state.delayingBlurEvent) return;
 
     if (cm.state.focused) {
-      signal(cm, "blur", cm);
+      signal(cm, "blur", cm, e);
       cm.state.focused = false;
       rmClass(cm.display.wrapper, "CodeMirror-focused");
     }
@@ -4907,7 +4907,8 @@
     var doc = cm.doc, x = pos.left, y;
     if (unit == "page") {
       var pageSize = Math.min(cm.display.wrapper.clientHeight, window.innerHeight || document.documentElement.clientHeight);
-      y = pos.top + dir * (pageSize - (dir < 0 ? 1.5 : .5) * textHeight(cm.display));
+      var moveAmount = Math.max(pageSize - .5 * textHeight(cm.display), 3);
+      y = (dir > 0 ? pos.bottom : pos.top) + dir * moveAmount;
     } else if (unit == "line") {
       y = dir > 0 ? pos.bottom + 3 : pos.top - 3;
     }
@@ -6860,7 +6861,7 @@
       }
       if (!flattenSpans || curStyle != style) {
         while (curStart < stream.start) {
-          curStart = Math.min(stream.start, curStart + 50000);
+          curStart = Math.min(stream.start, curStart + 5000);
           f(curStart, curStyle);
         }
         curStyle = style;
@@ -6868,8 +6869,10 @@
       stream.start = stream.pos;
     }
     while (curStart < stream.pos) {
-      // Webkit seems to refuse to render text nodes longer than 57444 characters
-      var pos = Math.min(stream.pos, curStart + 50000);
+      // Webkit seems to refuse to render text nodes longer than 57444
+      // characters, and returns inaccurate measurements in nodes
+      // starting around 5000 chars.
+      var pos = Math.min(stream.pos, curStart + 5000);
       f(pos, curStyle);
       curStart = pos;
     }
@@ -8955,7 +8958,7 @@
 
   // THE END
 
-  CodeMirror.version = "5.18.2";
+  CodeMirror.version = "5.19.0";
 
   return CodeMirror;
 });

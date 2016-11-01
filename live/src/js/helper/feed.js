@@ -117,7 +117,7 @@ function beforeInit() {
 			
 		// to store input state
 		input_state = {
-			url: URL,
+			url: config.url,
 			appname: APPNAME
 		};
 		init();
