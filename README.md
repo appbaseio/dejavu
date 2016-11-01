@@ -52,6 +52,25 @@ http://127.0.0.1:9200/_plugin/dejavu
 4. bower install
 5. gulp watch (runs dejavu on http://localhost:1358)
 
+#### Local Build
+
+#### `master` branch: Elasticsearch Plugin
+
+```sh
+$ npm run build_es_plugin
+```
+
+#### `chrome-extension` branch: Chrome extension
+
+```sh
+$ npm run build_chrome_extension
+```
+
+#### `gh-pages` branch: Github hosted pages
+
+```sh
+$ npm run build_gh_pages
+```
 
 #### Contributing
 
