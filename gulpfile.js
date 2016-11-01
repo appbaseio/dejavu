@@ -169,4 +169,14 @@ gulp.task('chromeBuild', ['bundle', 'compact'], function() {
         }, 1000);
 });
 
+gulp.task('ghpagesBuild', ['bundle', 'compact'], function() {
+    var folders_length = Object.keys(files.folders).length;
+    for(folder in files.folders) {
+        gulp.src(files.folders[folder])
+            .pipe(gulp.dest('./live/'+folder));   
+    }
+    gulp.src(files.moveFiles)
+        .pipe(gulp.dest('./live'));
+});
+
 gulp.task('default', ['bundle', 'compact']);
