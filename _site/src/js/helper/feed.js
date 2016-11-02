@@ -454,8 +454,9 @@ var feed = (function() {
 			});
 		},
 		filterType: function() {
-			var createUrl = HOST + '/' + APPNAME + '/_search?search_type=count';
+			var createUrl = HOST + '/' + APPNAME + '/_search?search_type=query_then_fetch';
 			var queryBody = {
+				'size': 0,
 				'aggs': {
 			        'count_by_type': {
 			            'terms': {
