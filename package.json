@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/appbaseio/dejaVu.git"
+    "url": "git+https://github.com/appbaseio/dejavu.git"
   },
   "dependencies": {
     "babel-preset-react": "^6.3.13",
@@ -43,7 +43,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/appbaseio/dejaVu/issues"
+    "url": "https://github.com/appbaseio/dejavu/issues"
   },
-  "homepage": "https://github.com/appbaseio/dejaVu#readme"
+  "homepage": "https://github.com/appbaseio/dejavu#readme"
 }
