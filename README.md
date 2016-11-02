@@ -84,7 +84,7 @@ http://127.0.0.1:9200/_plugin/dejavu
 
 #### Local Installation
 
-1. git clone https://github.com/appbaseio/dejavu  
+1. git clone https://github.com/appbaseio/dejavu
 2. git checkout master
 3. npm install
 4. bower install

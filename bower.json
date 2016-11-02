@@ -1,5 +1,5 @@
 {
-  "name": "dejaVu",
+  "name": "dejavu",
   "dependencies": {
     "appbase-js": "latest",
     "jquery": "~2.1.4",
