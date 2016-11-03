@@ -1359,9 +1359,9 @@ var HomePage = React.createClass({
                                 exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
+                            <a href="http://appbaseio.github.io/dejavu" target="_blank">Watch Video</a>
                             <span className="text-right pull-right powered_by">
-                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io" target="_blank">appbase.io</a>
                             </span>
                             <span className="pull-left github-star">
                                 {githubStar}
