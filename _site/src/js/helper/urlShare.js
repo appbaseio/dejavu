@@ -1,18 +1,36 @@
 var secret = 'dejvu';
 var decryptedData = {};
+var dejavuUrl;
 
 // Encrypt
-function createUrl(inputs) {
-    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputs), secret).toString();
-    window.location.href = '#?input_state=' + ciphertext;
+function createUrl(inputs, cb) {
+    compress(inputs, compressCb.bind(this));
+    function compressCb(error, ciphertext) {
+        if(!error) {
+            dejavuUrl  = ciphertext;
+            window.location.href = '#?input_state=' + dejavuUrl;
+        }
+        if(cb) {
+            cb(error, ciphertext);
+        }
+    }
 }
 
 // Decrypt
-function getUrl() {
-    var ciphertext = window.location.href.split('#?input_state=');
-    if (ciphertext.length > 1) {
-        var bytes = CryptoJS.AES.decrypt(ciphertext[1], secret);
-        decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+function getUrl(cb) {
+    var url = window.location.href.split('#?input_state=');
+    if (url.length > 1) {
+        decompress(url[1], function(error, data) {
+            if(data) {
+                applyDecrypt(data);
+                cb(decryptedData);
+            }
+        });    
+    } else {
+        resolve({error:'Empty url'});
+    }
+
+    function applyDecrypt(decryptedData) {
         window.storageService.setItem('esurl', decryptedData.url);
         window.storageService.setItem('appname', decryptedData.appname);
         var types;
@@ -28,7 +46,7 @@ function getUrl() {
 
 // convertToUrl
 function convertToUrl(type) {
-    var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(input_state), secret).toString();
+    var ciphertext = dejavuUrl;
     var final_url = '';
     if(type == 'gh-pages') {
         final_url = 'appbaseio.github.io/dejavu/live/#?input_state='+ciphertext;
@@ -81,4 +99,26 @@ function compress(jsonInput, cb) {
         });
     }
 }
-getUrl();
+
+function decompress(compressed, cb) {
+    var self = this;
+    if(compressed) {
+        var compressBuffer = SafeEncode.buffer(compressed);
+        JSONURL.decompress(SafeEncode.decode(compressBuffer), function(res, error) {
+        var decryptedData = res;
+        try {
+            if(decryptedData) {
+                decryptedData = JSON.parse(decryptedData);
+                self.decryptedData = decryptedData;
+                cb(null, decryptedData);   
+            } else {
+                cb('Not found');
+            }
+          } catch(e) {
+            cb(e);
+          }
+        });
+    } else {
+        return cb('Empty');
+    }
+}
