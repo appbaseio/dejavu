@@ -26,8 +26,6 @@ function getUrl(cb) {
                 cb(decryptedData);
             }
         });    
-    } else {
-        // resolve({error:'Empty url'});
     }
 
     function applyDecrypt(decryptedData) {
