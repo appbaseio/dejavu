@@ -317,14 +317,14 @@ var HomePage = React.createClass({
                         this.unwatchStock(type);
                     }
                 }.bind(this));
-                if(BRANCH !== 'chrome') {
-                    this.setState({
-                        types: update,
-                        connect: true
-                    });
-                } else {
+                // if(BRANCH !== 'chrome') {
+                //     this.setState({
+                //         types: update,
+                //         connect: true
+                //     });
+                // } else {
                     this.setChromeTypes(update);
-                }
+                // }
             }.bind(this));
         }
     },
@@ -378,6 +378,7 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
+                getUrl(this.connectSync(config));
             }
         }
     },
@@ -391,6 +392,27 @@ var HomePage = React.createClass({
             }
         }
         this.setApps();
+    },
+    connectSync: function(config) {
+        var self = this;
+        this.afterConnect();
+        input_state = JSON.parse(JSON.stringify(config));
+        getMapFlag = false;
+        $('.full_page_loading').removeClass('hide');
+        esTypes = [];
+        subsetESTypes = [];
+        self.setState({
+            splash: false,
+            types: [],
+            documents: [],
+            totalRecord: 0,
+            connect: false
+        });
+        beforeInit();
+        setTimeout(function(){
+            appAuth = true;
+            self.init_map_stream();
+        },500);
     },
     init_map_stream: function() {
         try {
@@ -1053,8 +1075,11 @@ var HomePage = React.createClass({
         function letsConnect() {
             storageService.setItem('esurl',temp_config.url);
             storageService.setItem('appname',temp_config.appname);
+            config = temp_config;
             if(BRANCH !== 'chrome') {
-                location.reload();
+                createUrl(temp_config, function() {
+                    self.connectSync(temp_config);
+                });
             } else {
                 config = temp_config;
                 setTimeout(function(){
@@ -1249,10 +1274,10 @@ var HomePage = React.createClass({
         if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
             index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
         }
-        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
+        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
         if(BRANCH === 'chrome') {
-            githubStar = (<a href="https://github.com/appbaseio/dejaVu" target="_blank">
-                            <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
+            githubStar = (<a href="https://github.com/appbaseio/dejavu" target="_blank">
+                            <img src="buttons/appbaseio-dejavu.png" alt="Dejavu"/>
                         </a>);
         }
         var composeQuery;
@@ -1359,7 +1384,7 @@ var HomePage = React.createClass({
                                 exportJsonData= {this.exportJsonData} />
                         </div>
                         <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a>
+                            <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
                             <span className="text-right pull-right powered_by">
                                 Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
                             </span>

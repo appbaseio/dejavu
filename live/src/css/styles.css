@@ -166,6 +166,7 @@ body{
 }
 .dejavuContainer{
   border: 1px solid #ddd;
+  overflow-x: hidden;
 }
 .dejavuContainer,
 .typeContainer{

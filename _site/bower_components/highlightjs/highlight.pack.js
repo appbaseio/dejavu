@@ -1,4 +1,4 @@
-/*! highlight.js v9.7.0 | BSD3 License | git.io/hljslicense */
+/*! highlight.js v9.8.0 | BSD3 License | git.io/hljslicense */
 (function(factory) {
 
   // Find the global object for export to both the browser and web workers.
@@ -2888,6 +2888,31 @@ hljs.registerLanguage('ceylon', function(hljs) {
   };
 });
 
+hljs.registerLanguage('clean', function(hljs) {
+  return {
+    aliases: ['clean','icl','dcl'],
+    keywords: {
+      keyword:
+        'if let in with where case of class instance otherwise ' +
+        'implementation definition system module from import qualified as ' +
+        'special code inline foreign export ccall stdcall generic derive ' +
+        'infix infixl infixr',
+      literal:
+        'True False'
+    },
+    contains: [
+
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      hljs.APOS_STRING_MODE,
+      hljs.QUOTE_STRING_MODE,
+      hljs.C_NUMBER_MODE,
+
+      {begin: '->|<-[|:]?|::|#!?|>>=|\\{\\||\\|\\}|:==|=:|\\.\\.|<>|`'} // relevance booster
+    ]
+  };
+});
+
 hljs.registerLanguage('clojure', function(hljs) {
   var keywords = {
     'builtin-name':
@@ -5553,6 +5578,51 @@ hljs.registerLanguage('fix', function(hljs) {
   };
 });
 
+hljs.registerLanguage('flix', function (hljs) {
+
+    var CHAR = {
+        className: 'string',
+        begin: /'(.|\\[xXuU][a-zA-Z0-9]+)'/
+    };
+
+    var STRING = {
+        className: 'string',
+        variants: [
+            {
+                begin: '"', end: '"'
+            }
+        ]
+    };
+
+    var NAME = {
+        className: 'title',
+        begin: /[^0-9\n\t "'(),.`{}\[\]:;][^\n\t "'(),.`{}\[\]:;]+|[^0-9\n\t "'(),.`{}\[\]:;=]/
+    };
+
+    var METHOD = {
+        className: 'function',
+        beginKeywords: 'def',
+        end: /[:={\[(\n;]/,
+        excludeEnd: true,
+        contains: [NAME]
+    };
+
+    return {
+        keywords: {
+            literal: 'true false',
+            keyword: 'case class def else enum if impl import in lat rel index let match namespace switch type yield with'
+        },
+        contains: [
+            hljs.C_LINE_COMMENT_MODE,
+            hljs.C_BLOCK_COMMENT_MODE,
+            CHAR,
+            STRING,
+            METHOD,
+            hljs.C_NUMBER_MODE
+        ]
+    };
+});
+
 hljs.registerLanguage('fortran', function(hljs) {
   var PARAMS = {
     className: 'params',
@@ -6168,7 +6238,7 @@ hljs.registerLanguage('glsl', function(hljs) {
     keywords: {
       keyword:
         // Statements
-        'break continue discard do else for if return while' +
+        'break continue discard do else for if return while switch case default ' +
         // Qualifiers
         'attribute binding buffer ccw centroid centroid varying coherent column_major const cw ' +
         'depth_any depth_greater depth_less depth_unchanged early_fragment_tests equal_spacing ' +
@@ -6753,57 +6823,111 @@ hljs.registerLanguage('haxe', function(hljs) {
   var IDENT_RE = '[a-zA-Z_$][a-zA-Z0-9_$]*';
   var IDENT_FUNC_RETURN_TYPE_RE = '([*]|[a-zA-Z_$][a-zA-Z0-9_$]*)';
 
+  var HAXE_BASIC_TYPES = 'Int Float String Bool Dynamic Void Array ';
+
   return {
     aliases: ['hx'],
     keywords: {
-      keyword: 'break callback case cast catch class continue default do dynamic else enum extends extern ' +
-    'for function here if implements import in inline interface never new override package private ' +
-    'public return static super switch this throw trace try typedef untyped using var while',
-      literal: 'true false null'
+      keyword: 'break callback case cast catch continue default do dynamic else enum extern ' +
+               'for function here if import in inline never new override package private get set ' +
+               'public return static super switch this throw trace try typedef untyped using var while ' +
+               HAXE_BASIC_TYPES,
+      built_in:
+        'trace this',
+      literal:
+        'true false null _'
     },
     contains: [
-      hljs.APOS_STRING_MODE,
+      { className: 'string', // interpolate-able strings
+        begin: '\'', end: '\'',
+        contains: [
+          hljs.BACKSLASH_ESCAPE,
+          { className: 'subst', // interpolation
+            begin: '\\$\\{', end: '\\}'
+          },
+          { className: 'subst', // interpolation
+            begin: '\\$', end: '\\W}'
+          }
+        ]
+      },
       hljs.QUOTE_STRING_MODE,
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       hljs.C_NUMBER_MODE,
-      {
-        className: 'class',
-        beginKeywords: 'class interface', end: '{', excludeEnd: true,
+      { className: 'meta', // compiler meta
+        begin: '@:', end: '$'
+      },
+      { className: 'meta', // compiler conditionals
+        begin: '#', end: '$',
+        keywords: {'meta-keyword': 'if else elseif end error'}
+      },
+      { className: 'type', // function types
+        begin: ':[ \t]*', end: '[^A-Za-z0-9_ \t\\->]',
+        excludeBegin: true, excludeEnd: true,
+        relevance: 0
+      },
+      { className: 'type', // types
+        begin: ':[ \t]*', end: '\\W',
+        excludeBegin: true, excludeEnd: true
+      },
+      { className: 'type', // instantiation
+        begin: 'new *', end: '\\W',
+        excludeBegin: true, excludeEnd: true
+      },
+      { className: 'class', // enums
+        beginKeywords: 'enum', end: '\\{',
         contains: [
-          {
-            beginKeywords: 'extends implements'
+          hljs.TITLE_MODE
+        ]
+      },
+      { className: 'class', // abstracts
+        beginKeywords: 'abstract', end: '[\\{$]',
+        contains: [
+          { className: 'type',
+            begin: '\\(', end: '\\)',
+            excludeBegin: true, excludeEnd: true
+          },
+          { className: 'type',
+            begin: 'from +', end: '\\W',
+            excludeBegin: true, excludeEnd: true
+          },
+          { className: 'type',
+            begin: 'to +', end: '\\W',
+            excludeBegin: true, excludeEnd: true
+          },
+          hljs.TITLE_MODE
+        ],
+        keywords: {
+          keyword: 'abstract from to'
+        }
+      },
+      { className: 'class', // classes
+        begin: '\\b(class|interface) +', end: '[\\{$]',  excludeEnd: true,
+        keywords: 'class interface',
+        contains: [
+          { className: 'keyword',
+            begin: '\\b(extends|implements) +',
+            keywords: 'extends implements',
+            contains: [
+              {
+                className: 'type',
+                begin: hljs.IDENT_RE,
+                relevance: 0
+              }
+            ]
           },
           hljs.TITLE_MODE
         ]
       },
-      {
-        className: 'meta',
-        begin: '#', end: '$',
-        keywords: {'meta-keyword': 'if else elseif end error'}
-      },
-      {
-        className: 'function',
-        beginKeywords: 'function', end: '[{;]', excludeEnd: true,
+      { className: 'function',
+        beginKeywords: 'function', end: '\\(', excludeEnd: true,
         illegal: '\\S',
         contains: [
-          hljs.TITLE_MODE,
-          {
-            className: 'params',
-            begin: '\\(', end: '\\)',
-            contains: [
-              hljs.APOS_STRING_MODE,
-              hljs.QUOTE_STRING_MODE,
-              hljs.C_LINE_COMMENT_MODE,
-              hljs.C_BLOCK_COMMENT_MODE
-            ]
-          },
-          {
-            begin: ':\\s*' + IDENT_FUNC_RETURN_TYPE_RE
-          }
+          hljs.TITLE_MODE
         ]
       }
-    ]
+    ],
+    illegal: /<\//
   };
 });
 
@@ -7165,13 +7289,14 @@ hljs.registerLanguage('irpf90', function(hljs) {
 });
 
 hljs.registerLanguage('java', function(hljs) {
-  var GENERIC_IDENT_RE = hljs.UNDERSCORE_IDENT_RE + '(<' + hljs.UNDERSCORE_IDENT_RE + '(\\s*,\\s*' + hljs.UNDERSCORE_IDENT_RE + ')*>)?';
+  var JAVA_IDENT_RE = '[\u00C0-\u02B8a-zA-Z_$][\u00C0-\u02B8a-zA-Z_$0-9]*';
+  var GENERIC_IDENT_RE = JAVA_IDENT_RE + '(<' + JAVA_IDENT_RE + '(\\s*,\\s*' + JAVA_IDENT_RE + ')*>)?';
   var KEYWORDS =
     'false synchronized int abstract float private char boolean static null if const ' +
     'for true while long strictfp finally protected import native final void ' +
     'enum else break transient catch instanceof byte super volatile case assert short ' +
     'package default double public try this switch continue throws protected public private ' +
-    'module requires exports';
+    'module requires exports do';
 
   // https://docs.oracle.com/javase/7/docs/technotes/guides/language/underscores-literals.html
   var JAVA_NUMBER_RE = '\\b' +
@@ -10283,65 +10408,86 @@ hljs.registerLanguage('nix', function(hljs) {
 hljs.registerLanguage('nsis', function(hljs) {
   var CONSTANTS = {
     className: 'variable',
-    begin: '\\$(ADMINTOOLS|APPDATA|CDBURN_AREA|CMDLINE|COMMONFILES32|COMMONFILES64|COMMONFILES|COOKIES|DESKTOP|DOCUMENTS|EXEDIR|EXEFILE|EXEPATH|FAVORITES|FONTS|HISTORY|HWNDPARENT|INSTDIR|INTERNET_CACHE|LANGUAGE|LOCALAPPDATA|MUSIC|NETHOOD|OUTDIR|PICTURES|PLUGINSDIR|PRINTHOOD|PROFILE|PROGRAMFILES32|PROGRAMFILES64|PROGRAMFILES|QUICKLAUNCH|RECENT|RESOURCES_LOCALIZED|RESOURCES|SENDTO|SMPROGRAMS|SMSTARTUP|STARTMENU|SYSDIR|TEMP|TEMPLATES|VIDEOS|WINDIR)'
+    begin: /\$(ADMINTOOLS|APPDATA|CDBURN_AREA|CMDLINE|COMMONFILES32|COMMONFILES64|COMMONFILES|COOKIES|DESKTOP|DOCUMENTS|EXEDIR|EXEFILE|EXEPATH|FAVORITES|FONTS|HISTORY|HWNDPARENT|INSTDIR|INTERNET_CACHE|LANGUAGE|LOCALAPPDATA|MUSIC|NETHOOD|OUTDIR|PICTURES|PLUGINSDIR|PRINTHOOD|PROFILE|PROGRAMFILES32|PROGRAMFILES64|PROGRAMFILES|QUICKLAUNCH|RECENT|RESOURCES_LOCALIZED|RESOURCES|SENDTO|SMPROGRAMS|SMSTARTUP|STARTMENU|SYSDIR|TEMP|TEMPLATES|VIDEOS|WINDIR)/
   };
 
   var DEFINES = {
     // ${defines}
     className: 'variable',
-    begin: '\\$+{[a-zA-Z0-9_]+}'
+    begin: /\$+{[\w\.:-]+}/
   };
 
   var VARIABLES = {
     // $variables
     className: 'variable',
-    begin: '\\$+[a-zA-Z0-9_]+',
-    illegal: '\\(\\){}'
+    begin: /\$+\w+/,
+    illegal: /\(\){}/
   };
 
   var LANGUAGES = {
     // $(language_strings)
     className: 'variable',
-    begin: '\\$+\\([a-zA-Z0-9_]+\\)'
+    begin: /\$+\([\w\^\.:-]+\)/
   };
 
   var PARAMETERS = {
     // command parameters
-    className: 'built_in',
+    className: 'params',
     begin: '(ARCHIVE|FILE_ATTRIBUTE_ARCHIVE|FILE_ATTRIBUTE_NORMAL|FILE_ATTRIBUTE_OFFLINE|FILE_ATTRIBUTE_READONLY|FILE_ATTRIBUTE_SYSTEM|FILE_ATTRIBUTE_TEMPORARY|HKCR|HKCU|HKDD|HKEY_CLASSES_ROOT|HKEY_CURRENT_CONFIG|HKEY_CURRENT_USER|HKEY_DYN_DATA|HKEY_LOCAL_MACHINE|HKEY_PERFORMANCE_DATA|HKEY_USERS|HKLM|HKPD|HKU|IDABORT|IDCANCEL|IDIGNORE|IDNO|IDOK|IDRETRY|IDYES|MB_ABORTRETRYIGNORE|MB_DEFBUTTON1|MB_DEFBUTTON2|MB_DEFBUTTON3|MB_DEFBUTTON4|MB_ICONEXCLAMATION|MB_ICONINFORMATION|MB_ICONQUESTION|MB_ICONSTOP|MB_OK|MB_OKCANCEL|MB_RETRYCANCEL|MB_RIGHT|MB_RTLREADING|MB_SETFOREGROUND|MB_TOPMOST|MB_USERICON|MB_YESNO|NORMAL|OFFLINE|READONLY|SHCTX|SHELL_CONTEXT|SYSTEM|TEMPORARY)'
   };
 
-  var COMPILER ={
+  var COMPILER = {
     // !compiler_flags
     className: 'keyword',
-    begin: '\\!(addincludedir|addplugindir|appendfile|cd|define|delfile|echo|else|endif|error|execute|finalize|getdllversionsystem|ifdef|ifmacrodef|ifmacrondef|ifndef|if|include|insertmacro|macroend|macro|makensis|packhdr|searchparse|searchreplace|tempfile|undef|verbose|warning)'
+    begin: /\!(addincludedir|addplugindir|appendfile|cd|define|delfile|echo|else|endif|error|execute|finalize|getdllversionsystem|ifdef|ifmacrodef|ifmacrondef|ifndef|if|include|insertmacro|macroend|macro|makensis|packhdr|searchparse|searchreplace|tempfile|undef|verbose|warning)/
+  };
+
+  var METACHARS = {
+    // $\n, $\r, $\t, $$
+    className: 'subst',
+    begin: /\$(\\[nrt]|\$)/
+  };
+
+  var PLUGINS = {
+    // plug::ins
+    className: 'class',
+    begin: /\w+\:\:\w+/
+  };
+
+    var STRING = {
+      className: 'string',
+      variants: [
+        {
+          begin: '"', end: '"'
+        },
+        {
+          begin: '\'', end: '\''
+        },
+        {
+          begin: '`', end: '`'
+        }
+      ],
+      illegal: /\n/,
+      contains: [
+        METACHARS,
+        CONSTANTS,
+        DEFINES,
+        VARIABLES,
+        LANGUAGES
+      ]
   };
 
   return {
     case_insensitive: false,
     keywords: {
       keyword:
-      'Abort AddBrandingImage AddSize AllowRootDirInstall AllowSkipFiles AutoCloseWindow BGFont BGGradient BrandingText BringToFront Call CallInstDLL Caption ChangeUI CheckBitmap ClearErrors CompletedText ComponentText CopyFiles CRCCheck CreateDirectory CreateFont CreateShortCut Delete DeleteINISec DeleteINIStr DeleteRegKey DeleteRegValue DetailPrint DetailsButtonText DirText DirVar DirVerify EnableWindow EnumRegKey EnumRegValue Exch Exec ExecShell ExecWait ExpandEnvStrings File FileBufSize FileClose FileErrorText FileOpen FileRead FileReadByte FileReadUTF16LE FileReadWord FileSeek FileWrite FileWriteByte FileWriteUTF16LE FileWriteWord FindClose FindFirst FindNext FindWindow FlushINI FunctionEnd GetCurInstType GetCurrentAddress GetDlgItem GetDLLVersion GetDLLVersionLocal GetErrorLevel GetFileTime GetFileTimeLocal GetFullPathName GetFunctionAddress GetInstDirError GetLabelAddress GetTempFileName Goto HideWindow Icon IfAbort IfErrors IfFileExists IfRebootFlag IfSilent InitPluginsDir InstallButtonText InstallColors InstallDir InstallDirRegKey InstProgressFlags InstType InstTypeGetText InstTypeSetText IntCmp IntCmpU IntFmt IntOp IsWindow LangString LicenseBkColor LicenseData LicenseForceSelection LicenseLangString LicenseText LoadLanguageFile LockWindow LogSet LogText ManifestDPIAware ManifestSupportedOS MessageBox MiscButtonText Name Nop OutFile Page PageCallbacks PageExEnd Pop Push Quit ReadEnvStr ReadINIStr ReadRegDWORD ReadRegStr Reboot RegDLL Rename RequestExecutionLevel ReserveFile Return RMDir SearchPath SectionEnd SectionGetFlags SectionGetInstTypes SectionGetSize SectionGetText SectionGroupEnd SectionIn SectionSetFlags SectionSetInstTypes SectionSetSize SectionSetText SendMessage SetAutoClose SetBrandingImage SetCompress SetCompressor SetCompressorDictSize SetCtlColors SetCurInstType SetDatablockOptimize SetDateSave SetDetailsPrint SetDetailsView SetErrorLevel SetErrors SetFileAttributes SetFont SetOutPath SetOverwrite SetPluginUnload SetRebootFlag SetRegView SetShellVarContext SetSilent ShowInstDetails ShowUninstDetails ShowWindow SilentInstall SilentUnInstall Sleep SpaceTexts StrCmp StrCmpS StrCpy StrLen SubCaption SubSectionEnd Unicode UninstallButtonText UninstallCaption UninstallIcon UninstallSubCaption UninstallText UninstPage UnRegDLL Var VIAddVersionKey VIFileVersion VIProductVersion WindowIcon WriteINIStr WriteRegBin WriteRegDWORD WriteRegExpandStr WriteRegStr WriteUninstaller XPStyle',
+      'Abort AddBrandingImage AddSize AllowRootDirInstall AllowSkipFiles AutoCloseWindow BGFont BGGradient BrandingText BringToFront Call CallInstDLL Caption ChangeUI CheckBitmap ClearErrors CompletedText ComponentText CopyFiles CRCCheck CreateDirectory CreateFont CreateShortCut Delete DeleteINISec DeleteINIStr DeleteRegKey DeleteRegValue DetailPrint DetailsButtonText DirText DirVar DirVerify EnableWindow EnumRegKey EnumRegValue Exch Exec ExecShell ExecWait ExpandEnvStrings File FileBufSize FileClose FileErrorText FileOpen FileRead FileReadByte FileReadUTF16LE FileReadWord FileSeek FileWrite FileWriteByte FileWriteUTF16LE FileWriteWord FindClose FindFirst FindNext FindWindow FlushINI FunctionEnd GetCurInstType GetCurrentAddress GetDlgItem GetDLLVersion GetDLLVersionLocal GetErrorLevel GetFileTime GetFileTimeLocal GetFullPathName GetFunctionAddress GetInstDirError GetLabelAddress GetTempFileName Goto HideWindow Icon IfAbort IfErrors IfFileExists IfRebootFlag IfSilent InitPluginsDir InstallButtonText InstallColors InstallDir InstallDirRegKey InstProgressFlags InstType InstTypeGetText InstTypeSetText IntCmp IntCmpU IntFmt IntOp IsWindow LangString LicenseBkColor LicenseData LicenseForceSelection LicenseLangString LicenseText LoadLanguageFile LockWindow LogSet LogText ManifestDPIAware ManifestSupportedOS MessageBox MiscButtonText Name Nop OutFile Page PageCallbacks PageExEnd Pop Push Quit ReadEnvStr ReadINIStr ReadRegDWORD ReadRegStr Reboot RegDLL Rename RequestExecutionLevel ReserveFile Return RMDir SearchPath SectionEnd SectionGetFlags SectionGetInstTypes SectionGetSize SectionGetText SectionGroupEnd SectionIn SectionSetFlags SectionSetInstTypes SectionSetSize SectionSetText SendMessage SetAutoClose SetBrandingImage SetCompress SetCompressor SetCompressorDictSize SetCtlColors SetCurInstType SetDatablockOptimize SetDateSave SetDetailsPrint SetDetailsView SetErrorLevel SetErrors SetFileAttributes SetFont SetOutPath SetOverwrite SetRebootFlag SetRegView SetShellVarContext SetSilent ShowInstDetails ShowUninstDetails ShowWindow SilentInstall SilentUnInstall Sleep SpaceTexts StrCmp StrCmpS StrCpy StrLen SubCaption Unicode UninstallButtonText UninstallCaption UninstallIcon UninstallSubCaption UninstallText UninstPage UnRegDLL Var VIAddVersionKey VIFileVersion VIProductVersion WindowIcon WriteINIStr WriteRegBin WriteRegDWORD WriteRegExpandStr WriteRegStr WriteUninstaller XPStyle',
       literal:
-      'admin all auto both colored current false force hide highest lastused leave listonly none normal notset off on open print show silent silentlog smooth textonly true user '
+      'admin all auto both bottom bzip2 colored components current custom directory false force hide highest ifdiff ifnewer instfiles lastused leave left license listonly lzma nevershow none normal notset off on open print right show silent silentlog smooth textonly top true try un.components un.custom un.directory un.instfiles un.license uninstConfirm user Win10 Win7 Win8 WinVista zlib'
     },
     contains: [
       hljs.HASH_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      {
-        className: 'string',
-        begin: '"', end: '"',
-        illegal: '\\n',
-        contains: [
-          { // $\n, $\r, $\t, $$
-            begin: '\\$(\\\\(n|r|t)|\\$)'
-          },
-          CONSTANTS,
-          DEFINES,
-          VARIABLES,
-          LANGUAGES
-        ]
-      },
       hljs.COMMENT(
         ';',
         '$',
@@ -10351,17 +10497,16 @@ hljs.registerLanguage('nsis', function(hljs) {
       ),
       {
         className: 'function',
-        beginKeywords: 'Function PageEx Section SectionGroup SubSection', end: '$'
+        beginKeywords: 'Function PageEx Section SectionGroup', end: '$'
       },
+      STRING,
       COMPILER,
       DEFINES,
       VARIABLES,
       LANGUAGES,
       PARAMETERS,
-      hljs.NUMBER_MODE,
-      { // plug::ins
-        begin: hljs.IDENT_RE + '::' + hljs.IDENT_RE
-      }
+      PLUGINS,
+      hljs.NUMBER_MODE
     ]
   };
 });
@@ -11039,7 +11184,7 @@ hljs.registerLanguage('powershell', function(hljs) {
     case_insensitive: true,
     keywords: {
       keyword: 'if else foreach return function do while until elseif begin for trap data dynamicparam end break throw param continue finally in switch exit filter try process catch',
-      built_in: 'Add-Computer Add-Content Add-History Add-JobTrigger Add-Member Add-PSSnapin Add-Type Checkpoint-Computer Clear-Content Clear-EventLog Clear-History Clear-Host Clear-Item Clear-ItemProperty Clear-Variable Compare-Object Complete-Transaction Connect-PSSession Connect-WSMan Convert-Path ConvertFrom-Csv ConvertFrom-Json ConvertFrom-SecureString ConvertFrom-StringData ConvertTo-Csv ConvertTo-Html ConvertTo-Json ConvertTo-SecureString ConvertTo-Xml Copy-Item Copy-ItemProperty Debug-Process Disable-ComputerRestore Disable-JobTrigger Disable-PSBreakpoint Disable-PSRemoting Disable-PSSessionConfiguration Disable-WSManCredSSP Disconnect-PSSession Disconnect-WSMan Disable-ScheduledJob Enable-ComputerRestore Enable-JobTrigger Enable-PSBreakpoint Enable-PSRemoting Enable-PSSessionConfiguration Enable-ScheduledJob Enable-WSManCredSSP Enter-PSSession Exit-PSSession Export-Alias Export-Clixml Export-Console Export-Counter Export-Csv Export-FormatData Export-ModuleMember Export-PSSession ForEach-Object Format-Custom Format-List Format-Table Format-Wide Get-Acl Get-Alias Get-AuthenticodeSignature Get-ChildItem Get-Command Get-ComputerRestorePoint Get-Content Get-ControlPanelItem Get-Counter Get-Credential Get-Culture Get-Date Get-Event Get-EventLog Get-EventSubscriber Get-ExecutionPolicy Get-FormatData Get-Host Get-HotFix Get-Help Get-History Get-IseSnippet Get-Item Get-ItemProperty Get-Job Get-JobTrigger Get-Location Get-Member Get-Module Get-PfxCertificate Get-Process Get-PSBreakpoint Get-PSCallStack Get-PSDrive Get-PSProvider Get-PSSession Get-PSSessionConfiguration Get-PSSnapin Get-Random Get-ScheduledJob Get-ScheduledJobOption Get-Service Get-TraceSource Get-Transaction Get-TypeData Get-UICulture Get-Unique Get-Variable Get-Verb Get-WinEvent Get-WmiObject Get-WSManCredSSP Get-WSManInstance Group-Object Import-Alias Import-Clixml Import-Counter Import-Csv Import-IseSnippet Import-LocalizedData Import-PSSession Import-Module Invoke-AsWorkflow Invoke-Command Invoke-Expression Invoke-History Invoke-Item Invoke-RestMethod Invoke-WebRequest Invoke-WmiMethod Invoke-WSManAction Join-Path Limit-EventLog Measure-Command Measure-Object Move-Item Move-ItemProperty New-Alias New-Event New-EventLog New-IseSnippet New-Item New-ItemProperty New-JobTrigger New-Object New-Module New-ModuleManifest New-PSDrive New-PSSession New-PSSessionConfigurationFile New-PSSessionOption New-PSTransportOption New-PSWorkflowExecutionOption New-PSWorkflowSession New-ScheduledJobOption New-Service New-TimeSpan New-Variable New-WebServiceProxy New-WinEvent New-WSManInstance New-WSManSessionOption Out-Default Out-File Out-GridView Out-Host Out-Null Out-Printer Out-String Pop-Location Push-Location Read-Host Receive-Job Register-EngineEvent Register-ObjectEvent Register-PSSessionConfiguration Register-ScheduledJob Register-WmiEvent Remove-Computer Remove-Event Remove-EventLog Remove-Item Remove-ItemProperty Remove-Job Remove-JobTrigger Remove-Module Remove-PSBreakpoint Remove-PSDrive Remove-PSSession Remove-PSSnapin Remove-TypeData Remove-Variable Remove-WmiObject Remove-WSManInstance Rename-Computer Rename-Item Rename-ItemProperty Reset-ComputerMachinePassword Resolve-Path Restart-Computer Restart-Service Restore-Computer Resume-Job Resume-Service Save-Help Select-Object Select-String Select-Xml Send-MailMessage Set-Acl Set-Alias Set-AuthenticodeSignature Set-Content Set-Date Set-ExecutionPolicy Set-Item Set-ItemProperty Set-JobTrigger Set-Location Set-PSBreakpoint Set-PSDebug Set-PSSessionConfiguration Set-ScheduledJob Set-ScheduledJobOption Set-Service Set-StrictMode Set-TraceSource Set-Variable Set-WmiInstance Set-WSManInstance Set-WSManQuickConfig Show-Command Show-ControlPanelItem Show-EventLog Sort-Object Split-Path Start-Job Start-Process Start-Service Start-Sleep Start-Transaction Start-Transcript Stop-Computer Stop-Job Stop-Process Stop-Service Stop-Transcript Suspend-Job Suspend-Service Tee-Object Test-ComputerSecureChannel Test-Connection Test-ModuleManifest Test-Path Test-PSSessionConfigurationFile Trace-Command Unblock-File Undo-Transaction Unregister-Event Unregister-PSSessionConfiguration Unregister-ScheduledJob Update-FormatData Update-Help Update-List Update-TypeData Use-Transaction Wait-Event Wait-Job Wait-Process Where-Object Write-Debug Write-Error Write-EventLog Write-Host Write-Output Write-Progress Write-Verbose Write-Warning',
+      built_in: 'Add-Computer Add-Content Add-History Add-JobTrigger Add-Member Add-PSSnapin Add-Type Checkpoint-Computer Clear-Content Clear-EventLog Clear-History Clear-Host Clear-Item Clear-ItemProperty Clear-Variable Compare-Object Complete-Transaction Connect-PSSession Connect-WSMan Convert-Path ConvertFrom-Csv ConvertFrom-Json ConvertFrom-SecureString ConvertFrom-StringData ConvertTo-Csv ConvertTo-Html ConvertTo-Json ConvertTo-SecureString ConvertTo-Xml Copy-Item Copy-ItemProperty Debug-Process Disable-ComputerRestore Disable-JobTrigger Disable-PSBreakpoint Disable-PSRemoting Disable-PSSessionConfiguration Disable-WSManCredSSP Disconnect-PSSession Disconnect-WSMan Disable-ScheduledJob Enable-ComputerRestore Enable-JobTrigger Enable-PSBreakpoint Enable-PSRemoting Enable-PSSessionConfiguration Enable-ScheduledJob Enable-WSManCredSSP Enter-PSSession Exit-PSSession Export-Alias Export-Clixml Export-Console Export-Counter Export-Csv Export-FormatData Export-ModuleMember Export-PSSession ForEach-Object Format-Custom Format-List Format-Table Format-Wide Get-Acl Get-Alias Get-AuthenticodeSignature Get-ChildItem Get-Command Get-ComputerRestorePoint Get-Content Get-ControlPanelItem Get-Counter Get-Credential Get-Culture Get-Date Get-Event Get-EventLog Get-EventSubscriber Get-ExecutionPolicy Get-FormatData Get-Host Get-HotFix Get-Help Get-History Get-IseSnippet Get-Item Get-ItemProperty Get-Job Get-JobTrigger Get-Location Get-Member Get-Module Get-PfxCertificate Get-Process Get-PSBreakpoint Get-PSCallStack Get-PSDrive Get-PSProvider Get-PSSession Get-PSSessionConfiguration Get-PSSnapin Get-Random Get-ScheduledJob Get-ScheduledJobOption Get-Service Get-TraceSource Get-Transaction Get-TypeData Get-UICulture Get-Unique Get-Variable Get-Verb Get-WinEvent Get-WmiObject Get-WSManCredSSP Get-WSManInstance Group-Object Import-Alias Import-Clixml Import-Counter Import-Csv Import-IseSnippet Import-LocalizedData Import-PSSession Import-Module Invoke-AsWorkflow Invoke-Command Invoke-Expression Invoke-History Invoke-Item Invoke-RestMethod Invoke-WebRequest Invoke-WmiMethod Invoke-WSManAction Join-Path Limit-EventLog Measure-Command Measure-Object Move-Item Move-ItemProperty New-Alias New-Event New-EventLog New-IseSnippet New-Item New-ItemProperty New-JobTrigger New-Object New-Module New-ModuleManifest New-PSDrive New-PSSession New-PSSessionConfigurationFile New-PSSessionOption New-PSTransportOption New-PSWorkflowExecutionOption New-PSWorkflowSession New-ScheduledJobOption New-Service New-TimeSpan New-Variable New-WebServiceProxy New-WinEvent New-WSManInstance New-WSManSessionOption Out-Default Out-File Out-GridView Out-Host Out-Null Out-Printer Out-String Pop-Location Push-Location Read-Host Receive-Job Register-EngineEvent Register-ObjectEvent Register-PSSessionConfiguration Register-ScheduledJob Register-WmiEvent Remove-Computer Remove-Event Remove-EventLog Remove-Item Remove-ItemProperty Remove-Job Remove-JobTrigger Remove-Module Remove-PSBreakpoint Remove-PSDrive Remove-PSSession Remove-PSSnapin Remove-TypeData Remove-Variable Remove-WmiObject Remove-WSManInstance Rename-Computer Rename-Item Rename-ItemProperty Reset-ComputerMachinePassword Resolve-Path Restart-Computer Restart-Service Restore-Computer Resume-Job Resume-Service Save-Help Select-Object Select-String Select-Xml Send-MailMessage Set-Acl Set-Alias Set-AuthenticodeSignature Set-Content Set-Date Set-ExecutionPolicy Set-Item Set-ItemProperty Set-JobTrigger Set-Location Set-PSBreakpoint Set-PSDebug Set-PSSessionConfiguration Set-ScheduledJob Set-ScheduledJobOption Set-Service Set-StrictMode Set-TraceSource Set-Variable Set-WmiInstance Set-WSManInstance Set-WSManQuickConfig Show-Command Show-ControlPanelItem Show-EventLog Sort-Object Split-Path Start-Job Start-Process Start-Service Start-Sleep Start-Transaction Start-Transcript Stop-Computer Stop-Job Stop-Process Stop-Service Stop-Transcript Suspend-Job Suspend-Service Tee-Object Test-ComputerSecureChannel Test-Connection Test-ModuleManifest Test-Path Test-PSSessionConfigurationFile Trace-Command Unblock-File Undo-Transaction Unregister-Event Unregister-PSSessionConfiguration Unregister-ScheduledJob Update-FormatData Update-Help Update-List Update-TypeData Use-Transaction Wait-Event Wait-Job Wait-Process Where-Object Write-Debug Write-Error Write-EventLog Write-Host Write-Output Write-Progress Write-Verbose Write-Warning Add-MDTPersistentDrive Disable-MDTMonitorService Enable-MDTMonitorService Get-MDTDeploymentShareStatistics Get-MDTMonitorData Get-MDTOperatingSystemCatalog Get-MDTPersistentDrive Import-MDTApplication Import-MDTDriver Import-MDTOperatingSystem Import-MDTPackage Import-MDTTaskSequence New-MDTDatabase Remove-MDTMonitorData Remove-MDTPersistentDrive Restore-MDTPersistentDrive Set-MDTMonitorData Test-MDTDeploymentShare Test-MDTMonitorData Update-MDTDatabaseSchema Update-MDTDeploymentShare Update-MDTLinkedDS Update-MDTMedia Update-MDTMedia Add-VamtProductKey Export-VamtData Find-VamtManagedMachine Get-VamtConfirmationId Get-VamtProduct Get-VamtProductKey Import-VamtData Initialize-VamtData Install-VamtConfirmationId Install-VamtProductActivation Install-VamtProductKey Update-VamtProduct',
       nomarkup: '-ne -eq -lt -gt -ge -le -not -like -notlike -match -notmatch -contains -notcontains -in -notin -replace'
     },
     contains: [
@@ -11488,7 +11633,7 @@ hljs.registerLanguage('python', function(hljs) {
       built_in:
         'Ellipsis NotImplemented'
     },
-    illegal: /(<\/|->|\?)/,
+    illegal: /(<\/|->|\?)|=>/,
     contains: [
       PROMPT,
       NUMBER,
@@ -11496,7 +11641,7 @@ hljs.registerLanguage('python', function(hljs) {
       hljs.HASH_COMMENT_MODE,
       {
         variants: [
-          {className: 'function', beginKeywords: 'def', relevance: 10},
+          {className: 'function', beginKeywords: 'def'},
           {className: 'class', beginKeywords: 'class'}
         ],
         end: /:/,
@@ -13965,7 +14110,7 @@ hljs.registerLanguage('swift', function(hljs) {
 
   var TYPE = {
     className: 'type',
-    begin: '\\b[A-Z][\\w\']*',
+    begin: '\\b[A-Z][\\w\u00C0-\u02B8\']*',
     relevance: 0
   };
   var BLOCK_COMMENT = hljs.COMMENT(
@@ -14032,7 +14177,7 @@ hljs.registerLanguage('swift', function(hljs) {
         end: '\\{',
         excludeEnd: true,
         contains: [
-          hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][0-9A-Za-z$_]*/})
+          hljs.inherit(hljs.TITLE_MODE, {begin: /[A-Za-z$_][\u00C0-\u02B80-9A-Za-z$_]*/})
         ]
       },
       {
