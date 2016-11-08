@@ -1,6 +1,7 @@
 var secret = 'dejvu';
 var decryptedData = {};
 var dejavuUrl;
+var queryParams;
 
 // Encrypt
 function createUrl(inputs, cb) {
@@ -8,7 +9,11 @@ function createUrl(inputs, cb) {
     function compressCb(error, ciphertext) {
         if(!error) {
             dejavuUrl  = ciphertext;
-            window.location.href = '#?input_state=' + dejavuUrl;
+            let finalUrl = '#?input_state=' + dejavuUrl;
+            if(queryParams && queryParams.hf) {
+                finalUrl += '&hf='+queryParams.hf
+            }
+            window.location.href = finalUrl;
         }
         if(cb) {
             cb(error, ciphertext);
@@ -19,8 +24,9 @@ function createUrl(inputs, cb) {
 // Decrypt
 function getUrl(cb) {
     var url = window.location.href.split('#?input_state=');
-    if (url.length > 1) {
-        decompress(url[1], function(error, data) {
+    queryParams = getQueryParameters();
+    if (queryParams.input_state) {
+        decompress(queryParams.input_state, function(error, data) {
             if(data) {
                 applyDecrypt(data);
                 cb(decryptedData);
@@ -120,3 +126,12 @@ function decompress(compressed, cb) {
         return cb('Empty');
     }
 }
+
+function getQueryParameters(str) {
+    let hash = window.location.hash.split('#');
+    if(hash.length > 1) {
+      return (str || hash[1]).replace(/(^\?)/,'').split("&").map(function(n){return n = n.split("="),this[n[0]] = n[1],this}.bind({}))[0];
+    } else {
+      return null;
+    }
+  }
