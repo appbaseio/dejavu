@@ -25,7 +25,7 @@ function createUrl(inputs, cb) {
 function getUrl(cb) {
     var url = window.location.href.split('#?input_state=');
     queryParams = getQueryParameters();
-    if (queryParams.input_state) {
+    if (queryParams && queryParams.input_state) {
         decompress(queryParams.input_state, function(error, data) {
             if(data) {
                 applyDecrypt(data);
