@@ -177,6 +177,9 @@ body{
   top: 0;
   margin: 0;
 }
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 44px 270px;
+}
 .init-ES, footer{
   position: absolute;
   top: 0;
@@ -897,6 +900,10 @@ iframe{
   100% {
     transform: translateX(100%)
   }
+}
+
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 0 270px;
 }
 
 /*Color Schemes*/
