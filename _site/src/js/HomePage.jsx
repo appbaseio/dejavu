@@ -1341,8 +1341,23 @@ var HomePage = React.createClass({
             }
             return form;
         }
-        var dejavuForm = initialForm();
-        var containerClass = 'row dejavuContainer '+BRANCH;
+        var footer;
+        queryParams = getQueryParameters();
+        if(!(queryParams && queryParams.hasOwnProperty('hf'))) {
+            var dejavuForm = initialForm();
+            footer = (
+                <footer className="text-center">
+                    <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
+                    <span className="text-right pull-right powered_by">
+                        Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                    </span>
+                    <span className="pull-left github-star">
+                        {githubStar}
+                    </span>
+                </footer>
+            );
+        }
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>
@@ -1383,15 +1398,7 @@ var HomePage = React.createClass({
                                 reloadData={this.reloadData}
                                 exportJsonData= {this.exportJsonData} />
                         </div>
-                        <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
-                            <span className="text-right pull-right powered_by">
-                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-                            </span>
-                            <span className="pull-left github-star">
-                                {githubStar}
-                            </span>
-                        </footer>
+                        {footer}
                         <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>
