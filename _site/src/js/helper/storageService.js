@@ -19,5 +19,11 @@ function StorageService() {
 			return window.localStorage.getItem(key);
 		}
 	};	
+	this.set = function(key, value) {
+		window.localStorage.setItem(key, value);
+	}
+	this.get = function(key) {
+		return window.localStorage.getItem(key);
+	}
 }
 var storageService = new StorageService();
