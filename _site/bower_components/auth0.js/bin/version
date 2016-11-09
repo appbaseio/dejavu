@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+var path = require('path');
+var bump = require('bump-version');
+var unreleased = require('unreleased');
+var fs = require('fs');
+
+function run(cmd, done) {
+  var exec = require('child_process').exec;
+  var proc = exec(cmd, function (err) {
+    if (err) {
+      run('git checkout .', function () {
+        process.exit(1);
+      });
+    }
+    done();
+  });
+  proc.stdout.pipe(process.stdout);
+  proc.stderr.pipe(process.stderr);
+}
+
+try {
+  var rootDir = path.resolve(__dirname, '..');
+  var res = bump(rootDir, process.argv.pop());
+
+  var versionFile = 'module.exports = { str: "' + res.version + '" };\n';
+  fs.writeFileSync(__dirname + '/../version.js', versionFile);
+
+  unreleased(res.version, rootDir, 'auth0/auth0.js', function (err, changelog) {
+    if (err) { return process.exit(1); }
+
+    changelog = new Buffer(changelog + '\n\n');
+    var file = path.join(rootDir, 'CHANGELOG.md');
+
+    var data = fs.readFileSync(file); //read existing contents into data
+    var fd = fs.openSync(file, 'w+');
+    fs.writeSync(fd, changelog, 0, changelog.length); //write new data
+    fs.writeSync(fd, data, 0, data.length); //append old data
+    fs.close(fd);
+
+    run('git add -A', function () {
+      run('git commit -am "release: ' + res.version + '"', function () {
+        process.exit(0);
+      });
+    });
+
+  });
+
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
+}

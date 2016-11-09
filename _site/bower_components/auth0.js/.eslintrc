@@ -1,0 +1,3 @@
+{
+  "extends": "auth0-base/legacy"
+}

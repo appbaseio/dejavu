@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- '4.2'
+script:
+- npm run ci
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+branches:
+  only:
+  - master
+notifications:
+  slack:
+    secure: aubvqT8MoCge+w1tnbfYmMIEAGRpb6hQ5zI/bvb4xr2dFGjxXoHqlcUpfART7LDS7fnehx7ixf74b+0Io0fdhPvgSvFGjWX+QB3OkalrtlOe/91AA9KvbDaCqf1nKlJPjBAFPOJhO8JEd15WGcs3zapeN60yCD9mzTVFXiDcPac=

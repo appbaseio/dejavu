@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+VERSION=$(node -e "console.log(require('$DIR/../package.json').version)")
+
+TAG_NAME="v$VERSION"
+TAG_EXISTS=$(git tag -l "$TAG_NAME")
+
+if [ ! -z "$TAG_EXISTS" ]; then
+    echo "There is already a tag $TAG_EXISTS in git. Skiping git deploy."
+else
+    echo "Deploying $VERSION to git"
+
+    LAST_COMMIT=$(git log -1 --pretty=%B)
+    git checkout -b dist
+    grep -v '^build$' .gitignore > /tmp/.gitignore
+    mv /tmp/.gitignore .gitignore
+    git add --force build/*
+    git commit -am "$TAG_NAME"
+    git tag "$TAG_NAME" -m "$LAST_COMMIT"
+    git checkout master
+    git push origin $TAG_NAME
+    git branch -D dist
+fi
+
+NPM_EXISTS=$(npm info auth0-js@$VERSION)
+
+if [ ! -z "$NPM_EXISTS" ]; then
+    echo "There is already a version $VERSION in npm. Skiping npm publish."
+else
+    echo "Deploying $VERSION to npm"
+    npm publish
+fi
+
+CDN_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" https://cdn.auth0.com/w2/auth0-$VERSION.min.js | grep 200 || true)
+
+if [ ! -z "$CDN_EXISTS" ]; then
+    echo "There is already a version $VERSION in the CDN. Skiping cdn publish."
+else
+    echo "Deploying $VERSION to cdn"
+    grunt cdn
+fi

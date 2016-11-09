@@ -1,0 +1,38 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests Harness</title>
+  <link rel="stylesheet" href="/node_modules/mocha/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <!-- support -->
+  <script src="/node_modules/mocha/mocha.js"></script>
+  <script src="/node_modules/expect.js/expect.js"></script>
+  <script src="/node_modules/sinon/pkg/sinon-1.16.1.js"></script>
+  <script src="/test/support/config.js"></script>
+
+  <!-- libs -->
+  <script src="/build/auth0.js"></script>
+
+  <!-- config -->
+  <script>
+    mocha.timeout(60000);
+    mocha.ui('bdd');
+    mocha.reporter('html');
+    mocha.setup({ ignoreLeaks: true });
+  </script>
+
+  <!-- tests -->
+  <script src="/test/tests.js"></script>
+  <script src="/test/user-and-pass.tests.js"></script>
+  <script src="/test/passwordless.tests.js"></script>
+  <script src="/test/logout.js"></script>
+
+  <!-- start -->
+  <script>
+    mocha.run();
+  </script>
+</body>
+</html>

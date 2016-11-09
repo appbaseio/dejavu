@@ -1,0 +1,18 @@
+ui: mocha-bdd
+tunnel:
+  type: ngrok
+  authtoken: LsVZFxFqgxA4h7ibWV9V_iuA9afbQwaSnGqH9dApL
+scripts:
+  - "/node_modules/expect.js/expect.js"
+  - "/node_modules/sinon/pkg/sinon-1.16.1.js"
+  - "/test/support/config.js"
+  - "/build/auth0.js"
+browsers:
+  - name: chrome
+    version: latest
+  - name: safari
+    version: latest
+  - name: firefox
+    version: latest
+  - name: ie
+    version: latest

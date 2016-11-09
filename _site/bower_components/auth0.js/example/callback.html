@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/auth0.js"></script>
+    <script type="text/javascript">
+      var auth0 = new Auth0({
+        domain:       'mdocs.auth0.com',
+        clientID:     '0HP71GSd6PuoRYJ3DXKdiXCUUdGmBbup'
+      });
+      var result = auth0.parseHash(window.location.hash);
+      if (result) {
+        parent.postMessage(result, "http://localhost:9999/"); //The second parameter should be your domain
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

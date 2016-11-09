@@ -186,11 +186,14 @@ body{
   left: 0;
   width: 100%;
   z-index: 6;
-  background: #eee;
+  background: #f8fafb;
   padding: 5px;
   padding-right: 130px;
   padding-left: 169px;
-  border-bottom: 1px solid #ddd;
+}
+.init-ES {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 .mirage_link {
   position: absolute;
@@ -258,11 +261,10 @@ footer{
 }
 .typeContainer{
   width: 270px;
-  border-right: 1px solid #eee;
   padding: 15px;
   background: #f8fafb;
   z-index: 2;
-  padding-top: 44px;
+  padding-top: 64px;
 }
 .dejavuContainer.appbase .typeContainer {
   padding-top: 0;
@@ -272,7 +274,7 @@ footer{
   overflow: hidden;
   position: absolute;
   width: 100%;
-  padding: 44px 0 44px 270px;
+  padding: 64px 0 44px 270px;
 }
 .dejavuContainer.appbase .dataContainer {
   padding: 0 0 44px 270px;
@@ -354,6 +356,9 @@ footer{
   border: 0 !important;
   background: #fff;
 }
+#data-table thead tr th:first-child .table-fixed-head {
+  border-left: 1px solid #eee;
+}
 .table>thead>tr>th{
   padding: 0;
 }
@@ -374,6 +379,10 @@ footer{
 }
 .nestedJson .popover-content{
   padding: 0;
+  -webkit-user-select: all; 
+  -moz-user-select: all;    
+  -ms-user-select: all;      
+  user-select: all;
 }
 .nestedJson.popover.left>.arrow:after{
   border-left-color: #f0f0f0;
@@ -481,6 +490,7 @@ footer{
 .headText .thtextShow{
   padding-right: 40px;
   line-height: 30px;
+  padding-top: 3px;
 }
 .headText .thtextShow.leftGap{
   padding-left: 26px;
@@ -623,6 +633,10 @@ footer{
     text-overflow: ellipsis;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+    -webkit-user-select: all; 
+    -moz-user-select: all;    
+    -ms-user-select: all;      
+    user-select: all;
 }
 .appId .appId_appname{
      display: inline-block;
@@ -723,6 +737,9 @@ iframe{
 .github-star{
   position: absolute;
   left: 5px;
+}
+#subscribeModal .modal-body {
+  padding-bottom: 45px;
 }
 .modal .modal-content{
   background: #fff;
