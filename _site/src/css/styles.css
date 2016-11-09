@@ -738,6 +738,9 @@ iframe{
   position: absolute;
   left: 5px;
 }
+#subscribeModal .modal-body {
+  padding-bottom: 45px;
+}
 .modal .modal-content{
   background: #fff;
   border-radius: 4px;

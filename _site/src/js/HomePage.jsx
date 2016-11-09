@@ -1358,7 +1358,7 @@ var HomePage = React.createClass({
                 </footer>
             );
         }
-        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '');
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (this.state.splash ? ' splash-on ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>

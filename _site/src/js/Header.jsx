@@ -1,4 +1,5 @@
 var React = require('react');
+var SubscribeModal = require('./SubscribeModal.jsx');
 
 var Header = React.createClass({
 
@@ -16,6 +17,7 @@ var Header = React.createClass({
               <div className="tag-line">
                 The missing Web UI for Elasticsearch
               </div>
+              <SubscribeModal />
             </header> 
         );
     }

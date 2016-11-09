@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "babel-preset-react": "^6.3.13",
+    "fbemitter": "^2.1.1",
     "gulp-concat": "^2.6.0",
     "gulp-minify-css": "^1.2.4",
     "react": "^0.14.7",

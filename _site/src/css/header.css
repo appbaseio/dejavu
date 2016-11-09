@@ -1,3 +1,9 @@
+.dejavuContainer.splash-on header {
+    display: none;
+}
+.dejavuContainer.splash-on .appHeaderContainer {
+    padding: 0;
+}
 .appHeaderContainer {
     position: absolute;
     left: 0;

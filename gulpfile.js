@@ -41,7 +41,8 @@ var files = {
             '_site/bower_components/select2/dist/js/select2.full.min.js',
             '_site/bower_components/highlightjs/highlight.pack.min.js',
             '_site/bower_components/lzma/src/lzma.js',
-            '_site/bower_components/urlsafe-base64/app.js'
+            '_site/bower_components/urlsafe-base64/app.js',
+            '_site/bower_components/auth0.js/build/auth0.min.js'
         ],
         custom: [
             
@@ -128,7 +129,7 @@ gulp.task('connect', function() {
   connect.server({
     root: '_site',
     livereload: true,
-    port: 1358
+    port: 8000
   });
 });
 
