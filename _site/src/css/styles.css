@@ -166,6 +166,7 @@ body{
 }
 .dejavuContainer{
   border: 1px solid #ddd;
+  overflow-x: hidden;
 }
 .dejavuContainer,
 .typeContainer{
@@ -175,6 +176,9 @@ body{
   left: 0;
   top: 0;
   margin: 0;
+}
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 44px 270px;
 }
 .init-ES, footer{
   position: absolute;
@@ -904,6 +908,13 @@ iframe{
   100% {
     transform: translateX(100%)
   }
+}
+
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 0 270px;
+}
+.dejavuContainer.without-hf .typeContainer {
+  padding-top: 5px;
 }
 
 /*Color Schemes*/
