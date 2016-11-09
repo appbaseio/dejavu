@@ -1,0 +1,94 @@
+.appHeaderContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding-top: 100px;
+}
+
+.appFormContainer {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9;
+    background: #f7f7f7;
+    border-bottom: 0;
+    padding: 0;
+    max-height: 100px;
+    margin: 0 auto;
+    position: absolute;
+    height: auto;
+    background: #fff;
+    border-bottom: 2px solid #ccc;
+}
+
+.header .img-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.header .header-img-container {
+  display: inline-block;
+}
+
+.header .img-container img {
+    max-width: 45px;
+    display: inline-block;
+    float: left;
+}
+
+.header .dejavu-title {
+    display: inline-block;
+    font-size: 30px;
+    padding-left: 15px;
+    float: left;
+}
+
+.header .tag-line {
+    line-height: 22px;
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: lighter;
+}
+
+.header .subscribe {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    color: #999999;
+}
+
+.header .subscribe img {
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 768px) {
+    .header .tag-line {
+        line-height: 16px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .header .header-container {
+        height: 30px;
+    }
+    .header .header-container .tag-line {
+        display: none;
+    }
+}
