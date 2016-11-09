@@ -317,14 +317,14 @@ var HomePage = React.createClass({
                         this.unwatchStock(type);
                     }
                 }.bind(this));
-                if(BRANCH !== 'chrome') {
-                    this.setState({
-                        types: update,
-                        connect: true
-                    });
-                } else {
+                // if(BRANCH !== 'chrome') {
+                //     this.setState({
+                //         types: update,
+                //         connect: true
+                //     });
+                // } else {
                     this.setChromeTypes(update);
-                }
+                // }
             }.bind(this));
         }
     },
@@ -378,6 +378,7 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
+                getUrl(this.connectSync(config));
             }
         }
     },
@@ -391,6 +392,27 @@ var HomePage = React.createClass({
             }
         }
         this.setApps();
+    },
+    connectSync: function(config) {
+        var self = this;
+        this.afterConnect();
+        input_state = JSON.parse(JSON.stringify(config));
+        getMapFlag = false;
+        $('.full_page_loading').removeClass('hide');
+        esTypes = [];
+        subsetESTypes = [];
+        self.setState({
+            splash: false,
+            types: [],
+            documents: [],
+            totalRecord: 0,
+            connect: false
+        });
+        beforeInit();
+        setTimeout(function(){
+            appAuth = true;
+            self.init_map_stream();
+        },500);
     },
     init_map_stream: function() {
         try {
@@ -1053,8 +1075,11 @@ var HomePage = React.createClass({
         function letsConnect() {
             storageService.setItem('esurl',temp_config.url);
             storageService.setItem('appname',temp_config.appname);
+            config = temp_config;
             if(BRANCH !== 'chrome') {
-                location.reload();
+                createUrl(temp_config, function() {
+                    self.connectSync(temp_config);
+                });
             } else {
                 config = temp_config;
                 setTimeout(function(){
@@ -1316,8 +1341,23 @@ var HomePage = React.createClass({
             }
             return form;
         }
-        var dejavuForm = initialForm();
-        var containerClass = 'row dejavuContainer '+BRANCH;
+        var footer;
+        queryParams = getQueryParameters();
+        if(!(queryParams && queryParams.hasOwnProperty('hf'))) {
+            var dejavuForm = initialForm();
+            footer = (
+                <footer className="text-center">
+                    <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
+                    <span className="text-right pull-right powered_by">
+                        Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                    </span>
+                    <span className="pull-left github-star">
+                        {githubStar}
+                    </span>
+                </footer>
+            );
+        }
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>
@@ -1358,15 +1398,7 @@ var HomePage = React.createClass({
                                 reloadData={this.reloadData}
                                 exportJsonData= {this.exportJsonData} />
                         </div>
-                        <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejavu" target="_blank">Watch Video</a>
-                            <span className="text-right pull-right powered_by">
-                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io" target="_blank">appbase.io</a>
-                            </span>
-                            <span className="pull-left github-star">
-                                {githubStar}
-                            </span>
-                        </footer>
+                        {footer}
                         <FeatureComponent.ErrorModal
                             errorShow={this.state.errorShow}
                             closeErrorModal = {this.closeErrorModal}>

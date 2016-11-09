@@ -370,6 +370,10 @@ footer{
 }
 .nestedJson .popover-content{
   padding: 0;
+  -webkit-user-select: all; 
+  -moz-user-select: all;    
+  -ms-user-select: all;      
+  user-select: all;
 }
 .nestedJson.popover.left>.arrow:after{
   border-left-color: #f0f0f0;
@@ -619,6 +623,10 @@ footer{
     text-overflow: ellipsis;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+    -webkit-user-select: all; 
+    -moz-user-select: all;    
+    -ms-user-select: all;      
+    user-select: all;
 }
 .appId .appId_appname{
      display: inline-block;
