@@ -166,7 +166,6 @@ body{
 }
 .dejavuContainer{
   border: 1px solid #ddd;
-  overflow-x: hidden;
 }
 .dejavuContainer,
 .typeContainer{
@@ -176,9 +175,6 @@ body{
   left: 0;
   top: 0;
   margin: 0;
-}
-.dejavuContainer.without-hf .dataContainer {
-  padding: 0 0 44px 270px;
 }
 .init-ES, footer{
   position: absolute;
@@ -374,6 +370,10 @@ footer{
 }
 .nestedJson .popover-content{
   padding: 0;
+  -webkit-user-select: all; 
+  -moz-user-select: all;    
+  -ms-user-select: all;      
+  user-select: all;
 }
 .nestedJson.popover.left>.arrow:after{
   border-left-color: #f0f0f0;
@@ -623,6 +623,10 @@ footer{
     text-overflow: ellipsis;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+    -webkit-user-select: all; 
+    -moz-user-select: all;    
+    -ms-user-select: all;      
+    user-select: all;
 }
 .appId .appId_appname{
      display: inline-block;
@@ -900,13 +904,6 @@ iframe{
   100% {
     transform: translateX(100%)
   }
-}
-
-.dejavuContainer.without-hf .dataContainer {
-  padding: 0 0 0 270px;
-}
-.dejavuContainer.without-hf .typeContainer {
-  padding-top: 5px;
 }
 
 /*Color Schemes*/
