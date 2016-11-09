@@ -905,6 +905,9 @@ iframe{
 .dejavuContainer.without-hf .dataContainer {
   padding: 0 0 0 270px;
 }
+.dejavuContainer.without-hf .typeContainer {
+  padding-top: 5px;
+}
 
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
