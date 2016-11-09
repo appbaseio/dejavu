@@ -1,7 +1,7 @@
-.dejavuContainer.splash-on header {
+.dejavuContainer.splash-on header, .dejavuContainer.without-hf header {
     display: none;
 }
-.dejavuContainer.splash-on .appHeaderContainer {
+.dejavuContainer.splash-on .appHeaderContainer, .dejavuContainer.without-hf .appHeaderContainer {
     padding: 0;
 }
 .appHeaderContainer {
