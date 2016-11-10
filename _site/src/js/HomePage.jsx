@@ -379,7 +379,11 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
-                getUrl(this.connectSync);
+                if(window.location.href.indexOf('?default=true') > -1) {
+                    this.connectSync(config);
+                } else {
+                    getUrl(this.connectSync);
+                }
             }
         }
     },
