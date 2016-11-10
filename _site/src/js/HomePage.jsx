@@ -4,6 +4,7 @@ var DataTable = require('./table/DataTable.jsx');
 var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
+var DeprecateInfo = require('./DeprecateInfo.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // This is the file which commands the data update/delete/append.
@@ -24,6 +25,7 @@ var HomePage = React.createClass({
 
     getInitialState: function() {
         return {
+            hideMessage: false,
             documents: [],
             types: [],
             signalColor: '',
@@ -1246,6 +1248,11 @@ var HomePage = React.createClass({
             }
         });
     },
+    hideMessage: function() {
+        this.setState({
+            hideMessage: true
+        });
+    },
     //The homepage is built on two children components(which may
     //have other children components). TypeTable renders the
     //streaming types and DataTable renders the streaming documents.
@@ -1358,8 +1365,10 @@ var HomePage = React.createClass({
             );
         }
         var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '');
+        var deprecateinfo = this.state.hideMessage ? '' : (<DeprecateInfo hideMessage={this.hideMessage} ></DeprecateInfo>);
         return (<div>
                     <div id='modal' />
+                    {deprecateinfo}
                     <div className={containerClass}>
                         {dejavuForm}
                         <div className="typeContainer">

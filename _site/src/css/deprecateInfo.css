@@ -1,0 +1,19 @@
+.DeprecatePage {
+	position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    margin: 0;	
+    z-index: 99999999999;
+    background: #3BC7F6;
+    color: #fff;
+    padding: 60px 15px 15px 15px;
+    font-size: 18px;
+}
+.DeprecatePage a.hide-message {
+	color: #fff;
+}
+.DeprecatePage h1, .DeprecatePage .gap {
+	margin-bottom: 30px;
+}
