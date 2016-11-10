@@ -379,29 +379,24 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
-                getUrl(this.connectSync(config));
+                getUrl(this.connectSync);
             }
         }
     },
     componentDidMount: function() {
-        if(!this.state.splash) {
-            this.afterConnect();
-            input_state = JSON.parse(JSON.stringify(config));
-            createUrl(input_state);
-            if(BRANCH === 'chrome') {
-                this.init_map_stream();
-            }
-        }
         this.setApps();
     },
-    connectSync: function(config) {
+    connectSync: function(config_in) {
+        config = config_in;
         var self = this;
         this.afterConnect();
-        input_state = JSON.parse(JSON.stringify(config));
+        input_state = JSON.parse(JSON.stringify(config_in));
+        createUrl(input_state);
         getMapFlag = false;
         $('.full_page_loading').removeClass('hide');
         esTypes = [];
         subsetESTypes = [];
+        beforeInit();
         self.setState({
             splash: false,
             types: [],
@@ -409,7 +404,6 @@ var HomePage = React.createClass({
             totalRecord: 0,
             connect: false
         });
-        beforeInit();
         setTimeout(function(){
             appAuth = true;
             self.init_map_stream();
