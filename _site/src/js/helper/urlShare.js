@@ -9,10 +9,17 @@ function createUrl(inputs, cb) {
     function compressCb(error, ciphertext) {
         if(!error) {
             dejavuUrl  = ciphertext;
-            let finalUrl = '#?input_state=' + dejavuUrl;
+            let finalUrl = '';
+            if(window.location.href.indexOf('?default=true') > -1) {
+                finalUrl = window.location.href.split('?default=true')[0];
+                storageService.set('esurl', inputs.url);
+                storageService.set('appname', inputs.appname);
+            }
+            finalUrl += '#?input_state=' + dejavuUrl;
             if(queryParams && queryParams.hf) {
                 finalUrl += '&hf='+queryParams.hf
             }
+            mirageLink(function() {});
             window.location.href = finalUrl;
         }
         if(cb) {
@@ -80,7 +87,8 @@ function mirageLink(cb) {
     compress(obj, compressCb.bind(this));
     function compressCb(error, ciphertext) {
         if(!error) {
-            var final_url = 'http://appbaseio.github.io/mirage/#?input_state='+ciphertext;
+            var final_url = 'https://appbaseio.github.io/mirage/#?input_state='+ciphertext;
+            $('.mirage_link').attr('href', final_url);
             return cb(null, final_url);
         } else {
             return cb(error);

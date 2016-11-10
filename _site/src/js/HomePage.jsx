@@ -360,6 +360,8 @@ var HomePage = React.createClass({
                 types: update,
                 typeCheck: typeCheck,
                 connect: true
+            }, function() {
+                mirageLink(function() {});
             });
         }.bind(this),1000);
     },
@@ -1281,7 +1283,7 @@ var HomePage = React.createClass({
         }
         var composeQuery;
         if(this.state.connect) {
-            composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
+            composeQuery = (<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default"> 
                                  Query View <i className="fa fa-external-link-square"></i>
                                 </a>);
         }

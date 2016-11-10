@@ -10,7 +10,7 @@ var Header = React.createClass({
                 <span className="header-img-container">
                     <img src="assets/img/icon.png" alt="Gem" className="img-responsive"/>
                     <span className="dejavu-title">
-                        Déjà vu
+                        Dejavu
                     </span>
                 </span>
               </div>
