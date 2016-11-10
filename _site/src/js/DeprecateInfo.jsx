@@ -11,13 +11,13 @@ var DeprecateInfo = React.createClass({
 				            	Dejavu 0.9 is here!
 				            </h1>
 				            <p className="gap">
-				            	<strong>Dejavu 0.9</strong> will be available as a chrome extension with moar features and bug fixes. We highly recommend that over this chrome packaged app as Google is phasing out chrome apps by mid 2017. This means that you won't be able to use the current app.
+				            	<strong>Dejavu 0.9</strong> is available as a chrome extension with moar features and bug fixes. We highly recommend that over the current app as Google is phasing out chrome apps by mid 2017. This means that you won't be able to use the current app.
 				            </p>
 					    <p className="gap">
 				            	Going forward, we will be freezing the current chrome app version and make all the future releases available as a chrome extension.
 				            </p>
 				            <div className="gap ">
-				            	<a href="https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh" className="btn btn-lg btn-default">
+				            	<a href="https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh" className="btn btn-lg btn-default" target="_blank">
 				            		Get the Latest Dejavu Chrome Extension
 				            	</a>
 				            </div>
