@@ -8,21 +8,22 @@ var DeprecateInfo = React.createClass({
 	            	<div className="row">
 	            		<div className="col-sm-12 col-md-8 col-md-offset-2 text-center">
 	            			<h1>
-				            	Dejavu 9.0 is here!
+				            	Dejavu 0.9 is here!
 				            </h1>
 				            <p className="gap">
-				            	<strong>Dejavu</strong> fits the unmet need of being a modern Web UI for Elasticsearch. 
-				            	Existing UIs were either built with a legacy UI and have left much to be desired from a 
-				            	Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
+				            	<strong>Dejavu 0.9</strong> will be available as a chrome extension with moar features and bug fixes. We highly recommend that over this chrome packaged app as Google is phasing out chrome apps by mid 2017. This means that you won't be able to use the current app.
+				            </p>
+					    <p className="gap">
+				            	Going forward, we will be freezing the current chrome app version and make all the future releases available as a chrome extension.
 				            </p>
 				            <div className="gap ">
-				            	<a href="https://github.com/appbaseio/dejavu/" className="btn btn-lg btn-default">
-				            		Upgrade to v9.0
+				            	<a href="https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh" className="btn btn-lg btn-default">
+				            		Get the Latest Dejavu Chrome Extension
 				            	</a>
 				            </div>
 				            <div className="gap text-center">
 				            	<a href="javascript:void;" className="pointer hide-message" onClick={this.props.hideMessage} >
-				            		Hide this message
+							<u>Hide this message</u>
 				            	</a>
 				            </div>
 	            		</div>
