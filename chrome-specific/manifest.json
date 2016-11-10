@@ -10,7 +10,6 @@
     "background": {
         "scripts": [ "background.js" ]
     },
-    "content_security_policy": "script-src 'self' https://appbaseio.auth0.com https://cdn.auth0.com blob: filesystem: chrome-extension-resource:",
     "web_accessible_resources": [
         "site/index.html"
     ],
