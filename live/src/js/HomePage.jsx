@@ -384,6 +384,7 @@ var HomePage = React.createClass({
                 if(window.location.href.indexOf('?default=true') > -1) {
                     this.connectSync(config);
                 } else {
+                    config = {};
                     getUrl(this.connectSync);
                 }
             }
