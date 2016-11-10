@@ -76,13 +76,13 @@ AuthOperation.prototype.getUserProfile = function() {
   });
 }
 AuthOperation.prototype.parseHash = function() {
-  var token = storageService.get('id_token');
+  var token = storageService.get('dejavu_id_token');
   if (token !== null && !this.isTokenExpired(token)) {
     this.show_logged_in(token);
   } else {
     var result = this.auth0.parseHash(window.location.hash);
     if (result && result.idToken) {
-      storageService.set('id_token', result.idToken);
+      storageService.set('dejavu_id_token', result.idToken);
       this.show_logged_in(result.idToken);
     } else if (result && result.error) {
       console.log('error: ' + result.error);
