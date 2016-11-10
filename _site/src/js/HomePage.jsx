@@ -4,6 +4,7 @@ var DataTable = require('./table/DataTable.jsx');
 var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
+var Header = require('./Header.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // This is the file which commands the data update/delete/append.
@@ -359,6 +360,8 @@ var HomePage = React.createClass({
                 types: update,
                 typeCheck: typeCheck,
                 connect: true
+            }, function() {
+                mirageLink(function() {});
             });
         }.bind(this),1000);
     },
@@ -378,29 +381,28 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
-                getUrl(this.connectSync(config));
+                if(window.location.href.indexOf('?default=true') > -1) {
+                    this.connectSync(config);
+                } else {
+                    getUrl(this.connectSync);
+                }
             }
         }
     },
     componentDidMount: function() {
-        if(!this.state.splash) {
-            this.afterConnect();
-            input_state = JSON.parse(JSON.stringify(config));
-            createUrl(input_state);
-            if(BRANCH === 'chrome') {
-                this.init_map_stream();
-            }
-        }
         this.setApps();
     },
-    connectSync: function(config) {
+    connectSync: function(config_in) {
+        config = config_in;
         var self = this;
         this.afterConnect();
-        input_state = JSON.parse(JSON.stringify(config));
+        input_state = JSON.parse(JSON.stringify(config_in));
+        createUrl(input_state);
         getMapFlag = false;
         $('.full_page_loading').removeClass('hide');
         esTypes = [];
         subsetESTypes = [];
+        beforeInit();
         self.setState({
             splash: false,
             types: [],
@@ -408,7 +410,6 @@ var HomePage = React.createClass({
             totalRecord: 0,
             connect: false
         });
-        beforeInit();
         setTimeout(function(){
             appAuth = true;
             self.init_map_stream();
@@ -1282,7 +1283,7 @@ var HomePage = React.createClass({
         }
         var composeQuery;
         if(this.state.connect) {
-            composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
+            composeQuery = (<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default"> 
                                  Query View <i className="fa fa-external-link-square"></i>
                                 </a>);
         }
@@ -1357,56 +1358,61 @@ var HomePage = React.createClass({
                 </footer>
             );
         }
-        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '');
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (this.state.splash ? ' splash-on ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>
-                        {dejavuForm}
-                        <div className="typeContainer">
-                            <TypeTable
-                                Types={this.state.types}
-                                watchTypeHandler={this.watchStock}
-                                unwatchTypeHandler={this.unwatchStock}
-                                ExportData={this.exportData}
-                                signalColor={this.state.signalColor}
-                                signalActive={this.state.signalActive}
-                                signalText={this.state.signalText}
-                                typeInfo={this.state.typeInfo} />
-                        </div>
-                         <div className="col-xs-12 dataContainer">
-                            <DataTable
-                                _data={this.state.documents}
-                                sortInfo={this.state.sortInfo}
-                                filterInfo={this.state.filterInfo}
-                                infoObj={this.state.infoObj}
-                                totalRecord={this.state.totalRecord}
-                                scrollFunction={this.handleScroll}
-                                selectedTypes={subsetESTypes}
-                                handleSort={this.handleSort}
-                                mappingObj={this.state.mappingObj}
-                                removeFilter ={this.removeFilter}
-                                addRecord = {this.addRecord}
-                                getTypeDoc={this.getTypeDoc}
-                                Types={this.state.types}
-                                removeSort = {this.removeSort}
-                                removeHidden = {this.removeHidden}
-                                visibleColumns = {this.state.visibleColumns}
-                                hiddenColumns = {this.state.hiddenColumns}
-                                columnToggle ={this.columnToggle}
-                                actionOnRecord = {this.state.actionOnRecord}
-                                pageLoading={this.state.pageLoading}
-                                reloadData={this.reloadData}
-                                exportJsonData= {this.exportJsonData} />
-                        </div>
-                        {footer}
-                        <FeatureComponent.ErrorModal
-                            errorShow={this.state.errorShow}
-                            closeErrorModal = {this.closeErrorModal}>
-                        </FeatureComponent.ErrorModal>
-                        <div className="full_page_loading hide">
-                            <div className="loadingBar"></div>
-                            <div className="vertical1">             
-                            </div> 
+                        <div className="appHeaderContainer">
+                        <Header />
+                            <div className="appFormContainer">
+                                {dejavuForm}
+                                <div className="typeContainer">
+                                    <TypeTable
+                                        Types={this.state.types}
+                                        watchTypeHandler={this.watchStock}
+                                        unwatchTypeHandler={this.unwatchStock}
+                                        ExportData={this.exportData}
+                                        signalColor={this.state.signalColor}
+                                        signalActive={this.state.signalActive}
+                                        signalText={this.state.signalText}
+                                        typeInfo={this.state.typeInfo} />
+                                </div>
+                                 <div className="col-xs-12 dataContainer">
+                                    <DataTable
+                                        _data={this.state.documents}
+                                        sortInfo={this.state.sortInfo}
+                                        filterInfo={this.state.filterInfo}
+                                        infoObj={this.state.infoObj}
+                                        totalRecord={this.state.totalRecord}
+                                        scrollFunction={this.handleScroll}
+                                        selectedTypes={subsetESTypes}
+                                        handleSort={this.handleSort}
+                                        mappingObj={this.state.mappingObj}
+                                        removeFilter ={this.removeFilter}
+                                        addRecord = {this.addRecord}
+                                        getTypeDoc={this.getTypeDoc}
+                                        Types={this.state.types}
+                                        removeSort = {this.removeSort}
+                                        removeHidden = {this.removeHidden}
+                                        visibleColumns = {this.state.visibleColumns}
+                                        hiddenColumns = {this.state.hiddenColumns}
+                                        columnToggle ={this.columnToggle}
+                                        actionOnRecord = {this.state.actionOnRecord}
+                                        pageLoading={this.state.pageLoading}
+                                        reloadData={this.reloadData}
+                                        exportJsonData= {this.exportJsonData} />
+                                </div>
+                                {footer}
+                                <FeatureComponent.ErrorModal
+                                    errorShow={this.state.errorShow}
+                                    closeErrorModal = {this.closeErrorModal}>
+                                </FeatureComponent.ErrorModal>
+                                <div className="full_page_loading hide">
+                                    <div className="loadingBar"></div>
+                                    <div className="vertical1">             
+                                    </div> 
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>);

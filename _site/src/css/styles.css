@@ -166,6 +166,7 @@ body{
 }
 .dejavuContainer{
   border: 1px solid #ddd;
+  overflow-x: hidden;
 }
 .dejavuContainer,
 .typeContainer{
@@ -176,17 +177,23 @@ body{
   top: 0;
   margin: 0;
 }
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 44px 270px;
+}
 .init-ES, footer{
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 6;
-  background: #eee;
+  background: #f8fafb;
   padding: 5px;
   padding-right: 130px;
   padding-left: 169px;
-  border-bottom: 1px solid #ddd;
+}
+.init-ES {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 .mirage_link {
   position: absolute;
@@ -254,11 +261,10 @@ footer{
 }
 .typeContainer{
   width: 270px;
-  border-right: 1px solid #eee;
   padding: 15px;
   background: #f8fafb;
   z-index: 2;
-  padding-top: 44px;
+  padding-top: 64px;
 }
 .dejavuContainer.appbase .typeContainer {
   padding-top: 0;
@@ -268,7 +274,7 @@ footer{
   overflow: hidden;
   position: absolute;
   width: 100%;
-  padding: 44px 0 44px 270px;
+  padding: 64px 0 44px 270px;
 }
 .dejavuContainer.appbase .dataContainer {
   padding: 0 0 44px 270px;
@@ -349,6 +355,9 @@ footer{
 #data-table{
   border: 0 !important;
   background: #fff;
+}
+#data-table thead tr th:first-child .table-fixed-head {
+  border-left: 1px solid #eee;
 }
 .table>thead>tr>th{
   padding: 0;
@@ -481,6 +490,7 @@ footer{
 .headText .thtextShow{
   padding-right: 40px;
   line-height: 30px;
+  padding-top: 3px;
 }
 .headText .thtextShow.leftGap{
   padding-left: 26px;
@@ -728,6 +738,9 @@ iframe{
   position: absolute;
   left: 5px;
 }
+#subscribeModal .modal-body {
+  padding-bottom: 45px;
+}
 .modal .modal-content{
   background: #fff;
   border-radius: 4px;
@@ -904,6 +917,13 @@ iframe{
   100% {
     transform: translateX(100%)
   }
+}
+
+.dejavuContainer.without-hf .dataContainer {
+  padding: 0 0 0 270px;
+}
+.dejavuContainer.without-hf .typeContainer {
+  padding-top: 5px;
 }
 
 /*Color Schemes*/

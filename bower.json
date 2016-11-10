@@ -14,6 +14,7 @@
     "highlightjs": "^9.6.0",
     "select2": "~4.0.1",
     "lzma": "^2.3.0",
-    "urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git"
+    "urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git",
+    "auth0.js": "^7.4.0"
   }
 }
