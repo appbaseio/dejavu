@@ -9,7 +9,13 @@ function createUrl(inputs, cb) {
     function compressCb(error, ciphertext) {
         if(!error) {
             dejavuUrl  = ciphertext;
-            let finalUrl = '#?input_state=' + dejavuUrl;
+            let finalUrl = '';
+            if(window.location.href.indexOf('?default=true') > -1) {
+                finalUrl = window.location.href.split('?default=true')[0];
+                storageService.set('esurl', inputs.url);
+                storageService.set('appname', inputs.appname);
+            }
+            finalUrl += '#?input_state=' + dejavuUrl;
             if(queryParams && queryParams.hf) {
                 finalUrl += '&hf='+queryParams.hf
             }
