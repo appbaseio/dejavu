@@ -8,16 +8,17 @@ var AppSelect = React.createClass({
             selectVal: null,
             apps: null,
             searchValue: '',
-            setAppClass: 'hide'
+            setAppClass: 'hide',
+            touched: false
         };
     },
-    componentDidMount: function() {
-        console.log(this.props.splash);
-        if(!this.props.splash) {
+    componentDidUpdate: function() {
+        if(!this.props.splash && config.appname && this.state.searchValue === '' && !this.state.touched) {
             this.setState({
-                searchValue: config.appname
+                searchValue: config.appname,
+                touched: true
             });
-        }
+        }  
     },
     handleInput: function(event) {
         this.setState({
