@@ -10,7 +10,11 @@
     "background": {
         "scripts": [ "background.js" ]
     },
-    "permissions": ["storage", "system.display", "<all_urls>"],
+    "content_security_policy": "script-src 'self' https://appbaseio.auth0.com https://cdn.auth0.com blob: filesystem: chrome-extension-resource:",
+    "web_accessible_resources": [
+        "site/index.html"
+    ],
+    "permissions": ["storage", "system.display", "<all_urls>", "https://appbaseio.auth0.com/*"],
     "manifest_version": 2,
     "offline_enabled":true,
     "browser_action": {
