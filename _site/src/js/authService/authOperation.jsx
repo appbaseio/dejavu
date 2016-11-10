@@ -56,7 +56,7 @@ AuthOperation.prototype.getUserProfile = function() {
   var url = this.serverAddress+'/api/getUserProfile';
   var subscribeOption = storageService.get('subscribeOption') && storageService.get('subscribeOption') !== 'null' ? storageService.get('subscribeOption') : null;
   var request = {
-    token: storageService.get('id_token'),
+    token: storageService.get('dejavu_id_token'),
     origin_app: 'DEJAVU',
     email_preference: subscribeOption
   };
