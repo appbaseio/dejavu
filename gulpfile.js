@@ -158,16 +158,15 @@ gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle', 'compact'], function() {
+gulp.task('chromeBuild', ['bundle', 'compact', 'chrome-specific_dir'], function() {
     setTimeout(function() {
-        var folders_length = Object.keys(files.folders).length;
-        for(folder in files.folders) {
-            gulp.src(files.folders[folder])
-                .pipe(gulp.dest('./dejavu-unpacked/'+folder));   
-        }
-        gulp.src(files.moveFiles)
-            .pipe(gulp.dest('./dejavu-unpacked'));
-        }, 1000);
+        return gulp.src(['_site/**/*']).pipe(gulp.dest('./dejavu-unpacked/site'));
+    }, 1000);
+});
+
+// copy chrome-specific dir
+gulp.task('chrome-specific_dir', function() {
+    return gulp.src(['chrome-specific/**/*']).pipe(gulp.dest('./dejavu-unpacked/'));
 });
 
 gulp.task('ghpagesBuild', ['bundle', 'compact'], function() {
