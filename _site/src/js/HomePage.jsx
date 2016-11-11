@@ -4,6 +4,7 @@ var DataTable = require('./table/DataTable.jsx');
 var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
+var Header = require('./Header.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // This is the file which commands the data update/delete/append.
@@ -317,14 +318,14 @@ var HomePage = React.createClass({
                         this.unwatchStock(type);
                     }
                 }.bind(this));
-                if(BRANCH !== 'chrome') {
-                    this.setState({
-                        types: update,
-                        connect: true
-                    });
-                } else {
+                // if(BRANCH !== 'chrome') {
+                //     this.setState({
+                //         types: update,
+                //         connect: true
+                //     });
+                // } else {
                     this.setChromeTypes(update);
-                }
+                // }
             }.bind(this));
         }
     },
@@ -359,6 +360,8 @@ var HomePage = React.createClass({
                 types: update,
                 typeCheck: typeCheck,
                 connect: true
+            }, function() {
+                mirageLink(function() {});
             });
         }.bind(this),1000);
     },
@@ -378,19 +381,40 @@ var HomePage = React.createClass({
                 this.setState({
                     splash: false
                 });
+                if(window.location.href.indexOf('?default=true') > -1) {
+                    this.connectSync(config);
+                } else {
+                    config = {};
+                    getUrl(this.connectSync);
+                }
             }
         }
     },
     componentDidMount: function() {
-        if(!this.state.splash) {
-            this.afterConnect();
-            input_state = JSON.parse(JSON.stringify(config));
-            createUrl(input_state);
-            if(BRANCH === 'chrome') {
-                this.init_map_stream();
-            }
-        }
         this.setApps();
+    },
+    connectSync: function(config_in) {
+        config = config_in;
+        var self = this;
+        this.afterConnect();
+        input_state = JSON.parse(JSON.stringify(config_in));
+        createUrl(input_state);
+        getMapFlag = false;
+        $('.full_page_loading').removeClass('hide');
+        esTypes = [];
+        subsetESTypes = [];
+        beforeInit();
+        self.setState({
+            splash: false,
+            types: [],
+            documents: [],
+            totalRecord: 0,
+            connect: false
+        });
+        setTimeout(function(){
+            appAuth = true;
+            self.init_map_stream();
+        },500);
     },
     init_map_stream: function() {
         try {
@@ -1053,8 +1077,11 @@ var HomePage = React.createClass({
         function letsConnect() {
             storageService.setItem('esurl',temp_config.url);
             storageService.setItem('appname',temp_config.appname);
+            config = temp_config;
             if(BRANCH !== 'chrome') {
-                location.reload();
+                createUrl(temp_config, function() {
+                    self.connectSync(temp_config);
+                });
             } else {
                 config = temp_config;
                 setTimeout(function(){
@@ -1249,15 +1276,15 @@ var HomePage = React.createClass({
         if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
             index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
         }
-        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejaVu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
+        var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
         if(BRANCH === 'chrome') {
-            githubStar = (<a href="https://github.com/appbaseio/dejaVu" target="_blank">
-                            <img src="buttons/appbaseio-dejavu.png" alt="DejaVu"/>
+            githubStar = (<a href="https://github.com/appbaseio/dejavu" target="_blank">
+                            <img src="buttons/appbaseio-dejavu.png" alt="Dejavu"/>
                         </a>);
         }
         var composeQuery;
         if(this.state.connect) {
-            composeQuery = (<a className="mirage_link btn btn-default" onClick={self.composeQuery}> 
+            composeQuery = (<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default"> 
                                  Query View <i className="fa fa-external-link-square"></i>
                                 </a>);
         }
@@ -1316,65 +1343,77 @@ var HomePage = React.createClass({
             }
             return form;
         }
-        var dejavuForm = initialForm();
-        var containerClass = 'row dejavuContainer '+BRANCH;
+        var footer;
+        queryParams = getQueryParameters();
+        if(!(queryParams && queryParams.hasOwnProperty('hf'))) {
+            var dejavuForm = initialForm();
+            footer = (
+                <footer className="text-center">
+                    <a href="http://appbaseio.github.io/dejavu">Watch Video</a>
+                    <span className="text-right pull-right powered_by">
+                        Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+                    </span>
+                    <span className="pull-left github-star">
+                        {githubStar}
+                    </span>
+                </footer>
+            );
+        }
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (this.state.splash ? ' splash-on ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>
-                        {dejavuForm}
-                        <div className="typeContainer">
-                            <TypeTable
-                                Types={this.state.types}
-                                watchTypeHandler={this.watchStock}
-                                unwatchTypeHandler={this.unwatchStock}
-                                ExportData={this.exportData}
-                                signalColor={this.state.signalColor}
-                                signalActive={this.state.signalActive}
-                                signalText={this.state.signalText}
-                                typeInfo={this.state.typeInfo} />
-                        </div>
-                         <div className="col-xs-12 dataContainer">
-                            <DataTable
-                                _data={this.state.documents}
-                                sortInfo={this.state.sortInfo}
-                                filterInfo={this.state.filterInfo}
-                                infoObj={this.state.infoObj}
-                                totalRecord={this.state.totalRecord}
-                                scrollFunction={this.handleScroll}
-                                selectedTypes={subsetESTypes}
-                                handleSort={this.handleSort}
-                                mappingObj={this.state.mappingObj}
-                                removeFilter ={this.removeFilter}
-                                addRecord = {this.addRecord}
-                                getTypeDoc={this.getTypeDoc}
-                                Types={this.state.types}
-                                removeSort = {this.removeSort}
-                                removeHidden = {this.removeHidden}
-                                visibleColumns = {this.state.visibleColumns}
-                                hiddenColumns = {this.state.hiddenColumns}
-                                columnToggle ={this.columnToggle}
-                                actionOnRecord = {this.state.actionOnRecord}
-                                pageLoading={this.state.pageLoading}
-                                reloadData={this.reloadData}
-                                exportJsonData= {this.exportJsonData} />
-                        </div>
-                        <footer className="text-center">
-                            <a href="http://appbaseio.github.io/dejaVu">Watch Video</a>
-                            <span className="text-right pull-right powered_by">
-                                Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-                            </span>
-                            <span className="pull-left github-star">
-                                {githubStar}
-                            </span>
-                        </footer>
-                        <FeatureComponent.ErrorModal
-                            errorShow={this.state.errorShow}
-                            closeErrorModal = {this.closeErrorModal}>
-                        </FeatureComponent.ErrorModal>
-                        <div className="full_page_loading hide">
-                            <div className="loadingBar"></div>
-                            <div className="vertical1">             
-                            </div> 
+                        <div className="appHeaderContainer">
+                        <Header />
+                            <div className="appFormContainer">
+                                {dejavuForm}
+                                <div className="typeContainer">
+                                    <TypeTable
+                                        Types={this.state.types}
+                                        watchTypeHandler={this.watchStock}
+                                        unwatchTypeHandler={this.unwatchStock}
+                                        ExportData={this.exportData}
+                                        signalColor={this.state.signalColor}
+                                        signalActive={this.state.signalActive}
+                                        signalText={this.state.signalText}
+                                        typeInfo={this.state.typeInfo} />
+                                </div>
+                                 <div className="col-xs-12 dataContainer">
+                                    <DataTable
+                                        _data={this.state.documents}
+                                        sortInfo={this.state.sortInfo}
+                                        filterInfo={this.state.filterInfo}
+                                        infoObj={this.state.infoObj}
+                                        totalRecord={this.state.totalRecord}
+                                        scrollFunction={this.handleScroll}
+                                        selectedTypes={subsetESTypes}
+                                        handleSort={this.handleSort}
+                                        mappingObj={this.state.mappingObj}
+                                        removeFilter ={this.removeFilter}
+                                        addRecord = {this.addRecord}
+                                        getTypeDoc={this.getTypeDoc}
+                                        Types={this.state.types}
+                                        removeSort = {this.removeSort}
+                                        removeHidden = {this.removeHidden}
+                                        visibleColumns = {this.state.visibleColumns}
+                                        hiddenColumns = {this.state.hiddenColumns}
+                                        columnToggle ={this.columnToggle}
+                                        actionOnRecord = {this.state.actionOnRecord}
+                                        pageLoading={this.state.pageLoading}
+                                        reloadData={this.reloadData}
+                                        exportJsonData= {this.exportJsonData} />
+                                </div>
+                                {footer}
+                                <FeatureComponent.ErrorModal
+                                    errorShow={this.state.errorShow}
+                                    closeErrorModal = {this.closeErrorModal}>
+                                </FeatureComponent.ErrorModal>
+                                <div className="full_page_loading hide">
+                                    <div className="loadingBar"></div>
+                                    <div className="vertical1">             
+                                    </div> 
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>);

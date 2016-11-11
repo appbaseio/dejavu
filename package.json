@@ -15,10 +15,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/appbaseio/dejaVu.git"
+    "url": "git+https://github.com/appbaseio/dejavu.git"
   },
   "dependencies": {
     "babel-preset-react": "^6.3.13",
+    "fbemitter": "^2.1.1",
     "gulp-concat": "^2.6.0",
     "gulp-minify-css": "^1.2.4",
     "react": "^0.14.7",
@@ -43,7 +44,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/appbaseio/dejaVu/issues"
+    "url": "https://github.com/appbaseio/dejavu/issues"
   },
-  "homepage": "https://github.com/appbaseio/dejaVu#readme"
+  "homepage": "https://github.com/appbaseio/dejavu#readme"
 }
