@@ -12,9 +12,25 @@ var AuthOperation = function() {
   this.serverAddress = 'https://ossauth.appbase.io';
   this.auth0 = new Auth0(authConfig);
   // check if already logged in
-  this.parseHash.call(this);
+  if(BRANCH !== 'master') {
+    this.init();
+  }
 }
 
+AuthOperation.prototype.init = function() {
+  var self = this;
+  this.parseHash.call(this);
+  var parseHash = this.parseHash.bind();
+  setTimeout(function() {
+    console.log('hash watching Activated!');
+    window.onhashchange = function() {
+      if(!self.access_token_applied && location.hash.indexOf('access_token') > -1) {
+        console.log('access_token found!');
+        parseHash();
+      }
+    }
+  }, 300);
+}
 AuthOperation.prototype.isTokenExpired = function(token) {
   var decoded = this.auth0.decodeJwt(token);
   var now = (new Date()).getTime() / 1000;
@@ -56,7 +72,7 @@ AuthOperation.prototype.getUserProfile = function() {
   var url = this.serverAddress+'/api/getUserProfile';
   var subscribeOption = storageService.get('subscribeOption') && storageService.get('subscribeOption') !== 'null' ? storageService.get('subscribeOption') : null;
   var request = {
-    token: storageService.get('id_token'),
+    token: storageService.get('dejavu_id_token'),
     origin_app: 'DEJAVU',
     email_preference: subscribeOption
   };
@@ -76,13 +92,13 @@ AuthOperation.prototype.getUserProfile = function() {
   });
 }
 AuthOperation.prototype.parseHash = function() {
-  var token = storageService.get('id_token');
+  var token = storageService.get('dejavu_id_token');
   if (token !== null && !this.isTokenExpired(token)) {
     this.show_logged_in(token);
   } else {
     var result = this.auth0.parseHash(window.location.hash);
     if (result && result.idToken) {
-      storageService.set('id_token', result.idToken);
+      storageService.set('dejavu_id_token', result.idToken);
       this.show_logged_in(result.idToken);
     } else if (result && result.error) {
       console.log('error: ' + result.error);
