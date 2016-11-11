@@ -20,7 +20,7 @@ var AuthOperation = function() {
 AuthOperation.prototype.init = function() {
   var self = this;
   this.parseHash.call(this);
-  var parseHash = this.parseHash.bind();
+  var parseHash = this.parseHash.bind(this);
   setTimeout(function() {
     console.log('hash watching Activated!');
     window.onhashchange = function() {
