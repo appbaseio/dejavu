@@ -12,9 +12,25 @@ var AuthOperation = function() {
   this.serverAddress = 'https://ossauth.appbase.io';
   this.auth0 = new Auth0(authConfig);
   // check if already logged in
-  this.parseHash.call(this);
+  if(BRANCH !== 'master') {
+    this.init();
+  }
 }
 
+AuthOperation.prototype.init = function() {
+  var self = this;
+  this.parseHash.call(this);
+  var parseHash = this.parseHash.bind();
+  setTimeout(function() {
+    console.log('hash watching Activated!');
+    window.onhashchange = function() {
+      if(!self.access_token_applied && location.hash.indexOf('access_token') > -1) {
+        console.log('access_token found!');
+        parseHash();
+      }
+    }
+  }, 300);
+}
 AuthOperation.prototype.isTokenExpired = function(token) {
   var decoded = this.auth0.decodeJwt(token);
   var now = (new Date()).getTime() / 1000;
