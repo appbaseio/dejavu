@@ -58,10 +58,11 @@ var Cell = React.createClass({
     componentDidUpdate: function() {
         var self = this;
         var _id = this.props._id;
+        var _type = this.props._type;
         var checkFlag = false;
         if(this.props.actionOnRecord.selectedRows.length) {
             this.props.actionOnRecord.selectedRows.forEach(function(v){
-                if (v._id == _id) 
+                if (v._id === _id && v._type === _type) 
                     checkFlag = true;
             });
         }
