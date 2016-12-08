@@ -226,7 +226,7 @@ var HomePage = React.createClass({
                 }
             }
             this.resetData(total);
-            this.setSampleData(update[0]);
+            this.filterSampleData(update);
         }
 
         //Set sort from url
@@ -740,12 +740,15 @@ var HomePage = React.createClass({
         }.bind(this), 2000);
     },
     getTypeDoc: function(editorref) {
-        var selectedType = $('#setType').val();
+        var selectedTypes = $('#setType').val();
+        var selectedType;
+        if(selectedTypes && selectedTypes.length) {
+            selectedType = selectedTypes[0];
+        }
         var typeDocSample = this.state.typeDocSample;
         var $this = this;
-        if (selectedType != '' && selectedType != null && typeDocSample) {
+        if (selectedType != '' && selectedType != null && typeDocSample && typeDocSample.hasOwnProperty(selectedType)) {
             if (typeDocSample.hasOwnProperty(selectedType)) {
-
                 feed.getSingleDoc(selectedType, function(data) {
                     try {
                         typeDocSample[selectedType] = data.hits.hits[0]._source;
@@ -758,7 +761,6 @@ var HomePage = React.createClass({
                         console.log(err);
                     }
                 });
-
             } else this.showSample(typeDocSample[selectedType], editorref);
         }
     },
@@ -772,8 +774,17 @@ var HomePage = React.createClass({
             editorref.setValue(objJson);
         }
     },
+    filterSampleData: function(data) {
+        var filteredType = [];
+        data.filter(function(record, index) {
+            if(filteredType.indexOf(record['_type']) < 0) {
+                filteredType.push(record['_type']);
+                this.setSampleData(record);
+            }
+        }.bind(this));
+    },
     setSampleData: function(update) {
-        if(typeof update != 'undefined'){
+        if(typeof update != 'undefined') {
             var typeDocSample = this.state.typeDocSample ? this.state.typeDocSample : {};
             typeDocSample[update['_type']] = $.extend({}, update);
             delete typeDocSample[update['_type']]._id;
