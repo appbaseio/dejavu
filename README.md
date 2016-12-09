@@ -3,7 +3,6 @@ dejavu - the missing web UI for elasticsearch
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)
 [![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
-[![GitHub Stars](https://labs.turbo.run/git-brag?user=appbaseio&repo=dejavu&maxn=7)](https://github.com/appbaseio/dejavu/stargazers)
 
 dejavu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
@@ -19,7 +18,7 @@ Thus started the journey of dejavu, with a goal of 100% client side rendering an
  http.port: 9200
  http.cors.allow-origin: "http://127.0.0.1:9200"
  http.cors.enabled: true
- http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
+ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
  http.cors.allow-credentials: true
 ```
 
@@ -35,6 +34,16 @@ http://127.0.0.1:9200/_plugin/dejavu
 ```
 
 ``Note:`` If you use Elasticsearch from a different port, the URL to access and the `http.cors.allow-origin` value in the configuration file would change accordingly.
+
+For example: If you are using the chrome-extension instead of site plugins, the `http.cors.allow-origin` in Elasticsearch.yml file would change accordingly:
+
+```sh
+http.port: 9200
+http.cors.allow-origin: "chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh/"
+http.cors.enabled: true
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true
+```
 
 ### Developing
 
