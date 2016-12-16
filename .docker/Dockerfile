@@ -18,5 +18,5 @@ USER $APP_USER
 RUN npm install
 RUN bower install
 
-EXPOSE 3030 3031
+EXPOSE 1358
 CMD ["npm", "start", "--host=0.0.0.0"]
