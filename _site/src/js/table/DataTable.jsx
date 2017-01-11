@@ -103,7 +103,7 @@ var DataTable = React.createClass({
                                 visibility={visibility}
                                 row={newRow}
                                 _checked={newRow._checked}
-                                actionOnRecord={$this.props.actionOnRecord}/>);
+                                actionOnRecord={$this.props.actionOnRecord} />);
             }
             rows.push({
                 '_key': String(data[row]['_id']) + String(data[row]['_type']),
@@ -116,7 +116,8 @@ var DataTable = React.createClass({
                         _sortInfo={$this.props.sortInfo}
                         handleSort={$this.props.handleSort}
                         mappingObj={$this.props.mappingObj}
-                        filterInfo={$this.props.filterInfo} />);
+                        filterInfo={$this.props.filterInfo} 
+                        externalQueryApplied={$this.props.externalQueryApplied} />);
         });
         var visibleColumns = this.props.visibleColumns;
         

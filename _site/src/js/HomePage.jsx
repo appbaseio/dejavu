@@ -5,6 +5,7 @@ var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
 var Header = require('./Header.jsx');
+var QueryList = require('./QueryList/index.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // This is the file which commands the data update/delete/append.
@@ -43,6 +44,7 @@ var HomePage = React.createClass({
             infoObj: this.resetInfoObj(),
             totalRecord: 0,
             pageLoading: false,
+            externalQueryApplied: false,
             mappingObj: {},
             actionOnRecord: {
                 active: false,
@@ -265,32 +267,37 @@ var HomePage = React.createClass({
         });
     },
     getStreamingData: function(types) {
-        if (!OperationFlag) {
-            OperationFlag = true;
+        if(!queryParams.query) {
+            startGet.call(this);
+        }
+        function startGet() {
+            if (!OperationFlag) {
+                OperationFlag = true;
 
-            //If filter is applied apply filter data
-            if (this.state.filterInfo.active) {
-                var filterInfo = this.state.filterInfo;
-                this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
-            }
-            //Get the data without filter
-            else {
-                if (types.length) {
-                    d1 = new Date();
-                    feed.getData(types, function(update, fromStream, total) {
-                        if(subsetESTypes.length)
-                            this.updateDataOnView(update, total);
-                        else
-                            this.updateDataOnView([],0);
-                    }.bind(this), function(total, fromStream, method) {
-                        this.streamCallback(total, fromStream, method);
-                    }.bind(this));
-                } else {
-                    this.onEmptySelection();
+                //If filter is applied apply filter data
+                if (this.state.filterInfo.active) {
+                    var filterInfo = this.state.filterInfo;
+                    this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
                 }
+                //Get the data without filter
+                else {
+                    if (types.length) {
+                        d1 = new Date();
+                        feed.getData(types, function(update, fromStream, total) {
+                            if(subsetESTypes.length)
+                                this.updateDataOnView(update, total);
+                            else
+                                this.updateDataOnView([],0);
+                        }.bind(this), function(total, fromStream, method) {
+                            this.streamCallback(total, fromStream, method);
+                        }.bind(this));
+                    } else {
+                        this.onEmptySelection();
+                    }
+                }
+            } else {
+                setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
             }
-        } else {
-            setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
         }
     },
     // infinite scroll implementation
@@ -580,6 +587,11 @@ var HomePage = React.createClass({
                 setTimeout(this.getTotalRecord, 1000);
             } else {
                 feed.getTotalRecord().on('data', function(data) {
+                    if(queryParams.query) {
+                        setTimeout(function() {
+                            $this.externalQuery(queryParams.query);
+                        }, 1000*5);
+                    }
                     var infoObj = $this.state.infoObj;
                     infoObj.getOnce = true;
                     infoObj.availableTotal = data.hits.total;
@@ -875,6 +887,32 @@ var HomePage = React.createClass({
         }
         this.removeSelection();
     },
+    externalQuery: function(query) {
+        var $this = this;
+        try {
+            query = JSON.parse(query);
+        } catch(e) {}
+        this.setState({
+            externalQueryApplied: true
+        }, this.removeFilter);
+        feed.externalQuery(query, subsetESTypes, function(update, fromStream, total) {
+            if (!fromStream) {
+                sdata = [];
+                $this.resetData(total);
+            }
+            setTimeout(function() {
+                if (update != null)
+                    $this.updateDataOnView(update);
+            }, 500);
+        }.bind(this), function(total, fromStream, method) {
+            this.streamCallback(total, fromStream, method);
+        }.bind(this));
+    },
+    removeExternalQuery: function() {
+        this.setState({
+            externalQueryApplied: false
+        }, this.removeFilter);
+    },
     removeFilter: function() {
         var $this = this;
         var obj = {
@@ -885,18 +923,18 @@ var HomePage = React.createClass({
             filterInfo: obj
         });
 
-
         //Remove filterinfo from store
         if(input_state.hasOwnProperty('filterInfo')) {
             delete input_state.filterInfo;
             createUrl(input_state);
         }
-
-        sdata = [];
-        $this.resetData();
-        setTimeout(function() {
-            $this.getStreamingData(subsetESTypes);
-        }, 500);
+        if(!$this.state.externalQueryApplied) {
+            sdata = [];
+            $this.resetData();
+            setTimeout(function() {
+                $this.getStreamingData(subsetESTypes);
+            }, 500);
+        }
         this.removeSelection();
     },
     removeSort: function() {
@@ -1370,7 +1408,7 @@ var HomePage = React.createClass({
                 </footer>
             );
         }
-        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (this.state.splash ? ' splash-on ' : '');
+        var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (queryParams && queryParams.hasOwnProperty('sidebar') ? ' without-sidebar ' : '') + (this.state.splash ? ' splash-on ' : '');
         return (<div>
                     <div id='modal' />
                     <div className={containerClass}>
@@ -1378,6 +1416,9 @@ var HomePage = React.createClass({
                         <Header />
                             <div className="appFormContainer">
                                 {dejavuForm}
+                                <QueryList 
+                                    externalQuery={this.externalQuery} 
+                                    removeExternalQuery={this.removeExternalQuery} />
                                 <div className="typeContainer">
                                     <TypeTable
                                         Types={this.state.types}
@@ -1412,7 +1453,8 @@ var HomePage = React.createClass({
                                         actionOnRecord = {this.state.actionOnRecord}
                                         pageLoading={this.state.pageLoading}
                                         reloadData={this.reloadData}
-                                        exportJsonData= {this.exportJsonData} />
+                                        exportJsonData= {this.exportJsonData}
+                                        externalQueryApplied={this.state.externalQueryApplied} />
                                 </div>
                                 {footer}
                                 <FeatureComponent.ErrorModal

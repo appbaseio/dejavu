@@ -19,6 +19,12 @@ function createUrl(inputs, cb) {
             if(queryParams && queryParams.hf) {
                 finalUrl += '&hf='+queryParams.hf
             }
+            if(queryParams && queryParams.query) {
+                finalUrl += '&query='+queryParams.query
+            }
+            if(queryParams && queryParams.sidebar) {
+                finalUrl += '&sidebar='+queryParams.sidebar
+            }
             mirageLink(function() {});
             window.location.href = finalUrl;
         }

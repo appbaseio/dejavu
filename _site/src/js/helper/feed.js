@@ -524,9 +524,13 @@ var feed = (function() {
 		filterUrl: function(url) {
 			return filterUrl(url);
 		},
+		externalQuery: function(query, typeName, callback, setTotal) {
+			this.externalQueryBody = query;
+			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal);
+		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
-			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
-			applyStreamSearch(typeName, callback, queryBody, setTotal);
+			this.queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
+			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
 		},
 		//Create Filter Query by passing attributes
 		createFilterQuery: function(method, columnName, value, typeName, analyzed) {

@@ -926,6 +926,14 @@ iframe{
   padding-top: 5px;
 }
 
+.dejavuContainer.without-sidebar .dataContainer {
+  padding-left: 0;
+}
+.dejavuContainer.without-sidebar .typeContainer,
+.dejavuContainer.without-sidebar .querylist-section {
+  display: none;
+}
+
 /*Color Schemes*/
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after{
