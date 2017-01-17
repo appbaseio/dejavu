@@ -45,6 +45,7 @@ var HomePage = React.createClass({
             totalRecord: 0,
             pageLoading: false,
             externalQueryApplied: false,
+            externalQueryTotal: 0,
             mappingObj: {},
             actionOnRecord: {
                 active: false,
@@ -305,7 +306,10 @@ var HomePage = React.createClass({
         var filterInfo = this.state.filterInfo;
         var queryBody = null;
         d1 = new Date();
-        if (filterInfo.active)
+        if(this.state.externalQueryApplied) {
+            queryBody = feed.externalQueryBody;
+        }
+        else if (filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
         feed.paginateData(this.state.infoObj.total, function(update) {
             this.updateDataOnView(update);
@@ -896,6 +900,9 @@ var HomePage = React.createClass({
             externalQueryApplied: true
         }, this.removeFilter);
         feed.externalQuery(query, subsetESTypes, function(update, fromStream, total) {
+            $this.setState({
+                externalQueryTotal: total
+            });
             if (!fromStream) {
                 sdata = [];
                 $this.resetData(total);
@@ -909,6 +916,7 @@ var HomePage = React.createClass({
         }.bind(this));
     },
     removeExternalQuery: function() {
+        feed.removeExternalQuery();
         this.setState({
             externalQueryApplied: false
         }, this.removeFilter);
@@ -1454,7 +1462,8 @@ var HomePage = React.createClass({
                                         pageLoading={this.state.pageLoading}
                                         reloadData={this.reloadData}
                                         exportJsonData= {this.exportJsonData}
-                                        externalQueryApplied={this.state.externalQueryApplied} />
+                                        externalQueryApplied={this.state.externalQueryApplied}
+                                        externalQueryTotal={this.state.externalQueryTotal} />
                                 </div>
                                 {footer}
                                 <FeatureComponent.ErrorModal

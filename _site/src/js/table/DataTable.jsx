@@ -177,7 +177,9 @@ var DataTable = React.createClass({
             actionOnRecord= {this.props.actionOnRecord} 
             reloadData = {this.props.reloadData}
             exportJsonData = {this.props.exportJsonData} 
-            selectedTypes = {this.props.selectedTypes} />
+            selectedTypes = {this.props.selectedTypes}
+            externalQueryApplied={this.props.externalQueryApplied}
+            externalQueryTotal={this.props.externalQueryTotal} />
 
             {extraAddBtn}
 

@@ -528,6 +528,9 @@ var feed = (function() {
 			this.externalQueryBody = query;
 			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal);
 		},
+		removeExternalQuery: function() {
+			delete this.externalQueryBody;
+		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
 			this.queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);

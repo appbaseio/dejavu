@@ -36,7 +36,7 @@ var Info = React.createClass({
     render: function() {
         var selectedTypes = this.props.selectedTypes ? this.props.selectedTypes : [];
         var infoObj = this.props.infoObj;
-        var totalRecord = this.props.totalRecord;
+        var totalRecord = this.props.externalQueryApplied ? this.props.externalQueryTotal : this.props.totalRecord;
         var filterInfo = this.props.filterInfo;
         var sortInfo = this.props.sortInfo;
         var actionOnRecord = this.props.actionOnRecord;
