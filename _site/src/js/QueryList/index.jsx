@@ -68,8 +68,6 @@ var QueryList = React.createClass({
 	},
 	renderQueries: function() {
 		return this.state.querylist.map(function(query, index) {
-			console.log(query.name);
-			console.log(this.state.selectedQuery);
 			return (
 				<li key={index} className={"list-item col-xs-12 "+ (query.name === this.state.selectedQuery.name ? 'active' : '')}>
 					<a className="col-xs-12 pd-0" onClick={this.applyQuery.bind(this, query)}>

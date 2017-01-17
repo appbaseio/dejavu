@@ -301,19 +301,22 @@ var HomePage = React.createClass({
             }
         }
     },
-    // infinite scroll implementation
-    paginateData: function() {
+    // get query body
+    getQueryBody: function() {
         var filterInfo = this.state.filterInfo;
         var queryBody = null;
-        d1 = new Date();
         if(this.state.externalQueryApplied) {
             queryBody = feed.externalQueryBody;
         }
         else if (filterInfo.active)
             queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+        return queryBody;
+    },
+    // infinite scroll implementation
+    paginateData: function() {
         feed.paginateData(this.state.infoObj.total, function(update) {
             this.updateDataOnView(update);
-        }.bind(this), queryBody);
+        }.bind(this), this.getQueryBody());
     },
     // only called on change in types.
     getStreamingTypes: function() {
@@ -815,6 +818,7 @@ var HomePage = React.createClass({
     exportData: function() {
         var exportObject = help.exportData();
         var $this = this;
+        exportObject.query = this.getQueryBody();
         var testQuery = feed.testQuery(exportObject.type, exportObject.query);
         testQuery.on('data', function(res) {
             if (!res.hasOwnProperty('error'))
@@ -1203,16 +1207,13 @@ var HomePage = React.createClass({
     exportJsonData: function() {
         $('.json-spinner').show();
 
-        var activeQuery = {
+        var defaultQuery = {
             "query": {
                 "match_all": {}
             },
             "size":1000
         };
-        if (this.state.filterInfo.active) {
-            var filterInfo = this.state.filterInfo;
-            activeQuery = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
-        }
+        var activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
         this.scrollApi({"activeQuery": activeQuery});
     },
     scrollApi: function(info) {
