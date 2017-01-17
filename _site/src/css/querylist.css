@@ -1,14 +1,5 @@
 .querylist-section {
-	position: absolute;
-	width: 250px;
-	height: 100%;
-	left: 0;
-	top: 0;
-	background: #f7f7f7;
-	border-right: 1px solid #dedede;
-	padding: 15px 0;
-	z-index: 7;
-	transition: all 0.2s;
+
 }
 
 .querylist-section.off {
@@ -45,7 +36,8 @@
 	font-size: 10px;
 }
 
-.querylist-section .theme-list li.list-item:hover {
+.querylist-section .theme-list li.list-item:hover, 
+.querylist-section .theme-list li.list-item.active {
 	background: #dedede;
 }
 

@@ -6,7 +6,6 @@ var TypeRow = React.createClass({
     getInitialState: function() {
         // we store the state(checked/unchecked) for every type
         // so that when we reload, the state restores.
-
         return {
             isChecked: false
         };
@@ -197,9 +196,6 @@ var TypeTable = React.createClass({
         return (
             <div className='left-tab'>
                 <div className="row typesList">
-                    <h4 className='types-header pull-left col-xs-12'>
-                        <span className="pull-left">Types</span>
-                    </h4>
                     <ul className='fa-ul types-list clearfix'>
                         {rowObj}
                     </ul>

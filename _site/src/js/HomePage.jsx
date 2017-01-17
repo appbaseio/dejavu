@@ -1,10 +1,10 @@
 var React = require('react');
-var TypeTable = require('./TypeTable.jsx');
 var DataTable = require('./table/DataTable.jsx');
 var FeatureComponent = require('./features/FeatureComponent.jsx');
 var ShareLink = require('./features/ShareLink.jsx');
 var AppSelect = require('./AppSelect.jsx');
 var Header = require('./Header.jsx');
+var Sidebar = require('./Sidebar.jsx');
 var QueryList = require('./QueryList/index.jsx');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
 
@@ -1424,19 +1424,23 @@ var HomePage = React.createClass({
                         <Header />
                             <div className="appFormContainer">
                                 {dejavuForm}
-                                <QueryList 
-                                    externalQuery={this.externalQuery} 
-                                    removeExternalQuery={this.removeExternalQuery} />
                                 <div className="typeContainer">
-                                    <TypeTable
-                                        Types={this.state.types}
-                                        watchTypeHandler={this.watchStock}
-                                        unwatchTypeHandler={this.unwatchStock}
-                                        ExportData={this.exportData}
-                                        signalColor={this.state.signalColor}
-                                        signalActive={this.state.signalActive}
-                                        signalText={this.state.signalText}
-                                        typeInfo={this.state.typeInfo} />
+                                   <Sidebar
+                                        typeProps={{
+                                            Types:this.state.types,
+                                            watchTypeHandler:this.watchStock,
+                                            unwatchTypeHandler:this.unwatchStock,
+                                            ExportData:this.exportData,
+                                            signalColor:this.state.signalColor,
+                                            signalActive:this.state.signalActive,
+                                            signalText:this.state.signalText,
+                                            typeInfo:this.state.typeInfo
+                                        }}
+                                        queryProps={{
+                                            'externalQuery':this.externalQuery,
+                                            'removeExternalQuery':this.removeExternalQuery
+                                        }}
+                                    />
                                 </div>
                                  <div className="col-xs-12 dataContainer">
                                     <DataTable

@@ -88,7 +88,7 @@ var AddQuery = React.createClass({
 		var selectClass = this.props.selectClass + ' tags-select form-control';
 
 		return (
-			<div className="add-record-container pd-r10">
+			<div className="add-record-container">
 				<a href="javascript:void(0);" className={btnLinkClassSub}  title="Add" onClick={this.open} >{btnText}</a>
 				<Modal show={this.state.showModal} onHide={this.close}>
 					<Modal.Header closeButton>

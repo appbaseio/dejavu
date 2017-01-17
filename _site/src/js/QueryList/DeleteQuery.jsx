@@ -34,25 +34,22 @@ var DeleteQuery = React.createClass({
     render: function() {
         return (
             <div className="inlineBlock pd-r10 pull-left ">
-        <a title="Delete" onClick={this.open} className="btn btn-default themeBtn">
-          <i className="fa fa-trash greyBtn"></i>&nbsp;&nbsp;Delete
-        </a>
-        <Modal className="modal-danger" show={this.state.showModal} onHide={this.close}>
-          <Modal.Header closeButton>
-            <Modal.Title>Delete Query</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>You are about to delete the <strong>{this.props.selectedQuery.name}</strong> query.</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button bsStyle="danger" id="deleteBtn" className="loadingBtn"
-              onClick={this.props.deleteQuery}>
-              <span className="submitText">Confirm Deletion</span>
-              <i className="fa fa-spinner fa-spin"></i>
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+              <Modal className="modal-danger" show={this.state.showModal} onHide={this.close}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Delete Query</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <p>You are about to delete the <strong>{this.props.selectedQuery.name}</strong> query.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button bsStyle="danger" id="deleteBtn" className="loadingBtn"
+                    onClick={this.props.deleteQuery}>
+                    <span className="submitText">Confirm Deletion</span>
+                    <i className="fa fa-spinner fa-spin"></i>
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
         );
     }
 });

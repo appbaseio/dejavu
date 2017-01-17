@@ -31,11 +31,6 @@ var QueryList = React.createClass({
 		var list = JSON.stringify(list);
 		storageService.setItem('queryList', list);
 	},
-	sidebarToggle: function() {
-		this.setState({
-			querylistShow: !this.state.querylistShow
-		});
-	},
 	includeQuery: function(queryObj) {
 		this.props.externalQuery(queryObj.query);
 		var querylist = this.filterDeleteQuery(queryObj);
@@ -46,6 +41,9 @@ var QueryList = React.createClass({
 		});
 	},
 	applyQuery: function(query) {
+		this.setState({
+			selectedQuery: query,
+		});
 		this.props.externalQuery(query.query);
 	},
 	applyDeleteQuery: function(query) {
@@ -70,8 +68,10 @@ var QueryList = React.createClass({
 	},
 	renderQueries: function() {
 		return this.state.querylist.map(function(query, index) {
+			console.log(query.name);
+			console.log(this.state.selectedQuery);
 			return (
-				<li key={index} className="list-item col-xs-12">
+				<li key={index} className={"list-item col-xs-12 "+ (query.name === this.state.selectedQuery.name ? 'active' : '')}>
 					<a className="col-xs-12 pd-0" onClick={this.applyQuery.bind(this, query)}>
 						<span className="col-xs-12 query-name">
 							{query.name}
@@ -89,28 +89,19 @@ var QueryList = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className={"querylist-section "+(this.state.querylistShow ? '' : 'off')}>
+			<div className={"querylist-section"}>
 				<DeleteQuery 
 					selectedQuery={this.state.selectedQuery}
 					showModal={this.state.showDeleteQuery}
 					deleteQuery={this.deleteQuery} />
-				<a onClick={this.sidebarToggle} className="btn btn-default sidebar-toggle"> 
-					<span>q</span>
-					<span>u</span>
-					<span>e</span>
-					<span>r</span>
-					<span>i</span>
-					<span>s</span>
-				</a>
-				<div className="querylist-container col-xs-12 pd-0">
-					Query List
-					<AddQuery includeQuery={this.includeQuery} />
-				</div>
 				<ul className="theme-list col-xs-12">
-					<li className="list-item col-xs-12 list-title">
-						<a className="list-item col-xs-12 remove-query" onClick={this.props.removeExternalQuery}>
-							Remove Query
-						</a>
+					<li className="list-item col-xs-12">
+						<span>
+							<a className="remove-query text-danger" onClick={this.props.removeExternalQuery}>
+								Remove
+							</a>
+						</span>
+						<AddQuery includeQuery={this.includeQuery} />
 					</li>
 					{this.renderQueries()}
 				</ul>
