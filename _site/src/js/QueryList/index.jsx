@@ -66,6 +66,14 @@ var QueryList = React.createClass({
 		});
 		return list;
 	},
+	clearQuery: function() {
+		this.setState({
+			selectedQuery: {
+				'name': ''
+			}
+		});
+		this.props.removeExternalQuery();
+	},
 	renderQueries: function() {
 		return this.state.querylist.map(function(query, index) {
 			return (
@@ -95,7 +103,7 @@ var QueryList = React.createClass({
 				<ul className="theme-list col-xs-12">
 					<li className="list-item col-xs-12">
 						<span>
-							<a className="remove-query text-danger" onClick={this.props.removeExternalQuery}>
+							<a className="remove-query text-danger" onClick={this.clearQuery}>
 								Remove
 							</a>
 						</span>

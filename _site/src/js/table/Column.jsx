@@ -62,7 +62,6 @@ var Column = React.createClass({
 											<i className ="fa fa-chevron-up asc-icon" />
 											<i className ="fa fa-chevron-down desc-icon" />
 										</span>;
-		console.log(this.props.externalQueryApplied);
 		var filterRow = this.props.externalQueryApplied ? '' :(
 							<span className="filterIcon">
 								<FilterDropdown columnField={item} type={type} datatype = {datatype} analyzed={analyzed} filterInfo={this.props.filterInfo} />

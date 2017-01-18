@@ -46,6 +46,7 @@ var HomePage = React.createClass({
             pageLoading: false,
             externalQueryApplied: false,
             externalQueryTotal: 0,
+            extQuery: null,
             mappingObj: {},
             actionOnRecord: {
                 active: false,
@@ -276,7 +277,10 @@ var HomePage = React.createClass({
                 OperationFlag = true;
 
                 //If filter is applied apply filter data
-                if (this.state.filterInfo.active) {
+                if(this.state.externalQueryApplied && this.state.extQuery) {
+                    this.externalQuery(this.state.extQuery);
+                }
+                else if (this.state.filterInfo.active) {
                     var filterInfo = this.state.filterInfo;
                     this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
                 }
@@ -901,8 +905,10 @@ var HomePage = React.createClass({
             query = JSON.parse(query);
         } catch(e) {}
         this.setState({
+            extQuery: query,
             externalQueryApplied: true
         }, this.removeFilter);
+        $('.full_page_loading').removeClass('hide');
         feed.externalQuery(query, subsetESTypes, function(update, fromStream, total) {
             $this.setState({
                 externalQueryTotal: total
@@ -914,16 +920,19 @@ var HomePage = React.createClass({
             setTimeout(function() {
                 if (update != null)
                     $this.updateDataOnView(update);
+                    $('.full_page_loading').addClass('hide');
             }, 500);
         }.bind(this), function(total, fromStream, method) {
             this.streamCallback(total, fromStream, method);
         }.bind(this));
     },
     removeExternalQuery: function() {
-        feed.removeExternalQuery();
-        this.setState({
-            externalQueryApplied: false
-        }, this.removeFilter);
+        if(this.state.externalQueryApplied) {
+            feed.removeExternalQuery();
+            this.setState({
+                externalQueryApplied: false
+            }, this.removeFilter);
+        }
     },
     removeFilter: function() {
         var $this = this;
