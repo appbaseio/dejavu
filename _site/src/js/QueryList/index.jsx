@@ -40,12 +40,19 @@ var QueryList = React.createClass({
 		}, this.applyQuery.call(this, queryObj));
 	},
 	applyQuery: function(query) {
-		if(this.state.selectedQuery.name !== query.name) {
-			this.setState({
-				selectedQuery: query,
-			});
-			this.props.externalQuery(query);
+		if(this.props.externalQueryApplied) {
+			if(this.state.selectedQuery.name !== query.name) {
+				this.justApplyQuery(query);
+			}
+		} else {
+			this.justApplyQuery(query);
 		}
+	},
+	justApplyQuery: function(query) {
+		this.setState({
+			selectedQuery: query,
+		});
+		this.props.externalQuery(query);
 	},
 	applyDeleteQuery: function(query) {
 		this.setState({
