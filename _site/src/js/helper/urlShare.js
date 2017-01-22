@@ -8,7 +8,7 @@ function createUrl(inputs, cb) {
 	compress(inputs, compressCb.bind(this));
 
 	function compressCb(error, ciphertext) {
-		var allowParams = ['hf','h','f','query','sidebar','type'];
+		var allowParams = ['hf','h','f','query','sidebar','type','subscribe'];
 		if (!error) {
 			dejavuUrl = ciphertext;
 			let finalUrl = '';
