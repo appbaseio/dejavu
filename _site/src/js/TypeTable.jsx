@@ -34,6 +34,19 @@ var TypeRow = React.createClass({
             this.setType(value);
         }
     },
+    componentDidUpdate: function() {
+        if(this.props.cleanTypes != this.cleanTypes) {
+            this.cleanTypes = this.props.cleanTypes
+            this.cleanType();
+        }
+    },
+    cleanType: function() {
+        if(this.props.cleanTypes) {
+            this.setState({
+                isChecked: false
+            });
+        }
+    },
     setType: function(value){
         checked = false;
         if (value) {
@@ -99,7 +112,7 @@ var TypeRow = React.createClass({
         setObj[intype] = checked;
 
         storageService.getItem('types', function(result) {
-            var types = result.types;    
+            var types = result.types;
             try {
                 types = JSON.parse(types);
             } catch(e) {
@@ -170,7 +183,7 @@ var TypeTable = React.createClass({
             checkValue = {
                 checkValue: typeCheck[singleType]
             };
-        } 
+        }
         rowObj = [];
         appname = APPNAME;
         for (var type in types) {
@@ -179,6 +192,7 @@ var TypeTable = React.createClass({
                      key={type}
                      type={types[type]}
                      {...checkValue}
+                     cleanTypes={this.props.cleanTypes}
                      unwatchTypeHandler={this.props.unwatchTypeHandler}
                      watchTypeHandler={this.props.watchTypeHandler}
                      typeInfo={this.props.typeInfo} />);

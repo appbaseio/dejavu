@@ -1,5 +1,11 @@
-.querylist-section {
-
+.nav-tabs {
+	padding-top: 1px;
+}
+.nav-tabs>li>a {
+	border-radius: 0;
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus {
+	outline: none;
 }
 
 .querylist-section.off {
@@ -52,11 +58,14 @@
 
 .querylist-section .theme-list li.list-item .delete-query {
 	position: absolute;
-	right: 5px;
-	top: 5px;
+	right: 0;
+	top: 0;
 	display: none;
 }
-
+.querylist-section .theme-list li.list-item .delete-query i {
+	background: #dedede;
+	color: #333;
+}
 .querylist-section .sidebar-toggle {
 	position: absolute;
 	right: -27px;

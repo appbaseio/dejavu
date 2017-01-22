@@ -165,6 +165,7 @@ var DataTable = React.createClass({
             filterInfo = {this.props.filterInfo}
             removeFilter= {this.props.removeFilter}
             removeSort = {this.props.removeSort}
+            removeTypes = {this.props.removeTypes}
             removeHidden = {this.props.removeHidden}
             types={this.props.Types}
             addRecord = {this.props.addRecord}
@@ -179,7 +180,8 @@ var DataTable = React.createClass({
             exportJsonData = {this.props.exportJsonData} 
             selectedTypes = {this.props.selectedTypes}
             externalQueryApplied={this.props.externalQueryApplied}
-            externalQueryTotal={this.props.externalQueryTotal} />
+            externalQueryTotal={this.props.externalQueryTotal}
+            removeExternalQuery={this.props.removeExternalQuery} />
 
             {extraAddBtn}
 

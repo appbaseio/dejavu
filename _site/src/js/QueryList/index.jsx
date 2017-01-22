@@ -32,19 +32,20 @@ var QueryList = React.createClass({
 		storageService.setItem('queryList', list);
 	},
 	includeQuery: function(queryObj) {
-		this.props.externalQuery(queryObj.query);
 		var querylist = this.filterDeleteQuery(queryObj);
 		querylist.push(queryObj);
 		this.setHistoricList(querylist);
 		this.setState({
 			querylist: querylist
-		});
+		}, this.applyQuery.call(this, queryObj));
 	},
 	applyQuery: function(query) {
-		this.setState({
-			selectedQuery: query,
-		});
-		this.props.externalQuery(query.query);
+		if(this.state.selectedQuery.name !== query.name) {
+			this.setState({
+				selectedQuery: query,
+			});
+			this.props.externalQuery(query);
+		}
 	},
 	applyDeleteQuery: function(query) {
 		this.setState({
@@ -74,18 +75,30 @@ var QueryList = React.createClass({
 		});
 		this.props.removeExternalQuery();
 	},
+	isChecked: function(name) {
+		return this.props.externalQueryApplied && name === this.state.selectedQuery.name;
+	},
 	renderQueries: function() {
 		return this.state.querylist.map(function(query, index) {
 			return (
-				<li key={index} className={"list-item col-xs-12 "+ (query.name === this.state.selectedQuery.name ? 'active' : '')}>
-					<a className="col-xs-12 pd-0" onClick={this.applyQuery.bind(this, query)}>
-						<span className="col-xs-12 query-name">
-							{query.name}
-							<span className="pull-right createdAt">
-								{moment(query.createdAt).format('Do MMM, h:mm a')}
+				<li key={index} className={"list-item col-xs-12 "+ (this.props.externalQueryApplied && query.name === this.state.selectedQuery.name ? 'active' : '')}>
+					<div className="theme-element radio">
+						<input
+							id={"query-"+index}
+							type="radio"
+							checked={this.isChecked(query.name)}
+							onChange={this.applyQuery.bind(this, query)}
+							readOnly={false}
+							/>
+						<label htmlFor={"query-"+index}>
+							<span className="col-xs-12 query-name">
+								{query.name}
+								<span className="pull-right createdAt">
+									{moment(query.createdAt).format('Do MMM, h:mm a')}
+								</span>
 							</span>
-						</span>
-					</a>
+						</label>
+					</div>
 					<a className="btn btn-grey delete-query" onClick={this.applyDeleteQuery.bind(this, query)}>
 						<i className="fa fa-times"></i>
 					</a>
@@ -102,12 +115,10 @@ var QueryList = React.createClass({
 					deleteQuery={this.deleteQuery} />
 				<ul className="theme-list col-xs-12">
 					<li className="list-item col-xs-12">
-						<span>
-							<a className="remove-query text-danger" onClick={this.clearQuery}>
-								Remove
-							</a>
-						</span>
-						<AddQuery includeQuery={this.includeQuery} />
+						<AddQuery 
+							types={this.props.types}
+							selectClass="applyQueryOn"
+							includeQuery={this.includeQuery} />
 					</li>
 					{this.renderQueries()}
 				</ul>
