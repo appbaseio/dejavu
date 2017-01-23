@@ -145,7 +145,9 @@ var feed = (function() {
 			type: types,
 			body: query
 		}).on('data', function(res) {
-			setTotal(res.hits.total);
+			if(res && res.hits && res.hits.total) {
+				setTotal(res.hits.total);
+			}
 		});
 
 		//Stop old stream
