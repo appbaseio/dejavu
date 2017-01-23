@@ -60,6 +60,11 @@ var QueryList = React.createClass({
 			showDeleteQuery: true
 		});
 	},
+	deleteQueryCb: function(val) {
+		this.setState({
+			showDeleteQuery: val
+		});
+	},
 	deleteQuery: function() {
 		var querylist = this.filterDeleteQuery(this.state.selectedQuery);
 		this.setHistoricList(querylist);
@@ -119,7 +124,8 @@ var QueryList = React.createClass({
 				<DeleteQuery 
 					selectedQuery={this.state.selectedQuery}
 					showModal={this.state.showDeleteQuery}
-					deleteQuery={this.deleteQuery} />
+					deleteQuery={this.deleteQuery}
+					deleteQueryCb={this.deleteQueryCb} />
 				<ul className="theme-list col-xs-12">
 					<li className="list-item col-xs-12">
 						<AddQuery 
