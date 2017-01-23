@@ -15,7 +15,7 @@ var QueryList = React.createClass({
 		};
 	},
 	getHistoricList: function() {
-		var list = storageService.getItem('queryList');
+		var list = storageService.getItem('dejavuQueryList');
 		if(list) {
 			try {
 				list = JSON.parse(list);
@@ -29,7 +29,7 @@ var QueryList = React.createClass({
 	},
 	setHistoricList: function(list) {
 		var list = JSON.stringify(list);
-		storageService.setItem('queryList', list);
+		storageService.setItem('dejavuQueryList', list);
 	},
 	includeQuery: function(queryObj) {
 		var querylist = this.filterDeleteQuery(queryObj);
