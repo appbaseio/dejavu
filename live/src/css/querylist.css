@@ -81,6 +81,24 @@
 	border-left: 1px solid #efb503;
 }
 
+.query-error {
+	float: left;
+	width: 100%;
+	overflow: auto;
+	max-height: 100px;
+	text-align: left;
+}
+
+.applyQueryBtn .fa {
+	display: none;
+	font-size: 14px;
+	margin-right: 5px;
+}
+
+.applyQueryBtn.loading .fa {
+	display: inline-block;
+}
+
 .querylist-section .sidebar-toggle span {
 	display: block;
 	text-transform: uppercase;
