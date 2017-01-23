@@ -145,7 +145,9 @@ var feed = (function() {
 			type: types,
 			body: query
 		}).on('data', function(res) {
-			setTotal(res.hits.total);
+			if(res && res.hits && res.hits.total) {
+				setTotal(res.hits.total);
+			}
 		});
 
 		//Stop old stream
@@ -196,6 +198,7 @@ var feed = (function() {
 				cb_succes(res);
 			},
 			error: function() {
+				$('.full_page_loading').addClass('hide');
 				if(cb_error) {
 					cb_error();
 				}
