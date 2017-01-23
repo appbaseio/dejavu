@@ -36,7 +36,7 @@ var Column = React.createClass({
 		prettyData = " Clicking on {...} displays the JSON data. ";
 		var itemText = item == 'json' ? 
 				(<span>
-					<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
+					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
 						<a href="javascript:void(0);" className="bracketIcon"></a>
 					</OverlayTrigger>
 					<span>&nbsp;&nbsp;type / id</span>

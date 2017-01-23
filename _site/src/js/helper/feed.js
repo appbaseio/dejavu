@@ -134,14 +134,16 @@ var feed = (function() {
 
 	//This function is built only to maintain the total number of records
 	//It's hard to figure out correct total number of records while streaming and filtering is together
-	function countStream(types, setTotal) {
+	function countStream(types, setTotal, query) {
+		var defaultQuery = {
+			'query': {
+				'match_all': {}
+			}
+		};
+		query = query ? query : defaultQuery;
 		appbaseRef.search({
 			type: types,
-			body: {
-				'query': {
-					'match_all': {}
-				}
-			}
+			body: query
 		}).on('data', function(res) {
 			setTotal(res.hits.total);
 		});
@@ -153,11 +155,7 @@ var feed = (function() {
 
 		counterStream = appbaseRef.searchStream({
 			type: types,
-			body: {
-				'query': {
-					'match_all': {}
-				}
-			}
+			body: query
 		}).on('data', function(res2) {
 			//For update data
 			if (res2._updated) {
@@ -226,7 +224,7 @@ var feed = (function() {
 	// applies a searchStream() query on a particular ``type``
 	// to establish a continuous query connection.
 	// use applyAppbaseSearch to get the data
-	function applyStreamSearch(types, callback, queryBody, setTotal) {
+	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery) {
 		if (types !== null) {
 			var defaultQueryBody = {
 				query: {
@@ -266,7 +264,7 @@ var feed = (function() {
 			});
 
 			// Counter stream
-			countStream(types, setTotal);
+			countStream(types, setTotal, streamQuery);
 
 			//Stop old stream
 			if (typeof streamRef !== 'undefined') {
@@ -289,8 +287,8 @@ var feed = (function() {
 	}
 
 	return {
-		countStream: function(types, setTotal) {
-			countStream(types, setTotal);
+		countStream: function(types, setTotal, query) {
+			countStream(types, setTotal, query);
 		},
 		// exposes ``applyStreamSearch()`` as ``getData()``
 		getData: function(types, callback, setTotal) {
@@ -533,7 +531,7 @@ var feed = (function() {
 		externalQuery: function(query, typeName, callback, setTotal) {
 			this.externalQueryBody = query;
 			this.externalQueryType = typeName;
-			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal);
+			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal, query);
 		},
 		removeExternalQuery: function() {
 			delete this.externalQueryBody;
