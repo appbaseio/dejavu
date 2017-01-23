@@ -6,7 +6,6 @@ var TypeRow = React.createClass({
     getInitialState: function() {
         // we store the state(checked/unchecked) for every type
         // so that when we reload, the state restores.
-
         return {
             isChecked: false
         };
@@ -33,6 +32,19 @@ var TypeRow = React.createClass({
             var intype = this.props.type;
             var value = this.props.checkValue;
             this.setType(value);
+        }
+    },
+    componentDidUpdate: function() {
+        if(this.props.cleanTypes != this.cleanTypes) {
+            this.cleanTypes = this.props.cleanTypes
+            this.cleanType();
+        }
+    },
+    cleanType: function() {
+        if(this.props.cleanTypes) {
+            this.setState({
+                isChecked: false
+            });
         }
     },
     setType: function(value){
@@ -100,7 +112,7 @@ var TypeRow = React.createClass({
         setObj[intype] = checked;
 
         storageService.getItem('types', function(result) {
-            var types = result.types;    
+            var types = result.types;
             try {
                 types = JSON.parse(types);
             } catch(e) {
@@ -171,7 +183,7 @@ var TypeTable = React.createClass({
             checkValue = {
                 checkValue: typeCheck[singleType]
             };
-        } 
+        }
         rowObj = [];
         appname = APPNAME;
         for (var type in types) {
@@ -180,6 +192,7 @@ var TypeTable = React.createClass({
                      key={type}
                      type={types[type]}
                      {...checkValue}
+                     cleanTypes={this.props.cleanTypes}
                      unwatchTypeHandler={this.props.unwatchTypeHandler}
                      watchTypeHandler={this.props.watchTypeHandler}
                      typeInfo={this.props.typeInfo} />);
@@ -197,9 +210,6 @@ var TypeTable = React.createClass({
         return (
             <div className='left-tab'>
                 <div className="row typesList">
-                    <h4 className='types-header pull-left col-xs-12'>
-                        <span className="pull-left">Types</span>
-                    </h4>
                     <ul className='fa-ul types-list clearfix'>
                         {rowObj}
                     </ul>

@@ -84,6 +84,8 @@ var FilterDropdown = React.createClass({
 
         switch (datatype) {
             case 'string':
+            case 'text':
+            case 'keyword':
                 FilterMenuItems = stringFilter;
                 break;
             case 'long':

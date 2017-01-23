@@ -5,7 +5,7 @@ var Header = React.createClass({
 
     render: function() {
       var subscribeModal;
-      if(BRANCH !== 'master') {
+      if(!((queryParams && queryParams.hasOwnProperty('subscribe')) || BRANCH === 'master')) {
         subscribeModal = (<SubscribeModal></SubscribeModal>);
       }
       return (

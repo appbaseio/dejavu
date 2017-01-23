@@ -58,10 +58,11 @@ var Cell = React.createClass({
     componentDidUpdate: function() {
         var self = this;
         var _id = this.props._id;
+        var _type = this.props._type;
         var checkFlag = false;
         if(this.props.actionOnRecord.selectedRows.length) {
             this.props.actionOnRecord.selectedRows.forEach(function(v){
-                if (v._id == _id) 
+                if (v._id === _id && v._type === _type) 
                     checkFlag = true;
             });
         }
@@ -113,7 +114,7 @@ var Cell = React.createClass({
                                  value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
                                 <label htmlFor={radioId}></label>
                             </span>
-                            <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                            <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
                             </OverlayTrigger>
                             <span className="appId_name" onClick={this.copyId}>
@@ -125,7 +126,7 @@ var Cell = React.createClass({
         } else {
             if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean') {
                 prettyData = <Pretty json={data} />
-                to_display = <OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+                to_display = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);"  className="bracketIcon">
                                 </a>
                             </OverlayTrigger>
