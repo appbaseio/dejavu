@@ -25,6 +25,7 @@ var DeleteQuery = React.createClass({
         this.setState({
             showModal: false
         });
+        this.props.deleteQueryCb(false);
     },
     open: function() {
         this.setState({
