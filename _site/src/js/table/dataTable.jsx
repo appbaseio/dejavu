@@ -156,7 +156,6 @@ var DataTable = React.createClass({
                                         pageLoading={this.props.pageLoading}>
                                     </PageLoading>) : '';
 
-        
         return (
             <div className="dejavu-table">
 

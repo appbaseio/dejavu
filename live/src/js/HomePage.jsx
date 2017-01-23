@@ -108,25 +108,33 @@ var HomePage = React.createClass({
 	//later but it is not that expensive right now, read writes to
 	//DOM are much more expensive.
 
-	resetData: function(total) {
+	resetData: function(total, sdata_key) {
 		var sortedArray = [];
 		sdata_values = [];
 
 		for (each in sdata) {
-			sdata_values.push(sdata[each]);
+			if(!(sdata_key && each === sdata_key)) {
+				sdata_values.push(sdata[each]);
+			}
 		}
+		if(sdata_key) {
+			sdata_values.unshift(sdata[sdata_key]);
+		}
+
 		//if sort is already applied
 		if (this.state.sortInfo.active) {
 			sortedArray = help.sortIt(sdata_values, this.state.sortInfo.column, this.state.sortInfo.reverse);
 
 		}
 		//by default sort it by typename by passing json field
-		else {
+		else if(!sdata_key) {
 			sortedArray = help.sortIt(sdata_values, 'json', false);
+		} else {
+			sortedArray = sdata_values;
 		}
 		var infoObj = this.state.infoObj;
 		infoObj.showing = sortedArray.length;
-		if (typeof total != 'undefined') {
+		if (typeof total != 'undefined' && total !== null) {
 			infoObj.searchTotal = total;
 		}
 		data = sortedArray;
@@ -213,7 +221,7 @@ var HomePage = React.createClass({
 			//apply the `new transition`.
 			else {
 				sdata[key] = update;
-				this.resetData();
+				this.resetData(null, key);
 				for (var each in update) {
 					var _key = keyGen(update, each);
 					newTransition(_key);
@@ -251,11 +259,31 @@ var HomePage = React.createClass({
 			totalRecord = total
 		return totalRecord;
 	},
+	countExternalTotalRecord: function(total, fromStream, method){
+		var totalRecord = this.state.externalQueryTotal;
+		if(fromStream) {
+			if(method == 'index')
+				totalRecord += 1;
+			else if(method == 'delete')
+				totalRecord -= 1;
+		}
+		else
+			totalRecord = total
+		return totalRecord;
+	},
 	streamCallback: function(total, fromStream, method) {
-		var totalRecord = this.countTotalRecord(total, fromStream, method);
-		this.setState({
-			totalRecord: totalRecord
-		});
+		var reacordObj;
+		if(this.state.externalQueryApplied) {
+			reacordObj = {
+				externalQueryTotal: this.countExternalTotalRecord(total, fromStream, method)
+			};
+			feed.externalQueryTotal = reacordObj.externalQueryTotal;
+		} else {
+			reacordObj = {
+				totalRecord: this.countTotalRecord(total, fromStream, method)
+			};
+		}
+		this.setState(reacordObj);
 	},
 	onEmptySelection: function() {
 		OperationFlag = false;
@@ -956,11 +984,11 @@ var HomePage = React.createClass({
 		}, this.removeFilter);
 		$('.full_page_loading').removeClass('hide');
 		feed.externalQuery(query.query, query.type , function(update, fromStream, total) {
-			$this.setState({
-				externalQueryTotal: total
-			});
 			if (!fromStream) {
 				sdata = [];
+				$this.setState({
+					externalQueryTotal: total
+				});
 				$this.resetData(total);
 			}
 			setTimeout(function() {
