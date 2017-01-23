@@ -3,7 +3,6 @@ dejavu - the missing web UI for elasticsearch
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)
 [![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
-[![GitHub Stars](https://img.shields.io/github/stars/appbaseio/dejavu.svg)](https://github.com/appbaseio/dejavu/stargazers)
 
 dejavu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
 
@@ -19,7 +18,7 @@ Thus started the journey of dejavu, with a goal of 100% client side rendering an
  http.port: 9200
  http.cors.allow-origin: "http://127.0.0.1:9200"
  http.cors.enabled: true
- http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization
+ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
  http.cors.allow-credentials: true
 ```
 
@@ -35,6 +34,16 @@ http://127.0.0.1:9200/_plugin/dejavu
 ```
 
 ``Note:`` If you use Elasticsearch from a different port, the URL to access and the `http.cors.allow-origin` value in the configuration file would change accordingly.
+
+For example: If you are using the chrome-extension instead of site plugins, the `http.cors.allow-origin` in Elasticsearch.yml file would change accordingly:
+
+```sh
+http.port: 9200
+http.cors.allow-origin: "chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh/"
+http.cors.enabled: true
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true
+```
 
 ### Developing
 
@@ -83,7 +92,7 @@ You can make pull requests against the ``dev`` branch.
 
 ### Filter Views
 
-![Filter Views](http://gdurl.com/DKHu)
+![Filter Views](http://i.imgur.com/sE90O10.gif)
 
 Sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``string`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
@@ -93,7 +102,7 @@ dejavu also supports local filters like column sorting and showing a subset of c
 
 ### Modern UI elements
 
-![Pagination](http://gdurl.com/P6Ay)
+![Pagination](http://i.imgur.com/IAX0kLX.gif)
 
 It's not uncommon to have thousands of records in a type. dejavu supports an infinite scroll based UI, pagination is so old school.
 
@@ -101,7 +110,7 @@ dejavu also supports browsing data from multiple types and bulk deletions. It al
 
 ### Realtime data updates
 
-![](http://gdurl.com/lBVA)
+![Realtime data updates](http://i.imgur.com/z0Ey4BN.gif)
 
 dejavu uses a websockets based API and subscribes for data changes for the current filtered view. For this to work, the Elasticsearch server needs to support a websockets based publish API. Currently, you can take advantage of this feature by hosting your data with appbase.io.
 

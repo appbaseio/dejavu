@@ -42,7 +42,8 @@ var files = {
             '_site/bower_components/highlightjs/highlight.pack.min.js',
             '_site/bower_components/lzma/src/lzma.js',
             '_site/bower_components/urlsafe-base64/app.js',
-            '_site/bower_components/auth0.js/build/auth0.min.js'
+            '_site/bower_components/auth0.js/build/auth0.min.js',
+            '_site/bower_components/moment/min/moment.min.js'
         ],
         custom: [
             
