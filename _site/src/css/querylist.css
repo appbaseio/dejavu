@@ -60,6 +60,7 @@
 	position: absolute;
 	right: 0;
 	top: 0;
+	z-index: 2;
 	display: none;
 }
 .querylist-section .theme-list li.list-item .delete-query i {
