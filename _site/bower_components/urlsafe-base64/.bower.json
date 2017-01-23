@@ -1,11 +1,27 @@
 {
   "name": "urlsafe-base64",
   "homepage": "https://github.com/farhan687/urlsafe-base64",
-  "_release": "851218a684",
+  "authors": [
+    "farhan687 <farhan687@gmail.com>"
+  ],
+  "description": "urlsafe-base64",
+  "main": "app.js",
+  "keywords": [
+    "base64"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "582dd136f6",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "851218a684a876ab60ad3682adca8b2381a51f0f"
+    "commit": "582dd136f6906db6c6e521570f59572b68191fc5"
   },
   "_source": "https://github.com/farhan687/urlsafe-base64.git",
   "_target": "*",

@@ -24,3 +24,5 @@ release
 .DS_Store
 
 example/auth0.js
+
+.idea/

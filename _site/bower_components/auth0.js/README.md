@@ -16,20 +16,12 @@ Auth0.js is a client-side library for [Auth0](http://auth0.com). It allows you t
 
 The example directory has a ready-to-go app. In order to run it you need [node](http://nodejs.org/) installed, download dependencies with `npm install`, then execute `npm run example` from the root of this project.
 
-## Usage
-
-Take `auth0.js` or `auth0.min.js` from the `/build` directory and import it to your page.
-
-If you are using [browserify](http://browserify.org/) install with `npm i auth0-js --production --save`.
-
-> Note: The following examples use jQuery, but auth0.js is not tied to jQuery and any library can be used with it.
-
 ### Initialize
 
 Construct a new instance of the Auth0 client as follows:
 
 ```html
-<script src="//cdn.auth0.com/w2/auth0-7.4.0.min.js"></script>
+<script src="//cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
 <script type="text/javascript">
   var auth0 = new Auth0({
     domain:       'mine.auth0.com',
@@ -147,7 +139,48 @@ $('.login-dbconn').click(function () {
   });
 ```
 
-### Passwordless authentication
+## Logout
+
+After a user logs in, a JSON Web Token (JWT) is returned and this token can be saved in a cookie or in browser storage for later use. In addition to this, an SSO cookie gets set in the user's browser (unless specifying `sso: false`).
+
+If you would like to log the user out from their current browser session in your app, provide a method for removing their JWT from the browser.
+
+```js
+  $('.logout-dbconn').click(function() {
+    // local storage example
+    localStorage.removeItem('id_token');
+  });
+```
+
+If you would like to invalidate the user's Auth0 SSO session, use the `logout` method from `auth0.js`.
+
+```js
+  $('.logout-dbconn').click(function() {
+    auth0.logout();
+  });
+```
+
+This method will redirect the user to an Auth0-hosted page that says "OK". You may pass a `returnTo` value to specify where the user should be redirected to after logout.
+
+```js
+  $('.logout-dbconn').click(function() {
+    auth0.logout({ returnTo: 'http://localhost:3000' }, { version: 'v2' });
+  });
+```
+
+You must whitelist the **Logout URL** for your app at either the account level or the app level. To whitelist a logout URL for your entire account, provide it in your [advanced settings](https://manage.auth0.com/#/account/advanced). To whitelist for the application only, provide the logout URL in your [application settings](https://manage.auth0.com/#/clients).
+
+If you whitelist the logout URL at the application level, pass the `client_id` for your app in the query object.
+
+```js
+  $('.logout-dbconn').click(function() {
+    auth0.logout({ returnTo: 'http://localhost:3000', client_id: AUTH0_CLIENT_ID }, { version: 'v2' });
+  });
+```
+
+For more information about logout, see the [documentation](https://auth0.com/docs/logout).
+
+## Passwordless Authentication
 
 Passwordless authentication allows users to log in by receiving a one-time password via email or text message.
 
@@ -608,59 +641,61 @@ auth0.refreshToken(refresh_token, function (err, delegationResult) {
 });
 ```
 
-### Silent Authentication
+### Silent Authentication		
 
-If you want to fetch a new token because your existing token is expired (or soon to expire), you can fetch a new one doing the following:
+> Note: This only works when `OAuth 2.0 API Authorization` is enabled in the advanced accounts settings in the [Auth0 Dashboard](https://manage.auth0.com/#/account/advanced). For social connections, using your own app keys is mandatory.		
+	
+If you want to fetch a new token because your existing token is expired (or soon to expire), you can fetch a new one doing the following:		
 
-```js
-auth0.silentAuthentication({}, function(err, result){
-  // Get here the new result.id_token
-})
-```
+```js		
+auth0.silentAuthentication({}, function(err, result){		
+  // Get here the new result.id_token		
+})		
+```		
 
-This by default will use the callback url defined in the constructor. If this callback url is the same that handle the regular authentication callback, you will need to have in mind that you will need to handle the case where the user is already loged in and reached that path again.
+This by default will use the callback url defined in the constructor. If this callback url is the same that handle the regular authentication callback, you will need to have in mind that you will need to handle the case where the user is already loged in and reached that path again.		
+		
+If you want to use a different one, you can send the new `callbackURL` in the options param:		
+	
+```js		
+auth0.silentAuthentication({		
+   callbackURL: "https://.../silentCallback"		
+ }, function(err, result){		
+ // Get here the new result.id_token		
+})		
+```		
+		
+There are two ways this method works. The default behaviour will try to parse the callback url hash, but it also support `postMessage` to send the authentication result from the callback page back to the sdk. 		
+		
+```js		
+auth0.silentAuthentication({		
+    usePostMessage:true, 		
+    callbackURL: "https://.../silentCallback"		
+  }, function(err, result){		
+  // Get here the new result.id_token		
+})		
+```		
 
-If you want to use a different one, you can send the new `callbackURL` in the options param:
+An example of the callback page is the following:		
 
-```js
-auth0.silentAuthentication({
-    callbackURL: "https://.../silentCallback"
-  }, function(err, result){
-  // Get here the new result.id_token
-})
-```
-
-There are two ways this method works. The default behaviour will try to parse the callback url hash, but it also support `postMessage` to send the authentication result from the callback page back to the sdk. 
-
-```js
-auth0.silentAuthentication({
-    usePostMessage:true, 
-    callbackURL: "https://.../silentCallback"
-  }, function(err, result){
-  // Get here the new result.id_token
-})
-```
-
-An example of the callback page is the following:
-
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <script src="/auth0.js"></script>
-    <script type="text/javascript">
-        var auth0 = new Auth0({
-          domain:       'mine.auth0.com',
-          clientID:     '...'
-        });
-        var result = auth0.parseHash(window.location.hash);
-        if (result) {
-          parent.postMessage(result, "https://.../"); //The second parameter should be your domain
-        }
-    </script>
-  </head>
-  <body></body>
-</html>
+```html		
+<!DOCTYPE html>		
+<html>		
+  <head>		
+    <script src="/auth0.js"></script>		
+    <script type="text/javascript">		
+        var auth0 = new Auth0({		
+          domain:       'mine.auth0.com',		
+          clientID:     '...'		
+        });		
+        var result = auth0.parseHash(window.location.hash);		
+        if (result) {		
+          parent.postMessage(result, "https://.../"); //The second parameter should be your domain		
+        }		
+    </script>		
+  </head>		
+  <body></body>		
+</html>		
 ```
 
 ### Validate User

@@ -1,0 +1,21 @@
+{
+  "name": "urlsafe-base64",
+  "version": "1.0",
+  "homepage": "https://github.com/farhan687/urlsafe-base64",
+  "authors": [
+    "farhan687 <farhan687@gmail.com>"
+  ],
+  "description": "urlsafe-base64",
+  "main": "app.js",
+  "keywords": [
+    "base64"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

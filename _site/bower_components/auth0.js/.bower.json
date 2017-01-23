@@ -7,15 +7,14 @@
     "test"
   ],
   "homepage": "https://github.com/auth0/auth0.js",
-  "version": "7.4.0",
-  "_release": "7.4.0",
+  "version": "7.6.1",
+  "_release": "7.6.1",
   "_resolution": {
     "type": "version",
-    "tag": "v7.4.0",
-    "commit": "4ad2b54e61349e9b76125a4c83e06c397abf70d1"
+    "tag": "v7.6.1",
+    "commit": "17bfb66447f87b73f5beba37af0eee8c190fe8dd"
   },
   "_source": "https://github.com/auth0/auth0.js.git",
   "_target": "^7.4.0",
-  "_originalSource": "auth0.js",
-  "_direct": true
+  "_originalSource": "auth0.js"
 }

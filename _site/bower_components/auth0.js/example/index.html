@@ -119,7 +119,8 @@
                         username: $('.login-username').val(),
                         password: $('.login-password').val(),
                         sso: false
-                    }, function (err, result) {
+                    }
+                    , function (err, result) {
                       if (err) return alert('Something went wrong: ' + err.message);
                       auth0.getUserInfo(result.accessToken, function (err, profile) {
                         if (err) {
@@ -127,7 +128,8 @@
                         }
                         alert('hello ' + profile.name);
                       });
-                    });
+                    }
+                    );
                 });
             </script>
         </div>

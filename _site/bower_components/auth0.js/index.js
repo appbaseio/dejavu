@@ -6,6 +6,7 @@ var Base64Url         = require('./lib/base64_url');
 var assert_required   = require('./lib/assert_required');
 var is_array          = require('./lib/is-array');
 var index_of          = require('./lib/index-of');
+var nonceGenerator    = require('./lib/nonce-generator');
 
 var qs                = require('qs');
 var xtend             = require('xtend');
@@ -159,6 +160,11 @@ function Auth0 (options) {
   };
   this._useCordovaSocialPlugins = false || options.useCordovaSocialPlugins;
   this._sendClientInfo = null != options.sendSDKClientInfo ? options.sendSDKClientInfo : true;
+
+  this._scope = options.scope || 'openid';
+  this._audience = options.audience || null;
+  this._tenant = options.__tenant || this._domain.split('.')[0];
+  this._token_issuer = options.__token_issuer || 'https://' + this._domain + '/';
 }
 
 /**
@@ -262,7 +268,7 @@ Auth0.prototype._renderAndSubmitWSFedForm = function (options, formHtml) {
 
 Auth0.prototype._getMode = function (options) {
   var result = {
-    scope: 'openid',
+    scope: this._scope,
     response_type: this._getResponseType(options)
   };
 
@@ -291,7 +297,7 @@ Auth0.prototype._configureOfflineMode = function(options) {
 
 Auth0.prototype._getUserInfo = function (profile, id_token, callback) {
 
-  console.warn("DEPRECATION NOTICE: This method will be soon deprecated, use `getUserInfo` instead.")
+  warn("DEPRECATION NOTICE: This method will be soon deprecated, use `getUserInfo` instead.")
 
   if (!(profile && !profile.user_id)) {
     return callback(null, profile);
@@ -492,7 +498,8 @@ Auth0.prototype.decodeJwt = function (jwt) {
  *
  */
 
-Auth0.prototype.parseHash = function (hash) {
+Auth0.prototype.parseHash = function (hash, options) {
+  options = options || {};
   hash = hash || window.location.hash;
   hash = hash.replace(/^#?\/?/, '');
   var parsed_qs = qs.parse(hash);
@@ -537,9 +544,26 @@ Auth0.prototype.parseHash = function (hash) {
     }
 
     // iss should be the Auth0 domain (i.e.: https://contoso.auth0.com/)
-    if (prof.iss && prof.iss !== 'https://' + this._domain + '/') {
+    if (prof.iss && prof.iss !== this._token_issuer) {
       return invalidJwt(
-        'The domain configured (https://' + this._domain + '/) does not match with the domain set in the token (' + prof.iss + ').');
+        'The domain configured (' + this._token_issuer + ') does not match with the domain set in the token (' + prof.iss + ').');
+    }
+
+    var nonce;
+
+    if (options.nonce) {
+      nonce = options.nonce;
+    } else if (window.localStorage) {
+      try {
+        nonce = window.localStorage.getItem('com.auth0.auth.nonce');
+        window.localStorage.removeItem('com.auth0.auth.nonce');
+      } catch(e) {
+        // will fail because nonce is undefined
+      }
+    }
+
+    if ((nonce || prof.nonce) && prof.nonce !== nonce) {
+      return invalidJwt('The nonce does not match.');
     }
   }
 
@@ -569,8 +593,7 @@ Auth0.prototype.signup = function (options, callback) {
   var opts = {
     client_id: this._clientID,
     redirect_uri: this._getCallbackURL(options),
-    email: trim(options.email || options.username || ''),
-    tenant: this._domain.split('.')[0]
+    email: trim(options.email || options.username || '')
   };
 
   if (typeof options.username === 'string') {
@@ -664,7 +687,6 @@ Auth0.prototype.signup = function (options, callback) {
 
 Auth0.prototype.changePassword = function (options, callback) {
   var query = {
-    tenant:         this._domain.split('.')[0],
     client_id:      this._clientID,
     connection:     options.connection,
     email:          trim(options.email || '')
@@ -760,8 +782,20 @@ Auth0.prototype._buildAuthorizationParameters = function(args, blacklist) {
 };
 
 Auth0.prototype._buildAuthorizeUrl = function(options) {
+  var constructorOptions = {};
+
+  if (this._scope) {
+    constructorOptions.scope = this._scope;
+  }
+
+  if (this._audience) {
+    constructorOptions.audience = this._audience;
+  }
+
+
   var qs = [
     this._getMode(options),
+    constructorOptions,
     options,
     {
       client_id: this._clientID,
@@ -789,6 +823,29 @@ Auth0.prototype.login = Auth0.prototype.signin = function (options, callback) {
     options.sso = true;
   }
 
+  if (this._responseType.indexOf('id_token') > -1 && !options.nonce) {
+    if (typeof options.passcode === 'undefined' && (
+        ((typeof options.username !== 'undefined' || typeof options.email !== 'undefined') && !callback) ||
+        (typeof options.username === 'undefined' && typeof options.email === 'undefined')
+        ) ) {
+
+      if (window.localStorage) {
+        var nonce = nonceGenerator.randomString(16);
+        if (nonce) {
+          try {
+            options.nonce = nonce;
+            window.localStorage.setItem('com.auth0.auth.nonce', nonce);
+          }
+          catch(e) {
+            options.nonce = undefined;
+          }
+        }
+      } else {
+        throw new Error('Unable to generate and store nonce to request id_token. Please provide a nonce value via options');
+      }
+    }
+  }
+
   if (typeof options.passcode !== 'undefined') {
     return this.loginWithPasscode(options, callback);
   }
@@ -804,6 +861,10 @@ Auth0.prototype.login = Auth0.prototype.signin = function (options, callback) {
 
   if (!!options.popup && this._getCallbackOnLocationHash(options)) {
     return this.loginWithPopup(options, callback);
+  }
+
+  if (!options.nonce && this._responseType.indexOf('id_token') > -1) {
+    throw new Error('nonce is mandatory');
   }
 
   this._authorize(options);
@@ -994,6 +1055,10 @@ Auth0.prototype.loginWithPopup = function(options, callback) {
     throw new Error('popup mode should receive a mandatory callback');
   }
 
+  if (!options.nonce && this._responseType.indexOf('id_token') > -1) {
+    throw new Error('nonce is mandatory');
+  }
+
   var qs = [this._getMode(options), options, { client_id: this._clientID, owp: true }];
 
   if (this._sendClientInfo) {
@@ -1126,6 +1191,10 @@ Auth0.prototype.loginWithUsernamePasswordAndSSO = function (options, callback) {
   var _this = this;
   var popupPosition = this._computePopupPosition(options.popupOptions);
   var popupOptions = xtend(popupPosition, options.popupOptions);
+
+  if (!options.nonce && this._responseType.indexOf('id_token') > -1) {
+    throw new Error('nonce is mandatory');
+  }
 
   var winchanOptions = {
     url: 'https://' + this._domain + '/sso_dbconnection_popup/' + this._clientID,
@@ -1262,7 +1331,7 @@ Auth0.prototype.loginWithResourceOwner = function (options, callback) {
 Auth0.prototype.loginWithSocialAccessToken = function (options, callback) {
   var _this = this;
   var query = this._buildAuthorizationParameters([
-      { scope: 'openid' },
+      { scope: this._scope },
       options,
       { client_id: this._clientID }
     ]);
@@ -1370,6 +1439,10 @@ Auth0.prototype.loginWithUsernamePassword = function (options, callback) {
     popup = this._buildPopupWindow(options);
   }
 
+  if (!options.nonce && this._responseType.indexOf('id_token') > -1) {
+    throw new Error('nonce is mandatory');
+  }
+
   // When a callback with more than one argument is specified and sso: true then
   // we open a popup and do authentication there.
   if (callback && callback.length > 1 && options.sso ) {
@@ -1383,7 +1456,7 @@ Auth0.prototype.loginWithUsernamePassword = function (options, callback) {
       client_id: this._clientID,
       redirect_uri: this._getCallbackURL(options),
       username: trim(options.username || options.email || ''),
-      tenant: this._domain.split('.')[0]
+      tenant: this._tenant
     });
 
   this._configureOfflineMode(query);
@@ -1703,7 +1776,7 @@ Auth0.prototype.getDelegationToken = function (options, callback) {
  *
  *     auth0.silentAuthentication({}, function(error, result) {
  *        if (error) {
- *          console.log(error); 
+ *          console.log(error);
  *        }
  *        // result.id_token
  *     });
@@ -1712,7 +1785,7 @@ Auth0.prototype.getDelegationToken = function (options, callback) {
  *
  *     auth0.silentAuthentication({callbackUrl: "https://site.com/silentCallback"}, function(error, result) {
  *        if (error) {
- *          console.log(error); 
+ *          console.log(error);
  *        }
  *        // result.id_token
  *     });
@@ -1723,7 +1796,7 @@ Auth0.prototype.getDelegationToken = function (options, callback) {
  */
 Auth0.prototype.silentAuthentication = function (options, callback) {
   var usePostMessage = options.usePostMessage || false;
-  
+
   delete options.usePostMessage;
 
   options = xtend(options, {prompt:'none'});
@@ -1840,24 +1913,13 @@ Auth0.prototype.getSSOData = function (withActiveDirectories, cb) {
 /**
  * Get all configured connections for a client
  *
- * @example
- *
- *     auth0.getConnections(function (err, conns) {
- *       if (err) return console.log(err.message);
- *       expect(conns.length).to.be.above(0);
- *       expect(conns[0].name).to.eql('Apprenda.com');
- *       expect(conns[0].strategy).to.eql('adfs');
- *       expect(conns[0].status).to.eql(false);
- *       expect(conns[0].domain).to.eql('Apprenda.com');
- *       expect(conns[0].domain_aliases).to.eql(['Apprenda.com', 'foo.com', 'bar.com']);
- *     });
- *
  * @method getConnections
  * @param {Function} callback
+ * @deprecated This method is deprecated. If you need to get the connections please use Management API https://auth0.com/docs/api/management/v2#!/Connections/get_connections
  */
-// XXX We may change the way this method works in the future to use client's s3 file.
 
 Auth0.prototype.getConnections = function (callback) {
+  warn('getConnections is deprecated and will be removed shortly. Please use Management API endpoint /connections to list the connections');
   return jsonp('https://' + this._domain + '/public/api/' + this._clientID + '/connections', jsonpOpts, callback);
 };
 

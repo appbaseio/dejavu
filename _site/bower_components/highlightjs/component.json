@@ -1,7 +1,7 @@
 {
   "name": "highlightjs",
   "repo": "components/highlightjs",
-  "version": "9.8.0",
+  "version": "9.9.0",
   "main": "highlight.pack.min.js",
   "scripts": [
     "highlight.pack.min.js"
