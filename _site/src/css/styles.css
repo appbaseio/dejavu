@@ -65,10 +65,7 @@ label {
 .removeFilter {
 	background: #3BC7F6;
 	color: #fff;
-	/* padding: 10px; */
 	display: inline-block;
-	/* float: right; */
-	border-radius: 4px;
 }
 
 .removeFilter:hover,
