@@ -1,0 +1,100 @@
+.nav-tabs {
+	padding-top: 1px;
+}
+.nav-tabs>li>a {
+	border-radius: 0;
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus {
+	outline: none;
+}
+
+.querylist-section.off {
+	left: -250px;
+}
+
+.querylist-section .feature-btns {
+	padding: 0 15px;
+}
+
+.querylist-section .theme-list {
+	list-style: none;
+	padding: 0;
+	margin-top: 0;
+}
+
+.querylist-section .theme-list .createdAt {
+	font-size: 10px;
+}
+
+.querylist-section .theme-list li.list-item {
+	display: block;
+	border-bottom: 1px solid #dedede;
+	padding: 10px 15px 10px 15px;
+	cursor: pointer;
+}
+
+.querylist-section .theme-list li.list-item .query-name {
+	padding: 0;
+	padding-bottom: 10px;
+}
+
+.querylist-section .theme-list li.list-item .query-time {
+	font-size: 10px;
+}
+
+.querylist-section .theme-list li.list-item:hover, 
+.querylist-section .theme-list li.list-item.active {
+	background: #dedede;
+}
+
+.querylist-section .theme-list li.list-item:hover .delete-query {
+	display: inline-block;
+}
+
+.querylist-section .theme-list li.list-item.list-title {
+	background: #FCC829;
+	color: #fff;
+}
+
+.querylist-section .theme-list li.list-item .delete-query {
+	position: absolute;
+	right: 0;
+	top: 0;
+	display: none;
+}
+.querylist-section .theme-list li.list-item .delete-query i {
+	background: #dedede;
+	color: #333;
+}
+.querylist-section .sidebar-toggle {
+	position: absolute;
+	right: -27px;
+	top: 40%;
+	z-index: 3;
+	padding: 8px;
+	background: #FCC829;
+	color: #fff;
+	border: 0;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-left: 1px solid #efb503;
+}
+
+.querylist-section .sidebar-toggle span {
+	display: block;
+	text-transform: uppercase;
+	font-size: 10px;
+}
+
+.querylist-section .sidebar-toggle .sidebar-open {
+	display: none;
+}
+
+.querylist-section .btn-sort {
+	background: #eee;
+	color: #aaa;
+}
+
+.querylist-section .btn-sort.active {
+	color: #555;
+}

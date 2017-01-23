@@ -236,7 +236,12 @@ var feed = (function() {
 			queryBody = queryBody ? queryBody : defaultQueryBody;
 			var dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
-			var typesString = types.join(',');
+			var typesString = types;
+			try {
+				typesString = types.join(',');
+			} catch(e) {
+				console.log(e, types);
+			}
 			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
@@ -305,8 +310,9 @@ var feed = (function() {
 		},
 		// ``paginateData()`` scrolls new results using the
 		// datatable's current length.
-		paginateData: function(total, callback, queryBody) {
-			paginationSearch(subsetESTypes, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null);
+		paginateData: function(total, callback, queryBody, types) {
+			types = types ? types : subsetESTypes;
+			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null);
 		},
 		// gets all the types of the current app;
 		getTypes: function(callback) {
@@ -524,9 +530,17 @@ var feed = (function() {
 		filterUrl: function(url) {
 			return filterUrl(url);
 		},
+		externalQuery: function(query, typeName, callback, setTotal) {
+			this.externalQueryBody = query;
+			this.externalQueryType = typeName;
+			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal);
+		},
+		removeExternalQuery: function() {
+			delete this.externalQueryBody;
+		},
 		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
-			var queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
-			applyStreamSearch(typeName, callback, queryBody, setTotal);
+			this.queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
+			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
 		},
 		//Create Filter Query by passing attributes
 		createFilterQuery: function(method, columnName, value, typeName, analyzed) {

@@ -39,6 +39,7 @@
     "gulp-uglify": "^1.5.2",
     "gulp-util": "^3.0.7",
     "reactify": "^1.1.1",
+    "graceful-fs": "^4.1.11",
     "vinyl-source-stream": "^1.1.0"
   },
   "author": "",
