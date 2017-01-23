@@ -2,6 +2,7 @@ var browserify = require('browserify');
 var gulp = require('gulp');
 var source = require("vinyl-source-stream");
 var reactify = require('reactify');
+var del = require('del');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var connect = require('gulp-connect');
@@ -159,10 +160,16 @@ gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle', 'compact', 'chrome-specific_dir'], function() {
+gulp.task('chromeBuild', ['bundle', 'compact', 'chrome-specific_dir', 'copy_site'], function() {
     setTimeout(function() {
-        return gulp.src(['_site/**/*']).pipe(gulp.dest('./dejavu-unpacked/site'));
+        return del([
+            './dejavu-unpacked/site/bower_components'
+        ]);
     }, 1000);
+});
+
+gulp.task('copy_site', function() {
+    return gulp.src(['_site/**/*']).pipe(gulp.dest('./dejavu-unpacked/site'));
 });
 
 // copy chrome-specific dir
