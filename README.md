@@ -92,7 +92,7 @@ You can make pull requests against the ``dev`` branch.
 
 ### Filter Views
 
-![Filter Views](http://gdurl.com/DKHu)
+![Filter Views](http://i.imgur.com/sE90O10.gif)
 
 Sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``string`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
@@ -102,7 +102,7 @@ dejavu also supports local filters like column sorting and showing a subset of c
 
 ### Modern UI elements
 
-![Pagination](http://gdurl.com/P6Ay)
+![Pagination](http://i.imgur.com/IAX0kLX.gif)
 
 It's not uncommon to have thousands of records in a type. dejavu supports an infinite scroll based UI, pagination is so old school.
 
@@ -110,7 +110,7 @@ dejavu also supports browsing data from multiple types and bulk deletions. It al
 
 ### Realtime data updates
 
-![](http://gdurl.com/lBVA)
+![Realtime data updates](http://i.imgur.com/z0Ey4BN.gif)
 
 dejavu uses a websockets based API and subscribes for data changes for the current filtered view. For this to work, the Elasticsearch server needs to support a websockets based publish API. Currently, you can take advantage of this feature by hosting your data with appbase.io.
 
