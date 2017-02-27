@@ -113,7 +113,7 @@ var AddDocument = React.createClass({
 					  </Modal.Header>
 					  <Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
-							{Utils.getTypeMarkup(validateClass, selectClass)}
+							{Utils.getTypeMarkup('document', validateClass, selectClass)}
 							<div className="form-group">
 								<label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
 								<div className="col-sm-9">
