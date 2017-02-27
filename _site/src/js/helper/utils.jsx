@@ -1,11 +1,12 @@
 var React = require('react');
 var Utils = function() {
-	this.getTypeMarkup = function(validateClass, selectClass) {
+	this.getTypeMarkup = function(method, validateClass, selectClass) {
+		var id = method === 'query' ? 'applyQueryOn' : 'setType';
 		return (
 			<div className={validateClass.type}>
 				<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
 				<div className="col-sm-9">
-					<select id="applyQueryOn" className={selectClass} multiple="multiple" name="type">
+					<select id={id} className={selectClass} multiple="multiple" name="type">
 					</select>
 					<span className="help-block">
 						Type on which the query will be applied.
