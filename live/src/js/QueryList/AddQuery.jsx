@@ -171,7 +171,7 @@ var AddQuery = React.createClass({
 								</span>
 							</div>
 						</div>
-						{Utils.getTypeMarkup(validateClass, selectClass)}
+						{Utils.getTypeMarkup('query', validateClass, selectClass)}
 						{Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)}
 						</form>
 					</Modal.Body>
