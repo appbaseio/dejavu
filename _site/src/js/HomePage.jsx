@@ -812,7 +812,11 @@ var HomePage = React.createClass({
 			if (v2.value != '')
 				recordObject[v2.name] = v2.value;
 		});
-		feed.indexData(recordObject, method, function(newTypes) {
+		feed.indexData(recordObject, method, function(res, newTypes) {
+			if(method === 'bulk' && res && res.items && res.items.length) {
+				this.reloadData();
+				toastr.success(res.items.length+' records have been successfully indexed.');
+			}
 			$('.close').click();
 			this.getStreamingTypes();
 			if (typeof newTypes != 'undefined') {
@@ -1278,7 +1282,7 @@ var HomePage = React.createClass({
 			}
 		}
 	},
-	reloadData:function(){
+	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
 	},
 	userTouchAdd: function(flag){
