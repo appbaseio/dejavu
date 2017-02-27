@@ -1046,7 +1046,6 @@ var HomePage = React.createClass({
 				active: false
 			}
 		});
-
 		//Remove sortInfo from store
 		if(input_state.hasOwnProperty('sortInfo')) {
 			delete input_state.sortInfo;

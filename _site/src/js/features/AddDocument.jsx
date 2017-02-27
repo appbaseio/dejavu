@@ -4,6 +4,7 @@ var React = require('react');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
 var ReactBootstrap = require('react-bootstrap');
+var Utils = require('../helper/utils.jsx');
 
 var AddDocument = React.createClass({
 
@@ -18,9 +19,7 @@ var AddDocument = React.createClass({
 		};
 	},
 	componentDidUpdate: function() {
-		//apply select2 for auto complete
-		if (!this.state.validate.type && typeof this.props.types != 'undefined' && typeof this.props.selectClass != 'undefined')
-			this.applySelect();
+		Utils.applySelect.call(this);
 	},
 	applySelect: function(ele) {
 		var $this = this;
@@ -52,13 +51,7 @@ var AddDocument = React.createClass({
 		});
 	},
 	open: function() {
-		this.userTouch(false);
-		this.setState({
-			showModal: true
-		});
-		setTimeout(function() {
-			this.editorref = help.setCodeMirror('setBody');
-		}.bind(this), 300);
+		Utils.openModal.call(this);
 	},
 	getType: function() {
 		var typeList = this.props.types.map(function(type) {
@@ -120,38 +113,14 @@ var AddDocument = React.createClass({
 					  </Modal.Header>
 					  <Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
-						  <div className={validateClass.type}>
-							<label for="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
-							<div className="col-sm-9">
-							  <select id="setType" className={selectClass} multiple="multiple" name="type">
-							  </select>
-								<span className="help-block">
-								  Type in which the data will be stored.
-								</span>
+							{Utils.getTypeMarkup(validateClass, selectClass)}
+							<div className="form-group">
+								<label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
+								<div className="col-sm-9">
+								  <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
+								</div>
 							</div>
-						  </div>
-						  <div className="form-group">
-							<label for="inputPassword3" className="col-sm-3 control-label">Document Id</label>
-							<div className="col-sm-9">
-							  <input type="text" className="form-control" id="setId" placeholder="set Id" name="id" />
-							</div>
-						  </div>
-						  <div className={validateClass.body}>
-							<label for="inputPassword3" className="col-sm-3 control-label">
-								JSON
-								<p className="small-span">
-									(use array for adding multiple records, <a href="#">see an example</a>.)
-								</p>
-							</label>
-							<div className="col-sm-9">
-							  <textarea id="setBody" className="form-control" rows="10" name="body"
-								onClick={this.userTouch.bind(null, true)}
-								onFocus={this.userTouch.bind(null, true)} ></textarea>
-							   <span className="help-block">
-								  A data document is stored as a JSON object.
-								</span>
-							</div>
-						  </div>
+							{Utils.getBodyMarkup('document', validateClass, selectClass, this.userTouch)}
 						</form>
 					  </Modal.Body>
 					  <Modal.Footer>
