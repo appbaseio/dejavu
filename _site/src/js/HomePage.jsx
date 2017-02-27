@@ -411,7 +411,7 @@ var HomePage = React.createClass({
 				var value = result[v];
 				value = value == 'undefined' || typeof value == 'undefined' ? false : value;
 				typeCheck[v] = value;
-			});    
+			});
 		});
 		setTimeout(function(){
 			$('.full_page_loading').addClass('hide');
@@ -800,12 +800,11 @@ var HomePage = React.createClass({
 	},
 	addRecord: function(editorref) {
 		var form = $('#addObjectForm').serializeArray();
-		var obj = {
-			name: 'body',
-			value: editorref.getValue().trim()
-		};
-		form.push(obj);
-		this.indexCall(form, 'close-modal', 'index');
+		var indexData = help.normalizeIndexData(editorref.getValue().trim());
+		if(indexData.method) {
+			form.push(indexData.data);
+			this.indexCall(form, 'close-modal', indexData.method);
+		}
 	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};
@@ -813,7 +812,6 @@ var HomePage = React.createClass({
 			if (v2.value != '')
 				recordObject[v2.name] = v2.value;
 		});
-		recordObject.body = JSON.parse(recordObject.body);
 		feed.indexData(recordObject, method, function(newTypes) {
 			$('.close').click();
 			this.getStreamingTypes();
@@ -1048,7 +1046,6 @@ var HomePage = React.createClass({
 				active: false
 			}
 		});
-
 		//Remove sortInfo from store
 		if(input_state.hasOwnProperty('sortInfo')) {
 			delete input_state.sortInfo;
