@@ -372,12 +372,14 @@ var feed = (function() {
 					if (esTypes.indexOf(recordObject.type) === -1) {
 						self.getTypes(function(newTypes) {
 							if (callback) {
-								return callback(newTypes);
+								return callback(res, newTypes);
 							}
 						});
 					} else {
-						return callback();
+						return callback(res);
 					}
+				}).on('error', function(err) {
+					return callback(err);
 				});
 			}
 		},
