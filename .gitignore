@@ -1,5 +1,6 @@
 node_modules/
 site
 dejavu-unpacked/
+_site/bower_components
 .DS_Store
 *.log
