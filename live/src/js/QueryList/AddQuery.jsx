@@ -2,6 +2,7 @@ var React = require('react');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
 var ReactBootstrap = require('react-bootstrap');
+var Utils = require('../helper/utils.jsx');
 
 var AddQuery = React.createClass({
 
@@ -18,9 +19,7 @@ var AddQuery = React.createClass({
 		};
 	},
 	componentDidUpdate: function() {
-		 //apply select2 for auto complete
-		if (!this.state.validate.type && typeof this.props.types != 'undefined' && typeof this.props.selectClass != 'undefined')
-			this.applySelect();
+		Utils.applySelect.call(this);
 	},
 	applySelect: function(ele) {
 		var $this = this;
@@ -48,24 +47,10 @@ var AddQuery = React.createClass({
 		return typeList;
 	},
 	close: function() {
-		this.setState({
-			showModal: false,
-			validate: {
-				touch: false,
-				name: false,
-				body: false
-			},
-			selectClass: ''
-		});
+		Utils.closeModal.call(this);
 	},
 	open: function() {
-		this.userTouch(false);
-		this.setState({
-			showModal: true
-		});
-		setTimeout(function() {
-			this.editorref = help.setCodeMirror('setBody');
-		}.bind(this), 300);
+		Utils.openModal.call(this);
 	},
 	validateInput: function() {
 		var validateClass = this.state.validate;
@@ -84,9 +69,33 @@ var AddQuery = React.createClass({
 		});
 		if (validateClass.name && validateClass.body && validateClass.type) {
 			queryValues.type = $('#applyQueryOn').val();
-			this.props.includeQuery(queryValues);
-			this.close();
+			this.validateQuery(queryValues);
+			// this.props.includeQuery(queryValues);
+			// this.close();
 		}
+	},
+	validateQuery: function(queryValues) {
+		$('.applyQueryBtn').addClass('loading');
+		$('.applyQueryBtn').attr('disabled', true);
+		var self = this;
+		var testQuery = feed.testQuery(queryValues.type, JSON.parse(queryValues.query));
+		testQuery.on('data', function(res) {
+			if (!res.hasOwnProperty('error')) {
+				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+				self.props.includeQuery(queryValues);
+				self.close();
+			} else {
+				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+				self.setState({
+					error: res.error
+				});
+			}
+		}).on('error', function(err) {
+			self.setState({
+				error: err
+			});
+			$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+		});
 	},
 	IsJsonString: function(str) {
 		try {
@@ -98,6 +107,27 @@ var AddQuery = React.createClass({
 	},
 	userTouch: function(flag) {
 		// this.props.userTouchAdd(flag);
+	},
+	hideError: function() {
+		this.setState({
+			error: null
+		});
+	},
+	isErrorExists: function() {
+		var errorText;
+		if(this.state.error) {
+			var error = this.state.error;
+			try {
+				error = JSON.stringify(this.state.error);
+			} catch(e) {}
+			errorText = (
+				<div key={Math.random()} className="query-error alert alert-danger alert-dismissible" role="alert">
+					<button type="button" className="close" onClick={this.hideError}><span aria-hidden="true">&times;</span></button>
+					{error}
+				</div>
+			);
+		}
+		return errorText;
 	},
 	render: function() {
 		var typeList = '';
@@ -141,31 +171,18 @@ var AddQuery = React.createClass({
 								</span>
 							</div>
 						</div>
-						<div className={validateClass.type}>
-							<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
-							<div className="col-sm-9">
-								<select id="applyQueryOn" className={selectClass} multiple="multiple" name="type">
-								</select>
-								<span className="help-block">
-									Type on which the query will be applied.
-								</span>
-							</div>
-						</div>
-						<div className={validateClass.body}>
-							<label htmlFor="inputPassword3" className="col-sm-3 control-label">Query body <span className="small-span">(JSON)</span> </label>
-							<div className="col-sm-9">
-								<textarea id="setBody" className="form-control" rows="10" name="body"
-									onClick={this.userTouch.bind(null, true)}
-									onFocus={this.userTouch.bind(null, true)} ></textarea>
-								<span className="help-block">
-									Elasticsearch Query is required.
-								</span>
-							</div>
-						</div>
+						{Utils.getTypeMarkup('query', validateClass, selectClass)}
+						{Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)}
 						</form>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="success" onClick={this.validateInput}>Add</Button>
+						<div>
+							{this.isErrorExists()}
+						</div>
+						<Button key="applyQueryBtn" className="applyQueryBtn" bsStyle="success" onClick={this.validateInput}>
+							<i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+							Add
+						</Button>
 					</Modal.Footer>
 				</Modal>
 			</div>

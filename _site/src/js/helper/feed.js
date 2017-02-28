@@ -352,19 +352,10 @@ var feed = (function() {
 		},
 		indexData: function(recordObject, method, callback) {
 			var self = this;
-			if (method === 'index') {
-				appbaseRef.index(recordObject).on('data', function(res) {
-					if (esTypes.indexOf(res._type) === -1) {
-						self.getTypes(function(newTypes) {
-							if (callback) {
-								return callback(newTypes);
-							}
-						});
-					} else {
-						return callback();
-					}
-				});
-			} else {
+			if (method === 'index' || method === 'bulk') {
+				applyIndexOrBulk(method);
+			}
+			else {
 				var doc = recordObject.body;
 				recordObject.body = {
 					doc: doc
@@ -376,7 +367,21 @@ var feed = (function() {
 					}
 				});
 			}
-
+			function applyIndexOrBulk(method) {
+				appbaseRef[method](recordObject).on('data', function(res) {
+					if (esTypes.indexOf(recordObject.type) === -1) {
+						self.getTypes(function(newTypes) {
+							if (callback) {
+								return callback(res, newTypes);
+							}
+						});
+					} else {
+						return callback(res);
+					}
+				}).on('error', function(err) {
+					return callback(err);
+				});
+			}
 		},
 		deleteRecord: function(selectedRows, callback) {
 			var deleteArray = selectedRows.map(function(v) {
