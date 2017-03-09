@@ -160,12 +160,18 @@ gulp.task('watch', ['bundle', 'compact','connect'], function() {
     gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle', 'compact', 'chrome-specific_dir', 'copy_site'], function() {
+gulp.task('chromeBuild', ['cleanUnpacked', 'bundle', 'compact', 'chrome-specific_dir', 'copy_site'], function() {
     setTimeout(function() {
         return del([
-            './dejavu-unpacked/site/bower_components'
+            './dejavu-unpacked/site/bower_components',
         ]);
     }, 1000);
+});
+
+gulp.task('cleanUnpacked', function() {
+    return del([
+        './dejavu-unpacked/**/*',
+    ]);
 });
 
 gulp.task('copy_site', function() {
