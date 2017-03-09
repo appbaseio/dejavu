@@ -20,7 +20,11 @@ var SubscribeModal = React.createClass({
         text: 'Limited major updates'
       }
     };
+    this.countdown = 0;
     this.timer = 1;
+    this.activetab = true;
+    this.holdSubscribe = false;
+    this.internalClose = false;
     this.init();
   },
   init: function() {
@@ -29,14 +33,33 @@ var SubscribeModal = React.createClass({
         profile: data
       });
     }.bind(this));
-    if(storageService.get('popuptimer')) {
-      this.timer = parseInt(storageService.get('popuptimer'));
-    }
-    setTimeout(function() {
-      if(!this.state.profile) {
-        this.open();
+    storageService.set('dejavuPopuptimerAlreadyOpen', 'no');
+    var popupInterval = setInterval(function() {
+      this.countdown++;
+      if (!this.state.profile) {
+        var subPopuptimer = storageService.get('dejavuPopuptimer');
+        if (subPopuptimer && subPopuptimer !== 'NaN') {
+          this.timer = parseInt(storageService.get('dejavuPopuptimer'), 10);
+        }
+        if(this.countdown === this.timer) {
+          this.open();
+        }
+      } else {
+        popupInterval();
       }
-    }.bind(this), 1000*60*this.timer);
+    }.bind(this), 1000 * 60);
+    $(window).focus(function() {
+      this.activetab = true;
+      setTimeout(function() {
+        if (!this.state.profile && this.holdSubscribe && !this.internalClose) {
+          this.open();
+        }
+      }, 1000 * 10 * this.timer);
+    }.bind(this));
+
+    $(window).blur(function() {
+      this.activetab = false;
+    }.bind(this));
   },
   getInitialState: function() {
       return {
@@ -46,15 +69,32 @@ var SubscribeModal = React.createClass({
       };
   },
   close: function() {
+    this.internalClose = true;
+    storageService.set('dejavuPopuptimer', this.timer + 5);
+    storageService.set('dejavuPopuptimerAlreadyOpen', 'no');
     this.setState({
       showModal: false,
       selectClass: ''
     });
   },
   open: function() {
-    this.setState({
-        showModal: true
-    });
+  	if (!this.state.profile) {
+      if (!$('.fade.in.modal').length) {
+        if(this.activetab) {
+          if(storageService.get('dejavuPopuptimerAlreadyOpen') == 'no') {
+            this.setState({ showModal: true });
+            storageService.set('dejavuPopuptimerAlreadyOpen', 'yes');
+          }
+        } else {
+          this.holdSubscribe = true;
+        }
+      } else {
+        setTimeout(function() {
+          this.open();
+          console.log('Subscribe waiting');
+        }.bind(this), 1000 * 2);
+      }
+    }
   },
   showIcon: function() {
     var icon = (<i className="fa fa-envelope-o"></i>);
@@ -76,8 +116,8 @@ var SubscribeModal = React.createClass({
                     <a href="javascript:void(0);" className="subscribe"  title="Subscribe" onClick={this.open} >
                       {this.showIcon()}
                     </a>
-                    <Modal id="subscribeModal" show={this.state.showModal} onHide={this.close}>
-                      <Modal.Header closeButton>
+                    <Modal keyboard={false} id="subscribeModal" show={this.state.showModal} onHide={this.close}>
+                      <Modal.Header>
                         <Modal.Title>Be in the know about major updates!</Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
