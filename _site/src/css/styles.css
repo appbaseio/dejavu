@@ -500,8 +500,9 @@ footer {
 	position: absolute;
 	bottom: 100px;
 	text-align: center;
-	width: 100%;
 	z-index: 2;
+	left: -270px;
+	width: calc(100% + 270px);
 }
 
 .AddExtraBtn .add-record-container {
