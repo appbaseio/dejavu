@@ -334,6 +334,7 @@ var feed = (function() {
 							}
 						}
 					} else {
+						esTypes = types;
 						if (callback !== null) {
   							return callback(types);
 						}
