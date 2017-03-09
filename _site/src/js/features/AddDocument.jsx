@@ -102,11 +102,11 @@ var AddDocument = React.createClass({
 				body: 'form-group'
 			};
 		}
-		var btnLinkClassSub = this.props.link == "true" ? 'add-record-link fa fa-plus' : 'add-record-btn btn btn-primary fa fa-plus';
+		var btnLinkClassSub = this.props.link == "true" ? 'add-record-link' : 'add-record-btn btn btn-primary';
 		var selectClass = this.props.selectClass + ' tags-select form-control';
 
 		return (<div className="add-record-container pd-r10">
-					<a href="javascript:void(0);" className={btnLinkClassSub}  title="Add" onClick={this.open} >{btnText}</a>
+					<a href="javascript:void(0);" className={btnLinkClassSub}  title="Add" onClick={this.open} ><i className=" fa fa-plus"></i>{btnText}</a>
 					<Modal show={this.state.showModal} onHide={this.close}>
 					  <Modal.Header closeButton>
 						<Modal.Title>Add Data</Modal.Title>

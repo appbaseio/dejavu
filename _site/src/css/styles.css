@@ -502,6 +502,7 @@ footer {
 	z-index: 2;
 	left: -200px;
 	bottom: 200px;
+	font-size: 24px;
 	width: calc(100% + 270px);
 }
 
