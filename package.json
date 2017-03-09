@@ -10,7 +10,7 @@
     "start": "bower update && gulp watch",
     "build": "bower update && gulp",
     "build_es_plugin": "npm run build",
-    "build_chrome_extension": "bower update && gulp chromeBuild",
+    "build_chrome_extension": "gulp cleanUnpacked && bower update && gulp chromeBuild",
     "build_gh_pages": "bower update && gulp ghpagesBuild"
   },
   "repository": {
