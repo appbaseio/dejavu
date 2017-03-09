@@ -498,10 +498,10 @@ footer {
 
 .AddExtraBtn {
 	position: absolute;
-	bottom: 100px;
 	text-align: center;
 	z-index: 2;
-	left: -270px;
+	left: -200px;
+	bottom: 200px;
 	width: calc(100% + 270px);
 }
 
