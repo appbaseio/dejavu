@@ -815,7 +815,11 @@ var HomePage = React.createClass({
 		feed.indexData(recordObject, method, function(res, newTypes) {
 			if(method === 'bulk' && res && res.items && res.items.length) {
 				this.reloadData();
-				toastr.success(res.items.length+' records have been successfully indexed.');
+				if(!res.errors) {
+					toastr.success(res.items.length+' records have been successfully indexed.');
+				} else {
+					toastr.error('Your data hasn’t been added, likely cause is a mapper parsing exception.');
+				}
 			}
 			$('.close').click();
 			this.getStreamingTypes();
@@ -1448,7 +1452,7 @@ var HomePage = React.createClass({
 								</div>
 								<div>
 								  <h1>Déjà vu</h1>
-								  <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
+								  <h4 className="dejavu-bottomline">The Missing Web UI for Elasticsearch</h4>
 								  {index_create_text}
 								</div>
 								<ShareLink btn={shareBtn}> </ShareLink>

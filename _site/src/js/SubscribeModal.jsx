@@ -54,7 +54,7 @@ var SubscribeModal = React.createClass({
         if (!this.state.profile && this.holdSubscribe && !this.internalClose) {
           this.open();
         }
-      }, 1000 * 60);
+      }.bind(this), 1000 * 60);
     }.bind(this));
 
     $(window).blur(function() {
