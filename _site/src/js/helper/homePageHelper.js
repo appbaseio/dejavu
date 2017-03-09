@@ -128,8 +128,8 @@ var help = {
 	setCodeMirror: function(eleId) {
 		var options = {
 			lineNumbers: true,
-			mode: "javascript",
-			autoCloseBrackets: true,
+			mode: "application/ld+json",
+			lineWrapping: true,
 			matchBrackets: true,
 			showCursorWhenSelecting: true,
 			tabSize: 2,
