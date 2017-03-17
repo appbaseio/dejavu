@@ -201,8 +201,7 @@ var TypeTable = React.createClass({
             return (
                 <div className='left-tab'>
               <div className="highlight-tip left-tip">
-                  <strong>No data to view!</strong> Insert data by following this
-                  tutorial <a href="http://docs.appbase.io/scalr/rest/intro.html" target="_blank">here</a>.
+                  <strong>Loading data</strong> ...
               </div>
             </div>
             );

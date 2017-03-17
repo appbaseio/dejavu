@@ -806,6 +806,17 @@ var HomePage = React.createClass({
 			this.indexCall(form, 'close-modal', indexData.method);
 		}
 	},
+	updateRecord: function(editorref) {
+		var form = $('#updateObjectForm').serializeArray();
+		var indexData = JSON.parse(editorref.getValue().trim());
+		var obj = {
+			name: 'body',
+			value: indexData
+		};
+		form.push(obj);
+		var recordObject = {};
+		this.indexCall(form, 'close-update-modal', 'update');
+	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};
 		$.each(form, function(k2, v2) {
@@ -815,7 +826,11 @@ var HomePage = React.createClass({
 		feed.indexData(recordObject, method, function(res, newTypes) {
 			if(method === 'bulk' && res && res.items && res.items.length) {
 				this.reloadData();
-				toastr.success(res.items.length+' records have been successfully indexed.');
+				if(!res.errors) {
+					toastr.success(res.items.length+' records have been successfully indexed.');
+				} else {
+					toastr.error('Your data hasn’t been added, likely cause is a mapper parsing exception.');
+				}
 			}
 			$('.close').click();
 			this.getStreamingTypes();
@@ -1153,16 +1168,6 @@ var HomePage = React.createClass({
 			actionOnRecord: actionOnRecord
 		});
 	},
-	updateRecord: function(json) {
-		var form = $('#updateObjectForm').serializeArray();
-		var obj = {
-			name: 'body',
-			value: json
-		};
-		form.push(obj);
-		var recordObject = {};
-		this.indexCall(form, 'close-update-modal', 'update');
-	},
 	deleteRecord: function() {
 		$('.loadingBtn').addClass('loading');
 		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
@@ -1448,7 +1453,7 @@ var HomePage = React.createClass({
 								</div>
 								<div>
 								  <h1>Déjà vu</h1>
-								  <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
+								  <h4 className="dejavu-bottomline">The Missing Web UI for Elasticsearch</h4>
 								  {index_create_text}
 								</div>
 								<ShareLink btn={shareBtn}> </ShareLink>

@@ -19,7 +19,7 @@ var Header = React.createClass({
             </span>
           </div>
           <div className="tag-line">
-            The missing Web UI for Elasticsearch
+            The Missing Web UI for Elasticsearch
           </div>
           {subscribeModal}
         </header> 
