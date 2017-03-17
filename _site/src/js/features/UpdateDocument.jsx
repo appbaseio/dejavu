@@ -48,8 +48,7 @@ var UpdateDocument = React.createClass({
             validate: validateClass
         });
         if (validateClass.body) {
-            var updateJson = this.editorref.getValue();
-            this.props.actionOnRecord.updateRecord(updateJson);
+            this.props.actionOnRecord.updateRecord(this.editorref);
         }
     },
     IsJsonString: function(str) {
