@@ -806,6 +806,17 @@ var HomePage = React.createClass({
 			this.indexCall(form, 'close-modal', indexData.method);
 		}
 	},
+	updateRecord: function(editorref) {
+		var form = $('#updateObjectForm').serializeArray();
+		var indexData = JSON.parse(editorref.getValue().trim());
+		var obj = {
+			name: 'body',
+			value: indexData
+		};
+		form.push(obj);
+		var recordObject = {};
+		this.indexCall(form, 'close-update-modal', 'update');
+	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};
 		$.each(form, function(k2, v2) {
@@ -1156,16 +1167,6 @@ var HomePage = React.createClass({
 		this.setState({
 			actionOnRecord: actionOnRecord
 		});
-	},
-	updateRecord: function(json) {
-		var form = $('#updateObjectForm').serializeArray();
-		var obj = {
-			name: 'body',
-			value: json
-		};
-		form.push(obj);
-		var recordObject = {};
-		this.indexCall(form, 'close-update-modal', 'update');
 	},
 	deleteRecord: function() {
 		$('.loadingBtn').addClass('loading');
