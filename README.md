@@ -59,7 +59,7 @@ http.cors.allow-credentials: true
 2. git checkout master
 3. npm install
 4. bower install
-5. gulp watch (runs dejavu on http://localhost:1358)
+5. npm start (runs dejavu on http://localhost:1358)
 
 #### Local Build
 
