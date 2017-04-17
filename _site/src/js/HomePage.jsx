@@ -1533,7 +1533,8 @@ var HomePage = React.createClass({
 											signalText:this.state.signalText,
 											typeInfo:this.state.typeInfo,
 											selectedTypes: subsetESTypes,
-											cleanTypes: this.state.cleanTypes
+											cleanTypes: this.state.cleanTypes,
+											connect: this.state.connect
 										}}
 										queryProps={{
 											'externalQuery':this.externalQuery,
