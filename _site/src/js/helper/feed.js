@@ -473,7 +473,8 @@ var feed = (function() {
 				'aggs': {
 			        'count_by_type': {
 			            'terms': {
-			                'field': '_type'
+			                'field': '_type',
+			                "size": 1000000
 			            }
 			        }
 			    }
