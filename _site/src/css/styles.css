@@ -498,10 +498,12 @@ footer {
 
 .AddExtraBtn {
 	position: absolute;
-	bottom: 100px;
 	text-align: center;
-	width: 100%;
 	z-index: 2;
+	left: -200px;
+	bottom: 200px;
+	font-size: 24px;
+	width: calc(100% + 270px);
 }
 
 .AddExtraBtn .add-record-container {
@@ -830,6 +832,15 @@ footer {
 
 .inlineBlock {
 	display: inline-block;
+}
+
+#dejavu-sidebar {
+	height: 100%;
+}
+
+#dejavu-sidebar .tab-content {
+	height: calc(100% - 43px);
+	overflow: auto;
 }
 
 .themeBtn {

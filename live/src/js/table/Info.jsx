@@ -33,6 +33,9 @@ var Info = React.createClass({
 			});
 		}
 	},
+	removeFilter: function(index) {
+		this.props.removeFilter(index);
+	},
 	render: function() {
 		var selectedTypes = this.props.selectedTypes ? this.props.selectedTypes : [];
 		var infoObj = this.props.infoObj;
@@ -44,7 +47,7 @@ var Info = React.createClass({
 		var sortInfo = this.props.sortInfo;
 		var actionOnRecord = this.props.actionOnRecord;
 		var hiddenColumns = this.props.hiddenColumns;
-		var filterClass = filterInfo.active ? 'pull-right text-right pd-r10' : 'hide';
+		var filterClass = filterInfo.active ? 'pull-right text-right' : 'hide';
 		var sortClass = sortInfo.active ? 'pull-right text-right pd-r10' : 'hide';
 		var typeClass = this.props.selectedTypes.length ? 'pull-right text-right pd-r10' : 'hide';
 		var queryClass = this.props.externalQueryApplied && !queryParams.hasOwnProperty('sidebar') ? 'pull-right text-right pd-r10' : 'hide';
@@ -58,7 +61,7 @@ var Info = React.createClass({
 					<div className=" row">
 						<div className={infoObjClass}>
 							<div className={totalClass}>
-								<FeatureComponent.ExportasJson exportJsonData = {this.props.exportJsonData} />
+								<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
 								<a
 									href="javascript:void(0);"
 									className="btn btn-default themeBtn m-r10"
@@ -126,12 +129,18 @@ var Info = React.createClass({
 								</a>
 							</div>
 							<div className={filterClass}>
-								<a href="javascript:void(0)" className="removeFilter">
-									<span className="inside-info">{filterInfo.method}:&nbsp;{filterInfo.columnName}</span>
-									<span className="close-btn" onClick={this.props.removeFilter}>
-										<i className="fa fa-times"></i>
-									</span>
-								</a>
+								{
+									filterInfo.appliedFilter.map(function(filterItem, index) {
+										return (
+											<a key={index} href="javascript:void(0)" className="removeFilter m-r10">
+												<span className="inside-info">{filterItem.method}:&nbsp;{filterItem.columnName}</span>
+												<span className="close-btn" onClick={this.removeFilter.bind(this, index)}>
+													<i className="fa fa-times"></i>
+												</span>
+											</a>
+										);
+									}.bind(this))
+								}
 							</div>
 							<div className={sortClass}>
 								<a href="javascript:void(0)" className="removeFilter">

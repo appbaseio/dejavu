@@ -143,7 +143,7 @@ var DataTable = React.createClass({
                             getTypeDoc={this.props.getTypeDoc}
                             userTouchAdd={this.props.infoObj.userTouchAdd}
                             link="true"
-                            text="&nbsp;&nbsp;Add new data"
+                            text="&nbsp;&nbsp;Add Data"
                             selectClass="tags-select-big"/>
                           </div>
         }
@@ -180,7 +180,8 @@ var DataTable = React.createClass({
             selectedTypes = {this.props.selectedTypes}
             externalQueryApplied={this.props.externalQueryApplied}
             externalQueryTotal={this.props.externalQueryTotal}
-            removeExternalQuery={this.props.removeExternalQuery} />
+            removeExternalQuery={this.props.removeExternalQuery}
+            dejavuExportData={this.props.dejavuExportData} />
 
             {extraAddBtn}
 

@@ -42,26 +42,26 @@ var FilterDropdown = React.createClass({
         var self = this;
         
         function createDropItem(method, availableValues) {
-            function filterRender(value) {
+            function filterRender(value, index) {
                 var currentItem;
                 switch(method) {
                     case 'boolean':
-                        currentItem = (<SingleMenuItem boolFilter={self.boolFilter}  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={self.props.datatype} getFilterVal={self.getFilterVal} val={value} />);
+                        currentItem = (<SingleMenuItem key={index} boolFilter={self.boolFilter}  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={self.props.datatype} getFilterVal={self.getFilterVal} val={value} />);
                     break;
                     case 'date':
-                        currentItem = (<SingleMenuItem  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={datatype} getFilterVal={self.getFilterVal} val={value} />);
+                        currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={datatype} getFilterVal={self.getFilterVal} val={value} />);
                     break;
                     case 'string':
-                        currentItem = (<SingleMenuItem columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
+                        currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
                     break;
                     case 'number':
-                        currentItem = (<SingleMenuItem  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
+                        currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
                     break;
                 }
                 return currentItem;
             };
-            var newAvailableValues = availableValues.map(function(value) {
-                return filterRender(value);
+            var newAvailableValues = availableValues.map(function(value, index) {
+                return filterRender(value, index);
             });
             if(newAvailableValues.length) {
                 return (<Dropdown.Menu className="menuItems pull-right">

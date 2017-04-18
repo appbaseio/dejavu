@@ -200,11 +200,16 @@ var TypeTable = React.createClass({
         if (types.length < 1) {
             return (
                 <div className='left-tab'>
-              <div className="highlight-tip left-tip">
-                  <strong>No data to view!</strong> Insert data by following this
-                  tutorial <a href="http://docs.appbase.io/scalr/rest/intro.html" target="_blank">here</a>.
-              </div>
-            </div>
+                  <div className="highlight-tip left-tip">
+                      {
+                        this.props.connect ? (
+                            <strong>No data found.</strong>
+                        ) : (
+                            <strong>Loading data...</strong>
+                        )
+                      }
+                  </div>
+                </div>
             );
         }
         return (

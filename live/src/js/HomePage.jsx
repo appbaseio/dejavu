@@ -39,7 +39,8 @@ var HomePage = React.createClass({
 			connect: false,
 			filterInfo: {
 				active: false,
-				applyFilter: this.applyFilter
+				applyFilter: this.applyFilter,
+				appliedFilter: []
 			},
 			infoObj: this.resetInfoObj(),
 			totalRecord: 0,
@@ -72,7 +73,8 @@ var HomePage = React.createClass({
 			appname: '',
 			splash: true,
 			hideUrl: false,
-			cleanTypes: false
+			cleanTypes: false,
+			dejavuExportData: null
 		};
 	},
 	resetInfoObj: function() {
@@ -313,8 +315,12 @@ var HomePage = React.createClass({
 					// });
 				}
 				else if (this.state.filterInfo.active) {
-					var filterInfo = this.state.filterInfo;
-					this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
+					// var filterInfo = this.state.filterInfo;
+					// debugger
+					// filterInfo.appliedFilter.forEach(function(filterItem) {
+					// 	this.applyFilter(types, filterItem.columnName, filterItem.method, filterItem.value, filterItem.analyzed);
+					// }.bind(this));
+					this.applyFilter(types);
 				}
 				//Get the data without filter
 				else {
@@ -344,8 +350,9 @@ var HomePage = React.createClass({
 		if(this.state.externalQueryApplied) {
 			queryBody = feed.externalQueryBody;
 		}
-		else if (filterInfo.active)
-			queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+		else if (filterInfo.active) {
+			queryBody = this.generateFilterQuery(filterInfo.appliedFilter);
+		}
 		return queryBody;
 	},
 	// get type
@@ -806,6 +813,17 @@ var HomePage = React.createClass({
 			this.indexCall(form, 'close-modal', indexData.method);
 		}
 	},
+	updateRecord: function(editorref) {
+		var form = $('#updateObjectForm').serializeArray();
+		var indexData = JSON.parse(editorref.getValue().trim());
+		var obj = {
+			name: 'body',
+			value: indexData
+		};
+		form.push(obj);
+		var recordObject = {};
+		this.indexCall(form, 'close-update-modal', 'update');
+	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};
 		$.each(form, function(k2, v2) {
@@ -815,7 +833,11 @@ var HomePage = React.createClass({
 		feed.indexData(recordObject, method, function(res, newTypes) {
 			if(method === 'bulk' && res && res.items && res.items.length) {
 				this.reloadData();
-				toastr.success(res.items.length+' records have been successfully indexed.');
+				if(!res.errors) {
+					toastr.success(res.items.length+' records have been successfully indexed.');
+				} else {
+					toastr.error('Your data hasn’t been added, likely cause is a mapper parsing exception.');
+				}
 			}
 			$('.close').click();
 			this.getStreamingTypes();
@@ -933,27 +955,35 @@ var HomePage = React.createClass({
 		});
 	},
 	applyFilter: function(typeName, columnName, method, value, analyzed) {
-		filterVal = $.isArray(value) ? value : value.split(',');
 		var $this = this;
-		var filterObj = this.state.filterInfo;
-		filterObj['type'] = typeName;
-		filterObj['columnName'] = columnName;
-		filterObj['method'] = method;
-		filterObj['value'] = filterVal;
-		filterObj['active'] = true;
-		filterObj['analyzed'] = analyzed;
-		this.setState({
-			filterInfo: filterObj
-		});
-
+		var filterInfo = this.state.filterInfo;
+		if(columnName) {
+			filterVal = $.isArray(value) ? value : value.split(',');
+			var filterObj = {};
+			filterObj['type'] = typeName;
+			filterObj['columnName'] = columnName;
+			filterObj['method'] = method;
+			filterObj['value'] = filterVal;
+			filterObj['active'] = true;
+			filterObj['analyzed'] = analyzed;
+			if(filterInfo.appliedFilter) {
+				filterInfo.appliedFilter.push(filterObj);
+			} else {
+				filterInfo.appliedFilter = [filterObj];
+			}
+			filterInfo.active = true;
+			this.setState({
+				filterInfo: filterInfo
+			});
+		}
 		//Store state of filter
-		var filter_state = JSON.parse(JSON.stringify(filterObj));
+		var filter_state = JSON.parse(JSON.stringify(filterInfo));
 		delete filter_state.applyFilter;
 		input_state.filterInfo = filter_state;
 		createUrl(input_state);
-
+		// method, columnName, filterVal, subsetESTypes, analyzed
 		if (typeName != '' && typeName != null) {
-			feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
+			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
 				if (!fromStream) {
 					sdata = [];
 					$this.resetData(total);
@@ -1015,29 +1045,36 @@ var HomePage = React.createClass({
 			}.bind(this));
 		}
 	},
-	removeFilter: function() {
+	removeFilter: function(index) {
 		var $this = this;
+		var appliedFilter = this.state.filterInfo.appliedFilter;
+		appliedFilter.splice(index, 1);
 		var obj = {
-			active: false,
-			applyFilter: this.applyFilter
+			active: appliedFilter.length ? true : false,
+			applyFilter: this.applyFilter,
+			appliedFilter: appliedFilter
 		};
 		this.setState({
 			filterInfo: obj
 		});
 
-		//Remove filterinfo from store
-		if(input_state.hasOwnProperty('filterInfo')) {
-			delete input_state.filterInfo;
-			createUrl(input_state);
+		//Remove filterInfo from store
+		if(!obj.active) {
+			if(input_state.hasOwnProperty('filterInfo')) {
+				delete input_state.filterInfo;
+				createUrl(input_state);
+			}
+			if(!$this.state.externalQueryApplied) {
+				sdata = [];
+				$this.resetData();
+				setTimeout(function() {
+					$this.getStreamingData(subsetESTypes);
+				}, 500);
+			}
+			this.removeSelection();
+		} else {
+			this.applyFilter(subsetESTypes);
 		}
-		if(!$this.state.externalQueryApplied) {
-			sdata = [];
-			$this.resetData();
-			setTimeout(function() {
-				$this.getStreamingData(subsetESTypes);
-			}, 500);
-		}
-		this.removeSelection();
 	},
 	removeSort: function() {
 		var docs = this.state.documents;
@@ -1152,16 +1189,6 @@ var HomePage = React.createClass({
 		this.setState({
 			actionOnRecord: actionOnRecord
 		});
-	},
-	updateRecord: function(json) {
-		var form = $('#updateObjectForm').serializeArray();
-		var obj = {
-			name: 'body',
-			value: json
-		};
-		form.push(obj);
-		var recordObject = {};
-		this.indexCall(form, 'close-update-modal', 'update');
 	},
 	deleteRecord: function() {
 		$('.loadingBtn').addClass('loading');
@@ -1295,7 +1322,9 @@ var HomePage = React.createClass({
 	},
 	exportJsonData: function() {
 		$('.json-spinner').show();
-
+		this.setState({
+			dejavuExportData: null
+		});
 		var defaultQuery = {
 			"query": {
 				"match_all": {}
@@ -1318,10 +1347,10 @@ var HomePage = React.createClass({
 			}
 			else {
 				var str = JSON.stringify(exportJsonData, null, 4);
-				var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
-				var link = document.getElementById('jsonlink').href = dataUri;
+				this.setState({
+					dejavuExportData: str
+				});
 				$('.json-spinner').hide();
-				$('#jsonlink').removeClass('hide');
 				exportJsonData = [];
 			}
 		}.bind(this));
@@ -1448,7 +1477,7 @@ var HomePage = React.createClass({
 								</div>
 								<div>
 								  <h1>Déjà vu</h1>
-								  <h4 className="dejavu-bottomline">The missing Web UI for Elasticsearch</h4>
+								  <h4 className="dejavu-bottomline">The Missing Web UI for Elasticsearch</h4>
 								  {index_create_text}
 								</div>
 								<ShareLink btn={shareBtn}> </ShareLink>
@@ -1528,7 +1557,8 @@ var HomePage = React.createClass({
 											signalText:this.state.signalText,
 											typeInfo:this.state.typeInfo,
 											selectedTypes: subsetESTypes,
-											cleanTypes: this.state.cleanTypes
+											cleanTypes: this.state.cleanTypes,
+											connect: this.state.connect
 										}}
 										queryProps={{
 											'externalQuery':this.externalQuery,
@@ -1565,7 +1595,9 @@ var HomePage = React.createClass({
 										exportJsonData= {this.exportJsonData}
 										externalQueryApplied={this.state.externalQueryApplied}
 										externalQueryTotal={this.state.externalQueryTotal} 
-										removeExternalQuery={this.removeExternalQuery} />
+										removeExternalQuery={this.removeExternalQuery}
+										dejavuExportData={this.state.dejavuExportData}
+									/>
 								</div>
 								{footer}
 								<FeatureComponent.ErrorModal
