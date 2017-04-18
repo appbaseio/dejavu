@@ -24,6 +24,10 @@ var ImportData = React.createClass({
         });
         this.props.exportJsonData();
     },
+    downloadFile: function() {
+        var file = new File([this.props.dejavuExportData], "data.json", {type: "text/plain;charset=utf-8"});
+        saveAs(file);
+    },
     render: function() {
         return (<div className="pull-left">
                     <a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
@@ -38,12 +42,15 @@ var ImportData = React.createClass({
                             <i className="fa fa-spinner fa-spin"></i>
                             <span>&nbsp;Please wait, while we are loading</span>
                         </p>
-                        <a href="#" id="jsonlink"
-                            target="_blank"
-                            download="data.json" 
-                            className="btn btn-success hide">
-                            Download json
-                        </a>
+                        {
+                            this.props.dejavuExportData ? (
+                                <a id="jsonlink"
+                                    className="btn btn-success"
+                                    onClick={this.downloadFile}>
+                                    Download json
+                                </a>
+                            ) : null
+                        }
                       </Modal.Body>
                     </Modal>
                   </div>);

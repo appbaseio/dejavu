@@ -58,7 +58,7 @@ var Info = React.createClass({
 					<div className=" row">
 						<div className={infoObjClass}>
 							<div className={totalClass}>
-								<FeatureComponent.ExportasJson exportJsonData = {this.props.exportJsonData} />
+								<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
 								<a
 									href="javascript:void(0);"
 									className="btn btn-default themeBtn m-r10"

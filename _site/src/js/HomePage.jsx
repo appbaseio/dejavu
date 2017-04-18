@@ -72,7 +72,8 @@ var HomePage = React.createClass({
 			appname: '',
 			splash: true,
 			hideUrl: false,
-			cleanTypes: false
+			cleanTypes: false,
+			dejavuExportData: null
 		};
 	},
 	resetInfoObj: function() {
@@ -1300,7 +1301,9 @@ var HomePage = React.createClass({
 	},
 	exportJsonData: function() {
 		$('.json-spinner').show();
-
+		this.setState({
+			dejavuExportData: null
+		});
 		var defaultQuery = {
 			"query": {
 				"match_all": {}
@@ -1323,10 +1326,10 @@ var HomePage = React.createClass({
 			}
 			else {
 				var str = JSON.stringify(exportJsonData, null, 4);
-				var dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(str);
-				var link = document.getElementById('jsonlink').href = dataUri;
+				this.setState({
+					dejavuExportData: str
+				});
 				$('.json-spinner').hide();
-				$('#jsonlink').removeClass('hide');
 				exportJsonData = [];
 			}
 		}.bind(this));
@@ -1571,7 +1574,9 @@ var HomePage = React.createClass({
 										exportJsonData= {this.exportJsonData}
 										externalQueryApplied={this.state.externalQueryApplied}
 										externalQueryTotal={this.state.externalQueryTotal} 
-										removeExternalQuery={this.removeExternalQuery} />
+										removeExternalQuery={this.removeExternalQuery}
+										dejavuExportData={this.state.dejavuExportData}
+									/>
 								</div>
 								{footer}
 								<FeatureComponent.ErrorModal
