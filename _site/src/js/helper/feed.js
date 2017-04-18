@@ -545,12 +545,27 @@ var feed = (function() {
 		removeExternalQuery: function() {
 			delete this.externalQueryBody;
 		},
-		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
-			this.queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
+		filterQuery: function(filterQuerys, typeName, callback, setTotal) {
+			this.queryBody = this.generateFilterQuery(filterQuerys);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
 		},
+		generateFilterQuery(filterQuerys) {
+			var queries = [];
+			filterQuerys.forEach(function(filterItem) {
+				var query = this.createFilterQuery(filterItem.method, filterItem.columnName, filterItem.value, filterItem.analyzed);
+				queries.push(query);
+			}.bind(this));
+			var queryBody = {
+				query: {
+					bool: {
+						must: queries
+					}
+				}
+			};
+			return queryBody;
+		},
 		//Create Filter Query by passing attributes
-		createFilterQuery: function(method, columnName, value, typeName, analyzed) {
+		createFilterQuery: function(method, columnName, value, analyzed) {
 			var queryBody = {};
 			var queryMaker = [];
 			var subQuery;
@@ -572,9 +587,7 @@ var feed = (function() {
 				termObj[columnName] = {};
 				termObj[columnName][method] = value[0];
 				queryBody = {
-					'query': {
-						'range': termObj
-					}
+					'range': termObj
 				};
 				return termObj;
 			}
@@ -586,9 +599,7 @@ var feed = (function() {
 				var boolType = method === 'has' ? 'must' : 'must_not';
 				boolQuery[boolType] = queryMaker;
 				return {
-					'query': {
-						'bool': boolQuery
-					}
+					'bool': boolQuery
 				};
 			}
 
@@ -604,9 +615,7 @@ var feed = (function() {
 					var termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'query': {
-							'match': termObj
-						}
+						'match': termObj
 					};
 					break;
 
@@ -627,9 +636,7 @@ var feed = (function() {
 						'lte': rangeVal[1]
 					};
 					queryBody = {
-						'query': {
-							'range': termObj
-						}
+						'range': termObj
 					};
 					break;
 
@@ -637,9 +644,7 @@ var feed = (function() {
 					termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'query': {
-							'term': termObj
-						}
+						'term': termObj
 					};
 					break;
 			}

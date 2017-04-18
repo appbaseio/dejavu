@@ -39,7 +39,8 @@ var HomePage = React.createClass({
 			connect: false,
 			filterInfo: {
 				active: false,
-				applyFilter: this.applyFilter
+				applyFilter: this.applyFilter,
+				appliedFilter: []
 			},
 			infoObj: this.resetInfoObj(),
 			totalRecord: 0,
@@ -314,8 +315,12 @@ var HomePage = React.createClass({
 					// });
 				}
 				else if (this.state.filterInfo.active) {
-					var filterInfo = this.state.filterInfo;
-					this.applyFilter(types, filterInfo.columnName, filterInfo.method, filterInfo.value, filterInfo.analyzed);
+					// var filterInfo = this.state.filterInfo;
+					// debugger
+					// filterInfo.appliedFilter.forEach(function(filterItem) {
+					// 	this.applyFilter(types, filterItem.columnName, filterItem.method, filterItem.value, filterItem.analyzed);
+					// }.bind(this));
+					this.applyFilter(types);
 				}
 				//Get the data without filter
 				else {
@@ -345,8 +350,9 @@ var HomePage = React.createClass({
 		if(this.state.externalQueryApplied) {
 			queryBody = feed.externalQueryBody;
 		}
-		else if (filterInfo.active)
-			queryBody = feed.createFilterQuery(filterInfo.method, filterInfo.columnName, filterInfo.value, filterInfo.type, filterInfo.analyzed);
+		else if (filterInfo.active) {
+			queryBody = this.generateFilterQuery(filterInfo.appliedFilter);
+		}
 		return queryBody;
 	},
 	// get type
@@ -949,27 +955,35 @@ var HomePage = React.createClass({
 		});
 	},
 	applyFilter: function(typeName, columnName, method, value, analyzed) {
-		filterVal = $.isArray(value) ? value : value.split(',');
 		var $this = this;
-		var filterObj = this.state.filterInfo;
-		filterObj['type'] = typeName;
-		filterObj['columnName'] = columnName;
-		filterObj['method'] = method;
-		filterObj['value'] = filterVal;
-		filterObj['active'] = true;
-		filterObj['analyzed'] = analyzed;
-		this.setState({
-			filterInfo: filterObj
-		});
-
+		var filterInfo = this.state.filterInfo;
+		if(columnName) {
+			filterVal = $.isArray(value) ? value : value.split(',');
+			var filterObj = {};
+			filterObj['type'] = typeName;
+			filterObj['columnName'] = columnName;
+			filterObj['method'] = method;
+			filterObj['value'] = filterVal;
+			filterObj['active'] = true;
+			filterObj['analyzed'] = analyzed;
+			if(filterInfo.appliedFilter) {
+				filterInfo.appliedFilter.push(filterObj);
+			} else {
+				filterInfo.appliedFilter = [filterObj];
+			}
+			filterInfo.active = true;
+			this.setState({
+				filterInfo: filterInfo
+			});
+		}
 		//Store state of filter
-		var filter_state = JSON.parse(JSON.stringify(filterObj));
+		var filter_state = JSON.parse(JSON.stringify(filterInfo));
 		delete filter_state.applyFilter;
 		input_state.filterInfo = filter_state;
 		createUrl(input_state);
-
+		// method, columnName, filterVal, subsetESTypes, analyzed
 		if (typeName != '' && typeName != null) {
-			feed.filterQuery(method, columnName, filterVal, subsetESTypes, analyzed, function(update, fromStream, total) {
+			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
 				if (!fromStream) {
 					sdata = [];
 					$this.resetData(total);
@@ -1031,29 +1045,36 @@ var HomePage = React.createClass({
 			}.bind(this));
 		}
 	},
-	removeFilter: function() {
+	removeFilter: function(index) {
 		var $this = this;
+		var appliedFilter = this.state.filterInfo.appliedFilter;
+		appliedFilter.splice(index, 1);
 		var obj = {
-			active: false,
-			applyFilter: this.applyFilter
+			active: appliedFilter.length ? true : false,
+			applyFilter: this.applyFilter,
+			appliedFilter: appliedFilter
 		};
 		this.setState({
 			filterInfo: obj
 		});
 
-		//Remove filterinfo from store
-		if(input_state.hasOwnProperty('filterInfo')) {
-			delete input_state.filterInfo;
-			createUrl(input_state);
+		//Remove filterInfo from store
+		if(!obj.active) {
+			if(input_state.hasOwnProperty('filterInfo')) {
+				delete input_state.filterInfo;
+				createUrl(input_state);
+			}
+			if(!$this.state.externalQueryApplied) {
+				sdata = [];
+				$this.resetData();
+				setTimeout(function() {
+					$this.getStreamingData(subsetESTypes);
+				}, 500);
+			}
+			this.removeSelection();
+		} else {
+			this.applyFilter(subsetESTypes);
 		}
-		if(!$this.state.externalQueryApplied) {
-			sdata = [];
-			$this.resetData();
-			setTimeout(function() {
-				$this.getStreamingData(subsetESTypes);
-			}, 500);
-		}
-		this.removeSelection();
 	},
 	removeSort: function() {
 		var docs = this.state.documents;
