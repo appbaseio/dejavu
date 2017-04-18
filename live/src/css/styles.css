@@ -834,6 +834,15 @@ footer {
 	display: inline-block;
 }
 
+#dejavu-sidebar {
+	height: 100%;
+}
+
+#dejavu-sidebar .tab-content {
+	height: calc(100% - 43px);
+	overflow: auto;
+}
+
 .themeBtn {
 	padding: 3px 6px;
 }

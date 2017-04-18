@@ -12,7 +12,7 @@ var Sidebar = React.createClass({
 	},
 	render: function() {
 		return (
-			<Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+			<Tabs defaultActiveKey={1} id="dejavu-sidebar">
 				<Tab 
 					eventKey={1} 
 					title="Types">

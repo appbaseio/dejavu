@@ -200,10 +200,16 @@ var TypeTable = React.createClass({
         if (types.length < 1) {
             return (
                 <div className='left-tab'>
-              <div className="highlight-tip left-tip">
-                  <strong>Loading data</strong> ...
-              </div>
-            </div>
+                  <div className="highlight-tip left-tip">
+                      {
+                        this.props.connect ? (
+                            <strong>No data found.</strong>
+                        ) : (
+                            <strong>Loading data...</strong>
+                        )
+                      }
+                  </div>
+                </div>
             );
         }
         return (
