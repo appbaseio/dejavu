@@ -3,12 +3,14 @@ var decryptedData = {};
 var dejavuUrl;
 var queryParams;
 
+initialize();
+
 // Encrypt
 function createUrl(inputs, cb) {
 	compress(inputs, compressCb.bind(this));
 
 	function compressCb(error, ciphertext) {
-		var allowParams = ['hf','h','f','query','sidebar','type','subscribe'];
+		var allowParams = ['hf','h','f','query','sidebar','type','subscribe', 'importer'];
 		if (!error) {
 			dejavuUrl = ciphertext;
 			let finalUrl = '';
@@ -145,5 +147,13 @@ function getQueryParameters(str) {
 			return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
 	} else {
 		return null;
+	}
+}
+
+function initialize() {
+	var dejavuHash = localStorage.getItem("dejavuHash");
+	if(dejavuHash) {
+		localStorage.removeItem("dejavuHash");
+		window.location.href = window.location.protocol+"//"+window.location.host+dejavuHash;
 	}
 }
