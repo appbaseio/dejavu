@@ -1,0 +1,85 @@
+#login_modal.modal {
+	margin-top: 0;
+}
+
+#login_modal.modal .modal-content {
+	width: 350px;
+	border-radius: 4px;
+	border: 3px solid;
+	color: #555;
+	background: #fff;
+	margin: 50% auto 0;
+}
+
+#login_modal.modal .modal-content .modal-header {
+	font-size: 18px;
+	background-color: inherit;
+	border: 0;
+	padding: 5px 15px 0 15px;
+	text-align: center;
+}
+
+#login_modal.modal .modal-content .modal-header .modal-title {
+	color: #555;
+	text-transform: inherit;
+	text-align: center;
+}
+
+#login_modal.modal .modal-content .modal-footer {
+	border: 0;
+	padding-top: 0;
+}
+
+#login_modal.modal .modal-content .modal-body {
+	padding: 15px;
+	text-align: center;
+}
+
+#login_modal.modal .modal-content .mr15 {
+	margin-right: 15px;
+}
+
+#login_modal.modal .modal-content .mt25 {
+	margin-top: 25px;
+}
+
+#login_modal.modal .modal-content .close {
+	border-color: #555;
+	color: #555;
+}
+
+#login_modal.modal .modal-content .modal-btn {
+	background: transparent;
+	color: inherit;
+	border: 1px solid;
+	font-size: 16px;
+	padding: 4px 20px;
+	display: inline-block;
+	width: auto;
+	margin-right: 15px;
+	height: auto;
+}
+
+#login_modal.modal .modal-content .modal-btn:hover {
+	background-color: #555;
+	color: #fff;
+}
+
+#login_modal.modal .modal-content .contact-link {
+	color: #555;
+	border-bottom: 1px dotted;
+}
+
+#login_modal.modal .modal-sm .modal-body {
+	padding-top: 25px;
+}
+
+#login_modal.modal#login_modal,
+#login_modal.modal#signup_modal {
+	margin-top: 0;
+}
+
+#login_modal.modal#login_modal .modal-header,
+#login_modal.modal#signup_modal .modal-header {
+	padding: 35px 15px 0 15px;
+}
