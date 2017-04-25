@@ -767,12 +767,16 @@ footer {
 }
 
 .left-tab {
-	height: 100%;
+	height: calc(100% - 32px);
+	overflow: auto;
+}
+
+.tab-content>.active {
+	height: calc(100% - 43px);
 }
 
 .typesList {
 	height: 100%;
-	padding-bottom: 80px;
 	overflow: auto;
 }
 
@@ -851,7 +855,6 @@ footer {
 .checkbox input[type="radio"] {
 	cursor: pointer;
 }
-
 
 .radio input[type="checkbox"]:focus,
 .radio input[type="radio"]:focus {

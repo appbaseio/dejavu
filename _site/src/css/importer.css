@@ -1,0 +1,30 @@
+.typeContainer.importer-included {
+	z-index: 99;
+}
+.dejavu-importer-btn {
+	display: block;
+	width: 100%;
+	margin: 15px 0;
+}
+.dejavu-importer .dejavu-importer-iframe-container {
+	position: fixed;
+	width: 100%;
+	height: calc(100% - 130px);
+	top: 100px;
+	left: 0;
+}
+.dejavu-importer-iframe {
+	position: relative;
+	height: 100%;
+	width: 100%;
+}
+.dejavu-importer .dejavu-importer-iframe-container .dejavu-importer-close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	border-radius: 50%;
+	font-size: 20px;
+	width: 40px;
+	height: 40px;
+	line-height: 26px;
+}
