@@ -154,6 +154,6 @@ function initialize() {
 	var dejavuHash = localStorage.getItem("dejavuHash");
 	if(dejavuHash) {
 		localStorage.removeItem("dejavuHash");
-		window.location.href = window.location.protocol+"//"+window.location.host+dejavuHash;
+		window.location.href = window.location.protocol+"//"+window.location.host+window.location.pathname+dejavuHash;
 	}
 }
