@@ -117,7 +117,8 @@ gulp.task('moveCss', function() {
 
 gulp.task('moveFonts', function() {
     return gulp.src(['_site/bower_components/bootstrap/dist/fonts/*', 
-        '_site/bower_components/font-awesome/fonts/*'])
+        '_site/bower_components/font-awesome/fonts/*',
+        '_site/assets/fonts/*'])
         .pipe(gulp.dest('_site/dist/fonts'));
 });
 

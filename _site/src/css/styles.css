@@ -193,6 +193,7 @@ label {
 
 body {
 	background: transparent;
+	font-family: "Source Sans Pro Regular";
 }
 
 .dejavuContainer {
@@ -984,13 +985,14 @@ iframe {
 	color: #fff;
 }
 
-.modal .btn-danger {
+.modal .btn-danger, .theme-btn-danger {
 	background: transparent;
 	color: #FF8484;
+	border: 1px solid;
 	border-color: #FF8484;
 }
 
-.modal .btn-danger:hover {
+.modal .btn-danger:hover, .theme-btn-danger:hover {
 	background: #FF8484;
 	color: #fff;
 }
