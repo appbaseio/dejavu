@@ -1,5 +1,6 @@
 var React = require('react');
 var Login = require('./Login.jsx');
+var GoBackToDejavu = require('./GoBackToDejavu.jsx');
 
 var Importer = React.createClass({
 	getInitialState: function() {
@@ -64,9 +65,7 @@ var Importer = React.createClass({
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
 							<iframe src="https://appbaseio-confidential.github.io/importer/?header=false" frameBorder="0" className="dejavu-importer-iframe" />
-							<button className="btn theme-btn-danger dejavu-importer-close" onClick={this.close}>
-								Go back to dejavu
-							</button>
+							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
 				}
