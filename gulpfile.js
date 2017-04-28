@@ -155,9 +155,7 @@ gulp.task('compact',['browserify'], function() {
         .pipe(connect.reload());
 });
 
-gulp.task('watch', ['bundle', 'compact','connect'], function() {
-    gulp.watch('_site/src/js/*/*.jsx', ['compact']);
-    gulp.watch('_site/src/js/*.jsx', ['compact']);
+gulp.task('watch', ['bundle'], function() {
     gulp.watch(files.css.custom, ['cssChanges']);
 });
 
