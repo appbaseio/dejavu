@@ -193,6 +193,7 @@ label {
 
 body {
 	background: transparent;
+	font-family: "Source Sans Pro Regular";
 }
 
 .dejavuContainer {
@@ -239,7 +240,7 @@ footer {
 	padding-right: 5px;
 	border-top: 1px solid #ddd;
 	border-bottom: 0;
-	z-index: 99999999;
+	z-index: 98;
 }
 
 .init-ES .submit-btn {
@@ -984,13 +985,14 @@ iframe {
 	color: #fff;
 }
 
-.modal .btn-danger {
+.modal .btn-danger, .theme-btn-danger {
 	background: transparent;
 	color: #FF8484;
+	border: 1px solid;
 	border-color: #FF8484;
 }
 
-.modal .btn-danger:hover {
+.modal .btn-danger:hover, .theme-btn-danger:hover {
 	background: #FF8484;
 	color: #fff;
 }

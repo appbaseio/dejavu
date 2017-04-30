@@ -1,5 +1,6 @@
 var React = require('react');
 var Login = require('./Login.jsx');
+var GoBackToDejavu = require('./GoBackToDejavu.jsx');
 
 var Importer = React.createClass({
 	getInitialState: function() {
@@ -25,12 +26,15 @@ var Importer = React.createClass({
 			.done(function(data) {
 				this.userInfo = data;
 				var storageImporter = localStorage.getItem("importer");
+				var showFlag = show ? show : (storageImporter && storageImporter === "true" ? true : false);
 				this.setState({
 					loggedIn: true,
-					show: show ? show : (storageImporter && storageImporter === "true" ? true : false)
+					show: showFlag
 				}, function() {
-					$(".typeContainer").addClass("importer-included");
-					localStorage.setItem("importer", "false");
+					if(showFlag) {
+						$(".typeContainer").addClass("importer-included");
+						localStorage.setItem("importer", "false");
+					}
 				});
 			}.bind(this)).fail(function(e) {
 				console.log(e);
@@ -55,13 +59,13 @@ var Importer = React.createClass({
 		return (
 			<div className="dejavu-importer">
 				<button onClick={this.open} className="btn btn-primary dejavu-importer-btn">
-					Importer
+					Import JSON or CSV files
 				</button>
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
 							<iframe src="https://appbaseio-confidential.github.io/importer/?header=false" frameBorder="0" className="dejavu-importer-iframe" />
-							<button className="btn dejavu-importer-close" onClick={this.close}>x</button>
+							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
 				}

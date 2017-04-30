@@ -9,7 +9,7 @@
 .dejavu-importer .dejavu-importer-iframe-container {
 	position: fixed;
 	width: 100%;
-	height: calc(100% - 130px);
+	height: calc(100% - 100px);
 	top: 100px;
 	left: 0;
 }
@@ -20,11 +20,10 @@
 }
 .dejavu-importer .dejavu-importer-iframe-container .dejavu-importer-close {
 	position: absolute;
-	right: 0;
-	top: 0;
-	border-radius: 50%;
-	font-size: 20px;
-	width: 40px;
-	height: 40px;
-	line-height: 26px;
+	left: 15px;
+	bottom: 15px;
+	background: #fff;
+}
+.dejavu-importer .dejavu-importer-iframe-container .dejavu-importer-close:hover {
+	background: #FF8484;
 }
