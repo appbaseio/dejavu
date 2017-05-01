@@ -64,7 +64,7 @@ var Importer = React.createClass({
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
-							<iframe src="https://appbaseio-confidential.github.io/importer/?header=false" frameBorder="0" className="dejavu-importer-iframe" />
+							<iframe src="https://appbaseio-confidential.github.io/importer" frameBorder="0" className="dejavu-importer-iframe" />
 							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
