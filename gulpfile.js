@@ -117,7 +117,8 @@ gulp.task('moveCss', function() {
 
 gulp.task('moveFonts', function() {
     return gulp.src(['_site/bower_components/bootstrap/dist/fonts/*', 
-        '_site/bower_components/font-awesome/fonts/*'])
+        '_site/bower_components/font-awesome/fonts/*',
+        '_site/assets/fonts/*'])
         .pipe(gulp.dest('_site/dist/fonts'));
 });
 
@@ -131,15 +132,15 @@ gulp.task('connect', function() {
   connect.server({
     root: '_site',
     livereload: true,
-    port: 1358
+    port: 8000
   });
 });
 
 gulp.task('bundle', [
-    'customcss', 
-    'vendorcss', 
-    'vendorjs', 
-    'customjs',  
+    'customcss',
+    'vendorcss',
+    'vendorjs',
+    'customjs',
     'moveCss',
     'moveFonts',
     'moveJs']);
