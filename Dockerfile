@@ -3,6 +3,8 @@ MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
 
+RUN apk add --no-cache git
+
 RUN npm install -g bower
 RUN npm install -g gulp
 RUN npm install -g http-server
