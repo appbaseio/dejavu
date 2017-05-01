@@ -31,5 +31,5 @@ For development instructions, checkout the [developing section](https://github.c
 
 ### License
 
-[MIT License](https://github.com/appbaseio/dejavu/blob/dev/LICENSE.md) (c) 2016, Appbase Inc.
+[MIT License](https://github.com/appbaseio/dejavu/blob/dev/LICENSE.md) (c) 2017, Appbase Inc.
 
