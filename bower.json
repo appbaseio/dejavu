@@ -16,6 +16,7 @@
     "lzma": "^2.3.0",
     "urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git",
     "auth0.js": "^7.4.0",
-    "moment": "^2.17.1"
+    "moment": "^2.17.1",
+    "file-saver": "^1.3.3"
   }
 }

@@ -180,7 +180,8 @@ var DataTable = React.createClass({
             selectedTypes = {this.props.selectedTypes}
             externalQueryApplied={this.props.externalQueryApplied}
             externalQueryTotal={this.props.externalQueryTotal}
-            removeExternalQuery={this.props.removeExternalQuery} />
+            removeExternalQuery={this.props.removeExternalQuery}
+            dejavuExportData={this.props.dejavuExportData} />
 
             {extraAddBtn}
 

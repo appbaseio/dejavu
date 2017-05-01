@@ -22,11 +22,11 @@ var Dropdown = React.createClass({
         });
         return (
             <Dropdown
-            className="dejavu-dropdown pull-right "
-            pullRight={true}
-            noCaret
-            id='ab-dropdown'>
-            <Dropdown.Toggle className='fa fa-cog' noCaret/>
+                className="dejavu-dropdown pull-right "
+                pullRight={true}
+                id='ab-dropdown'
+            >
+            <Dropdown.Toggle className='fa fa-cog' />
             <Dropdown.Menu>
                 <MenuItem header className='centered-text'>Displayed Attributes</MenuItem>
                 <MenuItem divider/>

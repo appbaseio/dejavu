@@ -16,7 +16,7 @@ function getDataSize() {
 }
 
 const DATA_SIZE = getDataSize();
-var APPNAME, USERNAME, PASSWORD, URL, OperationFlag, APPURL, input_state, HOST;
+var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
@@ -26,7 +26,7 @@ var counterStream, streamRef;
 // Instantiating appbase ref with the global configs defined above.
 function init() {
 	appbaseRef = new Appbase({
-		url: URL,
+		url: dejavuURL,
 		appname: APPNAME,
 		username: USERNAME,
 		password: PASSWORD
@@ -36,53 +36,53 @@ function init() {
 // parse the url and detect username, password
 function filterUrl(url) {
 	if (url) {
-        var obj = {
-            username: 'test',
-            password: 'test',
-            url: url
-        };
-        var urlsplit = url.split(':');
-        try {
-            obj.username = urlsplit[1].replace('//', '');
-            var httpPrefix = url.split('://');
-            if(urlsplit[2]) {
-                var pwsplit = urlsplit[2].split('@');
-                obj.password = pwsplit[0];
-                if(url.indexOf('@') !== -1) {
-                    obj.url = httpPrefix[0] + '://' + pwsplit[1];
-                    if(urlsplit[3]) {
-                        obj.url += ':'+urlsplit[3];
-                    }
-                }
-            }
-        } catch(e) {
-            console.log(e);
-        }
-        return obj;
-    } else {
-        return null;
-    }
+		var obj = {
+			username: 'test',
+			password: 'test',
+			url: url
+		};
+		var urlsplit = url.split(':');
+		try {
+			obj.username = urlsplit[1].replace('//', '');
+			var httpPrefix = url.split('://');
+			if (urlsplit[2]) {
+				var pwsplit = urlsplit[2].split('@');
+				obj.password = pwsplit[0];
+				if (url.indexOf('@') !== -1) {
+					obj.url = httpPrefix[0] + '://' + pwsplit[1];
+					if (urlsplit[3]) {
+						obj.url += ':' + urlsplit[3];
+					}
+				}
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		return obj;
+	} else {
+		return null;
+	}
 }
 
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
 
-if(BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
-	if(!flag_url || decryptedData.hasOwnProperty('url')){
+if (BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
+	if (!flag_url || decryptedData.hasOwnProperty('url')) {
 		config = {
 			url: storageService.getItem('esurl'),
 			appname: storageService.getItem('appname')
 		};
 	}
 	beforeInit();
-} else if(BRANCH === 'appbase') {
+} else if (BRANCH === 'appbase') {
 	parent.globalAppData(function(res) {
-	    APPNAME = res.appname;
-	    USERNAME = res.username;
-	    PASSWORD = res.password;
-	    APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io';
-	    storageService.setItem('esurl', APPURL);
+		APPNAME = res.appname;
+		USERNAME = res.username;
+		PASSWORD = res.password;
+		APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io';
+		storageService.setItem('esurl', APPURL);
 		storageService.setItem('appname', APPNAME);
 		config = {
 			url: APPURL,
@@ -90,8 +90,7 @@ if(BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
 		};
 		beforeInit();
 	});
-} 
-else {
+} else {
 	storageService.getItem('esurl', function(result) {
 		config.url = result.esurl;
 		$('#configUrl').val(config.url);
@@ -105,16 +104,16 @@ else {
 
 function beforeInit() {
 	APPNAME = config.appname;
-	URL = config.url;
-	if(URL) {
-		var parsedUrl = filterUrl(URL);
+	dejavuURL = config.url;
+	if (dejavuURL) {
+		var parsedUrl = filterUrl(dejavuURL);
 		USERNAME = parsedUrl.username;
 		PASSWORD = parsedUrl.password;
-		URL = parsedUrl.url;
+		dejavuURL = parsedUrl.url;
 		HOST = parsedUrl.url;
-		APPURL = URL + '/' + APPNAME;
+		APPURL = dejavuURL + '/' + APPNAME;
 		OperationFlag = false;
-			
+
 		// to store input state
 		input_state = {
 			url: config.url,
@@ -145,7 +144,7 @@ var feed = (function() {
 			type: types,
 			body: query
 		}).on('data', function(res) {
-			if(res && res.hits && res.hits.total) {
+			if (res && res.hits && res.hits.total) {
 				setTotal(res.hits.total);
 			}
 		});
@@ -199,7 +198,7 @@ var feed = (function() {
 			},
 			error: function() {
 				$('.full_page_loading').addClass('hide');
-				if(cb_error) {
+				if (cb_error) {
 					cb_error();
 				}
 			}
@@ -240,7 +239,7 @@ var feed = (function() {
 			var typesString = types;
 			try {
 				typesString = types.join(',');
-			} catch(e) {
+			} catch (e) {
 				console.log(e, types);
 			}
 			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
@@ -326,7 +325,7 @@ var feed = (function() {
 					types = types.map(function(bucket) {
 						return bucket.key;
 					});
-					if(types.length) {
+					if (types.length) {
 						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
 							esTypes = types.slice();
 							if (callback !== null) {
@@ -336,10 +335,10 @@ var feed = (function() {
 					} else {
 						esTypes = types;
 						if (callback !== null) {
-  							return callback(types);
+							return callback(types);
 						}
 					}
-				}).error(function(xhr){
+				}).error(function(xhr) {
 					console.log(xhr);
 					clearInterval(streamingInterval);
 					console.log('error in retrieving types: ', xhr);
@@ -355,8 +354,7 @@ var feed = (function() {
 			var self = this;
 			if (method === 'index' || method === 'bulk') {
 				applyIndexOrBulk(method);
-			}
-			else {
+			} else {
 				var doc = recordObject.body;
 				recordObject.body = {
 					doc: doc
@@ -368,6 +366,7 @@ var feed = (function() {
 					}
 				});
 			}
+
 			function applyIndexOrBulk(method) {
 				appbaseRef[method](recordObject).on('data', function(res) {
 					if (esTypes.indexOf(recordObject.type) === -1) {
@@ -389,7 +388,7 @@ var feed = (function() {
 				return { 'delete': v };
 			});
 			console.log(deleteArray);
-			
+
 			function deleteData(sdata, data) {
 				selectedRows.forEach(function(v) {
 					if (typeof sdata[data] !== 'undefined') {
@@ -454,7 +453,7 @@ var feed = (function() {
 			});
 		},
 		applyGetQuery: function(temp_config, ajaxType) {
-			var ajaxType = ajaxType ? ajaxType : 'GET'; 
+			var ajaxType = ajaxType ? ajaxType : 'GET';
 			return $.ajax({
 				type: ajaxType,
 				beforeSend: function(request) {
@@ -471,12 +470,13 @@ var feed = (function() {
 			var queryBody = {
 				'size': 0,
 				'aggs': {
-			        'count_by_type': {
-			            'terms': {
-			                'field': '_type'
-			            }
-			        }
-			    }
+					'count_by_type': {
+						'terms': {
+							'field': '_type',
+							"size": 1000000
+						}
+					}
+				}
 			};
 			return this.applyQuery(createUrl, queryBody);
 		},
@@ -511,9 +511,9 @@ var feed = (function() {
 		},
 		getIndices: function(url) {
 			var temp_config = this.filterUrl(url);
-			if(temp_config) {
+			if (temp_config) {
 				temp_config.url += '/_stats/indices';
-				return this.applyGetQuery(temp_config);	
+				return this.applyGetQuery(temp_config);
 			} else {
 				return null;
 			}
@@ -526,10 +526,10 @@ var feed = (function() {
 		},
 		executeIndexOperation: function(url, appname) {
 			var temp_config = this.filterUrl(url);
-			if(temp_config) {
-				temp_config.url += '/'+appname;
+			if (temp_config) {
+				temp_config.url += '/' + appname;
 				console.log(temp_config);
-				return this.applyGetQuery(temp_config, 'POST');	
+				return this.applyGetQuery(temp_config, 'POST');
 			} else {
 				return null;
 			}
@@ -545,12 +545,27 @@ var feed = (function() {
 		removeExternalQuery: function() {
 			delete this.externalQueryBody;
 		},
-		filterQuery: function(method, columnName, value, typeName, analyzed, callback, setTotal) {
-			this.queryBody = this.createFilterQuery(method, columnName, value, typeName, analyzed);
+		filterQuery: function(filterQuerys, typeName, callback, setTotal) {
+			this.queryBody = this.generateFilterQuery(filterQuerys);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
 		},
+		generateFilterQuery(filterQuerys) {
+			var queries = [];
+			filterQuerys.forEach(function(filterItem) {
+				var query = this.createFilterQuery(filterItem.method, filterItem.columnName, filterItem.value, filterItem.analyzed);
+				queries.push(query);
+			}.bind(this));
+			var queryBody = {
+				query: {
+					bool: {
+						must: queries
+					}
+				}
+			};
+			return queryBody;
+		},
 		//Create Filter Query by passing attributes
-		createFilterQuery: function(method, columnName, value, typeName, analyzed) {
+		createFilterQuery: function(method, columnName, value, analyzed) {
 			var queryBody = {};
 			var queryMaker = [];
 			var subQuery;
@@ -572,9 +587,7 @@ var feed = (function() {
 				termObj[columnName] = {};
 				termObj[columnName][method] = value[0];
 				queryBody = {
-					'query': {
-						'range': termObj
-					}
+					'range': termObj
 				};
 				return termObj;
 			}
@@ -583,12 +596,10 @@ var feed = (function() {
 				var boolQuery = {
 					'minimum_should_match': 1
 				}
-				var boolType = method === 'has' ? 'must': 'must_not';
+				var boolType = method === 'has' ? 'must' : 'must_not';
 				boolQuery[boolType] = queryMaker;
 				return {
-					'query': {
-						'bool': boolQuery
-					}
+					'bool': boolQuery
 				};
 			}
 
@@ -604,9 +615,7 @@ var feed = (function() {
 					var termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'query': {
-							'match': termObj
-						}
+						'match': termObj
 					};
 					break;
 
@@ -627,23 +636,42 @@ var feed = (function() {
 						'lte': rangeVal[1]
 					};
 					queryBody = {
-						'query': {
-							'range': termObj
-						}
+						'range': termObj
 					};
 					break;
 
-				case 'term': 
+				case 'term':
 					termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'query': {
-							'term': termObj
-						}
+						'term': termObj
 					};
-				break;	
+					break;
 			}
 			return queryBody;
+		},
+		b64toBlob: function(b64Data, contentType, sliceSize) {
+			contentType = contentType || '';
+			sliceSize = sliceSize || 512;
+
+			var byteCharacters = atob(b64Data);
+			var byteArrays = [];
+
+			for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+				var byteNumbers = new Array(slice.length);
+				for (var i = 0; i < slice.length; i++) {
+					byteNumbers[i] = slice.charCodeAt(i);
+				}
+
+				var byteArray = new Uint8Array(byteNumbers);
+
+				byteArrays.push(byteArray);
+			}
+
+			var blob = new Blob(byteArrays, { type: contentType });
+			return blob;
 		}
 	};
 
