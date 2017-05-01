@@ -9,8 +9,8 @@
 .dejavu-importer .dejavu-importer-iframe-container {
 	position: fixed;
 	width: 100%;
-	height: calc(100% - 100px);
-	top: 100px;
+	height: calc(100%);
+	top: 0;
 	left: 0;
 }
 .dejavu-importer-iframe {
