@@ -12,6 +12,19 @@ var Importer = React.createClass({
 	componentWillMount: function() {
 		this.checkLoggedIn();
 	},
+	componentDidMount: function() {
+		this.handleLogout();
+	},
+	handleLogout: function() {
+		window.addEventListener("message", this.onLogout.bind(this), false);
+	},
+	onLogout: function(params) {
+		setTimeout(function() {
+			if(params.data === "loggedOut") {
+				this.close();
+			}
+		}.bind(this), 1000);
+	},
 	checkLoggedIn: function(show) {
 		this.userInfo = null;
 		this.apps = {};
@@ -55,6 +68,9 @@ var Importer = React.createClass({
 	open: function() {
 		this.checkLoggedIn(true);
 	},
+	getImporterUrl: function() {
+		return "http://127.0.0.1:1357?logout="+window.location.href;
+	},
 	render: function() {
 		return (
 			<div className="dejavu-importer">
@@ -64,7 +80,7 @@ var Importer = React.createClass({
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
-							<iframe src="https://appbaseio-confidential.github.io/importer" frameBorder="0" className="dejavu-importer-iframe" />
+							<iframe src={this.getImporterUrl()} frameBorder="0" className="dejavu-importer-iframe" />
 							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
