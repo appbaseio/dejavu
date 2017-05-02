@@ -14,6 +14,9 @@ var Importer = React.createClass({
 	},
 	componentDidMount: function() {
 		this.handleLogout();
+		if(this.props.directImporter) {
+			this.open();
+		}
 	},
 	handleLogout: function() {
 		window.addEventListener("message", this.onLogout.bind(this), false);
@@ -64,19 +67,26 @@ var Importer = React.createClass({
 		this.setState({
 			show: false,
 		});
+		if(this.props.onClose) {
+			this.props.onClose();
+		}
 	},
 	open: function() {
 		this.checkLoggedIn(true);
 	},
 	getImporterUrl: function() {
-		return "http://127.0.0.1:1357?logout="+window.location.href;
+		return "https://appbaseio-confidential.github.io/importer";
 	},
 	render: function() {
 		return (
 			<div className="dejavu-importer">
-				<button onClick={this.open} className="btn btn-primary dejavu-importer-btn">
-					Import JSON or CSV files
-				</button>
+				{
+					this.props.directImporter ? null : (
+						<button onClick={this.open} className="btn btn-primary dejavu-importer-btn">
+							Import JSON or CSV files
+						</button>
+					)
+				}
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
@@ -87,7 +97,7 @@ var Importer = React.createClass({
 				}
 				{
 					this.state.show && !this.state.loggedIn ? (
-						<Login showModal={true}></Login>
+						<Login directImporter={this.props.directImporter} onClose={this.props.onClose} showModal={true}></Login>
 					) : null
 				}
 			</div>
