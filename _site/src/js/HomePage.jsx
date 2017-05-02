@@ -1513,7 +1513,7 @@ var HomePage = React.createClass({
 									</a>
 									{
 										this.state && this.state.splash ? (
-											<a className="btn btn-default m-l10" href="./importer">
+											<a className="btn btn-default m-l10" href="./importer/index.html">
 												Import JSON or CSV files
 											</a>
 										) : null
