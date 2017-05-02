@@ -1,7 +1,7 @@
 {
-  "name": "browser",
-  "version": "0.12.1",
-  "description": "",
+  "name": "dejavu",
+  "version": "0.13.0",
+  "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
     "doc": "docs"
