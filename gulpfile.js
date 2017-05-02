@@ -55,7 +55,8 @@ var files = {
 		dist: '_site/dist/**/*',
 		src: '_site/src/**/*',
 		vendors: '_site/vendors/**/*',
-		buttons: '_site/buttons/**/*'
+		buttons: '_site/buttons/**/*',
+		importer: '_site/importer/**/*'
 	},
 	moveFiles: [
 		'_site/index.html',

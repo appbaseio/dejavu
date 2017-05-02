@@ -10,13 +10,18 @@ var Login = React.createClass({
 	close: function() {
 		this.setState({
 			showModal: false
+		}, function() {
+			if(this.props.onClose) {
+				this.props.onClose();
+			}
 		});
 	},
 	login: function(provider) {
 		const baseURL = window.location.protocol+"//"+window.location.host+window.location.pathname;
 		const redirectTo = "https://accapi.appbase.io/login/"+provider+"?next="+baseURL;
 		localStorage.setItem("dejavuHash", window.location.hash);
-		localStorage.setItem("importer", "true");
+		const importerValue = this.props.directImporter ? "directImporter" : "true";
+		localStorage.setItem("importer", importerValue);
 		window.location.href = redirectTo;
 	},
 	render: function() {

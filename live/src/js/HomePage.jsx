@@ -1496,7 +1496,7 @@ var HomePage = React.createClass({
 											<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 												value={url}
 												onChange={self.valChange}  {...opts} />
-											  <span className={hideUrl} style={hideEye}>
+											<span className={hideUrl} style={hideEye}>
 												<a className="btn btn-default"
 													onClick={self.hideUrlChange}>
 													{hideUrlText}
@@ -1511,6 +1511,13 @@ var HomePage = React.createClass({
 										<i className={pauseClass}></i>
 										{esText}
 									</a>
+									{
+										this.state && this.state.splash ? (
+											<a className="btn btn-default m-l10" href="./importer">
+												Import JSON or CSV files
+											</a>
+										) : null
+									}
 								</div>
 							</div>
 						</div>
@@ -1535,7 +1542,7 @@ var HomePage = React.createClass({
 			);
 		}
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('h')))) {
-			var dejavuForm = initialForm();
+			var dejavuForm = initialForm.call(this);
 		}
 		var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (queryParams && queryParams.hasOwnProperty('h') ? ' without-h ' : '') + (queryParams && queryParams.hasOwnProperty('f') ? ' without-f ' : '') + (queryParams && queryParams.hasOwnProperty('sidebar') ? ' without-sidebar ' : '') + (this.state.splash ? ' splash-on ' : '');
 		return (<div>
