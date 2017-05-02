@@ -56,7 +56,8 @@ var files = {
         dist: '_site/dist/**/*',
         src: '_site/src/**/*',
         vendors: '_site/vendors/**/*',
-        buttons: '_site/buttons/**/*'
+        buttons: '_site/buttons/**/*',
+        importer: '_site/importer/**/*'
     },
     moveFiles: [
         '_site/index.html',
@@ -76,6 +77,18 @@ gulp.task('browserify', function() {
         .pipe(source('main.js'))
         .pipe(gulp.dest('./_site/dist'))
          .pipe(connect.reload());
+});
+
+gulp.task('browserifyImporter', function() {
+    var b = browserify({
+        entries: ['_site/importer/js/app.js'],
+        debug: true
+    });
+    b.transform(reactify); // use the reactify transform
+    return b.bundle()
+        .pipe(source('main.js'))
+        .pipe(gulp.dest('./_site/importer/dist'))
+        .pipe(connect.reload());
 });
 
 gulp.task('vendorcss', function() {
@@ -156,13 +169,24 @@ gulp.task('compact',['browserify'], function() {
         .pipe(connect.reload());
 });
 
-gulp.task('watch', ['bundle', 'compact','connect'], function() {
-    gulp.watch('_site/src/js/*/*.jsx', ['compact']);
-    gulp.watch('_site/src/js/*.jsx', ['compact']);
+
+gulp.task('compactImporter', ['browserifyImporter'], function() {
+    return gulp.src('_site/importer/dist/main.js')
+        .pipe(uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('_site/importer/dist'))
+        .pipe(connect.reload());
+});
+
+gulp.task('watch', ['bundle', 'compact','compactImporter', 'connect'], function() {
+    gulp.watch('_site/src/js/*/*.jsx', ['compact', 'compactImporter']);
+    gulp.watch('_site/src/js/*.jsx', ['compact', 'compactImporter']);
     gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle', 'compact', 'chrome-specific_dir', 'copy_site'], function() {
+gulp.task('chromeBuild', ['bundle', 'compact', 'compactImporter', 'chrome-specific_dir', 'copy_site'], function() {
     setTimeout(function() {
         return del([
             './dejavu-unpacked/site/bower_components',
