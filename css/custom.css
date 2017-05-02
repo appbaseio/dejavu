@@ -194,3 +194,33 @@
 .small-icon {
 	width: 70px;
 }
+
+.features-row {
+	display: flex;
+}
+.features-row > div {
+	display: flex;
+	margin-bottom: 15px;
+}
+.features-row > div > .card {
+	height: 100%;
+	width: 100%;
+	margin-bottom: 0;
+}
+
+.card .img-container {
+	height: 150px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card .img-container img {
+	padding: 0;
+}
+
+@media screen and (max-width: 768px) {
+	.features-row {
+		flex-direction: column;
+	}
+}

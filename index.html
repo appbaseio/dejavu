@@ -1,152 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Dejavu - the missing Web UI for Elasticsearch</title>
-    <meta name="description" content="The Elasticsearch data browser" />
-    <meta name="keywords" content="Dejavu, Elasticsearch data browser, data visualization" />
-    <meta name="author" content="Farhan Chauhan, appbase.io" />
-    <!-- Favicon Here -->
-    <link rel="apple-touch-icon" sizes="57x57" href="live/assets/img/fevicon/apple-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="60x60" href="live/assets/img/fevicon/apple-icon-60x60.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="live/assets/img/fevicon/apple-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="live/assets/img/fevicon/apple-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="live/assets/img/fevicon/apple-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="live/assets/img/fevicon/apple-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="live/assets/img/fevicon/apple-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="live/assets/img/fevicon/apple-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="live/assets/img/fevicon/apple-icon-180x180.png" />
-    <link rel="icon" type="image/png" sizes="192x192"  href="live/assets/img/fevicon/android-icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="live/assets/img/fevicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="live/assets/img/fevicon/favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="live/assets/img/fevicon/favicon-16x16.png" />
-    <link rel="manifest" href="live/assets/img/fevicon/manifest.json" />
-    <meta name="msapplication-TileColor" content="#ffffff" />
-    <meta name="msapplication-TileImage" content="live/assets/img/fevicon/ms-icon-144x144.png" />
-    <meta name="theme-color" content="#ffffff" />
-    <!-- Chrome Inline installation link -->
-    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/jopjeaiilkcibeohjdmejhoifenbnmlh" />
-    <!-- Css here -->
-    <link rel="stylesheet" type="text/css" href="live/dist/css/vendor.min.css" />
-    <link rel="stylesheet" href="css/landio.css" />
-    <link rel="stylesheet" href="css/custom.css" />
-  </head>
-  <body>
-    <a href="https://github.com/appbaseio/dejavu">
-      <img style="position: absolute; top: 0; right: 0; border: 0;z-index:15" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
-      <header class="text-xs-center center-vertically">
-        <div class="hero shift-with-hiw js-hero">
-          <div class="hero__background" data-native-currency="INR" aria-hidden="true">
-            <div class="air-slideshow hero-slideshow"></div>
-            <video id="dejavu-video" class="video-playing">
-              <source id="mp4source" src="videos/dejavuintro.mp4" type="video/mp4" />
-            </video>
-            <div class="bg-img vertical-0">
-              <div class="vertical-1">
-                <img src="img/bg.png" alt="" class="img-responsive"></div>
-              </div>
-            </div>
-            <div class="hero_content">
-              <div class="vertical-0">
-                <div class="vertical-1">
-                  <div class="col-xs-12 dejaVu-icon-strip">
-                    <img src="img/icon.png" alt="DejaVu" class="dejaVu-icon m-b-3"></div>
-                    <div class="col-xs-12 dejaVu-content">
-                      <h1 class="display-3">dejavu</h1>
-                      <h2 class="m-b-2">The missing web UI for Elasticsearch.</h2>
-                    </div>
-                    <div class="m-b-2 col-xs-12">
-                      <a class="btn btn-secondary-outline m-b-1 video-play" href="javascript:void(0);" role="button">
-                        <span class="fa fa-play"></span>
-                        <span class="fa fa-pause"></span>
-                      </a>
-                    </div>
-                    <div class="col-xs-12 live-btn-strip">
-                      <a class="btn btn-secondary-outline m-b-1 try-it-btn" href="live?default=true" role="button">Try it live</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header>
-          <section class="section-intro bg-faded text-xs-center">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-block">
-                      <div class="col-xs-12 pd-0">
-                        <img class="img-responsive" src="img/icon1.png" alt="" />
-                      </div>
-                      <h4 class="card-title">Filter views</h4>
-                      <h6 class="card-subtitle text-muted">see relevant data</h6>
-                      <p class="card-text">sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates.</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card">
-                    <div class="card-block">
-                      <div class="col-xs-12 pd-0">
-                        <img class="img-responsive" src="img/icon2.png" alt="" />
-                      </div>
-                      <h4 class="card-title">Performant</h4>
-                      <h6 class="card-subtitle text-muted">with a modern UI</h6>
-                      <p class="card-text">dejavu is built using React v0.14.0 as a serverless app. Whether you are showing 10 records or 10000, it stays snappy.</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card m-b-0">
-                    <div class="card-block">
-                      <div class="col-xs-12 pd-0">
-                        <img class="img-responsive" src="img/icon3.png" alt="" />
-                      </div>
-                      <h4 class="card-title">Fast data updates</h4>
-                      <h6 class="card-subtitle text-muted">without page refresh</h6>
-                      <p class="card-text">dejavu provides a single-click data reload view. And if your data is hosted with appbase.io, it reflects changes in realtime.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <p class="p-text">Get the
-                  <strong>
-                    <a class="highlight-link" href="javascript:void(0)" onclick="chrome.webstore.install()"><img style="display:inline;" src="img/chrome_icon.png" alt="Chrome" class="img-responsive small-icon" /> extension</a>.
-                  </strong>
-                     Also available as an <a class="highlight-link" href="https://github.com/appbaseio/dejavu#elasticsearch-plugin---installation"><b>elasticsearch plugin</b></a>.
-                </p>
-              </div>
-            </div>
-          </section>
-          <footer class="section-footer bg-inverse" role="contentinfo">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-6 col-lg-7">
-                  <ul class="nav nav-inline">
-                    <li class="nav-item">
-                      <a class="nav-link compare-btn" href="https://github.com/appbaseio/dejavu#comparison-with-other-data-browsers">Compare</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link roadmap-btn" href="https://github.com/appbaseio/dejavu#roadmap">Roadmap</a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-md-6 col-lg-5 nav-media">
-                  <div class="media">
-                    <small class="media-body media-bottom">Built with
-                      <i class="fa fa-heart theme-color"></i> by
-                      <a href="http://appbase.io" class="theme-color">appbase.io</a>
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </footer>
-          <script src="js/jquery.js"></script>
-          <script src="js/landio.min.js"></script>
-          <script type="text/javascript" src="js/custom.js"></script>
-        </body>
-      </html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="x-ua-compatible" content="ie=edge" />
+	<title>Dejavu - the missing Web UI for Elasticsearch</title>
+	<meta name="description" content="The Elasticsearch data browser" />
+	<meta name="keywords" content="Dejavu, Elasticsearch data browser, data visualization" />
+	<meta name="author" content="Farhan Chauhan, appbase.io" />
+	<!-- Favicon Here -->
+	<link rel="apple-touch-icon" sizes="57x57" href="live/assets/img/fevicon/apple-icon-57x57.png" />
+	<link rel="apple-touch-icon" sizes="60x60" href="live/assets/img/fevicon/apple-icon-60x60.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="live/assets/img/fevicon/apple-icon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="76x76" href="live/assets/img/fevicon/apple-icon-76x76.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="live/assets/img/fevicon/apple-icon-114x114.png" />
+	<link rel="apple-touch-icon" sizes="120x120" href="live/assets/img/fevicon/apple-icon-120x120.png" />
+	<link rel="apple-touch-icon" sizes="144x144" href="live/assets/img/fevicon/apple-icon-144x144.png" />
+	<link rel="apple-touch-icon" sizes="152x152" href="live/assets/img/fevicon/apple-icon-152x152.png" />
+	<link rel="apple-touch-icon" sizes="180x180" href="live/assets/img/fevicon/apple-icon-180x180.png" />
+	<link rel="icon" type="image/png" sizes="192x192" href="live/assets/img/fevicon/android-icon-192x192.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="live/assets/img/fevicon/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="96x96" href="live/assets/img/fevicon/favicon-96x96.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="live/assets/img/fevicon/favicon-16x16.png" />
+	<link rel="manifest" href="live/assets/img/fevicon/manifest.json" />
+	<meta name="msapplication-TileColor" content="#ffffff" />
+	<meta name="msapplication-TileImage" content="live/assets/img/fevicon/ms-icon-144x144.png" />
+	<meta name="theme-color" content="#ffffff" />
+	<!-- Chrome Inline installation link -->
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/jopjeaiilkcibeohjdmejhoifenbnmlh" />
+	<!-- Css here -->
+	<link rel="stylesheet" type="text/css" href="live/dist/css/vendor.min.css" />
+	<link rel="stylesheet" href="css/landio.css" />
+	<link rel="stylesheet" href="css/custom.css" />
+</head>
+
+<body>
+	<a href="https://github.com/appbaseio/dejavu">
+		<img style="position: absolute; top: 0; right: 0; border: 0;z-index:15" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+	<header class="text-xs-center center-vertically">
+		<div class="hero shift-with-hiw js-hero">
+			<div class="hero__background" data-native-currency="INR" aria-hidden="true">
+				<div class="air-slideshow hero-slideshow"></div>
+				<video id="dejavu-video" class="video-playing">
+					<source id="mp4source" src="videos/dejavuintro.mp4" type="video/mp4" />
+				</video>
+				<div class="bg-img vertical-0">
+					<div class="vertical-1">
+						<img src="img/bg.png" alt="" class="img-responsive"></div>
+				</div>
+			</div>
+			<div class="hero_content">
+				<div class="vertical-0">
+					<div class="vertical-1">
+						<div class="col-xs-12 dejaVu-icon-strip">
+							<img src="img/icon.png" alt="DejaVu" class="dejaVu-icon m-b-3"></div>
+						<div class="col-xs-12 dejaVu-content">
+							<h1 class="display-3">dejavu</h1>
+							<h2 class="m-b-2">The missing web UI for Elasticsearch.</h2>
+						</div>
+						<div class="m-b-2 col-xs-12">
+							<a class="btn btn-secondary-outline m-b-1 video-play" href="javascript:void(0);" role="button">
+								<span class="fa fa-play"></span>
+								<span class="fa fa-pause"></span>
+							</a>
+						</div>
+						<div class="col-xs-12 live-btn-strip">
+							<a class="btn btn-secondary-outline m-b-1 try-it-btn" href="live?default=true" role="button">Try it live</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<section class="section-intro bg-faded text-xs-center">
+		<div class="container">
+			<div class="row features-row">
+				<div class="col-md-6 col-xs-12">
+					<div class="card">
+						<div class="card-block">
+							<div class="col-xs-12 pd-0 img-container">
+								<img class="img-responsive" src="img/icon1.png" alt="" />
+							</div>
+							<h4 class="card-title">Filter views</h4>
+							<h6 class="card-subtitle text-muted">see relevant data</h6>
+							<p class="card-text">sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12">
+					<div class="card">
+						<div class="card-block">
+							<div class="col-xs-12 pd-0 img-container">
+								<img class="img-responsive" src="img/icon2.png" alt="" />
+							</div>
+							<h4 class="card-title">Performant</h4>
+							<h6 class="card-subtitle text-muted">with a modern UI</h6>
+							<p class="card-text">dejavu is built using React v0.14.0 as a serverless app. Whether you are showing 10 records or 10000, it stays snappy.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row features-row">
+				<div class="col-md-6 col-xs-12">
+					<div class="card m-b-0">
+						<div class="card-block">
+							<div class="col-xs-12 pd-0 img-container">
+								<img class="img-responsive" src="img/icon3.png" alt="" />
+							</div>
+							<h4 class="card-title">Fast data updates</h4>
+							<h6 class="card-subtitle text-muted">without page refresh</h6>
+							<p class="card-text">dejavu provides a single-click data reload view. And if your data is hosted with appbase.io, it reflects changes in realtime.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12">
+					<div class="card m-b-0">
+						<div class="card-block">
+							<div class="col-xs-12 pd-0 img-container">
+								<img class="img-responsive" src="img/icon4.svg" alt="" />
+							</div>
+							<h4 class="card-title">Importer</h4>
+							<h6 class="card-subtitle text-muted">Import JSON or CSV</h6>
+							<p class="card-text">Import JSON or CSV data directly</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<p class="p-text">Get the
+					<strong>
+					<a class="highlight-link" href="javascript:void(0)" onclick="chrome.webstore.install()"><img style="display:inline;" src="img/chrome_icon.png" alt="Chrome" class="img-responsive small-icon" /> extension</a>.
+				  </strong> Also available as an <a class="highlight-link" href="https://github.com/appbaseio/dejavu#elasticsearch-plugin---installation"><b>elasticsearch plugin</b></a>.
+				</p>
+			</div>
+		</div>
+	</section>
+	<footer class="section-footer bg-inverse" role="contentinfo">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-lg-7">
+					<ul class="nav nav-inline">
+						<li class="nav-item">
+							<a class="nav-link compare-btn" href="https://github.com/appbaseio/dejavu#comparison-with-other-data-browsers">Compare</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link roadmap-btn" href="https://github.com/appbaseio/dejavu#roadmap">Roadmap</a>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-6 col-lg-5 nav-media">
+					<div class="media">
+						<small class="media-body media-bottom">Built with
+					  <i class="fa fa-heart theme-color"></i> by
+					  <a href="http://appbase.io" class="theme-color">appbase.io</a>
+					</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script src="js/jquery.js"></script>
+	<script src="js/landio.min.js"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
+</body>
+
+</html>
