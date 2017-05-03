@@ -1,6 +1,7 @@
 //This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
 var React = require('react');
+var ReactDOM = require('react-dom');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
 var ReactBootstrap = require('react-bootstrap');
@@ -9,7 +10,7 @@ var ReactBootstrap = require('react-bootstrap');
 // a code block so that highlightjs recognises it.
 var Pretty = React.createClass({
     componentDidMount: function() {
-        var current = React.findDOMNode(this);
+        var current = ReactDOM.findDOMNode(this);
         hljs.highlightBlock(current);
     },
     selectText: function() {
