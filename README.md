@@ -41,7 +41,7 @@ For example: If you are using the chrome-extension instead of docker image, the 
 
 ```sh
 http.port: 9200
-http.cors.allow-origin: "chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh/"
+http.cors.allow-origin: "chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh"
 http.cors.enabled: true
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 http.cors.allow-credentials: true
