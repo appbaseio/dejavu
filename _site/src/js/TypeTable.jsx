@@ -13,7 +13,7 @@ var TypeRow = React.createClass({
     componentDidMount: function() {
         if(BRANCH !== 'chrome') {
             var types = window.storageService.getItem('types');
-            checked = false;
+            var checked = false;
             try {
                 types = JSON.parse(types);
                 if (types.indexOf(this.props.type) !== -1) {
@@ -48,7 +48,7 @@ var TypeRow = React.createClass({
         }
     },
     setType: function(value){
-        checked = false;
+        var checked = false;
         if (value) {
             checked = true;
             this.props.watchTypeHandler(this.props.type);
@@ -184,8 +184,7 @@ var TypeTable = React.createClass({
                 checkValue: typeCheck[singleType]
             };
         }
-        rowObj = [];
-        appname = APPNAME;
+        const rowObj = [];
         for (var type in types) {
             var singleType = types[type];
                 rowObj.push(<TypeRow

@@ -70,9 +70,9 @@ var AppSelect = React.createClass({
             }.bind(this));
         }
 
-        var options = optionsArr.map(function(app, index) {
-            return opt = <li key={index} onClick={this.selectOption.bind(this, app.appname)}>{app.appname}</li>;
-        }.bind(this));
+        var options = optionsArr.map((app, index) => (
+            <li key={index} onClick={this.selectOption.bind(this, app.appname)}>{app.appname}</li>
+        ));
 
         var searchValue = this.state.searchValue;
         var setAppClass = options.length == 0 ? 'hide' : 'autolist setApp col-xs-12 '+this.state.setAppClass;

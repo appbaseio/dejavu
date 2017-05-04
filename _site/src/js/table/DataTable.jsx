@@ -23,7 +23,7 @@ var DataTable = React.createClass({
     render: function() {
         var $this = this;
         var data = this.props._data;
-
+        var fixed, columns, initial_final_cols, fullColumns;
         //If render from sort, dont change the order of columns
         if (!$this.props.sortInfo.active) {
             if ($this.props.infoObj.showing != 0) {
@@ -43,7 +43,7 @@ var DataTable = React.createClass({
             }
             for (var each in data) {
                 fullColumns.type = data[each]['_type'];
-                for (column in data[each]) {
+                for (var column in data[each]) {
                     if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked') {
                         if (fullColumns.columns.indexOf(column) <= -1) {
                             fullColumns.columns.push(column);
@@ -81,11 +81,11 @@ var DataTable = React.createClass({
                     }
                 }
             }
-            renderRow = [];
+            var renderRow = [];
             for (var each in newRow) {
                 var _key = keyGen(data[row], each);
-                elem = document.getElementById(each);
-                visibility = '';
+                var elem = document.getElementById(each);
+                var visibility = '';
 
                 // We see if the column is already closed of open
                 // using the html key attribute and render their

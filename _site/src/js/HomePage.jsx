@@ -112,13 +112,12 @@ var HomePage = React.createClass({
 
 	resetData: function(total, sdata_key) {
 		var sortedArray = [];
-		sdata_values = [];
-
-		for (each in sdata) {
+		var sdata_values = [];
+		Object.keys(sdata).forEach((each) => {
 			if(!(sdata_key && each === sdata_key)) {
 				sdata_values.push(sdata[each]);
 			}
-		}
+		})
 		if(sdata_key) {
 			sdata_values.unshift(sdata[sdata_key]);
 		}
@@ -139,21 +138,22 @@ var HomePage = React.createClass({
 		if (typeof total != 'undefined' && total !== null) {
 			infoObj.searchTotal = total;
 		}
-		data = sortedArray;
-		hiddenColumns = this.state.hiddenColumns;
+		var data = sortedArray;
+		var hiddenColumns = this.state.hiddenColumns;
 		var visibleColumns = [];
 		var availableColumns = [];
-		for (var each in sdata) {
-			for (column in sdata[each]) {
-				if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
+		Object.keys(sdata).forEach((each) => {
+			Object.keys(sdata[each]).forEach((column) => {
+				// if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type') {
+				if (column != '_id' && column != '_type') {
 					if (visibleColumns.indexOf(column) <= -1 && hiddenColumns.indexOf(column) == -1) {
 						visibleColumns.push(column);
 					}
 				if(availableColumns.indexOf(column) <= -1)
 					availableColumns.push(column);
 				}
-			}
-		}
+			});
+		});
 
 		if(availableColumns.length){
 			hiddenColumns.forEach(function(col, key){
@@ -291,7 +291,7 @@ var HomePage = React.createClass({
 		OperationFlag = false;
 		var infoObj = this.state.infoObj;
 		infoObj.showing = 0;
-		totalRecord = 0;
+		var totalRecord = 0;
 		sdata = {};
 		this.setState({
 			infoObj: infoObj,
@@ -325,7 +325,7 @@ var HomePage = React.createClass({
 				//Get the data without filter
 				else {
 					if (types.length) {
-						d1 = new Date();
+						const d1 = new Date();
 						feed.getData(types, function(update, fromStream, total) {
 							if(subsetESTypes.length)
 								this.updateDataOnView(update, total);
@@ -484,7 +484,7 @@ var HomePage = React.createClass({
 	},
 	init_map_stream: function() {
 		try {
-			clearInterval(mappingInterval);
+			clearInterval(this.mappingInterval);
 			clearInterval(streamingInterval);
 		}
 		catch (e) {}
@@ -494,7 +494,7 @@ var HomePage = React.createClass({
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
-			mappingInterval = setInterval(this.setMap, 60 * 1000);
+			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
 			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 		}
@@ -598,7 +598,7 @@ var HomePage = React.createClass({
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
-			mappingInterval = setInterval(this.setMap, 60 * 1000);
+			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
 			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 
@@ -748,7 +748,7 @@ var HomePage = React.createClass({
 		if (APPNAME && !$('.modal-backdrop').hasClass('in')) {
 			var getMappingObj = feed.getMapping();
 			getMappingObj.done(function(data) {
-				mappingObjData = data;
+				const mappingObjData = data;
 				if(!getMapFlag) {
 					$this.setApps(true);
 					getMapFlag = true;
@@ -762,7 +762,7 @@ var HomePage = React.createClass({
 						errorShow: true
 					});
 					appAuth = false;
-					clearInterval(mappingInterval);
+					clearInterval(this.mappingInterval);
 					clearInterval(streamingInterval);
 				}
 			});

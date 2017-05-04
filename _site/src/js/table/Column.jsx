@@ -33,7 +33,7 @@ var Column = React.createClass({
 		var filterId = 'filter-' + item;
 		var datatype = null;
 		var analyzed = true;
-		prettyData = " Clicking on {...} displays the JSON data. ";
+		const prettyData = " Clicking on {...} displays the JSON data. ";
 		var itemText = item == 'json' ? 
 				(<span>
 					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>

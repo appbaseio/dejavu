@@ -83,16 +83,16 @@ var Cell = React.createClass({
         // exposing visibility property allows us to show / hide
         // individual cells
         var vb = this.props.visibility;
-        style = {
+        var style = {
             display: vb
         };
-        data = this.props.item;
+        var data = this.props.item;
         // The id of the html element is generated
         // in keys.js.
-        _id = this.props._id;
-        _type = this.props._type;
-        to_display = data;
-        tdClass = 'column_width columnAdjust';
+        var _id = this.props._id;
+        var _type = this.props._type;
+        var to_display = data;
+        var tdClass = 'column_width columnAdjust';
 
         var columnName = this.props.columnName;
         var radioId = this.props.unique + 'radio';
@@ -107,7 +107,7 @@ var Cell = React.createClass({
             appIdClass += " showRow";
         }
         if (columnName == 'json') {
-            prettyData = <Pretty json={data} />
+            var prettyData = <Pretty json={data} />
             to_display = <div className={appIdClass}>
                             <span className="theme-element selectrow checkbox">
                                 <input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
@@ -125,7 +125,7 @@ var Cell = React.createClass({
             tdClass = 'column_width';
         } else {
             if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean') {
-                prettyData = <Pretty json={data} />
+                var prettyData = <Pretty json={data} />
                 to_display = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
                                 <a href="javascript:void(0);"  className="bracketIcon">
                                 </a>

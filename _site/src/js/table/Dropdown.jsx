@@ -18,15 +18,15 @@ var Dropdown = React.createClass({
         var ColumnsCheckbox = columns.map(function(item, i) {
             var key = dropdownKeyGen(item);
             if (item != 'json')
-                return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={this.key}/>;
+                return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={key}/>;
         });
         return (
             <Dropdown
-            className="dejavu-dropdown pull-right "
-            pullRight={true}
-            noCaret
-            id='ab-dropdown'>
-            <Dropdown.Toggle className='fa fa-cog' noCaret/>
+                className="dejavu-dropdown pull-right "
+                pullRight={true}
+                id='ab-dropdown'
+            >
+            <Dropdown.Toggle className='fa fa-cog'/>
             <Dropdown.Menu>
                 <MenuItem header className='centered-text'>Displayed Attributes</MenuItem>
                 <MenuItem divider/>
