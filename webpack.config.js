@@ -22,7 +22,7 @@ module.exports = {
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				query: {
-					presets: ['env', 'react', 'react-hmre']
+					presets: ['es2015', 'stage-0', 'react', 'react-hmre']
 				}
 			}, {
 				test: /node_modules\/JSONStream\/index\.js$/,
