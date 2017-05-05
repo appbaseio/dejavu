@@ -1,7 +1,7 @@
 {
-  "name": "browser",
-  "version": "0.12.1",
-  "description": "",
+  "name": "dejavu",
+  "version": "0.13.0",
+  "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
     "doc": "docs"
@@ -9,7 +9,9 @@
   "scripts": {
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
-    "build": "bower update && gulp",
+    "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
+    "importerbuild": "webpack -p --progress --colors --config ./importer.webpack.production.config.js",
+    "build": "bower update && npm run dejavubuild && npm run importerbuild && gulp",
     "build_es_plugin": "npm run build",
     "build_chrome_extension": "bower update && gulp chromeBuild",
     "build_gh_pages": "bower update && gulp ghpagesBuild"

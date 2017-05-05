@@ -12,6 +12,25 @@ class Importer extends React.Component {
 		this.checkLoggedIn();
 	}
 
+	componentDidMount() {
+		this.handleLogout();
+		if(this.props.directImporter) {
+			this.open();
+		}
+	}
+
+	handleLogout = () => {
+		window.addEventListener("message", this.onLogout.bind(this), false);
+	};
+
+	onLogout = (params) => {
+		setTimeout(function() {
+			if(params.data === "loggedOut") {
+				this.close();
+			}
+		}.bind(this), 1000);
+	};
+
 	checkLoggedIn = (show) => {
 		this.userInfo = null;
 		this.apps = {};
@@ -22,7 +41,7 @@ class Importer extends React.Component {
 				withCredentials: true
 			}
 		});
-		$.get(this.address + "user")
+		$.get(this.address+"user")
 			.done(function(data) {
 				this.userInfo = data;
 				var storageImporter = localStorage.getItem("importer");
@@ -31,14 +50,14 @@ class Importer extends React.Component {
 					loggedIn: true,
 					show: showFlag
 				}, function() {
-					if (showFlag) {
+					if(showFlag) {
 						$(".typeContainer").addClass("importer-included");
 						localStorage.setItem("importer", "false");
 					}
 				});
 			}.bind(this)).fail(function(e) {
 				console.log(e);
-				if (show) {
+				if(show) {
 					this.setState({
 						loggedIn: false,
 						show: true
@@ -52,29 +71,40 @@ class Importer extends React.Component {
 		this.setState({
 			show: false,
 		});
+		if(this.props.onClose) {
+			this.props.onClose();
+		}
 	};
 
 	open = () => {
 		this.checkLoggedIn(true);
 	};
 
+	getImporterUrl = () => {
+		return "https://appbaseio-confidential.github.io/importer";
+	};
+
 	render() {
 		return (
 			<div className="dejavu-importer">
-				<button onClick={this.open} className="btn btn-primary dejavu-importer-btn">
-					Import JSON or CSV files
-				</button>
+				{
+					this.props.directImporter ? null : (
+						<button onClick={this.open} className="btn btn-primary dejavu-importer-btn">
+							Import JSON or CSV files
+						</button>
+					)
+				}
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
-							<iframe src="https://appbaseio-confidential.github.io/importer/?header=false" frameBorder="0" className="dejavu-importer-iframe" />
+							<iframe src={this.getImporterUrl()} frameBorder="0" className="dejavu-importer-iframe" />
 							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
 				}
 				{
 					this.state.show && !this.state.loggedIn ? (
-						<Login showModal={true}></Login>
+						<Login directImporter={this.props.directImporter} onClose={this.props.onClose} showModal={true}></Login>
 					) : null
 				}
 			</div>

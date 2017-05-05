@@ -79,7 +79,7 @@ class SubscribeModal extends React.Component {
 
 	open = () => {
 		if (!this.state.profile) {
-			if (!$('.fade.in.modal').length) {
+			if (!$('.fade.in.modal').length && !$(".typeContainer").hasClass("importer-included")) {
 				if (this.activetab) {
 					if (storageService.get('dejavuPopuptimerAlreadyOpen') == 'no') {
 						this.setState({ showModal: true });
