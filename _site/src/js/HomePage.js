@@ -506,7 +506,7 @@ var HomePage = createReactClass({
 	init_map_stream: function() {
 		try {
 			clearInterval(this.mappingInterval);
-			clearInterval(this.streamingInterval);
+			clearInterval(streamingInterval);
 		}
 		catch (e) {}
 		
@@ -516,7 +516,7 @@ var HomePage = createReactClass({
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
 			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			this.streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 		}
 	},
@@ -624,7 +624,7 @@ var HomePage = createReactClass({
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
 			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			this.streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
+			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 
 			this.setState({
@@ -797,7 +797,7 @@ var HomePage = createReactClass({
 					});
 					appAuth = false;
 					clearInterval(this.mappingInterval);
-					clearInterval(this.streamingInterval);
+					clearInterval(streamingInterval);
 				}
 			});
 		}
