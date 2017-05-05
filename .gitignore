@@ -5,3 +5,4 @@ _site/dist/
 dejavu-unpacked/
 .DS_Store
 *.log
+react-codemod/
