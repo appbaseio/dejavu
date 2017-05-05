@@ -55,7 +55,8 @@ var files = {
 		dist: '_site/dist/**/*',
 		src: '_site/src/**/*',
 		vendors: '_site/vendors/**/*',
-		buttons: '_site/buttons/**/*'
+		buttons: '_site/buttons/**/*',
+		importer: '_site/importer/**/*'
 	},
 	moveFiles: [
 		'_site/index.html',
@@ -74,18 +75,6 @@ gulp.task('browserify', function() {
 	return b.bundle()
 		.pipe(source('main.js'))
 		.pipe(gulp.dest('./_site/dist'))
-		.pipe(connect.reload());
-});
-
-gulp.task('browserifyImporter', function() {
-	var b = browserify({
-		entries: ['_site/importer/js/app.js'],
-		debug: true
-	});
-	b.transform(reactify); // use the reactify transform
-	return b.bundle()
-		.pipe(source('main.js'))
-		.pipe(gulp.dest('./_site/importer/dist'))
 		.pipe(connect.reload());
 });
 
@@ -146,7 +135,7 @@ gulp.task('connect', function() {
 	connect.server({
 		root: '_site',
 		livereload: true,
-		port: 1358
+		port: 8000
 	});
 });
 
@@ -160,33 +149,12 @@ gulp.task('bundle', [
 	'moveJs'
 ]);
 
-gulp.task('compact', ['browserify'], function() {
-	return gulp.src('_site/dist/main.js')
-		.pipe(uglify())
-		.pipe(rename({
-			suffix: '.min'
-		}))
-		.pipe(gulp.dest('_site/dist'))
-		.pipe(connect.reload());
-});
 
-gulp.task('compactImporter', ['browserifyImporter'], function() {
-	return gulp.src('_site/importer/dist/main.js')
-		.pipe(uglify())
-		.pipe(rename({
-			suffix: '.min'
-		}))
-		.pipe(gulp.dest('_site/importer/dist'))
-		.pipe(connect.reload());
-});
-
-gulp.task('watch', ['bundle', 'compact', 'compactImporter', 'connect'], function() {
-	gulp.watch('_site/src/js/*/*.jsx', ['compact', 'compactImporter']);
-	gulp.watch('_site/src/js/*.jsx', ['compact', 'compactImporter']);
+gulp.task('watch', ['bundle'], function() {
 	gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle', 'compact', 'compactImporter'], function() {
+gulp.task('chromeBuild', ['bundle'], function() {
 	var folders_length = Object.keys(files.folders).length;
 	for (folder in files.folders) {
 		gulp.src(files.folders[folder])
@@ -196,7 +164,7 @@ gulp.task('chromeBuild', ['bundle', 'compact', 'compactImporter'], function() {
 		.pipe(gulp.dest('./dejavu-unpacked'));
 });
 
-gulp.task('ghpagesBuild', ['bundle', 'compact', 'compactImporter'], function() {
+gulp.task('ghpagesBuild', ['bundle'], function() {
 	var folders_length = Object.keys(files.folders).length;
 	for (folder in files.folders) {
 		gulp.src(files.folders[folder])
@@ -206,4 +174,4 @@ gulp.task('ghpagesBuild', ['bundle', 'compact', 'compactImporter'], function() {
 		.pipe(gulp.dest('./live'));
 });
 
-gulp.task('default', ['bundle', 'compact', 'compactImporter']);
+gulp.task('default', ['bundle']);
