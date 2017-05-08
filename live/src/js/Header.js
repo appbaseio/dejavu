@@ -18,7 +18,7 @@ class Header extends React.Component {
 					</span>
 				</div>
 				<div className="tag-line">
-					he Missing Web UI for Elasticsearch
+					The Missing Web UI for Elasticsearch
 				</div>
 				{subscribeModal}
 			</header>
