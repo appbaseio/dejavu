@@ -1,7 +1,8 @@
 node_modules/
 site
+dist
+live/bower_components/
 dejavu-unpacked/
-live/bower_components
 react-codemod
 .DS_Store
 *.log
