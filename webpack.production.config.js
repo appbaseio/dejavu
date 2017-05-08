@@ -2,18 +2,13 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-	entry: ["babel-polyfill", path.join(__dirname, '_site/src/js/app.js')],
+	entry: ["babel-polyfill", path.join(__dirname, 'live/src/js/app.js')],
 	output: {
-		path: path.join(__dirname, './_site/dist/js'),
+		path: path.join(__dirname, './live/dist/js'),
 		publicPath: '/dist/js/',
 		filename: 'main.js'
 	},
 	devtool: false,
-	devServer: {
-		inline: true,
-		port: 8000,
-		contentBase: './_site'
-	},
 	module: {
 		loaders: [{
 				test: /.jsx?$/,

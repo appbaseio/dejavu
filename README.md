@@ -80,7 +80,7 @@ $ npm run build_gh_pages
 
 #### Contributing
 
-The source code is under the ``_site/src`` directory.
+The source code is under the ``live/src`` directory.
 You can make pull requests against the ``dev`` branch.
 
 ---

@@ -4,17 +4,16 @@ var webpack = require('webpack');
 const debug = process.env.NODE_ENV !== "production";
 
 module.exports = {
-	entry: ["babel-polyfill", path.join(__dirname, '_site/src/js/app.js')],
+	entry: ["babel-polyfill", path.join(__dirname, 'live/src/js/app.js')],
 	output: {
-		path: path.join(__dirname, './_site/dist/js'),
+		path: path.join(__dirname, './live/dist/js'),
 		publicPath: '/dist/js/',
 		filename: 'main.js'
 	},
 	devtool: 'inline-sourcemap',
 	devServer: {
 		inline: true,
-		port: 8000,
-		contentBase: './_site'
+		port: 1358
 	},
 	module: {
 		loaders: [{

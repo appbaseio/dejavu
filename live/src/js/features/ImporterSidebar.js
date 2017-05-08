@@ -5,7 +5,7 @@ var GoBackToDejavu = require('./GoBackToDejavu.js');
 class ImporterSidebar extends React.Component {
 	open = () => {
 		sessionStorage.setItem("dejavuUrl", window.location.href);
-		window.location.href = "./importer/index.html"
+		window.location.href = "../importer/index.html"
 	};
 
 	render() {

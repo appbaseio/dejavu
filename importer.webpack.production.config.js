@@ -2,17 +2,12 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-	entry: ["babel-polyfill", path.join(__dirname, '_site/importer/js/app.js')],
+	entry: ["babel-polyfill", path.join(__dirname, 'importer/js/app.js')],
 	output: {
-		path: path.join(__dirname, './_site/importer/dist'),
+		path: path.join(__dirname, './importer/dist'),
 		filename: 'main.js'
 	},
 	devtool: false,
-	devServer: {
-		inline: true,
-		port: 8000,
-		contentBase: './_site'
-	},
 	module: {
 		loaders: [{
 				test: /.jsx?$/,
