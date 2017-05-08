@@ -4,7 +4,7 @@ var React = require('react');
 import { Tabs, Tab } from 'react-bootstrap';
 var TypeTable = require('./TypeTable.js');
 var QueryList= require('./QueryList/index.js');
-var Importer = require('./features/Importer.js');
+var ImporterSidebar = require('./features/ImporterSidebar.js');
 
 class Sidebar extends React.Component {
 	state = {};
@@ -16,7 +16,7 @@ class Sidebar extends React.Component {
 					eventKey={1} 
 					title="Types">
 					<TypeTable {...this.props.typeProps} />
-					<Importer />
+					<ImporterSidebar />
 				</Tab>
 				<Tab 
 					eventKey={2} 
