@@ -1,7 +1,7 @@
 node_modules/
 dist
-_site/bower_components/
-_site/dist/
+live/bower_components/
+live/dist/
 dejavu-unpacked/
 .DS_Store
 *.log
