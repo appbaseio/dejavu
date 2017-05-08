@@ -1,6 +1,5 @@
 node_modules/
 site
-dist
 live/bower_components/
 dejavu-unpacked/
 react-codemod
