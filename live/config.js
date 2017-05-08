@@ -1,4 +1,4 @@
-const BRANCH = 'gh-pages';
+const BRANCH = 'dev';
 var config = {
 	"hostname": "scalr.api.appbase.io",
 	"appname": "2016primaries",
