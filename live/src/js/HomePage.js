@@ -1004,6 +1004,7 @@ var HomePage = createReactClass({
 	applyFilter: function(typeName, columnName, method, value, analyzed) {
 		var $this = this;
 		var filterInfo = this.state.filterInfo;
+		var filterVal;
 		if(columnName) {
 			filterVal = $.isArray(value) ? value : value.split(',');
 			var filterObj = {};
@@ -1088,9 +1089,11 @@ var HomePage = createReactClass({
 				externalQueryApplied: false
 			}, function() {
 				this.removeFilter();
-				if(cb) {
-					cb();
-				}
+				try {
+					if(cb) {
+						cb();
+					}
+				} catch(e) {console.log(e)}
 			}.bind(this));
 		}
 	},

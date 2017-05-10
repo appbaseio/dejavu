@@ -46,7 +46,7 @@ class Column extends React.Component {
 		
 		//get the datatype if field is not json & type mapping has properties field
 		try {
-			if (item != 'json' && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
+			if (item != 'json' && this.props.mappingObj[type] && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
 				datatype = this.props.mappingObj[type]['properties'][item].type;
 				analyzed = this.props.mappingObj[type]['properties'][item].index == 'not_analyzed' ? false : true;
 			}
