@@ -33,7 +33,7 @@ class Cell extends React.Component {
 	};
 
 	selectRecord = (ele) => {
-		var checkFlag;
+		var checkFlag, checkbox, _id, _type, row;
 		if (this.state.checked) {
 			this.setState({
 				checked: false
