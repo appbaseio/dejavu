@@ -19,7 +19,7 @@ class DataTable extends React.Component {
 	render() {
 		var $this = this;
 		var data = this.props._data;
-		var fixed, columns, initial_final_cols, fullColumns;
+		var fixed = [], columns, initial_final_cols;
 		//If render from sort, dont change the order of columns
 		if (!$this.props.sortInfo.active) {
 			if ($this.props.infoObj.showing != 0) {
@@ -36,7 +36,7 @@ class DataTable extends React.Component {
 				type: '',
 				columns: columns,
 				final_cols: initial_final_cols
-			}
+			};
 			for (var each in data) {
 				fullColumns.type = data[each]['_type'];
 				for (var column in data[each]) {
@@ -56,9 +56,9 @@ class DataTable extends React.Component {
 		var rows = [];
 		var visibleColumns = [];
 		var renderColumns = [];
-
 		for (var row in data) {
 			var newRow = {};
+			var columns = fullColumns.columns;
 			newRow['json'] = data[row]['json'];
 			// newRow['_type'] = data[row]['_type'];
 			// newRow['_id'] = data[row]['_id'];

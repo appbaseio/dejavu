@@ -11,7 +11,7 @@ var FieldCheckbox = require('./FieldCheckbox.js');
 class ColumnDropdown extends React.Component {
 	render() {
 		var $this = this;
-		var columns = this.props.cols;
+		var columns = this.props.cols ? this.props.cols : [] ;
 		// We'll get the dropdown menu items i.e. checkboxes
 		// as a list of react components i.e FieldCheckbox.
 		var ColumnsCheckbox = columns.map(function(item, i) {

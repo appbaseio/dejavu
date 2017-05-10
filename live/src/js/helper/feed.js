@@ -16,7 +16,7 @@ function getDataSize() {
 }
 
 const DATA_SIZE = getDataSize();
-var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval;
+var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;

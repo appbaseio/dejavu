@@ -20,10 +20,11 @@ class FieldCheckbox extends React.Component {
 	// when we check/uncheck a checkbox, all the elements
 	// which belong to that column should be visible/invisible
 	// we do this by assigning specific keys to them. check KeyGen.
-	check(elementId, event) {
+	check(elementId) {
 		var checked = true;
-		if (elementId == 'type / id')
+		if (elementId == 'type / id') {
 			elementId = 'json';
+		}
 		if (document.getElementById(elementId).style.display === "none") {
 			document.getElementById(elementId).style.display = "";
 			checked = true;
@@ -58,7 +59,7 @@ class FieldCheckbox extends React.Component {
 					id={key} 
 					type="checkbox" key={key}
 					defaultChecked={this.state.isChecked} 
-					onChange={this.check.bind(null, this.props._type)} readOnly={false}/>
+					onChange={this.check.bind(this, this.props._type)} readOnly={false}/>
 					<label htmlFor={key}> {this.props._type} </label>
 				</div>
 			</div>

@@ -8,7 +8,7 @@ class Info extends React.Component {
 	};
 
 	selectToggleChange = () => {
-		var checkFlag;
+		var checkFlag, checkbox;
 		if(this.state.selectToggle) {
 			this.setState({
 				selectToggle: false
