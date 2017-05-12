@@ -27,3 +27,9 @@
 .dejavu-importer .dejavu-importer-iframe-container .dejavu-importer-close:hover {
 	background: #FF8484;
 }
+.dejavu-importer-btn {
+	margin: 5px 0;
+}
+.dejavu-importer-direct .dejavu-importer-btn {
+	margin-top: 0;
+}

@@ -16,7 +16,8 @@ class Sidebar extends React.Component {
 					eventKey={1} 
 					title="Types">
 					<TypeTable {...this.props.typeProps} />
-					<ImporterSidebar />
+					<ImporterSidebar clone={true} {...this.props.importer} />
+					<ImporterSidebar {...this.props.importer} />
 				</Tab>
 				<Tab 
 					eventKey={2} 
