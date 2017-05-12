@@ -772,7 +772,7 @@ footer {
 }
 
 .left-tab {
-	height: calc(100% - 32px);
+	height: calc(100% - 36px);
 	overflow: auto;
 }
 
@@ -848,7 +848,7 @@ footer {
 }
 
 #dejavu-sidebar .tab-content {
-	height: calc(100% - 43px);
+	height: calc(100% - 62px);
 	overflow: auto;
 }
 

@@ -441,7 +441,8 @@ var HomePage = createReactClass({
 			this.setState({
 				types: update,
 				typeCheck: typeCheck,
-				connect: true
+				connect: true,
+				appname: APPNAME
 			}, function() {
 				mirageLink(function() {});
 			});
@@ -1647,6 +1648,10 @@ var HomePage = createReactClass({
 											'externalQueryApplied': this.state.externalQueryApplied,
 											'removeExternalQuery':this.removeExternalQuery,
 											'types': this.state.types
+										}}
+										importer={{
+											appname: this.state.appname,
+											url: this.state.url
 										}}
 									/>
 								</div>

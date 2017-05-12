@@ -1,6 +1,8 @@
 var React = require('react');
 var Login = require('./Login.js');
 var GoBackToDejavu = require('./GoBackToDejavu.js');
+// const importerURL = "http://127.0.0.1:1357/";
+const importerURL = "https://appbaseio-confidential.github.io/importer/";
 
 class Importer extends React.Component {
 	state = {
@@ -80,8 +82,10 @@ class Importer extends React.Component {
 		this.checkLoggedIn(true);
 	};
 
-	getImporterUrl = () => {
-		return "https://appbaseio-confidential.github.io/importer";
+	getImporterURL = () => {
+		const importerFrom = sessionStorage.getItem("importFrom");
+		sessionStorage.removeItem("importFrom");
+		return importerFrom ? importerURL+importerFrom : importerURL;
 	};
 
 	render() {
@@ -97,7 +101,7 @@ class Importer extends React.Component {
 				{
 					this.state.show && this.state.loggedIn ? (
 						<div className="dejavu-importer-iframe-container">
-							<iframe src={this.getImporterUrl()} frameBorder="0" className="dejavu-importer-iframe" />
+							<iframe src={this.getImporterURL()} frameBorder="0" className="dejavu-importer-iframe" />
 							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
