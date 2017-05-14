@@ -12,7 +12,8 @@ class ImporterSidebar extends React.Component {
 					hosturl: this.props.url
 				}
 			};
-			sessionStorage.setItem("importFrom", `?app=${JSON.stringify(importerApp)}`);
+			const importFrom = `?app=${JSON.stringify(importerApp)}`;
+			localStorage.setItem("importFrom", importFrom);
 		}
 		window.location.href = "../importer/index.html"
 	};

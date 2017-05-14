@@ -25,12 +25,15 @@
 	<!-- CSS HERE -->
 	<link rel="stylesheet" type="text/css" href="../live/dist/css/vendor.min.css" />
 	<link rel="stylesheet" type="text/css" href="../live/dist/css/style.min.css" />
+	<script type="text/javascript" src="../live/dist/js/vendor.min.js"></script>
+	<script type="text/javascript">
+		localStorage.setItem("importer", "true");
+	</script>
 </head>
 
 <body>
 	<div class="container-fluid mainContainer" id="main"></div>
-	<script type="text/javascript" src="../live/dist/js/vendor.min.js"></script>
-	<script src="dist/main.js"></script>
+	<script src="../bundle/importer.js"></script>
 </body>
 
 </html>

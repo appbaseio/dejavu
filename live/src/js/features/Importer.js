@@ -6,19 +6,14 @@ const importerURL = "https://appbaseio-confidential.github.io/importer/";
 
 class Importer extends React.Component {
 	state = {
-		show: false,
-		loggedIn: false
+		show: true,
+		loggedIn: null,
+		importerURL: null
 	};
-
-	componentWillMount() {
-		this.checkLoggedIn();
-	}
 
 	componentDidMount() {
 		this.handleLogout();
-		if(this.props.directImporter) {
-			this.open();
-		}
+		this.open();
 	}
 
 	handleLogout = () => {
@@ -46,25 +41,18 @@ class Importer extends React.Component {
 		$.get(this.address+"user")
 			.done(function(data) {
 				this.userInfo = data;
-				var storageImporter = localStorage.getItem("importer");
-				var showFlag = show ? show : (storageImporter && storageImporter === "true" ? true : false);
 				this.setState({
 					loggedIn: true,
-					show: showFlag
+					importerURL: this.getImporterURL()
 				}, function() {
-					if(showFlag) {
-						$(".typeContainer").addClass("importer-included");
-						localStorage.setItem("importer", "false");
-					}
+					$(".typeContainer").addClass("importer-included");
 				});
 			}.bind(this)).fail(function(e) {
 				console.log(e);
-				if(show) {
-					this.setState({
-						loggedIn: false,
-						show: true
-					});
-				}
+				this.setState({
+					loggedIn: false,
+					show: true
+				});
 			}.bind(this));
 	};
 
@@ -83,8 +71,8 @@ class Importer extends React.Component {
 	};
 
 	getImporterURL = () => {
-		const importerFrom = sessionStorage.getItem("importFrom");
-		sessionStorage.removeItem("importFrom");
+		const importerFrom = localStorage.getItem("importFrom");
+		localStorage.removeItem("importFrom");
 		return importerFrom ? importerURL+importerFrom : importerURL;
 	};
 
@@ -99,15 +87,15 @@ class Importer extends React.Component {
 					)
 				}
 				{
-					this.state.show && this.state.loggedIn ? (
+					this.state.show && this.state.loggedIn && this.state.importerURL ? (
 						<div className="dejavu-importer-iframe-container">
-							<iframe src={this.getImporterURL()} frameBorder="0" className="dejavu-importer-iframe" />
+							<iframe src={this.state.importerURL} frameBorder="0" className="dejavu-importer-iframe" />
 							<GoBackToDejavu onConfirm={this.close} />
 						</div>
 					) : null
 				}
 				{
-					this.state.show && !this.state.loggedIn ? (
+					this.state.show && this.state.loggedIn === false ? (
 						<Login directImporter={this.props.directImporter} onClose={this.props.onClose} showModal={true}></Login>
 					) : null
 				}

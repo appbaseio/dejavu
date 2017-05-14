@@ -4,11 +4,14 @@ var webpack = require('webpack');
 const debug = process.env.NODE_ENV !== "production";
 
 module.exports = {
-	entry: ["babel-polyfill", path.join(__dirname, 'live/src/js/app.js')],
+	entry: {
+		live: ["babel-polyfill", path.join(__dirname, 'live/src/js/app.js')],
+		importer: ["babel-polyfill", path.join(__dirname, 'importer/js/app.js')]
+	},
 	output: {
-		path: path.join(__dirname, './live/dist/js'),
-		publicPath: '/dist/js/',
-		filename: 'main.js'
+		path: path.join(__dirname, './bundle'),
+		publicPath: '/bundle/',
+		filename: '[name].js'
 	},
 	devtool: 'inline-sourcemap',
 	devServer: {
