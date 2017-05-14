@@ -10,9 +10,11 @@ class ImporterSidebar extends React.Component {
 				"importFrom": {
 					appname: this.props.appname,
 					hosturl: this.props.url
-				}
+				},
+				"platform": "appbase"
 			};
-			sessionStorage.setItem("importFrom", `?app=${JSON.stringify(importerApp)}`);
+			const importFrom = `?app=${JSON.stringify(importerApp)}`;
+			localStorage.setItem("importFrom", importFrom);
 		}
 		window.location.href = "../importer/index.html"
 	};

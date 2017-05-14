@@ -10,8 +10,7 @@
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
-    "importerbuild": "webpack -p --progress --colors --config ./importer.webpack.production.config.js",
-    "build": "bower update && npm run dejavubuild && npm run importerbuild && gulp",
+    "build": "bower update && npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
     "build_chrome_extension": "bower update && gulp chromeBuild"
   },
