@@ -10,7 +10,8 @@ class ImporterSidebar extends React.Component {
 				"importFrom": {
 					appname: this.props.appname,
 					hosturl: this.props.url
-				}
+				},
+				"platform": "appbase"
 			};
 			const importFrom = `?app=${JSON.stringify(importerApp)}`;
 			localStorage.setItem("importFrom", importFrom);
