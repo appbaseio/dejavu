@@ -44,7 +44,7 @@ var Utils = function() {
 		setTimeout(function() {
 			this.editorref = help.setCodeMirror('setBody');
 		}.bind(this), 300);
-	}
+	};
 	this.closeModal = function() {
 		this.setState({
 			showModal: false,
@@ -55,11 +55,11 @@ var Utils = function() {
 			},
 			selectClass: ''
 		});
-	}
+	};
 	this.applySelect = function() {
 		//apply select2 for auto complete
 		if (!this.state.validate.type && typeof this.props.types != 'undefined' && typeof this.props.selectClass != 'undefined')
 			this.applySelect();
-	}
+	};
 }
 module.exports = new Utils();
