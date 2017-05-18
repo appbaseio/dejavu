@@ -2,29 +2,15 @@ var React = require('react');
 var createReactClass = require('create-react-class');
 var DataTable = require('./table/DataTable.js');
 var FeatureComponent = require('./features/FeatureComponent.js');
-var ShareLink = require('./features/ShareLink.js');
-var AppSelect = require('./AppSelect.js');
 var Header = require('./Header.js');
 var Sidebar = require('./Sidebar.js');
 var QueryList = require('./QueryList/index.js');
 var PureRenderMixin = require('react-addons-pure-render-mixin');
-
-
-// This is the file which commands the data update/delete/append.
-// Any react component that wishes to modify the data state should
-// do so by flowing back the data and calling the `resetData` function
-//here. This is sort of like the Darth Vader - Dangerous and
-// Commands everything !
-//
-// ref: https://facebook.github.io/react/docs/two-way-binding-helpers.html
+var SharedComponents = require('./helper/SharedComponents');
 
 var HomePage = createReactClass({
 	displayName: 'HomePage',
 	mixins: [PureRenderMixin],
-	// The underlying data structure that holds the documents/records
-	// is a hashmap with keys as `_id + _type`(refer to keys.js). Its
-	// because no two records can have the same _type _id pair, so its
-	// easy to check if a record already exists.
 	getInitialState: function() {
 		return {
 			documents: [],
@@ -78,11 +64,6 @@ var HomePage = createReactClass({
 			dejavuExportData: null
 		};
 	},
-	//The record might have nested json objects. They can't be shown
-	//as is since it looks cumbersome in the table. What we do in the
-	//case of a nested json object is, we replace it with a font-icon
-	//(in injectLink) which upon clicking shows a Modal with the json
-	//object it contains.
 	flatten: function(data, callback) {
 		var response = help.flatten(data);
 		return callback(response.data, response.fields);
@@ -93,13 +74,7 @@ var HomePage = createReactClass({
 	deleteRow: function(index) {
 		delete sdata[index];
 	},
-	//We cannot render a hashmap of documents on the table,
-	//hence we convert that to a list of documents every time
-	//there is a delete/update/change. This can be more optimised
-	//later but it is not that expensive right now, read writes to
-	//DOM are much more expensive.
 	resetData: function(total, sdata_key) {
-		//set the combined state
 		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
 	},
 	// Logic to stream continuous data.
@@ -175,7 +150,18 @@ var HomePage = createReactClass({
 		}
 	},
 	streamCallback: function(total, fromStream, method) {
-		this.setState(help.streamCallback(total, fromStream, method, this.state.externalQueryApplied, this.state.externalQueryTotal, this.state.totalRecord));
+		var reacordObj;
+		if(this.state.externalQueryApplied) {
+			reacordObj = {
+				externalQueryTotal: help.countExternalTotalRecord(total, fromStream, method, this.state.totalRecord)
+			};
+			feed.externalQueryTotal = reacordObj.externalQueryTotal;
+		} else {
+			reacordObj = {
+				totalRecord: help.countTotalRecord(total, fromStream, method, this.state.totalRecord)
+			};
+		}
+		this.setState(reacordObj);
 	},
 	onEmptySelection: function() {
 		this.setState(help.onEmptySelection(this.state.infoObj));
@@ -187,23 +173,9 @@ var HomePage = createReactClass({
 		function startGet() {
 			if (!OperationFlag) {
 				OperationFlag = true;
-
-				//If filter is applied apply filter data
-				if(this.state.externalQueryApplied && this.state.extQuery) {
-					// this.externalQuery({
-					// 	query: this.state.extQuery,
-					// 	type: this.state.extType,
-					// });
-				}
-				else if (this.state.filterInfo.active) {
-					// var filterInfo = this.state.filterInfo;
-					// debugger
-					// filterInfo.appliedFilter.forEach(function(filterItem) {
-					// 	this.applyFilter(types, filterItem.columnName, filterItem.method, filterItem.value, filterItem.analyzed);
-					// }.bind(this));
+				if (this.state.filterInfo.active) {
 					this.applyFilter(types);
 				}
-				//Get the data without filter
 				else {
 					if (types.length) {
 						const d1 = new Date();
@@ -227,7 +199,6 @@ var HomePage = createReactClass({
 	getQueryBody: function() {
 		return help.getQueryBody(this.state.filterInfo, this.state.externalQueryApplied);
 	},
-	// only called on change in types.
 	getStreamingTypes: function() {
 		if (typeof APPNAME == 'undefined' || APPNAME == null) {
 			setTimeout(this.getTotalRecord, 1000);
@@ -266,21 +237,15 @@ var HomePage = createReactClass({
 		}.bind(this));
 	},
 	componentWillMount: function() {
-		if(BRANCH === 'appbase') {
+		if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
 			this.setState({
 				splash: false
 			});
-		} else {
-			if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
-				this.setState({
-					splash: false
-				});
-				if(window.location.href.indexOf('?default=true') > -1) {
-					this.connectSync(config);
-				} else {
-					config = {};
-					getUrl(this.connectSync);
-				}
+			if(window.location.href.indexOf('?default=true') > -1) {
+				this.connectSync(config);
+			} else {
+				config = {};
+				getUrl(this.connectSync);
 			}
 		}
 	},
@@ -376,7 +341,6 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-
 	watchStock: function(typeName) {
 		if(this.state.externalQueryApplied) {
 			this.removeExternalQuery();
@@ -529,7 +493,6 @@ var HomePage = createReactClass({
 			this.getStreamingTypes();
 		}.bind(this), 2000);
 	},
-
 	getTypeDoc: function(editorref) {
 		var selectedTypes = $('#setType').val();
 		var selectedType;
@@ -568,44 +531,20 @@ var HomePage = createReactClass({
 		}
 	},
 	applyFilter: function(typeName, columnName, method, value, analyzed) {
-		var $this = this;
-		var filterInfo = this.state.filterInfo;
-		var filterVal;
-		if(columnName) {
-			filterVal = $.isArray(value) ? value : value.split(',');
-			var filterObj = {};
-			filterObj['type'] = typeName;
-			filterObj['columnName'] = columnName;
-			filterObj['method'] = method;
-			filterObj['value'] = filterVal;
-			filterObj['active'] = true;
-			filterObj['analyzed'] = analyzed;
-			if(filterInfo.appliedFilter) {
-				filterInfo.appliedFilter.push(filterObj);
-			} else {
-				filterInfo.appliedFilter = [filterObj];
-			}
-			filterInfo.active = true;
-			this.setState({
-				filterInfo: filterInfo
-			});
-		}
-		//Store state of filter
-		var filter_state = JSON.parse(JSON.stringify(filterInfo));
-		delete filter_state.applyFilter;
-		input_state.filterInfo = filter_state;
-		createUrl(input_state);
+		const helpFilter = help.applyFilter.call(this, typeName, columnName, method, value, analyzed, this.state.filterInfo);
+		this.setState(helpFilter);
+		var filterInfo = helpFilter.filterInfo;
 		// method, columnName, filterVal, subsetESTypes, analyzed
 		if (typeName != '' && typeName != null) {
 			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
 				if (!fromStream) {
 					sdata = [];
-					$this.resetData(total);
+					this.resetData(total);
 				}
 				setTimeout(function() {
 					if (update != null)
-						$this.updateDataOnView(update);
-				}, 500);
+						this.updateDataOnView(update);
+				}.bind(this), 500);
 			}.bind(this), function(total, fromStream, method) {
 				this.streamCallback(total, fromStream, method);
 			}.bind(this));
@@ -615,36 +554,24 @@ var HomePage = createReactClass({
 		this.removeSelection();
 	},
 	externalQuery: function(query) {
-		var $this = this;
-		try {
-			query.query = JSON.parse(query.query);
-		} catch(e) {}
-		try {
-			query.type = JSON.parse(query.type);
-		} catch(e) {}
-		this.removeTypes();
-		this.setState({
-			extQuery: query.query,
-			extType: query.type,
-			externalQueryApplied: true
-		}, this.removeFilter);
-		$('.full_page_loading').removeClass('hide');
-		feed.externalQuery(query.query, query.type , function(update, fromStream, total) {
+		this.setState(help.externalQueryPre(query, this.removeTypes), this.removeFilter);
+		feed.externalQuery(query.query, query.type , (update, fromStream, total) => {
 			if (!fromStream) {
 				sdata = [];
-				$this.setState({
+				this.setState({
 					externalQueryTotal: total
 				});
-				$this.resetData(total);
+				this.resetData(total);
 			}
-			setTimeout(function() {
-				if (update != null)
-					$this.updateDataOnView(update);
-					$('.full_page_loading').addClass('hide');
+			setTimeout(() => {
+				if (update != null) {
+					this.updateDataOnView(update);
+				}
+				$('.full_page_loading').addClass('hide');
 			}, 500);
-		}.bind(this), function(total, fromStream, method) {
+		}, (total, fromStream, method) => {
 			this.streamCallback(total, fromStream, method);
-		}.bind(this));
+		});
 	},
 	removeExternalQuery: function(cb) {
 		if(this.state.externalQueryApplied) {
@@ -654,58 +581,16 @@ var HomePage = createReactClass({
 			}, function() {
 				this.removeFilter();
 				try {
-					if(cb) {
-						cb();
-					}
-				} catch(e) {console.log(e)}
+					if(cb) { cb(); }
+				} catch(e) {}
 			}.bind(this));
 		}
 	},
 	removeFilter: function(index) {
-		var $this = this;
-		var appliedFilter = this.state.filterInfo.appliedFilter;
-		appliedFilter.splice(index, 1);
-		var obj = {
-			active: appliedFilter.length ? true : false,
-			applyFilter: this.applyFilter,
-			appliedFilter: appliedFilter
-		};
-		this.setState({
-			filterInfo: obj
-		});
-		//Remove filterInfo from store
-		if(!obj.active) {
-			if(input_state.hasOwnProperty('filterInfo')) {
-				delete input_state.filterInfo;
-				createUrl(input_state);
-			}
-			if(!$this.state.externalQueryApplied) {
-				sdata = [];
-				$this.resetData();
-				setTimeout(function() {
-					$this.getStreamingData(subsetESTypes);
-				}, 500);
-			}
-			this.removeSelection();
-		} else {
-			this.applyFilter(subsetESTypes);
-		}
+		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.state.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
 	},
 	removeSort: function() {
-		var docs = this.state.documents;
-		var sortedArray = help.sortIt(docs, '_type', false);
-		this.setState({
-			documents: sortedArray
-		});
-		this.setState({
-			sortInfo: {
-				active: false
-			}
-		});
-		if(input_state.hasOwnProperty('sortInfo')) {
-			delete input_state.sortInfo;
-			createUrl(input_state);
-		}
+		this.setState(help.removeSort(this.state.documents));
 	},
 	columnToggle: function() {
 		var self = this;
@@ -834,11 +719,6 @@ var HomePage = createReactClass({
 	hideUrlChange: function() {
 		this.setState(help.hideUrlChange(this.state.hideUrl));
 	},
-	//The homepage is built on two children components(which may
-	//have other children components). TypeTable renders the
-	//streaming types and DataTable renders the streaming documents.
-	//main.js ties them together.
-
 	render: function() {
 		var self = this;
 		var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
@@ -859,97 +739,46 @@ var HomePage = createReactClass({
 		var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
 		var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
 		var index_create_text = (<div className="index-create-info col-xs-12"></div>);
-		if(BRANCH === 'master' && this.state.show_index_info && this.state.current_appname.length && !this.state.app_match_flag) {
-			index_create_text = (<p className="danger-text"> A new index '{this.state.current_appname}' will be created.</p>);
-		}
 		var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
-		if(BRANCH === 'chrome') {
-			githubStar = (<a href="https://github.com/appbaseio/dejavu" target="_blank">
-							<img src="buttons/appbaseio-dejavu.png" alt="Dejavu"/>
-						</a>);
-		}
 		var composeQuery;
 		if(this.state.connect) {
-			composeQuery = (<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default"> 
-								 Query View <i className="fa fa-external-link-square"></i>
-								</a>);
+			composeQuery = (<SharedComponents.ComposeQuery />);
 		}
 		function initialForm() {
-			var form = null;
-			if(BRANCH !== 'appbase') {
-				form = (
-				<form className={EsForm} id="init-ES">
-					<div className="vertical0">
-						<div className="vertical1">
-							<div className="esContainer">
-								<div className="img-container">
-									<img src="assets/img/icon.png" />
-								</div>
-								<div>
-								  <h1>Déjà vu</h1>
-								  <h4 className="dejavu-bottomline">The Missing Web UI for Elasticsearch</h4>
-								  {index_create_text}
-								</div>
-								<ShareLink btn={shareBtn}> </ShareLink>
-								{composeQuery}
-								<div className="splashIn">
-									<div className="form-group m-0 col-xs-4 pd-0 pr-5">
-										<AppSelect 
-											connect={self.state.connect} 
-											splash={self.state.splash} 
-											setConfig={self.setConfig} 
-											apps={self.state.historicApps} 
-											appnameCb={self.appnameCb} />
-									</div>
-									<div className="col-xs-8 m-0 pd-0 pr-5 form-group">
-										<div className="url-container">
-											<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-												value={url}
-												onChange={self.valChange}  {...opts} />
-											<span className={hideUrl} style={hideEye}>
-												<a className="btn btn-default"
-													onClick={self.hideUrlChange}>
-													{hideUrlText}
-												</a>
-											</span>
-										</div>
-									</div>
-								</div>
-								<div className="submit-btn-container">
-									<a className={esBtn} onClick={self.connectPlayPause}>
-										<i className={playClass}></i>
-										<i className={pauseClass}></i>
-										{esText}
-									</a>
-									{
-										this.state && this.state.splash ? (
-											<a className="btn btn-default m-l10" href="../importer/index.html">
-												Import JSON or CSV files
-											</a>
-										) : null
-									}
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>);
-			}
+			var form = (
+				<SharedComponents.InitialForm
+					EsForm={EsForm}
+					index_create_text={index_create_text}
+					shareBtn={shareBtn}
+					appSelect={{
+						connect: self.state.connect,
+						splash: self.state.splash,
+						setConfig: self.setConfig,
+						apps: self.state.historicApps,
+						appnameCb: self.appnameCb
+					}}
+					url={url}
+					valChange={self.valChange}
+					opts={opts}
+					hideUrl={hideUrl}
+					hideEye={hideEye}
+					hideUrlChange={self.hideUrlChange}
+					hideUrlText={hideUrlText}
+					esBtn={esBtn}
+					connectPlayPause={self.connectPlayPause}
+					playClass={playClass}
+					pauseClass={pauseClass}
+					esText={esText}
+					splash={self.state.splash}
+					composeQuery={composeQuery}
+				/>
+			);
 			return form;
 		}
 		var footer;
 		queryParams = getQueryParameters();
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('f')))) {
-			footer = (
-				<footer className="text-center">
-					<a href="http://appbaseio.github.io/dejavu">Watch Video</a>
-					<span className="text-right pull-right powered_by">
-						Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-					</span>
-					<span className="pull-left github-star">
-						{githubStar}
-					</span>
-				</footer>
-			);
+			footer = (<SharedComponents.FooterCombine githubStar={githubStar} />);
 		}
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('h')))) {
 			var dejavuForm = initialForm.call(this);

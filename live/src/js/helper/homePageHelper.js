@@ -715,5 +715,89 @@ var help = {
 			visibleColumns: visibleColumns,
 			hiddenColumns: hiddenColumns
 		};
+	},
+	removeSort: function(docs) {
+		var sortedArray = help.sortIt(docs, '_type', false);
+		if(input_state.hasOwnProperty('sortInfo')) {
+			delete input_state.sortInfo;
+			createUrl(input_state);
+		}
+		return {
+			documents: sortedArray,
+			sortInfo: {
+				active: false
+			}
+		};
+	},
+	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn) {
+		var appliedFilter = filterInfo.appliedFilter;
+		appliedFilter.splice(index, 1);
+		var obj = {
+			active: appliedFilter.length ? true : false,
+			applyFilter: applyFilter,
+			appliedFilter: appliedFilter
+		};
+		//Remove filterInfo from store
+		if(!obj.active) {
+			if(input_state.hasOwnProperty('filterInfo')) {
+				delete input_state.filterInfo;
+				createUrl(input_state);
+			}
+			if(!externalQueryApplied) {
+				sdata = [];
+				resetData();
+				setTimeout(function() {
+					getStreamingData(subsetESTypes);
+				}, 500);
+			}
+			removeSelection();
+		} else {
+			applyFilterFn(subsetESTypes);
+		}
+		return {
+			filterInfo: obj
+		};
+	},
+	externalQueryPre: function(query, removeTypes) {
+		try {
+			query.query = JSON.parse(query.query);
+		} catch(e) {}
+		try {
+			query.type = JSON.parse(query.type);
+		} catch(e) {}
+		removeTypes();
+		$('.full_page_loading').removeClass('hide');
+		return {
+			extQuery: query.query,
+			extType: query.type,
+			externalQueryApplied: true
+		};
+	},
+	applyFilter: function(typeName, columnName, method, value, analyzed, filterInfo) {
+		var filterVal;
+		if(columnName) {
+			filterVal = $.isArray(value) ? value : value.split(',');
+			var filterObj = {};
+			filterObj['type'] = typeName;
+			filterObj['columnName'] = columnName;
+			filterObj['method'] = method;
+			filterObj['value'] = filterVal;
+			filterObj['active'] = true;
+			filterObj['analyzed'] = analyzed;
+			if(filterInfo.appliedFilter) {
+				filterInfo.appliedFilter.push(filterObj);
+			} else {
+				filterInfo.appliedFilter = [filterObj];
+			}
+			filterInfo.active = true;
+		}
+		//Store state of filter
+		var filter_state = JSON.parse(JSON.stringify(filterInfo));
+		delete filter_state.applyFilter;
+		input_state.filterInfo = filter_state;
+		createUrl(input_state);
+		return {
+			filterInfo: filterInfo
+		};
 	}
 }
