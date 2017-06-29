@@ -1,10 +1,6 @@
-var browserify = require('browserify');
 var gulp = require('gulp');
-var source = require("vinyl-source-stream");
-var reactify = require('reactify');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
-var connect = require('gulp-connect');
 var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 
@@ -66,18 +62,6 @@ var files = {
 	]
 };
 
-gulp.task('browserify', function() {
-	var b = browserify({
-		entries: ['live/src/js/app.js'],
-		debug: true
-	});
-	b.transform(reactify); // use the reactify transform
-	return b.bundle()
-		.pipe(source('main.js'))
-		.pipe(gulp.dest('./live/dist'))
-		.pipe(connect.reload());
-});
-
 gulp.task('vendorcss', function() {
 	return gulp.src(files.css.vendor)
 		.pipe(concat('vendor.min.css'))
@@ -93,7 +77,6 @@ gulp.task('customcss', function() {
 
 
 gulp.task('cssChanges', ['customcss'], function() {
-	connect.reload();
 });
 
 gulp.task('vendorjs', function() {
@@ -129,14 +112,6 @@ gulp.task('moveJs', function() {
 			'live/vendors/JSONURL.js'
 		])
 		.pipe(gulp.dest('live/dist/vendor'));
-});
-
-gulp.task('connect', function() {
-	connect.server({
-		root: 'live',
-		livereload: true,
-		port: 8000
-	});
 });
 
 gulp.task('bundle', [
