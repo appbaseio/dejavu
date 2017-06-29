@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
-    "babel-core": "^6.24.0",
+    "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.0",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
@@ -54,6 +54,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "react": "^15.5.4",
+    "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4"
   },
