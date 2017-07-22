@@ -19,6 +19,8 @@ class ImportData extends React.Component {
 	open = () => {
 		this.setState({
 			showModal: true
+		}, () => {
+			$('.modal-text').hide();
 		});
 		this.props.exportJsonData();
 	};
