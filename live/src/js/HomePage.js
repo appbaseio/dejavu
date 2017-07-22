@@ -587,7 +587,7 @@ var HomePage = createReactClass({
 		}
 	},
 	removeFilter: function(index) {
-		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.state.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
+		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
 	},
 	removeSort: function() {
 		this.setState(help.removeSort(this.state.documents));
