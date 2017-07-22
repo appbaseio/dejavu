@@ -72,15 +72,19 @@ class ImportData extends React.Component {
 		return (<div className="pull-left">
 					<a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
 					  <i className="fa fa-cloud-download"></i>
+					  &nbsp;Export
 					</a>
 					<Modal show={this.state.showModal} onHide={this.close}>
 					  <Modal.Header closeButton>
-						<Modal.Title>Export data <span className="small-span">in json</span></Modal.Title>
+						<Modal.Title>Export Data <span className="small-span"></span></Modal.Title>
 					  </Modal.Header>
 					  <Modal.Body>
-						<p className="json-spinner"> 
+						<p className="json-spinner">
 							<i className="fa fa-spinner fa-spin"></i>
-							<span>&nbsp;Please wait, while we are loading</span>
+							<span>&nbsp;We are fetching the result data, please wait...</span>
+						</p>
+						<p className="modal-text">
+							Download the result data as a JSON or CSV file.
 						</p>
 						{
 							this.props.dejavuExportData ? (
@@ -88,12 +92,12 @@ class ImportData extends React.Component {
 									<a id="jsonlink"
 										className="btn btn-success m-r10"
 										onClick={this.downloadJSON}>
-										Download json
+										Download as JSON
 									</a>
 									<a id="csvlink"
 										className="btn btn-success"
 										onClick={this.downloadCSV}>
-										Download csv
+										Download as CSV
 									</a>
 								</div>
 							) : null
