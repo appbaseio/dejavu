@@ -10,10 +10,10 @@
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
-    "build": "bower update && npm run dejavubuild && gulp",
+    "build": "bower update --allow-root && npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
-    "build_chrome_extension": "bower update && gulp chromeBuild",
-    "build_gh_pages": "bower update && gulp ghpagesBuild"
+    "build_chrome_extension": "bower update --allow-root && gulp chromeBuild",
+    "build_gh_pages": "bower update --allow-root && gulp ghpagesBuild"
   },
   "repository": {
     "type": "git",
