@@ -109,7 +109,8 @@ gulp.task('moveFonts', function() {
 
 gulp.task('moveJs', function() {
 	return gulp.src(['live/bower_components/lzma/src/lzma_worker.js',
-			'live/vendors/JSONURL.js'
+			'live/vendors/JSONURL.js',
+			'node_modules/papaparse/papaparse.min.js',
 		])
 		.pipe(gulp.dest('live/dist/vendor'));
 });

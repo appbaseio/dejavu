@@ -3,8 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
 	entry: {
-		live: ["babel-polyfill", path.join(__dirname, 'live/src/js/app.js')],
-		importer: ["babel-polyfill", path.join(__dirname, 'importer/js/app.js')]
+		live: [path.join(__dirname, 'live/src/js/app.js')],
+		importer: [path.join(__dirname, 'importer/js/app.js')]
 	},
 	output: {
 		path: path.join(__dirname, './bundle'),

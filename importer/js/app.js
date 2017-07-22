@@ -1,3 +1,4 @@
+import "babel-polyfill";
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Importer = require('../../live/src/js/features/Importer.js');

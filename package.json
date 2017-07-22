@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "0.13.0",
+  "version": "1.0.0-alpha",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -10,9 +10,10 @@
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
-    "build": "bower update && npm run dejavubuild && gulp",
+    "build": "bower update --allow-root && npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
-    "build_chrome_extension": "bower update && gulp chromeBuild"
+    "build_chrome_extension": "bower update --allow-root && gulp chromeBuild",
+    "build_gh_pages": "bower update --allow-root && gulp ghpagesBuild"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.24.1",
+    "bower": "^1.8.0",
     "concurrently": "^3.4.0",
     "create-react-class": "^15.5.2",
     "css-loader": "^0.27.3",
@@ -53,6 +55,7 @@
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "papaparse": "^4.3.3",
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",

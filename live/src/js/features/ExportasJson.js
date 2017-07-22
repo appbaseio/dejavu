@@ -23,10 +23,50 @@ class ImportData extends React.Component {
 		this.props.exportJsonData();
 	};
 
-	downloadFile = () => {
-		var file = new File([this.props.dejavuExportData], "data.json", { type: "text/plain;charset=utf-8" });
+	downloadJSON = () => {
+		var file = new File([this.props.dejavuExportData], "data.json", { type: "application/json;charset=utf-8" });
 		saveAs(file);
 	};
+
+	downloadCSV = () => {
+		try {
+			let exportData = JSON.parse(this.props.dejavuExportData);
+			exportData = exportData.map(item => {
+				item = Object.assign(item, item._source);
+				delete item._source;
+				return this.flatten(item)
+			});
+			const newData = Papa.unparse(exportData, config);
+			const file = new File([newData], "data.csv", { type: "text/comma-separated-values;charset=utf-8" });
+			saveAs(file);
+		} catch(e) {
+			console.log(e);
+		}
+	};
+
+	flatten = (data) => {
+		var result = {};
+		function recurse (cur, prop) {
+			if (Object(cur) !== cur) {
+				result[prop] = cur;
+			} else if (Array.isArray(cur)) {
+				for(var i=0, l=cur.length; i<l; i++)
+					recurse(cur[i], prop + "[" + i + "]");
+				if (l == 0)
+					result[prop] = [];
+			} else {
+				var isEmpty = true;
+				for (var p in cur) {
+					isEmpty = false;
+					recurse(cur[p], prop ? prop+"."+p : p);
+				}
+				if (isEmpty && prop)
+					result[prop] = {};
+			}
+		}
+		recurse(data, "");
+		return result;
+	}
 
 	render() {
 		return (<div className="pull-left">
@@ -44,11 +84,18 @@ class ImportData extends React.Component {
 						</p>
 						{
 							this.props.dejavuExportData ? (
-								<a id="jsonlink"
-									className="btn btn-success"
-									onClick={this.downloadFile}>
-									Download json
-								</a>
+								<div>
+									<a id="jsonlink"
+										className="btn btn-success m-r10"
+										onClick={this.downloadJSON}>
+										Download json
+									</a>
+									<a id="csvlink"
+										className="btn btn-success"
+										onClick={this.downloadCSV}>
+										Download csv
+									</a>
+								</div>
 							) : null
 						}
 					  </Modal.Body>
