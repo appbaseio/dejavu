@@ -32,10 +32,10 @@ class ImportData extends React.Component {
 		try {
 			let exportData = JSON.parse(this.props.dejavuExportData);
 			exportData = exportData.map(item => {
+				item = Object.assign(item, item._source);
 				delete item._source;
 				return this.flatten(item)
 			});
-			console.log(exportData);
 			const newData = Papa.unparse(exportData, config);
 			const file = new File([newData], "data.csv", { type: "text/comma-separated-values;charset=utf-8" });
 			saveAs(file);
