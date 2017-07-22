@@ -54,6 +54,7 @@
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "papaparse": "^4.3.3",
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",

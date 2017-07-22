@@ -3,7 +3,6 @@
   "dependencies": {
     "appbase-js": "latest",
     "jquery": "~2.1.4",
-    "react": "~0.14.0",
     "react-bootstrap": "~0.25.1",
     "underscore": "~1.8.3",
     "bootstrap": "~3.3.6",
