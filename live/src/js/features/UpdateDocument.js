@@ -1,9 +1,10 @@
-//This contains the extra features like
-//Import data, Export Data, Add document, Pretty Json
-var React = require('react');
-import { Modal, Button } from 'react-bootstrap';
+// This contains the extra features like
+// Import data, Export Data, Add document, Pretty Json
+const React = require("react");
 
-//Update Document
+import { Modal, Button } from "react-bootstrap";
+
+// Update Document
 class UpdateDocument extends React.Component {
 	state = {
 		showModal: false,
@@ -25,7 +26,7 @@ class UpdateDocument extends React.Component {
 				touch: false,
 				body: false
 			},
-			selectClass: ''
+			selectClass: ""
 		});
 	};
 
@@ -33,14 +34,14 @@ class UpdateDocument extends React.Component {
 		this.setState({
 			showModal: true
 		});
-		setTimeout(function() {
-			this.editorref = help.setCodeMirror('setBodyUpdate');
-		}.bind(this), 300);
+		setTimeout(() => {
+			this.editorref = help.setCodeMirror("setBodyUpdate");
+		}, 300);
 		this.props.actionOnRecord.getUpdateObj();
 	};
 
 	validateInputCheck = () => {
-		var validateClass = this.state.validate;
+		const validateClass = this.state.validate;
 		validateClass.touch = true;
 		validateClass.body = this.IsJsonString(this.editorref.getValue());
 		this.setState({
@@ -61,58 +62,60 @@ class UpdateDocument extends React.Component {
 	};
 
 	render() {
-		var typeList = '';
-		var actionOnRecord = this.props.actionOnRecord;
+		const typeList = "";
+		const actionOnRecord = this.props.actionOnRecord;
 		if (this.state.validate.touch) {
 			var validateClass = {};
-			validateClass.body = this.state.validate.body ? 'form-group' : 'form-group has-error';
+			validateClass.body = this.state.validate.body ? "form-group" : "form-group has-error";
 		} else {
 			var validateClass = {
-				type: 'form-group',
-				body: 'form-group'
+				type: "form-group",
+				body: "form-group"
 			};
 		}
 
 		return (
 			<div className="inlineBlock pd-r10 pull-left">
-		<a href="javascript:void(0);" className='btn btn-default themeBtn'  title="Update" onClick={this.open} >
-		  <i className="fa fa-pencil greyBtn"></i>&nbsp;&nbsp;Update
+				<a href="javascript:void(0);" className="btn btn-default themeBtn" title="Update" onClick={this.open} >
+					<i className="fa fa-pencil greyBtn" />&nbsp;&nbsp;Update
 		</a>
-		<Modal className="modal-warning" show={this.state.showModal} onHide={this.close}>
-		  <Modal.Header closeButton>
-			<Modal.Title>Update Data</Modal.Title>
-		  </Modal.Header>
-		  <Modal.Body>
-			<form className="form-horizontal" id="updateObjectForm">
-			  <div className="form-group">
-				<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka Table)</span></label>
-				<div className="col-sm-9">
-					<input type="text" className="form-control" id="type" name="type" value={actionOnRecord.type} readOnly />
-				</div>
-			  </div>
-			  <div className="form-group">
-				<label htmlFor="inputPassword3" className="col-sm-3 control-label">Document Id</label>
-				<div className="col-sm-9">
-				  <input type="text" className="form-control" id="setId"
-				  value={actionOnRecord.id} readOnly placeholder="set Id" name="id" />
-				</div>
-			  </div>
-			  <div className={validateClass.body}>
-				<label htmlFor="inputPassword3" className="col-sm-3 control-label">JSON <span className="small-span">(partial object)</span></label>
-				<div className="col-sm-9">
-				  <textarea id="setBodyUpdate" className="form-control" rows="10" name="body" defaultValue={actionOnRecord.row}></textarea>
-				   <span className="help-block">
+				<Modal className="modal-warning" show={this.state.showModal} onHide={this.close}>
+					<Modal.Header closeButton>
+						<Modal.Title>Update Data</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<form className="form-horizontal" id="updateObjectForm">
+							<div className="form-group">
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka Table)</span></label>
+								<div className="col-sm-9">
+									<input type="text" className="form-control" id="type" name="type" value={actionOnRecord.type} readOnly />
+								</div>
+							</div>
+							<div className="form-group">
+								<label htmlFor="inputPassword3" className="col-sm-3 control-label">Document Id</label>
+								<div className="col-sm-9">
+									<input
+										type="text" className="form-control" id="setId"
+										value={actionOnRecord.id} readOnly placeholder="set Id" name="id"
+									/>
+								</div>
+							</div>
+							<div className={validateClass.body}>
+								<label htmlFor="inputPassword3" className="col-sm-3 control-label">JSON <span className="small-span">(partial object)</span></label>
+								<div className="col-sm-9">
+									<textarea id="setBodyUpdate" className="form-control" rows="10" name="body" defaultValue={actionOnRecord.row} />
+									<span className="help-block">
 					  Body is required and should be valid JSON.
 					</span>
-				</div>
-			  </div>
-			</form>
-		  </Modal.Body>
-		  <Modal.Footer>
-			<Button bsStyle="warning" onClick={this.validateInputCheck}>Update</Button>
-		  </Modal.Footer>
-		</Modal>
-	  </div>
+								</div>
+							</div>
+						</form>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button bsStyle="warning" onClick={this.validateInputCheck}>Update</Button>
+					</Modal.Footer>
+				</Modal>
+			</div>
 		);
 	}
 }

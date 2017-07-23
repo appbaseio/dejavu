@@ -1,9 +1,11 @@
-var React = require('react');
-import { ButtonToolbar, DropdownButton, MenuItem, Dropdown } from 'react-bootstrap';
-var SingleMenuItem = require('./SingleMenuItem.js');
+const React = require("react");
+
+import { ButtonToolbar, DropdownButton, MenuItem, Dropdown } from "react-bootstrap";
+
+const SingleMenuItem = require("./SingleMenuItem.js");
 
 
-//Filter dropdown for each column header
+// Filter dropdown for each column header
 class FilterDropdown extends React.Component {
 	state = {
 		filterField: null,
@@ -19,7 +21,7 @@ class FilterDropdown extends React.Component {
 
 	boolFilter = (value) => {
 		this.setState({
-			filterField: 'term',
+			filterField: "term",
 			filterValue: value
 		});
 	};
@@ -31,95 +33,90 @@ class FilterDropdown extends React.Component {
 	};
 
 	applyFilter = () => {
-		if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '')
-			this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.props.analyzed);
+		if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != "")			{ this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.props.analyzed); }
 	};
 
 	render() {
-		var datatype = this.props.datatype;
-		var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
-		var self = this;
-		
+		let datatype = this.props.datatype;
+		const applyBtn = this.state.filterValue == "" ? "true" : "false";
+		const self = this;
+
 		function createDropItem(method, availableValues) {
 			function filterRender(value, index) {
-				var currentItem;
-				switch(method) {
-					case 'boolean':
-						currentItem = (<SingleMenuItem key={index} boolFilter={self.boolFilter}  columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={self.props.datatype} getFilterVal={self.getFilterVal} val={value} />);
-					break;
-					case 'date':
+				let currentItem;
+				switch (method) {
+					case "boolean":
+						currentItem = (<SingleMenuItem key={index} boolFilter={self.boolFilter} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={self.props.datatype} getFilterVal={self.getFilterVal} val={value} />);
+						break;
+					case "date":
 						currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} datatype={datatype} getFilterVal={self.getFilterVal} val={value} />);
-					break;
-					case 'string':
+						break;
+					case "string":
 						currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
-					break;
-					case 'number':
+						break;
+					case "number":
 						currentItem = (<SingleMenuItem key={index} columnField={self.props.columnField} filterField={self.state.filterField} changeFilter={self.changeFilter} getFilterVal={self.getFilterVal} val={value} />);
-					break;
+						break;
 				}
 				return currentItem;
-			};
-			var newAvailableValues = availableValues.map(function(value, index) {
-				return filterRender(value, index);
-			});
-			if(newAvailableValues.length) {
-				return (<Dropdown.Menu className="menuItems pull-right">
-							{newAvailableValues}
-							<div className="singleItem">
-								<button className='btn btn-info col-xs-12' onClick={self.applyFilter}>Apply</button>
-							</div>
-						</Dropdown.Menu>);
-			} else {
-				return null;
 			}
+			const newAvailableValues = availableValues.map((value, index) => filterRender(value, index));
+			if (newAvailableValues.length) {
+				return (<Dropdown.Menu className="menuItems pull-right">
+					{newAvailableValues}
+					<div className="singleItem">
+						<button className="btn btn-info col-xs-12" onClick={self.applyFilter}>Apply</button>
+					</div>
+				</Dropdown.Menu>);
+			}
+			return null;
 		}
 
-		var stringFilter = createDropItem('string', ['search', 'has', 'has not']);
-		var numberFilter = createDropItem('number', ['greater than', 'less than']);
-		var dateFilter = createDropItem('date', ['greater than', 'less than', 'range']);
-		var booleanFilter = createDropItem('boolean', ['true', 'false']);
+		const stringFilter = createDropItem("string", ["search", "has", "has not"]);
+		const numberFilter = createDropItem("number", ["greater than", "less than"]);
+		const dateFilter = createDropItem("date", ["greater than", "less than", "range"]);
+		const booleanFilter = createDropItem("boolean", ["true", "false"]);
 
-		var FilterMenuItems = '';
+		let FilterMenuItems = "";
 
 		switch (datatype) {
-			case 'string':
-			case 'text':
-			case 'keyword':
+			case "string":
+			case "text":
+			case "keyword":
 				FilterMenuItems = stringFilter;
 				break;
-			case 'long':
-			case 'integer':
-			case 'short':
-			case 'byte':
-			case 'double':
-			case 'float':
+			case "long":
+			case "integer":
+			case "short":
+			case "byte":
+			case "double":
+			case "float":
 				FilterMenuItems = numberFilter;
 				break;
-			case 'date':
+			case "date":
 				FilterMenuItems = dateFilter;
 				break;
-			case 'boolean': 
+			case "boolean":
 				FilterMenuItems = booleanFilter;
-			break;    
+				break;
 			default:
 				datatype = null;
 				break;
 		}
 
 		if (datatype == null) {
-			return (<span></span>);
-		} else {
-			return (<div className="filterDropdown">
-					<ButtonToolbar>
-						<Dropdown id="ab" className="filterDropdownContainer">
-						  <Dropdown.Toggle className="filterBtn">
-							<i className="fa fa-filter"></i>
-						  </Dropdown.Toggle>
-							{FilterMenuItems}
-						</Dropdown>
-					</ButtonToolbar>
-				</div>);
+			return (<span />);
 		}
+		return (<div className="filterDropdown">
+			<ButtonToolbar>
+				<Dropdown id="ab" className="filterDropdownContainer">
+					<Dropdown.Toggle className="filterBtn">
+						<i className="fa fa-filter" />
+					</Dropdown.Toggle>
+					{FilterMenuItems}
+				</Dropdown>
+			</ButtonToolbar>
+		</div>);
 	}
 }
 

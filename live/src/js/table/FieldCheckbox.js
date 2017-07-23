@@ -1,4 +1,4 @@
-var React = require('react');
+const React = require("react");
 
 // The problem with checkboxes in bootstrap and react-bootstrap while using
 // them in react is that if you keep the fields checked by default, the don't
@@ -6,9 +6,9 @@ var React = require('react');
 class FieldCheckbox extends React.Component {
 	constructor(props) {
 		super(props);
-		var elemID = props._type;
-		var checked = true;
-		var elem = document.getElementById(elemID);
+		const elemID = props._type;
+		let checked = true;
+		const elem = document.getElementById(elemID);
 		if (elem && elem.style.display === "none") {
 			checked = false;
 		}
@@ -21,9 +21,9 @@ class FieldCheckbox extends React.Component {
 	// which belong to that column should be visible/invisible
 	// we do this by assigning specific keys to them. check KeyGen.
 	check(elementId) {
-		var checked = true;
-		if (elementId == 'type / id') {
-			elementId = 'json';
+		let checked = true;
+		if (elementId == "type / id") {
+			elementId = "json";
 		}
 		if (document.getElementById(elementId).style.display === "none") {
 			document.getElementById(elementId).style.display = "";
@@ -33,7 +33,7 @@ class FieldCheckbox extends React.Component {
 			// their id and then change their visibility.
 			for (var each in sdata) {
 				var key = keyGen(sdata[each], elementId);
-				document.getElementById(key).style.display = ""
+				document.getElementById(key).style.display = "";
 			}
 		} else {
 			document.getElementById(elementId).style.display = "none";
@@ -41,7 +41,7 @@ class FieldCheckbox extends React.Component {
 
 			for (var each in sdata) {
 				var key = keyGen(sdata[each], elementId);
-				document.getElementById(key).style.display = "none"
+				document.getElementById(key).style.display = "none";
 			}
 		}
 		this.setState({
@@ -51,15 +51,16 @@ class FieldCheckbox extends React.Component {
 	}
 
 	render() {
-		var key = dropdownKeyGen(this.props._type);
+		const key = dropdownKeyGen(this.props._type);
 		return (
-			<div className='ab-menu-item'>
+			<div className="ab-menu-item">
 				<div className="checkbox theme-element">
-					<input 
-					id={key} 
-					type="checkbox" key={key}
-					defaultChecked={this.state.isChecked} 
-					onChange={this.check.bind(this, this.props._type)} readOnly={false}/>
+					<input
+						id={key}
+						type="checkbox" key={key}
+						defaultChecked={this.state.isChecked}
+						onChange={this.check.bind(this, this.props._type)} readOnly={false}
+					/>
 					<label htmlFor={key}> {this.props._type} </label>
 				</div>
 			</div>

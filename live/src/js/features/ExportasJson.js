@@ -1,7 +1,8 @@
-//This contains the extra features like
-//Import data, Export Data, Add document, Pretty Json
-var React = require('react');
-import { Modal, Button } from 'react-bootstrap';
+// This contains the extra features like
+// Import data, Export Data, Add document, Pretty Json
+const React = require("react");
+
+import { Modal, Button } from "react-bootstrap";
 
 class ImportData extends React.Component {
 	state = {
@@ -20,50 +21,47 @@ class ImportData extends React.Component {
 		this.setState({
 			showModal: true
 		}, () => {
-			$('.modal-text').hide();
+			$(".modal-text").hide();
 		});
 		this.props.exportJsonData();
 	};
 
 	downloadJSON = () => {
-		var file = new File([this.props.dejavuExportData], "data.json", { type: "application/json;charset=utf-8" });
+		const file = new File([this.props.dejavuExportData], "data.json", { type: "application/json;charset=utf-8" });
 		saveAs(file);
 	};
 
 	downloadCSV = () => {
 		try {
 			let exportData = JSON.parse(this.props.dejavuExportData);
-			exportData = exportData.map(item => {
+			exportData = exportData.map((item) => {
 				item = Object.assign(item, item._source);
 				delete item._source;
-				return this.flatten(item)
+				return this.flatten(item);
 			});
 			const newData = Papa.unparse(exportData, config);
 			const file = new File([newData], "data.csv", { type: "text/comma-separated-values;charset=utf-8" });
 			saveAs(file);
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	};
 
 	flatten = (data) => {
-		var result = {};
-		function recurse (cur, prop) {
+		const result = {};
+		function recurse(cur, prop) {
 			if (Object(cur) !== cur) {
 				result[prop] = cur;
 			} else if (Array.isArray(cur)) {
-				for(var i=0, l=cur.length; i<l; i++)
-					recurse(cur[i], prop + "[" + i + "]");
-				if (l == 0)
-					result[prop] = [];
+				for (var i = 0, l = cur.length; i < l; i++)					{ recurse(cur[i], `${prop}[${i}]`); }
+				if (l == 0)					{ result[prop] = []; }
 			} else {
-				var isEmpty = true;
-				for (var p in cur) {
+				let isEmpty = true;
+				for (const p in cur) {
 					isEmpty = false;
-					recurse(cur[p], prop ? prop+"."+p : p);
+					recurse(cur[p], prop ? `${prop}.${p}` : p);
 				}
-				if (isEmpty && prop)
-					result[prop] = {};
+				if (isEmpty && prop)					{ result[prop] = {}; }
 			}
 		}
 		recurse(data, "");
@@ -72,41 +70,45 @@ class ImportData extends React.Component {
 
 	render() {
 		return (<div className="pull-left">
-					<a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
-					  <i className="fa fa-cloud-download"></i>
+			<a title="export" className="btn btn-default themeBtn m-r5 export-json-btn pull-left" onClick={this.open} >
+				<i className="fa fa-cloud-download" />
 					  &nbsp;Export
 					</a>
-					<Modal show={this.state.showModal} onHide={this.close}>
-					  <Modal.Header closeButton>
-						<Modal.Title>Export Data <span className="small-span"></span></Modal.Title>
-					  </Modal.Header>
-					  <Modal.Body>
-						<p className="json-spinner">
-							<i className="fa fa-spinner fa-spin"></i>
-							<span>&nbsp;We are fetching the result data, please wait...</span>
-						</p>
-						<p className="modal-text">
+			<Modal show={this.state.showModal} onHide={this.close}>
+				<Modal.Header closeButton>
+					<Modal.Title>Export Data <span className="small-span" /></Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<p className="json-spinner">
+						<i className="fa fa-spinner fa-spin" />
+						<span>&nbsp;We are fetching the result data, please wait...</span>
+					</p>
+					<p className="modal-text">
 							Download the result data as a JSON or CSV file.
 						</p>
-						{
+					{
 							this.props.dejavuExportData ? (
 								<div>
-									<a id="jsonlink"
+									<a
+										id="jsonlink"
 										className="btn btn-success m-r10"
-										onClick={this.downloadJSON}>
+										onClick={this.downloadJSON}
+									>
 										Download as JSON
 									</a>
-									<a id="csvlink"
+									<a
+										id="csvlink"
 										className="btn btn-success"
-										onClick={this.downloadCSV}>
+										onClick={this.downloadCSV}
+									>
 										Download as CSV
 									</a>
 								</div>
 							) : null
 						}
-					  </Modal.Body>
-					</Modal>
-				  </div>);
+				</Modal.Body>
+			</Modal>
+		</div>);
 	}
 }
 

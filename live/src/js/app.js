@@ -1,6 +1,7 @@
 import "babel-polyfill";
-var React = require('react');
-var ReactDOM = require('react-dom');
-var HomePage = require('./HomePage.js');
 
-ReactDOM.render(<HomePage />, document.getElementById('main'));
+const React = require("react");
+const ReactDOM = require("react-dom");
+const HomePage = require("./HomePage.js");
+
+ReactDOM.render(<HomePage />, document.getElementById("main"));

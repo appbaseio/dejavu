@@ -1,26 +1,26 @@
-//This contains the extra features like
-//Import data, Export Data, Add document, Pretty Json
-var React = require('react');
-var AddDocument = require('./AddDocument.js');
-var ImportData = require('./ImportData.js');
-var Pretty = require('./Pretty.js');
-var SignalCircle = require('./SignalCircle.js');
-var RemoveFilterButton = require('./RemoveFilterButton.js');
-var UpdateDocument = require('./UpdateDocument.js');
-var DeleteDocument = require('./DeleteDocument.js');
-var ErrorModal = require('./ErrorModal.js');
-var ExportasJson = require('./ExportasJson.js');
+// This contains the extra features like
+// Import data, Export Data, Add document, Pretty Json
+const React = require("react");
+const AddDocument = require("./AddDocument.js");
+const ImportData = require("./ImportData.js");
+const Pretty = require("./Pretty.js");
+const SignalCircle = require("./SignalCircle.js");
+const RemoveFilterButton = require("./RemoveFilterButton.js");
+const UpdateDocument = require("./UpdateDocument.js");
+const DeleteDocument = require("./DeleteDocument.js");
+const ErrorModal = require("./ErrorModal.js");
+const ExportasJson = require("./ExportasJson.js");
 
-var FeatureComponent = {
-	AddDocument: AddDocument,
-	ImportData: ImportData,
-	Pretty: Pretty,
-	SignalCircle: SignalCircle,
-	RemoveFilterButton: RemoveFilterButton,
-	UpdateDocument: UpdateDocument,
-	DeleteDocument: DeleteDocument,
-	ErrorModal: ErrorModal,
-	ExportasJson: ExportasJson
+const FeatureComponent = {
+	AddDocument,
+	ImportData,
+	Pretty,
+	SignalCircle,
+	RemoveFilterButton,
+	UpdateDocument,
+	DeleteDocument,
+	ErrorModal,
+	ExportasJson
 };
 
 module.exports = FeatureComponent;

@@ -1,29 +1,31 @@
-var React = require('react');
-import { OverlayTrigger, Popover } from 'react-bootstrap';
+const React = require("react");
+
+import { OverlayTrigger, Popover } from "react-bootstrap";
 
 class ShareLink extends React.Component {
 	state = {
-		url: '',
-		copied: ''
+		url: "",
+		copied: ""
 	};
 
 	selectText = () => {
-		var url = convertToUrl('gh-pages');
-		this.setState({ url: url, copied: '' });
-		setTimeout(function() {
-			var ele = document.getElementById('for-share');
-			var succeed = this.copyToClipboard(ele);
+		const url = convertToUrl("gh-pages");
+		this.setState({ url, copied: "" });
+		setTimeout(() => {
+			const ele = document.getElementById("for-share");
+			const succeed = this.copyToClipboard(ele);
 			if (succeed) {
-				this.setState({ copied: 'Link is copied to clipboard!' });
+				this.setState({ copied: "Link is copied to clipboard!" });
 			}
-		}.bind(this), 500);
+		}, 500);
 	};
 
 	copyToClipboard = (elem) => {
 		// create hidden text element, if it doesn't already exist
-		var targetId = "_hiddenCopyText_";
-		var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
-		var origSelectionStart, origSelectionEnd;
+		const targetId = "_hiddenCopyText_";
+		const isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+		let origSelectionStart,
+			origSelectionEnd;
 		if (isInput) {
 			// can just use the original source element for the selection and copy
 			target = elem;
@@ -43,12 +45,12 @@ class ShareLink extends React.Component {
 			target.textContent = elem.textContent;
 		}
 		// select the content
-		var currentFocus = document.activeElement;
+		const currentFocus = document.activeElement;
 		target.focus();
 		target.setSelectionRange(0, target.value.length);
 
 		// copy the selection
-		var succeed;
+		let succeed;
 		try {
 			succeed = document.execCommand("copy");
 		} catch (e) {
@@ -73,21 +75,22 @@ class ShareLink extends React.Component {
 	componentDidUpdate() {}
 
 	render() {
-		return (<div className = {this.props.btn} >
-				<OverlayTrigger rootClose trigger = "click" onClick = {this.selectText} placement = "right" overlay = 
-				  { 
-					<Popover id="share_pop" className = "nestedJson" >
-					  <div className="share_content">
-						<input type="text" className="form-control" value={this.state.url} onChange={this.changeUrl} id="for-share" />
-						<p className="mt-10">{this.state.copied}</p> 
-					  </div>
+		return (<div className={this.props.btn} >
+			<OverlayTrigger
+				rootClose trigger="click" onClick={this.selectText} placement="right" overlay={
+					<Popover id="share_pop" className="nestedJson" >
+						<div className="share_content">
+							<input type="text" className="form-control" value={this.state.url} onChange={this.changeUrl} id="for-share" />
+							<p className="mt-10">{this.state.copied}</p>
+						</div>
 					</Popover>
-				  } >
-				<a href = "javascript:void(0);" className = "btn btn-default" >
-				  <i className = "fa fa-share-alt"> </i> 
-				</a> 
-				</OverlayTrigger> 
-			  </div>);
+				  }
+			>
+				<a href="javascript:void(0);" className="btn btn-default" >
+					<i className="fa fa-share-alt" />
+				</a>
+			</OverlayTrigger>
+		</div>);
 	}
 }
 

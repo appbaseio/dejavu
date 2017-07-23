@@ -1,5 +1,6 @@
-var React = require('react');
-import { Modal } from 'react-bootstrap';
+const React = require("react");
+
+import { Modal } from "react-bootstrap";
 
 class Login extends React.Component {
 	state = {
@@ -9,16 +10,16 @@ class Login extends React.Component {
 	close = () => {
 		this.setState({
 			showModal: false
-		}, function() {
-			if(this.props.onClose) {
+		}, function () {
+			if (this.props.onClose) {
 				this.props.onClose();
 			}
 		});
 	};
 
 	login = (provider) => {
-		const baseURL = window.location.protocol+"//"+window.location.host+window.location.pathname;
-		const redirectTo = "https://accapi.appbase.io/login/"+provider+"?next="+baseURL;
+		const baseURL = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+		const redirectTo = `https://accapi.appbase.io/login/${provider}?next=${baseURL}`;
 		localStorage.setItem("dejavuHash", window.location.hash);
 		const importerValue = this.props.directImporter ? "directImporter" : "true";
 		localStorage.setItem("importer", importerValue);

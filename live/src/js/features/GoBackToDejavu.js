@@ -1,5 +1,6 @@
-var React = require('react');
-import { Modal, Button } from 'react-bootstrap';
+const React = require("react");
+
+import { Modal, Button } from "react-bootstrap";
 
 class GoBackToDejavu extends React.Component {
 	state = {
@@ -34,8 +35,10 @@ class GoBackToDejavu extends React.Component {
 						<p> Do you want to abort the import process and go back to the data view? The current progress will not be saved.</p>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="danger"
-							onClick={this.props.onConfirm}>
+						<Button
+							bsStyle="danger"
+							onClick={this.props.onConfirm}
+						>
 							Confirm
 						</Button>
 					</Modal.Footer>

@@ -1,6 +1,6 @@
-var React = require('react');
-var Login = require('./Login.js');
-var GoBackToDejavu = require('./GoBackToDejavu.js');
+const React = require("react");
+const Login = require("./Login.js");
+const GoBackToDejavu = require("./GoBackToDejavu.js");
 // const importerURL = "http://127.0.0.1:1357/";
 const importerURL = "https://appbaseio-confidential.github.io/importer/";
 
@@ -21,11 +21,11 @@ class Importer extends React.Component {
 	};
 
 	onLogout = (params) => {
-		setTimeout(function() {
-			if(params.data === "loggedOut") {
+		setTimeout(() => {
+			if (params.data === "loggedOut") {
 				this.close();
 			}
-		}.bind(this), 1000);
+		}, 1000);
 	};
 
 	checkLoggedIn = (show) => {
@@ -38,30 +38,30 @@ class Importer extends React.Component {
 				withCredentials: true
 			}
 		});
-		$.get(this.address+"user")
-			.done(function(data) {
+		$.get(`${this.address}user`)
+			.done((data) => {
 				this.userInfo = data;
 				this.setState({
 					loggedIn: true,
 					importerURL: this.getImporterURL()
-				}, function() {
+				}, () => {
 					$(".typeContainer").addClass("importer-included");
 				});
-			}.bind(this)).fail(function(e) {
+			}).fail((e) => {
 				console.log(e);
 				this.setState({
 					loggedIn: false,
 					show: true
 				});
-			}.bind(this));
+			});
 	};
 
 	close = () => {
 		$(".typeContainer").removeClass("importer-included");
 		this.setState({
-			show: false,
+			show: false
 		});
-		if(this.props.onClose) {
+		if (this.props.onClose) {
 			this.props.onClose();
 		}
 	};
@@ -73,7 +73,7 @@ class Importer extends React.Component {
 	getImporterURL = () => {
 		const importerFrom = localStorage.getItem("importFrom");
 		localStorage.removeItem("importFrom");
-		return importerFrom ? importerURL+importerFrom : importerURL;
+		return importerFrom ? importerURL + importerFrom : importerURL;
 	};
 
 	render() {
@@ -96,7 +96,7 @@ class Importer extends React.Component {
 				}
 				{
 					this.state.show && this.state.loggedIn === false ? (
-						<Login directImporter={this.props.directImporter} onClose={this.props.onClose} showModal={true}></Login>
+						<Login directImporter={this.props.directImporter} onClose={this.props.onClose} showModal={true} />
 					) : null
 				}
 			</div>

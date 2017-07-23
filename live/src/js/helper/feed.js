@@ -4,24 +4,34 @@
 // **Configs:** Appname and Credentials
 
 // Get data size according to window height
-'use strict';
+
 
 function getDataSize() {
-	var mininum_data_size = 20;
-	var winHeight = $(window).height() - 150;
-	var rowHeight = 51;
-	var min_rows = Math.ceil(winHeight / rowHeight);
-	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
+	const mininum_data_size = 20;
+	const winHeight = $(window).height() - 150;
+	const rowHeight = 51;
+	const min_rows = Math.ceil(winHeight / rowHeight);
+	const rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
 	return rows;
 }
 
 const DATA_SIZE = getDataSize();
-var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
-var appbaseRef;
-var getMapFlag = false;
-var appAuth = true;
-var exportJsonData = [];
-var counterStream, streamRef;
+let APPNAME,
+	USERNAME,
+	PASSWORD,
+	dejavuURL,
+	OperationFlag,
+	APPURL,
+	input_state,
+	HOST,
+	streamingInterval,
+	fullColumns;
+let appbaseRef;
+const getMapFlag = false;
+const appAuth = true;
+const exportJsonData = [];
+let counterStream,
+	streamRef;
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
@@ -36,22 +46,22 @@ function init() {
 // parse the url and detect username, password
 function filterUrl(url) {
 	if (url) {
-		var obj = {
-			username: 'test',
-			password: 'test',
-			url: url
+		const obj = {
+			username: "test",
+			password: "test",
+			url
 		};
-		var urlsplit = url.split(':');
+		const urlsplit = url.split(":");
 		try {
-			obj.username = urlsplit[1].replace('//', '');
-			var httpPrefix = url.split('://');
+			obj.username = urlsplit[1].replace("//", "");
+			const httpPrefix = url.split("://");
 			if (urlsplit[2]) {
-				var pwsplit = urlsplit[2].split('@');
+				const pwsplit = urlsplit[2].split("@");
 				obj.password = pwsplit[0];
-				if (url.indexOf('@') !== -1) {
-					obj.url = httpPrefix[0] + '://' + pwsplit[1];
+				if (url.indexOf("@") !== -1) {
+					obj.url = `${httpPrefix[0]}://${pwsplit[1]}`;
 					if (urlsplit[3]) {
-						obj.url += ':' + urlsplit[3];
+						obj.url += `:${urlsplit[3]}`;
 					}
 				}
 			}
@@ -59,31 +69,30 @@ function filterUrl(url) {
 			console.log(e);
 		}
 		return obj;
-	} else {
-		return null;
 	}
+	return null;
 }
 
-//If default = true then take it from config.js
-var browse_url = window.location.href;
-var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
+// If default = true then take it from config.js
+const browse_url = window.location.href;
+const flag_url = browse_url.split("?default=")[1] === "true" || browse_url.split("?default=")[1] === true;
 
-if (BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
-	if (!flag_url || decryptedData.hasOwnProperty('url')) {
+if (BRANCH === "dev" || BRANCH === "master" || BRANCH === "gh-pages") {
+	if (!flag_url || decryptedData.hasOwnProperty("url")) {
 		config = {
-			url: storageService.getItem('esurl'),
-			appname: storageService.getItem('appname')
+			url: storageService.getItem("esurl"),
+			appname: storageService.getItem("appname")
 		};
 	}
 	beforeInit();
-} else if (BRANCH === 'appbase') {
-	parent.globalAppData(function(res) {
+} else if (BRANCH === "appbase") {
+	parent.globalAppData((res) => {
 		APPNAME = res.appname;
 		USERNAME = res.username;
 		PASSWORD = res.password;
-		APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io';
-		storageService.setItem('esurl', APPURL);
-		storageService.setItem('appname', APPNAME);
+		APPURL = `https://${USERNAME}:${PASSWORD}@scalr.api.appbase.io`;
+		storageService.setItem("esurl", APPURL);
+		storageService.setItem("appname", APPNAME);
 		config = {
 			url: APPURL,
 			appname: APPNAME
@@ -91,12 +100,12 @@ if (BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
 		beforeInit();
 	});
 } else {
-	storageService.getItem('esurl', function(result) {
+	storageService.getItem("esurl", (result) => {
 		config.url = result.esurl;
-		$('#configUrl').val(config.url);
-		storageService.getItem('appname', function(result1) {
+		$("#configUrl").val(config.url);
+		storageService.getItem("appname", (result1) => {
 			config.appname = result1.appname;
-			$('#configAppname').val(config.appname);
+			$("#configAppname").val(config.appname);
 			beforeInit();
 		});
 	});
@@ -106,12 +115,12 @@ function beforeInit() {
 	APPNAME = config.appname;
 	dejavuURL = config.url;
 	if (dejavuURL) {
-		var parsedUrl = filterUrl(dejavuURL);
+		const parsedUrl = filterUrl(dejavuURL);
 		USERNAME = parsedUrl.username;
 		PASSWORD = parsedUrl.password;
 		dejavuURL = parsedUrl.url;
 		HOST = parsedUrl.url;
-		APPURL = dejavuURL + '/' + APPNAME;
+		APPURL = `${dejavuURL}/${APPNAME}`;
 		OperationFlag = false;
 
 		// to store input state
@@ -124,57 +133,56 @@ function beforeInit() {
 }
 
 // vars for tracking current data and types
-var sdata = {}; // data to be displayed in table
-var headers = ['_type', '_id'];
-var esTypes = []; // all the types in current 'app'
-var subsetESTypes = []; // currently 'selected' types
+let sdata = {}; // data to be displayed in table
+const headers = ["_type", "_id"];
+let esTypes = []; // all the types in current 'app'
+const subsetESTypes = []; // currently 'selected' types
 
-var feed = (function() {
-
-	//This function is built only to maintain the total number of records
-	//It's hard to figure out correct total number of records while streaming and filtering is together
+const feed = (function () {
+	// This function is built only to maintain the total number of records
+	// It's hard to figure out correct total number of records while streaming and filtering is together
 	function countStream(types, setTotal, query) {
-		var defaultQuery = {
-			'query': {
-				'match_all': {}
+		const defaultQuery = {
+			query: {
+				match_all: {}
 			}
 		};
-		query = query ? query : defaultQuery;
+		query = query || defaultQuery;
 		appbaseRef.search({
 			type: types,
 			body: query
-		}).on('data', function(res) {
+		}).on("data", (res) => {
 			if (res && res.hits && res.hits.total) {
 				setTotal(res.hits.total);
 			}
 		});
 
-		//Stop old stream
-		if (typeof counterStream !== 'undefined') {
+		// Stop old stream
+		if (typeof counterStream !== "undefined") {
 			counterStream.stop();
 		}
 
 		counterStream = appbaseRef.searchStream({
 			type: types,
 			body: query
-		}).on('data', function(res2) {
-			//For update data
+		}).on("data", (res2) => {
+			// For update data
 			if (res2._updated) {
-				console.log('Updated');
+				console.log("Updated");
 			} else if (res2._deleted) {
-				setTotal(0, true, 'delete');
+				setTotal(0, true, "delete");
 			}
-			//For Index data
+			// For Index data
 			else {
-				setTotal(0, true, 'index');
+				setTotal(0, true, "index");
 			}
-		}).on('error', function(err) {
-			console.log('caught a stream error', err);
+		}).on("error", (err) => {
+			console.log("caught a stream error", err);
 		});
 	}
 
 	function allowOtherOperation() {
-		setTimeout(function() {
+		setTimeout(() => {
 			OperationFlag = false;
 		}, 500);
 	}
@@ -182,22 +190,22 @@ var feed = (function() {
 	// ajax call instead of appbase search, to use preference in search query
 	function applyAppbaseSearch(finalUrl, queryBody, cb_succes, cb_error) {
 		$.ajax({
-			type: 'POST',
-			beforeSend: function(request) {
-				request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+			type: "POST",
+			beforeSend(request) {
+				request.setRequestHeader("Authorization", `Basic ${btoa(`${USERNAME}:${PASSWORD}`)}`);
 			},
 			url: finalUrl,
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'json',
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
 			data: JSON.stringify(queryBody),
 			xhrFields: {
 				withCredentials: true
 			},
-			success: function(res) {
+			success(res) {
 				cb_succes(res);
 			},
-			error: function() {
-				$('.full_page_loading').addClass('hide');
+			error() {
+				$(".full_page_loading").addClass("hide");
 				if (cb_error) {
 					cb_error();
 				}
@@ -209,15 +217,15 @@ var feed = (function() {
 	// to the bottom of the existing results.
 	function paginationSearch(typeName, from, callback, queryBody) {
 		if (typeName !== null) {
-			var defaultQueryBody = {
+			const defaultQueryBody = {
 				query: {
 					match_all: {}
 				}
 			};
-			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var typesString = typeName.join(',');
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE;
-			applyAppbaseSearch(finalUrl, queryBody, function(res) {
+			queryBody = queryBody || defaultQueryBody;
+			const typesString = typeName.join(",");
+			const finalUrl = `${HOST}/${APPNAME}/${typesString}/_search?preference=abcxyz&from=${from}&size=${DATA_SIZE}`;
+			applyAppbaseSearch(finalUrl, queryBody, (res) => {
 				callback(res.hits.hits);
 			});
 		}
@@ -228,24 +236,26 @@ var feed = (function() {
 	// use applyAppbaseSearch to get the data
 	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery) {
 		if (types !== null) {
-			var defaultQueryBody = {
+			const defaultQueryBody = {
 				query: {
 					match_all: {}
 				}
 			};
-			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var dataSize = Object.keys(sdata).length;
+			queryBody = queryBody || defaultQueryBody;
+			const dataSize = Object.keys(sdata).length;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
-			var typesString = types;
+			let typesString = types;
 			try {
-				typesString = types.join(',');
+				typesString = types.join(",");
 			} catch (e) {
 				console.log(e, types);
 			}
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
-			applyAppbaseSearch(finalUrl, queryBody, function(res) {
+			const finalUrl = `${HOST}/${APPNAME}/${typesString}/_search?preference=abcxyz&from=${0}&size=${Math.max(dataSize, DATA_SIZE)}`;
+			applyAppbaseSearch(finalUrl, queryBody, (res) => {
 				try {
-					var hits, flag, total;
+					let hits,
+						flag,
+						total;
 					if (res.hits.hits.length === 0) {
 						hits = null;
 						flag = false;
@@ -261,15 +271,15 @@ var feed = (function() {
 					allowOtherOperation();
 					console.log(err);
 				}
-			}, function() {
+			}, () => {
 				allowOtherOperation();
 			});
 
 			// Counter stream
 			countStream(types, setTotal, streamQuery);
 
-			//Stop old stream
-			if (typeof streamRef !== 'undefined') {
+			// Stop old stream
+			if (typeof streamRef !== "undefined") {
 				streamRef.stop();
 			}
 
@@ -277,30 +287,30 @@ var feed = (function() {
 			streamRef = appbaseRef.searchStream({
 				type: types,
 				body: queryBody
-			}).on('data', function(res) {
-				if (res.hasOwnProperty('_updated')) {
+			}).on("data", (res) => {
+				if (res.hasOwnProperty("_updated")) {
 					delete res._updated;
 				}
 				callback(res, true);
-			}).on('error', function(err) {
-				console.log('caught a stream error', err);
+			}).on("error", (err) => {
+				console.log("caught a stream error", err);
 			});
 		}
 	}
 
 	return {
-		countStream: function(types, setTotal, query) {
+		countStream(types, setTotal, query) {
 			countStream(types, setTotal, query);
 		},
 		// exposes ``applyStreamSearch()`` as ``getData()``
-		getData: function(types, callback, setTotal) {
+		getData(types, callback, setTotal) {
 			applyStreamSearch(types, callback, false, setTotal);
 		},
 		// ``deleteData()`` deletes the data records when
 		// a type is unchecked by the user.
-		deleteData: function(typeName, callback) {
-			var localSdata = {};
-			for (var data in sdata) {
+		deleteData(typeName, callback) {
+			const localSdata = {};
+			for (const data in sdata) {
 				if (sdata[data]._type !== typeName) {
 					localSdata[data] = sdata[data];
 				}
@@ -310,21 +320,17 @@ var feed = (function() {
 		},
 		// ``paginateData()`` scrolls new results using the
 		// datatable's current length.
-		paginateData: function(total, callback, queryBody, types) {
-			types = types ? types : subsetESTypes;
+		paginateData(total, callback, queryBody, types) {
+			types = types || subsetESTypes;
 			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null);
 		},
 		// gets all the types of the current app;
-		getTypes: function(callback) {
-			if (typeof APPNAME !== 'undefined') {
-				this.filterType().done(function(data) {
-					var buckets = data.aggregations.count_by_type.buckets;
-					var types = buckets.filter(function(bucket) {
-						return bucket.doc_count > 0;
-					});
-					types = types.map(function(bucket) {
-						return bucket.key;
-					});
+		getTypes(callback) {
+			if (typeof APPNAME !== "undefined") {
+				this.filterType().done((data) => {
+					const buckets = data.aggregations.count_by_type.buckets;
+					let types = buckets.filter(bucket => bucket.doc_count > 0);
+					types = types.map(bucket => bucket.key);
 					if (types.length) {
 						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
 							esTypes = types.slice();
@@ -338,29 +344,29 @@ var feed = (function() {
 							return callback(types);
 						}
 					}
-				}).error(function(xhr) {
+				}).error((xhr) => {
 					console.log(xhr);
 					clearInterval(streamingInterval);
-					console.log('error in retrieving types: ', xhr);
+					console.log("error in retrieving types: ", xhr);
 				});
 			} else {
-				var $this = this;
-				setTimeout(function() {
+				const $this = this;
+				setTimeout(() => {
 					$this.getTypes(callback);
 				}, 1000);
 			}
 		},
-		indexData: function(recordObject, method, callback) {
-			var self = this;
-			if (method === 'index' || method === 'bulk') {
+		indexData(recordObject, method, callback) {
+			const self = this;
+			if (method === "index" || method === "bulk") {
 				applyIndexOrBulk(method);
 			} else {
-				var doc = recordObject.body;
+				const doc = recordObject.body;
 				recordObject.body = {
-					doc: doc
+					doc
 				};
 				console.log(recordObject);
-				appbaseRef.update(recordObject).on('data', function() {
+				appbaseRef.update(recordObject).on("data", () => {
 					if (callback) {
 						return callback();
 					}
@@ -368,9 +374,9 @@ var feed = (function() {
 			}
 
 			function applyIndexOrBulk(method) {
-				appbaseRef[method](recordObject).on('data', function(res) {
+				appbaseRef[method](recordObject).on("data", (res) => {
 					if (esTypes.indexOf(recordObject.type) === -1) {
-						self.getTypes(function(newTypes) {
+						self.getTypes((newTypes) => {
 							if (callback) {
 								return callback(res, newTypes);
 							}
@@ -378,20 +384,16 @@ var feed = (function() {
 					} else {
 						return callback(res);
 					}
-				}).on('error', function(err) {
-					return callback(err);
-				});
+				}).on("error", err => callback(err));
 			}
 		},
-		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(function(v) {
-				return { 'delete': v };
-			});
+		deleteRecord(selectedRows, callback) {
+			const deleteArray = selectedRows.map(v => ({ delete: v }));
 			console.log(deleteArray);
 
 			function deleteData(sdata, data) {
-				selectedRows.forEach(function(v) {
-					if (typeof sdata[data] !== 'undefined') {
+				selectedRows.forEach((v) => {
+					if (typeof sdata[data] !== "undefined") {
 						if (sdata[data]._type === v._type && sdata[data]._id === v._id) {
 							delete sdata[data];
 						}
@@ -401,8 +403,8 @@ var feed = (function() {
 
 			appbaseRef.bulk({
 				body: deleteArray
-			}).on('data', function(data) {
-				for (var record in sdata) {
+			}).on("data", (data) => {
+				for (const record in sdata) {
 					if (sdata.hasOwnProperty(record)) {
 						deleteData(sdata, record);
 					}
@@ -410,9 +412,9 @@ var feed = (function() {
 				callback(sdata);
 			});
 		},
-		getSingleDoc: function(type, callback) {
+		getSingleDoc(type, callback) {
 			appbaseRef.search({
-				type: type,
+				type,
 				from: 0,
 				size: 1,
 				body: {
@@ -420,16 +422,16 @@ var feed = (function() {
 						match_all: {}
 					}
 				}
-			}).on('data', function(data) {
+			}).on("data", (data) => {
 				callback(data);
 			});
 		},
-		getMapping: function() {
-			var createUrl = HOST + '/' + APPNAME + '/_mapping';
+		getMapping() {
+			const createUrl = `${HOST}/${APPNAME}/_mapping`;
 			return $.ajax({
-				type: 'GET',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				type: "GET",
+				beforeSend(request) {
+					request.setRequestHeader("Authorization", `Basic ${btoa(`${USERNAME}:${PASSWORD}`)}`);
 				},
 				url: createUrl,
 				xhrFields: {
@@ -437,27 +439,27 @@ var feed = (function() {
 				}
 			});
 		},
-		applyQuery: function(url, queryBody) {
+		applyQuery(url, queryBody) {
 			return $.ajax({
-				type: 'POST',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				type: "POST",
+				beforeSend(request) {
+					request.setRequestHeader("Authorization", `Basic ${btoa(`${USERNAME}:${PASSWORD}`)}`);
 				},
-				url: url,
-				contentType: 'application/json; charset=utf-8',
-				dataType: 'json',
+				url,
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
 				data: JSON.stringify(queryBody),
 				xhrFields: {
 					withCredentials: true
 				}
 			});
 		},
-		applyGetQuery: function(temp_config, ajaxType) {
-			var ajaxType = ajaxType ? ajaxType : 'GET';
+		applyGetQuery(temp_config, ajaxType) {
+			var ajaxType = ajaxType || "GET";
 			return $.ajax({
 				type: ajaxType,
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.username + ':' + temp_config.password));
+				beforeSend(request) {
+					request.setRequestHeader("Authorization", `Basic ${btoa(`${temp_config.username}:${temp_config.password}`)}`);
 				},
 				url: temp_config.url,
 				xhrFields: {
@@ -465,29 +467,29 @@ var feed = (function() {
 				}
 			});
 		},
-		filterType: function() {
-			var createUrl = HOST + '/' + APPNAME + '/_search?search_type=query_then_fetch';
-			var queryBody = {
-				'size': 0,
-				'aggs': {
-					'count_by_type': {
-						'terms': {
-							'field': '_type',
-							"size": 1000000
+		filterType() {
+			const createUrl = `${HOST}/${APPNAME}/_search?search_type=query_then_fetch`;
+			const queryBody = {
+				size: 0,
+				aggs: {
+					count_by_type: {
+						terms: {
+							field: "_type",
+							size: 1000000
 						}
 					}
 				}
 			};
 			return this.applyQuery(createUrl, queryBody);
 		},
-		scrollapi: function(types, queryBody, scroll, scroll_id) {
-			var typesString = types.join(',');
-			var createUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?scroll=5m';
-			var scrollUrl = HOST + '/_search/scroll?scroll=5m&scroll_id=' + scroll_id;
-			var finalUrl = scroll ? scrollUrl : createUrl;
+		scrollapi(types, queryBody, scroll, scroll_id) {
+			const typesString = types.join(",");
+			const createUrl = `${HOST}/${APPNAME}/${typesString}/_search?scroll=5m`;
+			const scrollUrl = `${HOST}/_search/scroll?scroll=5m&scroll_id=${scroll_id}`;
+			const finalUrl = scroll ? scrollUrl : createUrl;
 			return this.applyQuery(finalUrl, queryBody);
 		},
-		testQuery: function(types, queryBody) {
+		testQuery(types, queryBody) {
 			// get historical data
 			return appbaseRef.search({
 				type: types,
@@ -496,7 +498,7 @@ var feed = (function() {
 				body: queryBody
 			});
 		},
-		getTotalRecord: function() {
+		getTotalRecord() {
 			// get historical data
 			return appbaseRef.search({
 				from: 0,
@@ -509,53 +511,51 @@ var feed = (function() {
 				}
 			});
 		},
-		getIndices: function(url) {
-			var temp_config = this.filterUrl(url);
+		getIndices(url) {
+			const temp_config = this.filterUrl(url);
 			if (temp_config) {
-				temp_config.url += '/_stats/indices';
+				temp_config.url += "/_stats/indices";
 				return this.applyGetQuery(temp_config);
-			} else {
-				return null;
 			}
+			return null;
 		},
-		checkIndex: function(url, appname) {
+		checkIndex(url, appname) {
 			return this.executeIndexOperation(url, appname);
 		},
-		createIndex: function(url, appname) {
+		createIndex(url, appname) {
 			return this.executeIndexOperation(url, appname);
 		},
-		executeIndexOperation: function(url, appname) {
-			var temp_config = this.filterUrl(url);
+		executeIndexOperation(url, appname) {
+			const temp_config = this.filterUrl(url);
 			if (temp_config) {
-				temp_config.url += '/' + appname;
+				temp_config.url += `/${appname}`;
 				console.log(temp_config);
-				return this.applyGetQuery(temp_config, 'POST');
-			} else {
-				return null;
+				return this.applyGetQuery(temp_config, "POST");
 			}
+			return null;
 		},
-		filterUrl: function(url) {
+		filterUrl(url) {
 			return filterUrl(url);
 		},
-		externalQuery: function(query, typeName, callback, setTotal) {
+		externalQuery(query, typeName, callback, setTotal) {
 			this.externalQueryBody = query;
 			this.externalQueryType = typeName;
 			applyStreamSearch(typeName, callback, this.externalQueryBody, setTotal, query);
 		},
-		removeExternalQuery: function() {
+		removeExternalQuery() {
 			delete this.externalQueryBody;
 		},
-		filterQuery: function(filterQuerys, typeName, callback, setTotal) {
+		filterQuery(filterQuerys, typeName, callback, setTotal) {
 			this.queryBody = this.generateFilterQuery(filterQuerys);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
 		},
 		generateFilterQuery(filterQuerys) {
-			var queries = [];
-			filterQuerys.forEach(function(filterItem) {
-				var query = this.createFilterQuery(filterItem.method, filterItem.columnName, filterItem.value, filterItem.analyzed);
+			const queries = [];
+			filterQuerys.forEach((filterItem) => {
+				const query = this.createFilterQuery(filterItem.method, filterItem.columnName, filterItem.value, filterItem.analyzed);
 				queries.push(query);
-			}.bind(this));
-			var queryBody = {
+			});
+			const queryBody = {
 				query: {
 					bool: {
 						must: queries
@@ -564,18 +564,18 @@ var feed = (function() {
 			};
 			return queryBody;
 		},
-		//Create Filter Query by passing attributes
-		createFilterQuery: function(method, columnName, value, analyzed) {
-			var queryBody = {};
-			var queryMaker = [];
-			var subQuery;
+		// Create Filter Query by passing attributes
+		createFilterQuery(method, columnName, value, analyzed) {
+			let queryBody = {};
+			let queryMaker = [];
+			let subQuery;
 
 			function setQuery() {
-				subQuery = analyzed ? 'match' : 'term';
-				value.forEach(function(val) {
-					var termObj = {};
+				subQuery = analyzed ? "match" : "term";
+				value.forEach((val) => {
+					const termObj = {};
 					termObj[columnName] = val.trim();
-					var obj = {};
+					const obj = {};
 					obj[subQuery] = termObj;
 					queryMaker.push(obj);
 				});
@@ -587,92 +587,91 @@ var feed = (function() {
 				termObj[columnName] = {};
 				termObj[columnName][method] = value[0];
 				queryBody = {
-					'range': termObj
+					range: termObj
 				};
 				return termObj;
 			}
 
 			function createHasQuery(queryMaker) {
-				var boolQuery = {
-					'minimum_should_match': 1
-				}
-				var boolType = method === 'has' ? 'must' : 'must_not';
+				const boolQuery = {
+					minimum_should_match: 1
+				};
+				const boolType = method === "has" ? "must" : "must_not";
 				boolQuery[boolType] = queryMaker;
 				return {
-					'bool': boolQuery
+					bool: boolQuery
 				};
 			}
 
 			switch (method) {
-				case 'has':
-				case 'has not':
-					//If field is analyzed use MATCH else term
+				case "has":
+				case "has not":
+					// If field is analyzed use MATCH else term
 					queryMaker = setQuery();
 					queryBody = createHasQuery(queryMaker);
 					break;
 
-				case 'search':
+				case "search":
 					var termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'match': termObj
+						match: termObj
 					};
 					break;
 
-				case 'greater than':
-					termObj = gtLtQuery('gte');
+				case "greater than":
+					termObj = gtLtQuery("gte");
 					break;
 
-				case 'less than':
-					termObj = gtLtQuery('lte');
+				case "less than":
+					termObj = gtLtQuery("lte");
 					break;
 
-				case 'range':
-					var rangeVal = value[0].split('@');
+				case "range":
+					var rangeVal = value[0].split("@");
 					termObj = {};
 					termObj[columnName] = {};
 					termObj[columnName] = {
-						'gte': rangeVal[0],
-						'lte': rangeVal[1]
+						gte: rangeVal[0],
+						lte: rangeVal[1]
 					};
 					queryBody = {
-						'range': termObj
+						range: termObj
 					};
 					break;
 
-				case 'term':
+				case "term":
 					termObj = {};
 					termObj[columnName] = value[0].trim();
 					queryBody = {
-						'term': termObj
+						term: termObj
 					};
 					break;
 			}
 			return queryBody;
 		},
-		b64toBlob: function(b64Data, contentType, sliceSize) {
-			contentType = contentType || '';
+		b64toBlob(b64Data, contentType, sliceSize) {
+			contentType = contentType || "";
 			sliceSize = sliceSize || 512;
 
-			var byteCharacters = atob(b64Data);
-			var byteArrays = [];
+			const byteCharacters = atob(b64Data);
+			const byteArrays = [];
 
-			for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-				var slice = byteCharacters.slice(offset, offset + sliceSize);
+			for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+				const slice = byteCharacters.slice(offset, offset + sliceSize);
 
-				var byteNumbers = new Array(slice.length);
-				for (var i = 0; i < slice.length; i++) {
+				const byteNumbers = new Array(slice.length);
+				for (let i = 0; i < slice.length; i++) {
 					byteNumbers[i] = slice.charCodeAt(i);
 				}
 
-				var byteArray = new Uint8Array(byteNumbers);
+				const byteArray = new Uint8Array(byteNumbers);
 
 				byteArrays.push(byteArray);
 			}
 
-			var blob = new Blob(byteArrays, { type: contentType });
+			const blob = new Blob(byteArrays, { type: contentType });
 			return blob;
 		}
 	};
-
 }());

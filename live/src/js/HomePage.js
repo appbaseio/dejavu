@@ -1,23 +1,23 @@
-var React = require('react');
-var createReactClass = require('create-react-class');
-var DataTable = require('./table/DataTable.js');
-var FeatureComponent = require('./features/FeatureComponent.js');
-var Header = require('./Header.js');
-var Sidebar = require('./Sidebar.js');
-var QueryList = require('./QueryList/index.js');
-var PureRenderMixin = require('react-addons-pure-render-mixin');
-var SharedComponents = require('./helper/SharedComponents');
+const React = require("react");
+const createReactClass = require("create-react-class");
+const DataTable = require("./table/DataTable.js");
+const FeatureComponent = require("./features/FeatureComponent.js");
+const Header = require("./Header.js");
+const Sidebar = require("./Sidebar.js");
+const QueryList = require("./QueryList/index.js");
+const PureRenderMixin = require("react-addons-pure-render-mixin");
+const SharedComponents = require("./helper/SharedComponents");
 
-var HomePage = createReactClass({
-	displayName: 'HomePage',
+const HomePage = createReactClass({
+	displayName: "HomePage",
 	mixins: [PureRenderMixin],
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			documents: [],
 			types: [],
-			signalColor: '',
-			signalActive: '',
-			signalText: '',
+			signalColor: "",
+			signalActive: "",
+			signalText: "",
 			visibleColumns: [],
 			hiddenColumns: [],
 			sortInfo: {
@@ -56,59 +56,57 @@ var HomePage = createReactClass({
 			},
 			errorShow: false,
 			historicApps: [],
-			url: '',
-			appname: '',
+			url: "",
+			appname: "",
 			splash: true,
 			hideUrl: false,
 			cleanTypes: false,
 			dejavuExportData: null
 		};
 	},
-	flatten: function(data, callback) {
-		var response = help.flatten(data);
+	flatten(data, callback) {
+		const response = help.flatten(data);
 		return callback(response.data, response.fields);
 	},
-	injectLink: function(data, fields) {
+	injectLink(data, fields) {
 		return data;
 	},
-	deleteRow: function(index) {
+	deleteRow(index) {
 		delete sdata[index];
 	},
-	resetData: function(total, sdata_key) {
+	resetData(total, sdata_key) {
 		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
 	},
 	// Logic to stream continuous data.
 	// We call the ``getData()`` function in feed.js
 	// which returns a single json document(record).
-	updateDataOnView: function(update, total) {
+	updateDataOnView(update, total) {
 		if (!Array.isArray(update)) {
 			update = this.flatten(update, this.injectLink);
 			var key = rowKeyGen(update);
 
-			//If the record already exists in sdata, it should
-			//either be a delete request or a change to an
-			//existing record.
+			// If the record already exists in sdata, it should
+			// either be a delete request or a change to an
+			// existing record.
 			if (sdata[key]) {
 				// If the update has a ``_deleted`` field, apply
 				// a 'delete transition' and then delete
 				// the record from sdata.
-				if (update['_deleted']) {
+				if (update._deleted) {
 					for (var each in sdata[key]) {
 						var _key = keyGen(sdata[key], each);
 						deleteTransition(_key);
 					}
 					deleteTransition(key);
 					this.deleteRow(key);
-					setTimeout(function(callback) {
-						callback();
-					}.bind(null, this.resetData), 1100);
+					setTimeout(this.resetData.bind(this), 1100);
 				}
 
 				// If it isn't a delete, we should find a record
 				// with the same _type and _id and apply an ``update
 				// transition`` and then update the record in sdata.
-				//Since sdata is modeled as a hashmap, this is
-				//trivial.
+				// Since sdata is modeled as a hashmap, this is
+				// trivial.
 				else {
 					sdata[key] = update;
 					this.resetData();
@@ -119,8 +117,8 @@ var HomePage = createReactClass({
 					updateTransition(key);
 				}
 			}
-			//If its a new record, we add it to sdata and then
-			//apply the `new transition`.
+			// If its a new record, we add it to sdata and then
+			// apply the `new transition`.
 			else {
 				sdata[key] = update;
 				this.resetData(null, key);
@@ -144,14 +142,14 @@ var HomePage = createReactClass({
 			this.filterSampleData(update);
 		}
 
-		//Set sort from url
-		if(decryptedData.sortInfo) {
+		// Set sort from url
+		if (decryptedData.sortInfo) {
 			this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
 		}
 	},
-	streamCallback: function(total, fromStream, method) {
-		var reacordObj;
-		if(this.state.externalQueryApplied) {
+	streamCallback(total, fromStream, method) {
+		let reacordObj;
+		if (this.state.externalQueryApplied) {
 			reacordObj = {
 				externalQueryTotal: help.countExternalTotalRecord(total, fromStream, method, this.state.totalRecord)
 			};
@@ -163,11 +161,11 @@ var HomePage = createReactClass({
 		}
 		this.setState(reacordObj);
 	},
-	onEmptySelection: function() {
+	onEmptySelection() {
 		this.setState(help.onEmptySelection(this.state.infoObj));
 	},
-	getStreamingData: function(types) {
-		if(!queryParams.query) {
+	getStreamingData(types) {
+		if (!queryParams.query) {
 			startGet.call(this);
 		}
 		function startGet() {
@@ -175,73 +173,65 @@ var HomePage = createReactClass({
 				OperationFlag = true;
 				if (this.state.filterInfo.active) {
 					this.applyFilter(types);
-				}
-				else {
-					if (types.length) {
-						const d1 = new Date();
-						feed.getData(types, function(update, fromStream, total) {
-							if(subsetESTypes.length)
-								this.updateDataOnView(update, total);
-							else
-								this.updateDataOnView([],0);
-						}.bind(this), function(total, fromStream, method) {
-							this.streamCallback(total, fromStream, method);
-						}.bind(this));
-					} else {
-						this.onEmptySelection();
-					}
+				}				else if (types.length) {
+					const d1 = new Date();
+					feed.getData(types, (update, fromStream, total) => {
+						if (subsetESTypes.length)								{ this.updateDataOnView(update, total); }						else								{ this.updateDataOnView([], 0); }
+					}, (total, fromStream, method) => {
+						this.streamCallback(total, fromStream, method);
+					});
+				} else {
+					this.onEmptySelection();
 				}
 			} else {
-				setTimeout(function(){ this.getStreamingData(types) }.bind(this), 300);
+				setTimeout(() => { this.getStreamingData(types); }, 300);
 			}
 		}
 	},
-	getQueryBody: function() {
+	getQueryBody() {
 		return help.getQueryBody(this.state.filterInfo, this.state.externalQueryApplied);
 	},
-	getStreamingTypes: function() {
-		if (typeof APPNAME == 'undefined' || APPNAME == null) {
+	getStreamingTypes() {
+		if (typeof APPNAME === "undefined" || APPNAME == null) {
 			setTimeout(this.getTotalRecord, 1000);
 		} else {
-			feed.getTypes(function(update) {
-				update = update.sort(function(a, b) {
-					return a.toLowerCase().localeCompare(b.toLowerCase());
-				});
-				subsetESTypes.forEach(function(type) {
-					if(update.indexOf(type) === -1) {
+			feed.getTypes((update) => {
+				update = update.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+				subsetESTypes.forEach((type) => {
+					if (update.indexOf(type) === -1) {
 						this.unwatchStock(type);
 					}
-				}.bind(this));
+				});
 				this.setChromeTypes(update);
-			}.bind(this));
+			});
 		}
 	},
 	// only for chrome branch
-	setChromeTypes: function(update) {
+	setChromeTypes(update) {
 		const typeInfo = help.setChromeTypes(update);
-		setTimeout(function(){
-			$('.full_page_loading').addClass('hide');
+		setTimeout(() => {
+			$(".full_page_loading").addClass("hide");
 			this.setState({
 				types: typeInfo.update,
 				typeCheck: typeInfo.typeCheck,
 				connect: true,
 				appname: APPNAME
-			}, function() {
-				mirageLink(function() {});
+			}, () => {
+				mirageLink(() => {});
 			});
-		}.bind(this),1000);
+		}, 1000);
 	},
-	removeType: function(typeName) {
-		feed.deleteData(typeName, function(data) {
+	removeType(typeName) {
+		feed.deleteData(typeName, (data) => {
 			this.resetData();
-		}.bind(this));
+		});
 	},
-	componentWillMount: function() {
-		if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+	componentWillMount() {
+		if (window.location.href.indexOf("#?input_state") !== -1 || window.location.href.indexOf("?default=true") !== -1) {
 			this.setState({
 				splash: false
 			});
-			if(window.location.href.indexOf('?default=true') > -1) {
+			if (window.location.href.indexOf("?default=true") > -1) {
 				this.connectSync(config);
 			} else {
 				config = {};
@@ -249,17 +239,17 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	componentDidMount: function() {
+	componentDidMount() {
 		this.setApps();
 	},
-	connectSync: function(config_in) {
+	connectSync(config_in) {
 		config = config_in;
-		var self = this;
+		const self = this;
 		this.afterConnect();
 		input_state = JSON.parse(JSON.stringify(config_in));
 		createUrl(input_state);
 		getMapFlag = false;
-		$('.full_page_loading').removeClass('hide');
+		$(".full_page_loading").removeClass("hide");
 		esTypes = [];
 		subsetESTypes = [];
 		beforeInit();
@@ -270,22 +260,21 @@ var HomePage = createReactClass({
 			totalRecord: 0,
 			connect: false
 		});
-		setTimeout(function(){
+		setTimeout(() => {
 			appAuth = true;
 			self.init_map_stream();
-		},500);
+		}, 500);
 	},
 
-	init_map_stream: function() {
+	init_map_stream() {
 		try {
 			clearInterval(this.mappingInterval);
 			clearInterval(streamingInterval);
-		}
-		catch (e) {}
-		
+		}		catch (e) {}
+
 		// this.setMap();
-		if(appAuth) {
-			setTimeout(this.setMap, 2000)
+		if (appAuth) {
+			setTimeout(this.setMap, 2000);
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
 			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
@@ -293,15 +282,15 @@ var HomePage = createReactClass({
 			this.getTotalRecord();
 		}
 	},
-	appnameCb: function(appname) {
-		if(this.state.indices) {
+	appnameCb(appname) {
+		if (this.state.indices) {
 			this.setState(help.appnameCb(this.state.indices, this.state.url, this.state.es_host));
 		}
 	},
-	afterConnect: function() {
-		if(appAuth) {
+	afterConnect() {
+		if (appAuth) {
 			help.afterConnect.bind(this);
-			setTimeout(this.setMap, 2000)
+			setTimeout(this.setMap, 2000);
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
 			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
@@ -312,46 +301,46 @@ var HomePage = createReactClass({
 			});
 		}
 	},
-	componentDidUpdate: function() {
-		var hiddenColumns = this.state.hiddenColumns;
-		help.hideAttribute(hiddenColumns, 'hide');
+	componentDidUpdate() {
+		const hiddenColumns = this.state.hiddenColumns;
+		help.hideAttribute(hiddenColumns, "hide");
 	},
-	removeHidden: function() {
+	removeHidden() {
 		this.setState(this.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
 	},
-	getTotalRecord: function() {
-		var $this = this;
+	getTotalRecord() {
+		const $this = this;
 		if (!this.state.infoObj.getOnce) {
-			if (typeof APPNAME == 'undefined' || APPNAME == null) {
+			if (typeof APPNAME === "undefined" || APPNAME == null) {
 				setTimeout(this.getTotalRecord, 1000);
 			} else {
-				feed.getTotalRecord().on('data', function(data) {
-					if(queryParams.query) {
-						setTimeout(function() {
+				feed.getTotalRecord().on("data", (data) => {
+					if (queryParams.query) {
+						setTimeout(() => {
 							$this.externalQuery(JSON.parse(queryParams.query));
-						}, 1000*5);
+						}, 1000 * 5);
 					}
-					var infoObj = $this.state.infoObj;
+					const infoObj = $this.state.infoObj;
 					infoObj.getOnce = true;
 					infoObj.availableTotal = data.hits.total;
 					$this.setState({
-						infoObj: infoObj
+						infoObj
 					});
 				});
 			}
 		}
 	},
-	watchStock: function(typeName) {
-		if(this.state.externalQueryApplied) {
+	watchStock(typeName) {
+		if (this.state.externalQueryApplied) {
 			this.removeExternalQuery();
-			setTimeout(function() {
+			setTimeout(() => {
 				watchCb.call(this);
-			}.bind(this), 1000*2);
+			}, 1000 * 2);
 		} else {
 			watchCb.call(this);
 		}
 		function watchCb() {
-			//Remove sorting while slecting new type
+			// Remove sorting while slecting new type
 			this.setState({
 				sortInfo: {
 					active: false
@@ -359,8 +348,8 @@ var HomePage = createReactClass({
 				cleanTypes: false
 			});
 
-			//Remove sortInfo from store
-			if(input_state.hasOwnProperty('sortInfo')) {
+			// Remove sortInfo from store
+			if (input_state.hasOwnProperty("sortInfo")) {
 				delete input_state.sortInfo;
 				createUrl(input_state);
 			}
@@ -371,15 +360,15 @@ var HomePage = createReactClass({
 			createUrl(input_state);
 		}
 	},
-	unwatchStock: function(typeName) {
-		//Remove sorting while unslecting type
+	unwatchStock(typeName) {
+		// Remove sorting while unslecting type
 		this.setState({
 			sortInfo: {
 				active: false
 			}
 		});
-		//Remove sortInfo from store
-		if(input_state.hasOwnProperty('sortInfo')) {
+		// Remove sortInfo from store
+		if (input_state.hasOwnProperty("sortInfo")) {
 			delete input_state.sortInfo;
 			createUrl(input_state);
 		}
@@ -390,16 +379,16 @@ var HomePage = createReactClass({
 		this.watchSelectedRecord();
 		this.applyGetStream();
 	},
-	removeTypes: function() {
-		subsetESTypes.forEach(function(typeName) {
+	removeTypes() {
+		subsetESTypes.forEach((typeName) => {
 			this.removeType(typeName);
-		}.bind(this));
+		});
 		subsetESTypes = [];
 		input_state.selectedType = subsetESTypes;
 		createUrl(input_state);
 		this.watchSelectedRecord();
 		this.applyGetStream();
-		window.storageService.setItem('types', JSON.stringify(subsetESTypes));
+		window.storageService.setItem("types", JSON.stringify(subsetESTypes));
 		this.setState({
 			sortInfo: {
 				active: false
@@ -407,31 +396,31 @@ var HomePage = createReactClass({
 			cleanTypes: true
 		});
 	},
-	typeCounter: function() {
+	typeCounter() {
 		this.setState(help.typeCounter(this.state.typeInfo));
 		this.applyGetStream();
 	},
-	applyGetStream: function() {
-		var typeInfo = this.state.typeInfo;
+	applyGetStream() {
+		const typeInfo = this.state.typeInfo;
 		if (typeInfo.count >= this.state.types.length) {
 			this.getStreamingData(subsetESTypes);
 		}
 	},
-	setMap: function() {
-		var $this = this;
-		if (APPNAME && !$('.modal-backdrop').hasClass('in')) {
-			var getMappingObj = feed.getMapping();
-			getMappingObj.done(function(data) {
+	setMap() {
+		const $this = this;
+		if (APPNAME && !$(".modal-backdrop").hasClass("in")) {
+			const getMappingObj = feed.getMapping();
+			getMappingObj.done((data) => {
 				const mappingObjData = data;
-				if(!getMapFlag) {
+				if (!getMapFlag) {
 					$this.setApps(true);
 					getMapFlag = true;
 				}
 				$this.setState({
-					mappingObj: mappingObjData[APPNAME]['mappings']
+					mappingObj: mappingObjData[APPNAME].mappings
 				});
-			}).error(function(xhr){
-				if(xhr.status == 401){
+			}).error(function (xhr) {
+				if (xhr.status == 401) {
 					$this.setState({
 						errorShow: true
 					});
@@ -442,76 +431,74 @@ var HomePage = createReactClass({
 			});
 		}
 	},
-	handleScroll: function(event) {
-		var scroller = document.getElementById('table-scroller');
-		var infoObj = this.state.infoObj;
+	handleScroll(event) {
+		const scroller = document.getElementById("table-scroller");
+		const infoObj = this.state.infoObj;
 		// Plug in a handler which takes care of infinite scrolling
 		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100 && !this.state.pageLoading) {
-				this.setState({
-					pageLoading: true
-				});
-				help.paginateData(this.state.infoObj.total, this.updateDataOnView, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
+			this.setState({
+				pageLoading: true
+			});
+			help.paginateData(this.state.infoObj.total, this.updateDataOnView, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
 		}
 	},
-	handleSort: function(item, type, eve, order) {
+	handleSort(item, type, eve, order) {
 		this.setState(help.handleSort(item, type, eve, order, this.state.documents));
 	},
-	addRecord: function(editorref) {
+	addRecord(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
 	},
-	updateRecord: function(editorref) {
+	updateRecord(editorref) {
 		help.updateRecord.call(this, editorref, this.indexCall);
 	},
-	indexCall: function(form, modalId, method) {
-		var recordObject = {};
-		$.each(form, function(k2, v2) {
-			if (v2.value != '')
-				recordObject[v2.name] = v2.value;
+	indexCall(form, modalId, method) {
+		const recordObject = {};
+		$.each(form, (k2, v2) => {
+			if (v2.value != "")				{ recordObject[v2.name] = v2.value; }
 		});
-		feed.indexData(recordObject, method, function(res, newTypes) {
-			if(method === 'bulk' && res && res.items && res.items.length) {
+		feed.indexData(recordObject, method, (res, newTypes) => {
+			if (method === "bulk" && res && res.items && res.items.length) {
 				this.reloadData();
-				if(!res.errors) {
-					toastr.success(res.items.length+' records have been successfully indexed.');
+				if (!res.errors) {
+					toastr.success(`${res.items.length} records have been successfully indexed.`);
 				} else {
-					toastr.error('Your data hasn’t been added, likely cause is a mapper parsing exception.');
+					toastr.error("Your data hasn’t been added, likely cause is a mapper parsing exception.");
 				}
 			}
-			$('.close').click();
+			$(".close").click();
 			this.getStreamingTypes();
-			if (typeof newTypes != 'undefined') {
+			if (typeof newTypes !== "undefined") {
 				this.setState({
 					types: newTypes
 				});
-				setTimeout(function(){
+				setTimeout(() => {
 					this.setMap();
-				}.bind(this),500);
+				}, 500);
 			}
-		}.bind(this));
-		setTimeout(function() {
-			$('.close').click();
+		});
+		setTimeout(() => {
+			$(".close").click();
 			this.getStreamingTypes();
-		}.bind(this), 2000);
+		}, 2000);
 	},
-	getTypeDoc: function(editorref) {
-		var selectedTypes = $('#setType').val();
-		var selectedType;
-		if(selectedTypes && selectedTypes.length) {
+	getTypeDoc(editorref) {
+		const selectedTypes = $("#setType").val();
+		let selectedType;
+		if (selectedTypes && selectedTypes.length) {
 			selectedType = selectedTypes[0];
 		}
-		var typeDocSample = this.state.typeDocSample;
-		var $this = this;
-		if (selectedType != '' && selectedType != null && typeDocSample && typeDocSample.hasOwnProperty(selectedType)) {
+		const typeDocSample = this.state.typeDocSample;
+		const $this = this;
+		if (selectedType != "" && selectedType != null && typeDocSample && typeDocSample.hasOwnProperty(selectedType)) {
 			if (typeDocSample.hasOwnProperty(selectedType)) {
-				feed.getSingleDoc(selectedType, function(data) {
+				feed.getSingleDoc(selectedType, (data) => {
 					try {
 						typeDocSample[selectedType] = data.hits.hits[0]._source;
 						$this.setState({
-							typeDocSample: typeDocSample
+							typeDocSample
 						});
 						$this.showSample(typeDocSample[selectedType], editorref);
-					}
-					catch (err) {
+					}					catch (err) {
 						console.log(err);
 					}
 				});
@@ -519,43 +506,42 @@ var HomePage = createReactClass({
 		}
 	},
 	userTouchFlag: false,
-	showSample: function(obj, editorref) {
+	showSample(obj, editorref) {
 		help.showSample(obj, editorref, this.userTouchFlag);
 	},
-	filterSampleData: function(data) {
+	filterSampleData(data) {
 		help.filterSampleData.call(this, data, this.setSampleData);
 	},
-	setSampleData: function(update) {
-		if(typeof update != 'undefined') {
+	setSampleData(update) {
+		if (typeof update !== "undefined") {
 			this.setState(help.setSampleData.call(this, update, this.state.typeDocSample));
 		}
 	},
-	applyFilter: function(typeName, columnName, method, value, analyzed) {
+	applyFilter(typeName, columnName, method, value, analyzed) {
 		const helpFilter = help.applyFilter.call(this, typeName, columnName, method, value, analyzed, this.state.filterInfo);
 		this.setState(helpFilter);
-		var filterInfo = helpFilter.filterInfo;
+		const filterInfo = helpFilter.filterInfo;
 		// method, columnName, filterVal, subsetESTypes, analyzed
-		if (typeName != '' && typeName != null) {
-			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
+		if (typeName != "" && typeName != null) {
+			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, (update, fromStream, total) => {
 				if (!fromStream) {
 					sdata = [];
 					this.resetData(total);
 				}
-				setTimeout(function() {
-					if (update != null)
-						this.updateDataOnView(update);
-				}.bind(this), 500);
-			}.bind(this), function(total, fromStream, method) {
+				setTimeout(() => {
+					if (update != null)						{ this.updateDataOnView(update); }
+				}, 500);
+			}, (total, fromStream, method) => {
 				this.streamCallback(total, fromStream, method);
-			}.bind(this));
+			});
 		} else {
 			this.onEmptySelection();
 		}
 		this.removeSelection();
 	},
-	externalQuery: function(query) {
+	externalQuery(query) {
 		this.setState(help.externalQueryPre(query, this.removeTypes), this.removeFilter);
-		feed.externalQuery(query.query, query.type , (update, fromStream, total) => {
+		feed.externalQuery(query.query, query.type, (update, fromStream, total) => {
 			if (!fromStream) {
 				sdata = [];
 				this.setState({
@@ -567,185 +553,185 @@ var HomePage = createReactClass({
 				if (update != null) {
 					this.updateDataOnView(update);
 				}
-				$('.full_page_loading').addClass('hide');
+				$(".full_page_loading").addClass("hide");
 			}, 500);
 		}, (total, fromStream, method) => {
 			this.streamCallback(total, fromStream, method);
 		});
 	},
-	removeExternalQuery: function(cb) {
-		if(this.state.externalQueryApplied) {
+	removeExternalQuery(cb) {
+		if (this.state.externalQueryApplied) {
 			feed.removeExternalQuery();
 			this.setState({
 				externalQueryApplied: false
-			}, function() {
+			}, () => {
 				this.removeFilter();
 				try {
-					if(cb) { cb(); }
-				} catch(e) {}
-			}.bind(this));
+					if (cb) { cb(); }
+				} catch (e) {}
+			});
 		}
 	},
-	removeFilter: function(index) {
+	removeFilter(index) {
 		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
 	},
-	removeSort: function() {
+	removeSort() {
 		this.setState(help.removeSort(this.state.documents));
 	},
-	columnToggle: function() {
-		var self = this;
-		var obj = {
-			toggleIt: function(elementId, checked) {
+	columnToggle() {
+		const self = this;
+		const obj = {
+			toggleIt(elementId, checked) {
 				self.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
 			},
-			setVisibleColumn: function() {}
+			setVisibleColumn() {}
 		};
 		return obj;
 	},
-	selectRecord: function(id, type, row, currentCheck) {
-		var selection = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck, this.state.documents);
+	selectRecord(id, type, row, currentCheck) {
+		const selection = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck, this.state.documents);
 		this.setState({
 			actionOnRecord: selection.actionOnRecord
 		});
 		this.forceUpdate();
 	},
-	removeSelection: function() {
-		var selection = help.removeSelection(this.state.actionOnRecord, this.state.documents);
+	removeSelection() {
+		const selection = help.removeSelection(this.state.actionOnRecord, this.state.documents);
 		selection.actionOnRecord.selectToggle = false;
 		this.setState({
 			actionOnRecord: selection.actionOnRecord
 		});
 		this.forceUpdate();
-		$('[name="selectRecord"]').removeAttr('checked');
+		$("[name=\"selectRecord\"]").removeAttr("checked");
 	},
-	watchSelectedRecord: function() {
-		var actionOnRecord = help.watchSelectedRecord.call(this, this.state.actionOnRecord);
-		if(!actionOnRecord.selectedRows.length) {
+	watchSelectedRecord() {
+		const actionOnRecord = help.watchSelectedRecord.call(this, this.state.actionOnRecord);
+		if (!actionOnRecord.selectedRows.length) {
 			this.removeSelection();
 		} else {
 			this.setState({
-				actionOnRecord: actionOnRecord
+				actionOnRecord
 			});
 			this.forceUpdate();
 		}
 	},
-	selectToggleChange: function(checkbox) {
-		var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
+	selectToggleChange(checkbox) {
+		const actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
 		actionOnRecord.selectToggle = checkbox;
 		this.setState({
-			actionOnRecord: actionOnRecord
+			actionOnRecord
 		});
 		this.forceUpdate();
 	},
-	getUpdateObj: function() {
+	getUpdateObj() {
 		this.setState({
 			actionOnRecord: help.getUpdateObj.call(this, this.state.actionOnRecord, this.state.documents)
 		});
 	},
-	deleteRecord: function() {
-		$('.loadingBtn').addClass('loading');
-		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
+	deleteRecord() {
+		$(".loadingBtn").addClass("loading");
+		feed.deleteRecord(this.state.actionOnRecord.selectedRows, (update) => {
 			this.setState({
 				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes)
 			});
-		}.bind(this));
+		});
 	},
-	initEs:function(){
+	initEs() {
 		const temp_config = help.initEs();
-		createUrl(temp_config, function() {
+		createUrl(temp_config, () => {
 			this.connectSync(temp_config);
-		}.bind(this));
+		});
 	},
-	connectPlayPause: function() {
-		if(!help.getReloadFlag()) {
-			alert('Url or appname should not be empty.');
+	connectPlayPause() {
+		if (!help.getReloadFlag()) {
+			alert("Url or appname should not be empty.");
 		} else {
 			const connectInfo = help.connectPlayOrPause(this.state.connect, this.userTouchAdd);
-			if(!connectInfo) {
+			if (!connectInfo) {
 				this.initEs();
 			} else {
 				this.setState(connectInfo);
 			}
 		}
 	},
-	reloadData: function(){
+	reloadData() {
 		this.getStreamingData(subsetESTypes);
 	},
-	userTouchAdd: function(flag){
+	userTouchAdd(flag) {
 		this.userTouchFlag = flag;
 	},
-	closeErrorModal: function(){
+	closeErrorModal() {
 		this.setState({
 			errorShow: false
 		});
 	},
-	exportJsonData: function() {
+	exportJsonData() {
 		this.setState({
 			dejavuExportData: null
 		});
 		const defaultQuery = help.defaultQuery();
-		var activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
-		this.scrollApi({"activeQuery": activeQuery});
+		const activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
+		this.scrollApi({ activeQuery });
 	},
-	scrollApi: function(info) {
+	scrollApi(info) {
 		feed.scrollapi(help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied), info.activeQuery, info.scroll, info.scroll_id)
-			.done(function(data) {
-				const dejavuExportData =  help.scrollapi.call(this, data, this.scrollApi);
-				if(dejavuExportData) {
+			.done((data) => {
+				const dejavuExportData = help.scrollapi.call(this, data, this.scrollApi);
+				if (dejavuExportData) {
 					this.setState({
 						dejavuExportData
 					});
 				}
-			}.bind(this));
+			});
 	},
-	getApps: function(cb) {
-		var apps = storageService.getItem('historicApps');
-		cb({historicApps: apps});
+	getApps(cb) {
+		const apps = storageService.getItem("historicApps");
+		cb({ historicApps: apps });
 	},
-	setApps: function(authFlag) {
+	setApps(authFlag) {
 		help.setApps.call(this, authFlag, this.getApps, (info) => {
 			this.setState(info);
 		});
 	},
-	setConfig: function(url) {
+	setConfig(url) {
 		this.setState({
-			url: url,
+			url,
 			connect: false
 		});
 	},
-	valChange: function(event) {
-		this.setState({ url: event.target.value});
+	valChange(event) {
+		this.setState({ url: event.target.value });
 	},
-	hideUrlChange: function() {
+	hideUrlChange() {
 		this.setState(help.hideUrlChange(this.state.hideUrl));
 	},
-	render: function() {
-		var self = this;
-		var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
-		var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
-		var esBtn = this.state.connect ? 'btn-primary ': '';
-		esBtn += 'btn btn-default submit-btn';
-		var shareBtn = this.state.connect ? 'share-btn': 'hide';
-		var url = this.state.url;
-		var opts = {};
-		var playClass = 'ib fa fa-play';
-		var pauseClass = 'hide fa fa-pause';
-		if(this.state.connect) {
-			opts['readOnly'] = 'readOnly';
-			playClass = 'hide fa fa-play';
-			pauseClass = 'ib fa fa-pause';
+	render() {
+		const self = this;
+		const EsForm = !this.state.splash ? "col-xs-12 init-ES" : "col-xs-12 EsBigForm";
+		const esText = !this.state.splash ? (this.state.connect ? "Disconnect" : "Connect") : "Start Browsing";
+		let esBtn = this.state.connect ? "btn-primary " : "";
+		esBtn += "btn btn-default submit-btn";
+		const shareBtn = this.state.connect ? "share-btn" : "hide";
+		const url = this.state.url;
+		const opts = {};
+		let playClass = "ib fa fa-play";
+		let pauseClass = "hide fa fa-pause";
+		if (this.state.connect) {
+			opts.readOnly = "readOnly";
+			playClass = "hide fa fa-play";
+			pauseClass = "ib fa fa-pause";
 		}
-		var hideEye = {'display': this.state.splash ? 'none': 'block'};
-		var hideUrl = this.state.hideUrl ? 'hide-url expand' : 'hide-url collapse';
-		var hideUrlText = this.state.hideUrl ? React.createElement('span', {className: 'fa fa-eye-slash'}, null): React.createElement('span', {className: 'fa fa-eye'}, null);
-		var index_create_text = (<div className="index-create-info col-xs-12"></div>);
-		var githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px"></iframe>);
-		var composeQuery;
-		if(this.state.connect) {
+		const hideEye = { display: this.state.splash ? "none" : "block" };
+		const hideUrl = this.state.hideUrl ? "hide-url expand" : "hide-url collapse";
+		const hideUrlText = this.state.hideUrl ? React.createElement("span", { className: "fa fa-eye-slash" }, null) : React.createElement("span", { className: "fa fa-eye" }, null);
+		const index_create_text = (<div className="index-create-info col-xs-12" />);
+		const githubStar = (<iframe src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true" frameBorder="0" scrolling="0" width="120px" height="20px" />);
+		let composeQuery;
+		if (this.state.connect) {
 			composeQuery = (<SharedComponents.ComposeQuery />);
 		}
 		function initialForm() {
-			var form = (
+			const form = (
 				<SharedComponents.InitialForm
 					EsForm={EsForm}
 					index_create_text={index_create_text}
@@ -775,94 +761,93 @@ var HomePage = createReactClass({
 			);
 			return form;
 		}
-		var footer;
+		let footer;
 		queryParams = getQueryParameters();
-		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('f')))) {
+		if (!((queryParams && queryParams.hasOwnProperty("hf")) || (queryParams && queryParams.hasOwnProperty("f")))) {
 			footer = (<SharedComponents.FooterCombine githubStar={githubStar} />);
 		}
-		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('h')))) {
+		if (!((queryParams && queryParams.hasOwnProperty("hf")) || (queryParams && queryParams.hasOwnProperty("h")))) {
 			var dejavuForm = initialForm.call(this);
 		}
-		var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (queryParams && queryParams.hasOwnProperty('h') ? ' without-h ' : '') + (queryParams && queryParams.hasOwnProperty('f') ? ' without-f ' : '') + (queryParams && queryParams.hasOwnProperty('sidebar') ? ' without-sidebar ' : '') + (this.state.splash ? ' splash-on ' : '');
+		const containerClass = `row dejavuContainer ${BRANCH}${queryParams && queryParams.hasOwnProperty("hf") ? " without-hf " : ""}${queryParams && queryParams.hasOwnProperty("h") ? " without-h " : ""}${queryParams && queryParams.hasOwnProperty("f") ? " without-f " : ""}${queryParams && queryParams.hasOwnProperty("sidebar") ? " without-sidebar " : ""}${this.state.splash ? " splash-on " : ""}`;
 		return (<div>
-					<div id='modal' />
-					<div className={containerClass}>
-						<div className="appHeaderContainer">
-						<Header />
-							<div className="appFormContainer">
-								{dejavuForm}
-								<div className="typeContainer">
-								<Sidebar
-										typeProps={{
-											Types:this.state.types,
-											watchTypeHandler:this.watchStock,
-											unwatchTypeHandler:this.unwatchStock,
-											signalColor:this.state.signalColor,
-											signalActive:this.state.signalActive,
-											signalText:this.state.signalText,
-											typeInfo:this.state.typeInfo,
-											selectedTypes: subsetESTypes,
-											cleanTypes: this.state.cleanTypes,
-											connect: this.state.connect
-										}}
-										queryProps={{
-											'externalQuery':this.externalQuery,
-											'externalQueryApplied': this.state.externalQueryApplied,
-											'removeExternalQuery':this.removeExternalQuery,
-											'types': this.state.types
-										}}
-										importer={{
-											appname: this.state.appname,
-											url: this.state.url
-										}}
-									/>
-								</div>
-								<div className="col-xs-12 dataContainer">
-									<DataTable
-										_data={this.state.documents}
-										sortInfo={this.state.sortInfo}
-										filterInfo={this.state.filterInfo}
-										infoObj={this.state.infoObj}
-										totalRecord={this.state.totalRecord}
-										scrollFunction={this.handleScroll}
-										selectedTypes={subsetESTypes}
-										handleSort={this.handleSort}
-										mappingObj={this.state.mappingObj}
-										removeFilter ={this.removeFilter}
-										addRecord = {this.addRecord}
-										getTypeDoc={this.getTypeDoc}
-										Types={this.state.types}
-										removeSort = {this.removeSort}
-										removeHidden = {this.removeHidden}
-										removeTypes = {this.removeTypes}
-										visibleColumns = {this.state.visibleColumns}
-										hiddenColumns = {this.state.hiddenColumns}
-										columnToggle ={this.columnToggle}
-										actionOnRecord = {this.state.actionOnRecord}
-										pageLoading={this.state.pageLoading}
-										reloadData={this.reloadData}
-										exportJsonData= {this.exportJsonData}
-										externalQueryApplied={this.state.externalQueryApplied}
-										externalQueryTotal={this.state.externalQueryTotal} 
-										removeExternalQuery={this.removeExternalQuery}
-										dejavuExportData={this.state.dejavuExportData}
-									/>
-								</div>
-								{footer}
-								<FeatureComponent.ErrorModal
-									errorShow={this.state.errorShow}
-									closeErrorModal = {this.closeErrorModal}>
-								</FeatureComponent.ErrorModal>
-								<div className="full_page_loading hide">
-									<div className="loadingBar"></div>
-									<div className="vertical1">
-									</div> 
-								</div>
-							</div>
+			<div id="modal" />
+			<div className={containerClass}>
+				<div className="appHeaderContainer">
+					<Header />
+					<div className="appFormContainer">
+						{dejavuForm}
+						<div className="typeContainer">
+							<Sidebar
+								typeProps={{
+									Types: this.state.types,
+									watchTypeHandler: this.watchStock,
+									unwatchTypeHandler: this.unwatchStock,
+									signalColor: this.state.signalColor,
+									signalActive: this.state.signalActive,
+									signalText: this.state.signalText,
+									typeInfo: this.state.typeInfo,
+									selectedTypes: subsetESTypes,
+									cleanTypes: this.state.cleanTypes,
+									connect: this.state.connect
+								}}
+								queryProps={{
+									externalQuery: this.externalQuery,
+									externalQueryApplied: this.state.externalQueryApplied,
+									removeExternalQuery: this.removeExternalQuery,
+									types: this.state.types
+								}}
+								importer={{
+									appname: this.state.appname,
+									url: this.state.url
+								}}
+							/>
+						</div>
+						<div className="col-xs-12 dataContainer">
+							<DataTable
+								_data={this.state.documents}
+								sortInfo={this.state.sortInfo}
+								filterInfo={this.state.filterInfo}
+								infoObj={this.state.infoObj}
+								totalRecord={this.state.totalRecord}
+								scrollFunction={this.handleScroll}
+								selectedTypes={subsetESTypes}
+								handleSort={this.handleSort}
+								mappingObj={this.state.mappingObj}
+								removeFilter={this.removeFilter}
+								addRecord={this.addRecord}
+								getTypeDoc={this.getTypeDoc}
+								Types={this.state.types}
+								removeSort={this.removeSort}
+								removeHidden={this.removeHidden}
+								removeTypes={this.removeTypes}
+								visibleColumns={this.state.visibleColumns}
+								hiddenColumns={this.state.hiddenColumns}
+								columnToggle={this.columnToggle}
+								actionOnRecord={this.state.actionOnRecord}
+								pageLoading={this.state.pageLoading}
+								reloadData={this.reloadData}
+								exportJsonData={this.exportJsonData}
+								externalQueryApplied={this.state.externalQueryApplied}
+								externalQueryTotal={this.state.externalQueryTotal}
+								removeExternalQuery={this.removeExternalQuery}
+								dejavuExportData={this.state.dejavuExportData}
+							/>
+						</div>
+						{footer}
+						<FeatureComponent.ErrorModal
+							errorShow={this.state.errorShow}
+							closeErrorModal={this.closeErrorModal}
+						/>
+						<div className="full_page_loading hide">
+							<div className="loadingBar" />
+							<div className="vertical1" />
 						</div>
 					</div>
-				</div>);
-	},
+				</div>
+			</div>
+		</div>);
+	}
 });
 
 module.exports = HomePage;

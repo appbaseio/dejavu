@@ -1,11 +1,11 @@
-var React = require('react');
-var AddQuery = require('./AddQuery.js');
-var DeleteQuery = require('./DeleteQuery.js');
+const React = require("react");
+const AddQuery = require("./AddQuery.js");
+const DeleteQuery = require("./DeleteQuery.js");
 
 // QueryList
 class QueryList extends React.Component {
 	getHistoricList = () => {
-		var list = storageService.getItem('dejavuQueryList');
+		let list = storageService.getItem("dejavuQueryList");
 		if (list) {
 			try {
 				list = JSON.parse(list);
@@ -20,15 +20,15 @@ class QueryList extends React.Component {
 
 	setHistoricList = (list) => {
 		var list = JSON.stringify(list);
-		storageService.setItem('dejavuQueryList', list);
+		storageService.setItem("dejavuQueryList", list);
 	};
 
 	includeQuery = (queryObj) => {
-		var querylist = this.filterDeleteQuery(queryObj);
+		const querylist = this.filterDeleteQuery(queryObj);
 		querylist.push(queryObj);
 		this.setHistoricList(querylist);
 		this.setState({
-			querylist: querylist
+			querylist
 		}, this.applyQuery.call(this, queryObj));
 	};
 
@@ -44,7 +44,7 @@ class QueryList extends React.Component {
 
 	justApplyQuery = (query) => {
 		this.setState({
-			selectedQuery: query,
+			selectedQuery: query
 		});
 		this.props.externalQuery(query);
 	};
@@ -63,86 +63,80 @@ class QueryList extends React.Component {
 	};
 
 	deleteQuery = () => {
-		var querylist = this.filterDeleteQuery(this.state.selectedQuery);
+		const querylist = this.filterDeleteQuery(this.state.selectedQuery);
 		this.setHistoricList(querylist);
 		this.setState({
-			querylist: querylist,
+			querylist,
 			showDeleteQuery: false
 		});
 	};
 
 	filterDeleteQuery = (query) => {
-		var list = this.state.querylist.filter(function(item) {
-			return item.name !== query.name;
-		});
+		const list = this.state.querylist.filter(item => item.name !== query.name);
 		return list;
 	};
 
 	clearQuery = () => {
 		this.setState({
 			selectedQuery: {
-				'name': ''
+				name: ""
 			}
 		});
 		this.props.removeExternalQuery();
 	};
 
-	isChecked = (name) => {
-		return this.props.externalQueryApplied && name === this.state.selectedQuery.name;
-	};
+	isChecked = name => this.props.externalQueryApplied && name === this.state.selectedQuery.name;
 
-	renderQueries = () => {
-		return this.state.querylist.map(function(query, index) {
-			return (
-				<li key={index} className={"list-item col-xs-12 "+ (this.props.externalQueryApplied && query.name === this.state.selectedQuery.name ? 'active' : '')}>
-					<div className="theme-element radio">
-						<input
-							id={"query-"+index}
-							type="radio"
-							checked={this.isChecked(query.name)}
-							onChange={this.applyQuery.bind(this, query)}
-							readOnly={false}
-							/>
-						<label htmlFor={"query-"+index}>
-							<span className="col-xs-12 query-name">
-								{query.name}
-								<span className="pull-right createdAt">
-									{moment(query.createdAt).format('Do MMM, h:mm a')}
-								</span>
-							</span>
-						</label>
-					</div>
-					<a className="btn btn-grey delete-query" onClick={this.applyDeleteQuery.bind(this, query)}>
-						<i className="fa fa-times"></i>
-					</a>
-				</li>
-			);
-		}.bind(this));
-	};
+	renderQueries = () => this.state.querylist.map((query, index) => (
+		<li key={index} className={`list-item col-xs-12 ${this.props.externalQueryApplied && query.name === this.state.selectedQuery.name ? "active" : ""}`}>
+			<div className="theme-element radio">
+				<input
+					id={`query-${index}`}
+					type="radio"
+					checked={this.isChecked(query.name)}
+					onChange={this.applyQuery.bind(this, query)}
+					readOnly={false}
+				/>
+				<label htmlFor={`query-${index}`}>
+					<span className="col-xs-12 query-name">
+						{query.name}
+						<span className="pull-right createdAt">
+							{moment(query.createdAt).format("Do MMM, h:mm a")}
+						</span>
+					</span>
+				</label>
+			</div>
+			<a className="btn btn-grey delete-query" onClick={this.applyDeleteQuery.bind(this, query)}>
+				<i className="fa fa-times" />
+			</a>
+		</li>
+			));
 
 	state = {
 		querylist: this.getHistoricList(),
 		querylistShow: false,
 		showDeleteQuery: false,
 		selectedQuery: {
-			name: ''
+			name: ""
 		}
 	};
 
 	render() {
 		return (
 			<div className={"querylist-section"}>
-				<DeleteQuery 
+				<DeleteQuery
 					selectedQuery={this.state.selectedQuery}
 					showModal={this.state.showDeleteQuery}
 					deleteQuery={this.deleteQuery}
-					deleteQueryCb={this.deleteQueryCb} />
+					deleteQueryCb={this.deleteQueryCb}
+				/>
 				<ul className="theme-list col-xs-12">
 					<li className="list-item col-xs-12">
-						<AddQuery 
+						<AddQuery
 							types={this.props.types}
 							selectClass="applyQueryOn"
-							includeQuery={this.includeQuery} />
+							includeQuery={this.includeQuery}
+						/>
 					</li>
 					{this.renderQueries()}
 				</ul>

@@ -1,17 +1,17 @@
-var React = require('react');
-var SubscribeModal = require('./SubscribeModal.js');
+const React = require("react");
+const SubscribeModal = require("./SubscribeModal.js");
 
 class Header extends React.Component {
 	render() {
-		var subscribeModal;
-		if(!((queryParams && queryParams.hasOwnProperty('subscribe')) || BRANCH === 'master')) {
-			subscribeModal = (<SubscribeModal></SubscribeModal>);
+		let subscribeModal;
+		if (!((queryParams && queryParams.hasOwnProperty("subscribe")) || BRANCH === "master")) {
+			subscribeModal = (<SubscribeModal />);
 		}
 		return (
 			<header className="header text-center">
 				<div className="img-container">
 					<span className="header-img-container">
-						<img src="assets/img/icon.png" alt="Gem" className="img-responsive"/>
+						<img src="assets/img/icon.png" alt="Gem" className="img-responsive" />
 						<span className="dejavu-title">
 							Dejavu
 						</span>

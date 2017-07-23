@@ -1,5 +1,5 @@
-var React = require('react');
-var FeatureComponent = require('./features/FeatureComponent.js');
+const React = require("react");
+const FeatureComponent = require("./features/FeatureComponent.js");
 
 // Each row in the types table on the left side.
 class TypeRow extends React.Component {
@@ -8,9 +8,9 @@ class TypeRow extends React.Component {
 	};
 
 	componentDidMount() {
-		if (BRANCH !== 'chrome') {
-			var types = window.storageService.getItem('types');
-			var checked = false;
+		if (BRANCH !== "chrome") {
+			let types = window.storageService.getItem("types");
+			let checked = false;
 			try {
 				types = JSON.parse(types);
 				if (types.indexOf(this.props.type) !== -1) {
@@ -26,7 +26,7 @@ class TypeRow extends React.Component {
 			this.props.typeInfo.typeCounter();
 		} else {
 			var value;
-			var intype = this.props.type;
+			const intype = this.props.type;
 			var value = this.props.checkValue;
 			this.setType(value);
 		}
@@ -34,7 +34,7 @@ class TypeRow extends React.Component {
 
 	componentDidUpdate() {
 		if (this.props.cleanTypes != this.cleanTypes) {
-			this.cleanTypes = this.props.cleanTypes
+			this.cleanTypes = this.props.cleanTypes;
 			this.cleanType();
 		}
 	}
@@ -48,7 +48,7 @@ class TypeRow extends React.Component {
 	};
 
 	setType = (value) => {
-		var checked = false;
+		let checked = false;
 		if (value) {
 			checked = true;
 			this.props.watchTypeHandler(this.props.type);
@@ -61,7 +61,7 @@ class TypeRow extends React.Component {
 
 	unwatch = () => {
 		// every time its checked we update the local storage.
-		if (BRANCH !== 'chrome') {
+		if (BRANCH !== "chrome") {
 			this.justUnwatch();
 		} else {
 			this.chromeUnwatch();
@@ -69,7 +69,7 @@ class TypeRow extends React.Component {
 	};
 
 	justUnwatch = () => {
-		var checked = false;
+		let checked = false;
 		if (this.state.isChecked) {
 			this.props.unwatchTypeHandler(this.props.type);
 		} else {
@@ -77,30 +77,30 @@ class TypeRow extends React.Component {
 			this.props.watchTypeHandler(this.props.type);
 		}
 		// every time its checked we update the local storage.
-		var types = window.storageService.getItem('types');
+		let types = window.storageService.getItem("types");
 		try {
 			types = JSON.parse(types);
 		} catch (e) {
-			types = []
+			types = [];
 		}
 		types = types == null ? [] : types;
 		if (checked) {
 			types.push(this.props.type);
 		} else {
-			types.forEach(function(val, index) {
+			types.forEach((val, index) => {
 				if (val == this.props.type) {
 					types.splice(index, 1);
 				}
-			}.bind(this));
+			});
 		}
-		window.storageService.setItem('types', JSON.stringify(types));
+		window.storageService.setItem("types", JSON.stringify(types));
 		this.setState({
 			isChecked: checked
 		});
 	};
 
 	chromeUnwatch = () => {
-		var checked = false;
+		let checked = false;
 		if (this.state.isChecked) {
 			this.props.unwatchTypeHandler(this.props.type);
 		} else {
@@ -110,27 +110,27 @@ class TypeRow extends React.Component {
 
 		// every time its checked we update the local storage.
 		// window.localStorage.setItem(this.props.type, checked);
-		var intype = this.props.type;
-		var setObj = {};
+		const intype = this.props.type;
+		const setObj = {};
 		setObj[intype] = checked;
 
-		storageService.getItem('types', function(result) {
-			var types = result.types;
+		storageService.getItem("types", (result) => {
+			let types = result.types;
 			try {
 				types = JSON.parse(types);
 			} catch (e) {
-				types = []
+				types = [];
 			}
 			if (checked) {
 				types.push(intype);
 			} else {
-				types.forEach(function(val, index) {
+				types.forEach((val, index) => {
 					if (val == intype) {
 						types.splice(index, 1);
 					}
-				})
+				});
 			}
-			storageService.setItem({ 'types': types });
+			storageService.setItem({ types });
 		});
 		this.setState({
 			isChecked: checked
@@ -141,19 +141,19 @@ class TypeRow extends React.Component {
 		try {
 			types = JSON.parse(types);
 		} catch (e) {
-			types = []
+			types = [];
 		}
 		types = types == null ? [] : types;
 		if (checked) {
 			types.push(this.props.type);
 		} else {
-			types.forEach(function(val, index) {
+			types.forEach((val, index) => {
 				if (val == this.props.type) {
 					types.splice(index, 1);
 				}
-			}.bind(this));
+			});
 		}
-		window.storageService.setItem('types', JSON.stringify(types));
+		window.storageService.setItem("types", JSON.stringify(types));
 		this.setState({
 			isChecked: checked
 		});
@@ -162,17 +162,18 @@ class TypeRow extends React.Component {
 	render() {
 		return (
 			<li>
-					<div className="theme-element checkbox">
+				<div className="theme-element checkbox">
 					<input
-						 id={this.props.type}
-						 type="checkbox"
-						 key={this.props.type}
-						 checked={this.state.isChecked}
-						 onChange={this.unwatch}
-						 readOnly={false}/>
-						<label htmlFor={this.props.type}>{this.props.type}</label>
-					</div>
-				</li>
+						id={this.props.type}
+						type="checkbox"
+						key={this.props.type}
+						checked={this.state.isChecked}
+						onChange={this.unwatch}
+						readOnly={false}
+					/>
+					<label htmlFor={this.props.type}>{this.props.type}</label>
+				</div>
+			</li>
 		);
 	}
 }
@@ -181,45 +182,46 @@ class TypeRow extends React.Component {
 // left tab.
 class TypeTable extends React.Component {
 	render() {
-		var types = this.props.Types;
-		var typeCheck = this.props.typeCheck;
-		var checkValue;
+		const types = this.props.Types;
+		const typeCheck = this.props.typeCheck;
+		let checkValue;
 		if (typeCheck && typeCheck[singleType]) {
 			checkValue = {
 				checkValue: typeCheck[singleType]
 			};
 		}
 		const rowObj = [];
-		for (var type in types) {
+		for (const type in types) {
 			var singleType = types[type];
 			rowObj.push(<TypeRow
-					 key={type}
-					 type={types[type]}
-					 {...checkValue}
-					 cleanTypes={this.props.cleanTypes}
-					 unwatchTypeHandler={this.props.unwatchTypeHandler}
-					 watchTypeHandler={this.props.watchTypeHandler}
-					 typeInfo={this.props.typeInfo} />);
+				key={type}
+				type={types[type]}
+				{...checkValue}
+				cleanTypes={this.props.cleanTypes}
+				unwatchTypeHandler={this.props.unwatchTypeHandler}
+				watchTypeHandler={this.props.watchTypeHandler}
+				typeInfo={this.props.typeInfo}
+			/>);
 		}
 		if (types.length < 1) {
 			return (
-				<div className='left-tab'>
-				  <div className="highlight-tip left-tip">
-					  {
+				<div className="left-tab">
+					<div className="highlight-tip left-tip">
+						{
 						this.props.connect ? (
 							<strong>No data found.</strong>
 						) : (
 							<strong>Loading data...</strong>
 						)
 					  }
-				  </div>
+					</div>
 				</div>
 			);
 		}
 		return (
-			<div className='left-tab'>
+			<div className="left-tab">
 				<div className="row typesList">
-					<ul className='fa-ul types-list clearfix'>
+					<ul className="fa-ul types-list clearfix">
 						{rowObj}
 					</ul>
 				</div>
