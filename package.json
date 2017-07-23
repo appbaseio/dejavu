@@ -54,6 +54,7 @@
     "fbemitter": "^2.1.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
+    "loglevel": "^1.4.1",
     "moment": "^2.18.1",
     "papaparse": "^4.3.3",
     "react": "^15.5.4",

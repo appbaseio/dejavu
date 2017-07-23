@@ -288,7 +288,7 @@ var help = {
 		if (externalQueryApplied) {
 			queryBody = feed.externalQueryBody;
 		} else if (filterInfo.active) {
-			// queryBody = cb(filterInfo.appliedFilter);
+			queryBody = feed.generateFilterQuery(filterInfo.appliedFilter);
 		}
 		return queryBody;
 	},
@@ -587,6 +587,7 @@ var help = {
 	},
 	defaultQuery: function() {
 		$('.json-spinner').show();
+		$('.modal-text').hide();
 		return {
 			"query": {
 				"match_all": {}
@@ -633,6 +634,7 @@ var help = {
 		else {
 			str = JSON.stringify(exportJsonData, null, 4);
 			$('.json-spinner').hide();
+			$('.modal-text').show();
 			exportJsonData = [];
 		}
 		return str;
