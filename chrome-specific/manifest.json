@@ -2,22 +2,22 @@
     "name":"dejavu",
     "version":"0.13.0",
     "icons":{
-        "16":"site/assets/img/icon_16.png",
-        "32":"site/assets/img/icon_32.png",
-        "48":"site/assets/img/icon_48.png",
-        "128":"site/assets/img/icon_128.png"
+        "16":"live/assets/img/icon_16.png",
+        "32":"live/assets/img/icon_32.png",
+        "48":"live/assets/img/icon_48.png",
+        "128":"live/assets/img/icon_128.png"
     },
     "background": {
         "scripts": [ "background.js" ]
     },
     "web_accessible_resources": [
-        "site/index.html"
+        "live/index.html"
     ],
     "permissions": ["storage", "system.display", "<all_urls>", "https://appbaseio.auth0.com/*"],
     "manifest_version": 2,
     "offline_enabled":true,
     "browser_action": {
-        "default_icon": "site/assets/img/icon_32.png",
+        "default_icon": "live/assets/img/icon_32.png",
         "default_title": "Dejavu"
     },
     "description": "The missing Web UI for Elasticsearch.",

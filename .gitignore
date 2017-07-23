@@ -4,7 +4,9 @@ bower_components/
 dist/main.js
 dejavu-unpacked
 dist
-_site/bower_components/
-_site/dist/
+live/bower_components/
+live/dist/
+dejavu-unpacked/
 .DS_Store
 *.log
+react-codemod/
