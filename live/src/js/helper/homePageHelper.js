@@ -288,7 +288,7 @@ var help = {
 		if (externalQueryApplied) {
 			queryBody = feed.externalQueryBody;
 		} else if (filterInfo.active) {
-			// queryBody = cb(filterInfo.appliedFilter);
+			queryBody = feed.generateFilterQuery(filterInfo.appliedFilter);
 		}
 		return queryBody;
 	},
