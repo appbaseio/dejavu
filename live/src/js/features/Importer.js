@@ -71,7 +71,8 @@ class Importer extends React.Component {
 	};
 
 	getImporterURL = () => {
-		const importerFrom = localStorage.getItem("importFrom");
+		const search = location.search.substring(1);
+		const importerFrom = search.trim() ? `?${search.trim()}` : localStorage.getItem("importFrom");
 		localStorage.removeItem("importFrom");
 		return importerFrom ? importerURL+importerFrom : importerURL;
 	};
