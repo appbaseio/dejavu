@@ -45,6 +45,15 @@ function getUrl(cb) {
 				cb(decryptedData);
 			}
 		});
+	} else if(queryParams && queryParams.app) {
+		try {
+			data = JSON.parse(queryParams.app);
+			decryptedData = data;
+			applyDecrypt(data);
+			cb(data);
+		} catch(e) {
+			console.log(e);
+		}
 	}
 
 	function applyDecrypt(decryptedData) {
