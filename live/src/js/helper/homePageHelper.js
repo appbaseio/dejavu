@@ -1,5 +1,5 @@
 // Help object which contains the helper function and we can use this in homePage component
-var help = {
+const help = {
 	flatten(data) {
 		const fields = [];
 		if (data != null) {
@@ -768,3 +768,5 @@ var help = {
 		};
 	}
 };
+
+module.exports = help;

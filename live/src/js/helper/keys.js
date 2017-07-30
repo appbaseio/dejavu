@@ -19,3 +19,10 @@ const filterKeyGen = function (column, field) {
 	field = field.replace(/\s/, "");
 	return `filter${column}${field}`;
 };
+
+module.exports = {
+	keyGen,
+	rowKeyGen,
+	dropdownKeyGen,
+	filterKeyGen
+};

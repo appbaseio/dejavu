@@ -21,3 +21,10 @@ const newTransition = function (_key) {
 	if (elem)		{ elem.style.background = "#B6EF7E"; }
 	setTimeout(this.revertTransition.bind(null, elem), 1000);
 };
+
+module.exports = {
+	revertTransition,
+	updateTransition,
+	deleteTransition,
+	newTransition
+};

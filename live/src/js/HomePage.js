@@ -1,12 +1,16 @@
+import { keyGen, rowKeyGen } from "./helper/keys";
+import { revertTransition, updateTransition, deleteTransition, newTransition } from "./helper/transitions";
+
 const React = require("react");
 const createReactClass = require("create-react-class");
-const DataTable = require("./table/DataTable.js");
-const FeatureComponent = require("./features/FeatureComponent.js");
-const Header = require("./Header.js");
-const Sidebar = require("./Sidebar.js");
-const QueryList = require("./QueryList/index.js");
 const PureRenderMixin = require("react-addons-pure-render-mixin");
+const DataTable = require("./table/DataTable");
+const FeatureComponent = require("./features/FeatureComponent");
+const Header = require("./Header");
+const Sidebar = require("./Sidebar");
 const SharedComponents = require("./helper/SharedComponents");
+const help = require("./helper/homePageHelper");
+
 
 const HomePage = createReactClass({
 	displayName: "HomePage",
@@ -68,22 +72,23 @@ const HomePage = createReactClass({
 		const response = help.flatten(data);
 		return callback(response.data, response.fields);
 	},
-	injectLink(data, fields) {
+	injectLink(data) {
 		return data;
 	},
 	deleteRow(index) {
 		delete sdata[index];
 	},
-	resetData(total, sdata_key) {
-		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
+	resetData(total, sdataKey) {
+		this.setState(help.resetData(total, sdataKey, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
 	},
 	// Logic to stream continuous data.
-	// We call the ``getData()`` function in feed.js
-	// which returns a single json document(record).
+	// We call the ``getData()`` function in feed
+	// which returns a single JSON document(record).
 	updateDataOnView(update, total) {
 		if (!Array.isArray(update)) {
+			let key;
 			update = this.flatten(update, this.injectLink);
-			var key = rowKeyGen(update);
+			key = rowKeyGen(update);
 
 			// If the record already exists in sdata, it should
 			// either be a delete request or a change to an
@@ -93,10 +98,10 @@ const HomePage = createReactClass({
 				// a 'delete transition' and then delete
 				// the record from sdata.
 				if (update._deleted) {
-					for (var each in sdata[key]) {
-						var _key = keyGen(sdata[key], each);
+					Object.keys(sdata[key]).forEach((each) => {
+						const _key = keyGen(sdata[key], each);
 						deleteTransition(_key);
-					}
+					});
 					deleteTransition(key);
 					this.deleteRow(key);
 					setTimeout(this.resetData.bind(this), 1100);
@@ -113,7 +118,7 @@ const HomePage = createReactClass({
 					for (var each in update) {
 						updateTransition(keyGen(update, each));
 					}
-					var key = rowKeyGen(update);
+					const key = rowKeyGen(update);
 					updateTransition(key);
 				}
 			}
@@ -133,7 +138,7 @@ const HomePage = createReactClass({
 		} else { // when update is an array
 			for (var each = 0; each < update.length; each++) {
 				update[each] = this.flatten(update[each], this.injectLink);
-				var key = rowKeyGen(update[each]);
+				const key = rowKeyGen(update[each]);
 				if (!sdata[key]) {
 					sdata[key] = update[each];
 				}
