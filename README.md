@@ -141,3 +141,5 @@ Here's a rough roadmap of things to come in the ``v1.0`` release.
 * Feature support for advanced filtering
 * Offline detection and reconnection for realtime updates
 * Performance improvements while scrolling
+
+
