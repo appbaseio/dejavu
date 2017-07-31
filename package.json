@@ -7,6 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "fix": "eslint --fix ./live/src/js/",
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
@@ -46,7 +47,14 @@
     "shebang-loader": "0.0.1",
     "style-loader": "^0.15.0",
     "webpack": "^2.3.0",
-    "webpack-dev-server": "^2.4.2"
+    "webpack-dev-server": "^2.4.2",
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.16.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "eslint-watch": "^3.0.0"
   },
   "dependencies": {
     "appbase-js": "^0.11.1",

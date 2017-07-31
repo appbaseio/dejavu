@@ -237,7 +237,7 @@ var HomePage = createReactClass({
 		}.bind(this));
 	},
 	componentWillMount: function() {
-		if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1) {
+		if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1 || window.location.href.indexOf('app=') !== -1) {
 			this.setState({
 				splash: false
 			});
