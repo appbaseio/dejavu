@@ -4,19 +4,21 @@ dejavu - the missing web UI for elasticsearch
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)
 [![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
 
-dejavu fits the unmet need of being a modern Web UI for Elasticsearch. Existing UIs were either built with a legacy UI and have left much to be desired from a Ux perspective or have been built with server side page rendering techniques (I am looking at you, Kibana).
+**dejavu** is the missing web UI for Elasticsearch. Existing web UIs leave much to be desired or are built with server side page rendering techniques (I am looking at you, Kibana).
 
 Thus started the journey of dejavu, with a goal of 100% client side rendering and usage of modern UI elements (zero page reloads, infinite scrolling, filtered views). It's available as a github hosted page, chrome extension and as a Docker Image.
+
+Starting version `1.0.0`, dejavu is the only web UI that supports importing data via JSON and CSV files and also supports exporting filtered data as JSON or CSV files.
 
 ### Docker - Installation
 
 
 ```
 docker run -p 1358:1358 -d appbaseio/dejavu
-open http://localhost:1358
+open http://localhost:1358/live
 ```   
 
-You can also run a specific version of **dejavu** by specifying a tag. For example, `v0.13.0` can be used by ``docker run -p 1358:1358 appbaseio/dejavu:v0.13.0``.
+You can also run a specific version of **dejavu** by specifying a tag. For example, version `1.0.0` can be used by specifying the ``docker run -p 1358:1358 appbaseio/dejavu:1.0.0`` command.
 
 ##### CORS
 
@@ -125,19 +127,22 @@ This newly supported feature allows importing CSV or JSON data directly into Ela
 
 |     Features     |                                                    dejavu                                                    | ES-head | ES-kopf | ES-browser |                                 Kibana                                |
 |:----------------:|:------------------------------------------------------------------------------------------------------------:|:------------------:|:------------------:|:---------------------:|:---------------------------------------------------------------------:|
-| Installation     | Chrome extension, Docker Image, Hosted App, ES Plugin.      | Elasticsearch plugin, static page | Elasticsearch plugin, static page  | Elasticsearch plugin (doesn't work with v2.0 and above) | Elasticsearch plugin |
-| Modern UI        | Built with React v0.14.0, uses a live-reload interface.                                                  | Built with jQuery v1.6.1, slightly stodgy | Built with Angular 1.x | Built with ExtJs, but a bit stodgy | Built with Node.JS, Hapi, Jade                                                                     |
+| Installation     | Chrome extension, Docker Image, Hosted App.      | Elasticsearch plugin, static page | Elasticsearch plugin, static page  | Elasticsearch plugin (doesn't work with v2.0 and above) | Elasticsearch plugin |
+| Modern UI        | Built with React v15.6.0, uses a live-reload interface.                                                  | Built with jQuery v1.6.1, slightly stodgy | Built with Angular 1.x | Built with ExtJs, but a bit stodgy | Built with Node.JS, Hapi, Jade                                                                     |
 | Browser features | CRUD with support for data filters. | Read data with support for full-text search. | No data view |  Data view support for a single type | Read view with support for visualizations / charting |
+| Data Import/Export | Yes, in JSON and CSV formats. | - | - |  - | Only export is supported, no CSV support. |
 | Open Source      | MIT license                                                                          |  Apache v2.0               |       MIT license             |   Apache v2.0                    |   Apache v2.0                                                                    |
 
 
 
 ## Roadmap
 
-Here's a rough roadmap of things to come in the ``v1.0`` release.
+<s>Here's a rough roadmap of things to come in the ``v1.0`` release.</s>
 
 * Create a test coverage suite
-* Battle-testing with different datasets
-* Feature support for advanced filtering
+- [x] Battle-testing with different datasets
+- [x] Feature support for advanced filtering
 * Offline detection and reconnection for realtime updates
-* Performance improvements while scrolling
+- [x] Performance improvements while scrolling
+- [x] Support for importing and exporting data
+- [x] Support for a continuous query view
