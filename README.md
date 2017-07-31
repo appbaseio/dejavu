@@ -1,7 +1,7 @@
 dejavu: The Missing Web UI for Elasticsearch
 ====
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)  ![React Version](https://img.shields.io/badge/react-v15.6-brightgreen.svg)
 [![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**   
