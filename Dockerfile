@@ -15,4 +15,4 @@ RUN bower install --allow-root
 RUN npm run build
 
 EXPOSE 1358
-CMD ["http-server","_site","-p 1358"]
+CMD ["http-server", "-p 1358"]
