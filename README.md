@@ -6,10 +6,10 @@ dejavu: The Missing Web UI for Elasticsearch
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**   
 2. **[Features](#2-features)**  
-  a. [Filter View](#filter-views)
-  b. [Modern UI Elements](#modern-ui-elements)
-  c. [Realtime Data Updates](#realtime-data-updates)
-  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)
+  a. [Filter Views](#filter-views)  
+  b. [Modern UI Elements](#modern-ui-elements)  
+  c. [Realtime Data Updates](#realtime-data-updates)  
+  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)  
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally](#5-build-locally)**  
@@ -17,6 +17,7 @@ dejavu: The Missing Web UI for Elasticsearch
   a. [Docker Installation](#docker-installation)  
   b. [Hosted Alternative](#hosted-alternative)
 
+---
 
 ### 1. Dejavu Intro
 
@@ -26,6 +27,8 @@ Thus started the journey of dejavu, with a goal of 100% client side rendering an
 
 Starting version `1.0.0`, dejavu is the only web UI that supports importing data via JSON and CSV files and also supports exporting filtered data as JSON or CSV files.
 
+---
+
 ### 2. Features
 
 #### Filter Views
@@ -34,9 +37,9 @@ Starting version `1.0.0`, dejavu is the only web UI that supports importing data
 
 Sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``string`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
-dejavu also supports local filters like column sorting and showing a subset of columns.
+dejavu also supports local filters like column sorting and showing a subset of columns. 
 
-``To-do``: dejavu doesn't support filtering on advanced data types (like geopoint, parent-child); but it's possible to add those at some point.
+dejavu also supports query filtered view, where a user can write an Elasticsearch query and the data view will be filtered according to the query.
 
 #### Modern UI elements
 
@@ -58,6 +61,8 @@ dejavu uses a websockets based API and subscribes for data changes for the curre
 
 This newly supported feature allows importing CSV or JSON data directly into Elasticsearch through a guided data mappings configuration.
 
+---
+
 ### 3. Comparison with other data browsers
 
 |     Features     |                                                    dejavu                                                    | ES-head | ES-kopf | ES-browser |                                 Kibana                                |
@@ -69,6 +74,7 @@ This newly supported feature allows importing CSV or JSON data directly into Ela
 | Open Source      | MIT license                                                                          |  Apache v2.0               |       MIT license             |   Apache v2.0                    |   Apache v2.0                                                                    |
 
 
+---
 
 ### 4. Roadmap
 
@@ -91,6 +97,8 @@ Roadmap for version `2.0.0` release, subject to change:
 - [ ] View data types from within the data browser view
 - [ ] A more streamlined import process
 - [ ] Create a test coverage suite
+
+---
 
 ### 5. Build Locally
 
@@ -127,6 +135,7 @@ $ npm run build_gh_pages
 
 The source code is under the ``live/src`` directory. You can make pull requests against the ``dev`` branch.
 
+---
 
 ### 6. Get Dejavu
 
@@ -152,7 +161,6 @@ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Len
 http.cors.allow-credentials: true
 ```
 
----
 
 #### Hosted Alternative
 
