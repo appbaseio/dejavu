@@ -57,7 +57,7 @@ dejavu uses a websockets based API and subscribes for data changes for the curre
 
 #### Importing JSON or CSV Data
 
-![Importing JSON or CSV files](https://i.imgur.com/B8P5Ag0.png)
+![Importing JSON or CSV files](https://i.imgur.com/bJEAdMN.gif)
 
 This newly supported feature allows importing CSV or JSON data directly into Elasticsearch through a guided data mappings configuration.
 
