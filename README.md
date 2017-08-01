@@ -25,7 +25,7 @@ dejavu: The Missing Web UI for Elasticsearch
 
 Thus started the journey of dejavu, with a goal to build a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates) with 100% client side rendering. It is available today as a [hosted app](https://opensource.appbase.io/dejavu/live), [chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh) and as a [docker image](https://hub.docker.com/r/appbaseio/dejavu/).
 
-Starting version `1.0.0`, dejavu is the only web UI that supports importing data via JSON and CSV files and also supports exporting filtered data as JSON or CSV files.
+Starting version `1.0.0`, dejavu is the only web UI that supports importing data via JSON and CSV files.
 
 ---
 
