@@ -15,7 +15,7 @@ dejavu: The Missing Web UI for Elasticsearch
 5. **[Build Locally](#5-build-locally)**  
 6. **[Get Dejavu](#6-get-dejavu)**  
   a. [Docker Installation](#docker-installation)  
-  b. [Hosted Alternative](#hosted-alternative)
+  b. [Hosted Alternatives](#hosted-alternatives)
 
 ---
 
@@ -156,16 +156,26 @@ To make sure you enable CORS settings for your ElasticSearch instance, add the f
 
 ```sh
 http.port: 9200
-http.cors.allow-origin: "http://127.0.0.1:1358"
+http.cors.allow-origin: "http://localhost:1358"
 http.cors.enabled: true
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 http.cors.allow-credentials: true
 ```
 
+If you are running your Elasticsearch with docker, you can use flags to pass the custom CORS configuration.
 
-#### Hosted Alternative
+###### Elasticsearch v2.x
 
-can also be run via hosted app at https://opensource.appbase.io/dejavu or [installed as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh).
+`docker run --name es -d -p 9200:9200 elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true`
+
+###### Elasticsearch v5.x
+
+`docker run --name es -d -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true`
+
+
+#### Hosted Alternatives
+
+can also be run via hosted app at https://opensource.appbase.io/dejavu/live or [installed as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh).
 
 
 For example: If you are using the chrome-extension instead of docker image, the `http.cors.allow-origin` in Elasticsearch.yml file would change accordingly:
