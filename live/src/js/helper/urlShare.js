@@ -150,7 +150,8 @@ function decompress(compressed, cb) {
 }
 
 function getQueryParameters(str) {
-	let hash = window.location.hash.split('#');
+	var tempurl = decodeURIComponent(window.location.href);
+	let hash = tempurl.split('#');
 	if (hash.length > 1) {
 		return (str || hash[1]).replace(/(^\?)/, '').split("&").map(function(n) {
 			return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
