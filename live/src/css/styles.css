@@ -1158,6 +1158,10 @@ iframe {
 	display: none;
 }
 
+.cell-input {
+	border: none;
+	padding: 3px;
+}
 
 /*Color Schemes*/
 
