@@ -1,15 +1,18 @@
-var React = require('react');
+import React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
-var FeatureComponent = require('../features/FeatureComponent.js');
-var PageLoading = require('./PageLoading.js');
-var Info = require('./Info.js');
-var Column = require('./Column.js');
-var Pretty = FeatureComponent.Pretty;
+import PropTypes from 'prop-types';
+
+/* global feed */
+
+import CellInput from './CellInput';
+import FeatureComponent from '../features/FeatureComponent';
+
+const Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
 // We decided to roll our own as existing
 // libs with React.JS were missing critical
 // features.
-var cellWidth = '250px';
+const cellWidth = '250px';
 
 // **Cell** defines the properties of each cell in the
 // data table.
@@ -19,7 +22,10 @@ class Cell extends React.Component {
 	};
 
 	state = {
-		checked: false
+		checked: false,
+		active: false,
+		prevData: this.props.item,
+		data: this.props.item
 	};
 
 	copyId = () => {
@@ -68,6 +74,30 @@ class Cell extends React.Component {
 				checked: checkFlag
 			});
 		}
+	}
+
+	handleChange = (e) => {
+		this.setState({
+			data: e.target.value
+		});
+	}
+
+	setActive(nextState) {
+		if (!nextState && this.state.data !== this.state.prevData) {
+			feed.indexData({
+				type: this.props._type,
+				id: this.props._id,
+				body: {
+					[this.props.columnName]: this.state.data
+				}
+			});
+			this.setState({
+				prevData: this.state.data
+			});
+		}
+		this.setState({
+			active: nextState
+		});
 	}
 
 	render() {
@@ -129,16 +159,33 @@ class Cell extends React.Component {
 			if (typeof data === 'boolean') {
 				to_display = to_display + '';
 			}
+			if (typeof data === 'string' || typeof data === 'number') {
+				to_display = this.state.data;
+			}
 		}
-		return <td
-				 width={cellWidth}
+		return (
+			<td
+				width={cellWidth}
 				id={this.props.unique}
 				key={this.props.unique}
 				style={style}
-				className={tdClass}>
-					{to_display}
-				</td>;
+				className={tdClass}
+				onClick={() => this.setActive(true)}
+			>
+				{
+					this.state.active && (typeof data === 'string' || typeof data === 'number') ?
+						<CellInput value={this.state.data} handleChange={this.handleChange} name={columnName} handleBlur={() => this.setActive(false)} /> :
+						to_display
+				}
+			</td>
+		);
 	}
 }
+
+Cell.propTypes = {
+	_id: PropTypes.string.isRequired,
+	_type: PropTypes.string.isRequired,
+	columnName: PropTypes.string.isRequired
+};
 
 module.exports = Cell;
