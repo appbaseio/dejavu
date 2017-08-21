@@ -89,17 +89,20 @@ class DataTable extends React.Component {
 				if (elem) {
 					visibility = elem.style.display;
 				}
-				renderRow.push(<Cell
-								item={newRow[each]}
-								unique={_key}
-								key={_key}
-								columnName={each}
-								_id={data[row]['_id']}
-								_type={data[row]['_type']}
-								visibility={visibility}
-								row={newRow}
-								_checked={newRow._checked}
-								actionOnRecord={$this.props.actionOnRecord} />);
+				renderRow.push(
+					<Cell
+						item={newRow[each]}
+						unique={_key}
+						key={_key}
+						columnName={each}
+						_id={data[row]['_id']}
+						_type={data[row]['_type']}
+						visibility={visibility}
+						row={newRow}
+						_checked={newRow._checked}
+						actionOnRecord={$this.props.actionOnRecord}
+						datatype={this.props.mappingObj[data[row]._type].properties[each]}
+					/>);
 			}
 			rows.push({
 				'_key': String(data[row]['_id']) + String(data[row]['_type']),
@@ -112,11 +115,11 @@ class DataTable extends React.Component {
 						_sortInfo={$this.props.sortInfo}
 						handleSort={$this.props.handleSort}
 						mappingObj={$this.props.mappingObj}
-						filterInfo={$this.props.filterInfo} 
+						filterInfo={$this.props.filterInfo}
 						externalQueryApplied={$this.props.externalQueryApplied} />);
 		});
 		var visibleColumns = this.props.visibleColumns;
-		
+
 		var renderRows1 = [];
 
 		// //If render from sort, dont render the coumns
@@ -146,8 +149,8 @@ class DataTable extends React.Component {
 
 		//Page loading - show while paging
 		var pageLoadingComponent = this.props.pageLoading ?
-			(<PageLoading  
-										key="123" 
+			(<PageLoading
+										key="123"
 										visibleColumns={visibleColumns}
 										pageLoading={this.props.pageLoading}>
 									</PageLoading>) : '';
@@ -170,9 +173,9 @@ class DataTable extends React.Component {
 			visibleColumns = {visibleColumns}
 			hiddenColumns = {this.props.hiddenColumns}
 			columnToggle = {this.props.columnToggle}
-			actionOnRecord= {this.props.actionOnRecord} 
+			actionOnRecord= {this.props.actionOnRecord}
 			reloadData = {this.props.reloadData}
-			exportJsonData = {this.props.exportJsonData} 
+			exportJsonData = {this.props.exportJsonData}
 			selectedTypes = {this.props.selectedTypes}
 			externalQueryApplied={this.props.externalQueryApplied}
 			externalQueryTotal={this.props.externalQueryTotal}
@@ -190,7 +193,7 @@ class DataTable extends React.Component {
 				 selectedTypes={this.props.selectedTypes}
 				 filterInfo={this.props.filterInfo} />
 			</div>
-			{pageLoadingComponent}    
+			{pageLoadingComponent}
 			<input id="copyId" className="hide" />
 			</div>
 		);

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import CellInput from './CellInput';
 import FeatureComponent from '../features/FeatureComponent';
+import ColumnLabel from './ColumnLabel';
 
 const Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
@@ -24,6 +25,10 @@ class Cell extends React.Component {
 	state = {
 		checked: false,
 		active: false,
+		geoActive: {
+			lat: false,
+			lon: false
+		},
 		prevData: this.props.item,
 		data: this.props.item
 	};
@@ -82,6 +87,15 @@ class Cell extends React.Component {
 		});
 	}
 
+	handleGeoChange = (e) => {
+		const { name, value } = e.target;
+		const { data } = this.state;
+		data[name] = value;
+		this.setState({
+			data
+		});
+	}
+
 	handleBooleanSelect = (e) => {
 		const nextState = e === '1';
 		if (this.state.data !== nextState) {
@@ -100,19 +114,38 @@ class Cell extends React.Component {
 
 	setActive(nextState) {
 		if (!nextState && this.state.data !== this.state.prevData) {
-			feed.indexData({
-				type: this.props._type,
-				id: this.props._id,
-				body: {
-					[this.props.columnName]: this.state.data
-				}
-			});
+			this.indexCurrentData();
 			this.setState({
 				prevData: this.state.data
 			});
 		}
 		this.setState({
 			active: nextState
+		});
+	}
+
+	setGeoActive(geo, nextState) {
+		if (!nextState && this.state.data[geo] !== this.state.prevData[geo]) {
+			this.indexCurrentData();
+		}
+		// update previous state of data
+		this.setState({
+			prevData: { ...this.state.data }
+		});
+		const geoActive = { ...this.state.geoActive };
+		geoActive[geo] = nextState;
+		this.setState({
+			geoActive
+		});
+	}
+
+	indexCurrentData() {
+		feed.indexData({
+			type: this.props._type,
+			id: this.props._id,
+			body: {
+				[this.props.columnName]: this.state.data
+			}
 		});
 	}
 
@@ -167,7 +200,7 @@ class Cell extends React.Component {
 						</div>;
 			tdClass = 'column_width';
 		} else {
-			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean') {
+			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
 				var prettyData = <Pretty json={data} />
 				to_display = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
 								<a href="javascript:void(0);"  className="bracketIcon">
@@ -180,6 +213,38 @@ class Cell extends React.Component {
 			}
 			if (typeof data === 'string' || typeof data === 'number') {
 				to_display = this.state.data;
+			}
+			if (this.props.datatype.type === 'geo_point') {
+				to_display = (
+					<div>
+						<div onClick={() => this.setGeoActive('lat', true)}>
+							<ColumnLabel>Lat</ColumnLabel>
+							{
+								this.state.geoActive.lat ?
+									<CellInput
+										name="lat"
+										value={this.state.data.lat}
+										handleChange={this.handleGeoChange}
+										handleBlur={() => this.setGeoActive('lat', false)}
+									/> :
+									this.state.data.lat
+							}
+						</div>
+						<div className="geo-point-container" onClick={() => this.setGeoActive('lon', true)}>
+							<ColumnLabel>Lon</ColumnLabel>
+							{
+								this.state.geoActive.lon ?
+									<CellInput
+										name="lon"
+										value={this.state.data.lon}
+										handleChange={this.handleGeoChange}
+										handleBlur={() => this.setGeoActive('lon', false)}
+									/> :
+								this.state.data.lon
+							}
+						</div>
+					</div>
+				)
 			}
 		}
 		return (
@@ -205,9 +270,9 @@ class Cell extends React.Component {
 						</div> :
 						this.state.active && (typeof data === 'string' || typeof data === 'number') ?
 							<CellInput
+								name={columnName}
 								value={this.state.data}
 								handleChange={this.handleChange}
-								name={columnName}
 								handleBlur={() => this.setActive(false)}
 							/> : to_display
 				}

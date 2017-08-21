@@ -9,6 +9,7 @@ class CellInput extends Component {
 	render() {
 		return (
 			<input
+				name={this.props.name}
 				ref={(node) => { this.inputRef = node; }}
 				type="text"
 				value={this.props.value}
@@ -21,6 +22,7 @@ class CellInput extends Component {
 }
 
 CellInput.propTypes = {
+	name: PropTypes.string,
 	value: PropTypes.oneOfType([
 		PropTypes.number,
 		PropTypes.string

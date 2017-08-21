@@ -1173,7 +1173,11 @@ iframe {
 	color: #fff;
 	border-radius: 4px;
 	padding: 4px;
-	margin-left: 10px;
+	margin: 0 10px;
+}
+
+.geo-point-container {
+	margin: 10px 0;
 }
 
 .dropdown-menu .active a,

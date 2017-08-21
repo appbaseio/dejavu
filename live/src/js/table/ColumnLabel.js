@@ -6,7 +6,10 @@ const ColumnLabel = ({ children }) => (
 );
 
 ColumnLabel.propTypes = {
-	children: PropTypes.string
+	children: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number
+	])
 };
 
 export default ColumnLabel;
