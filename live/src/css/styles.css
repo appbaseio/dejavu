@@ -379,6 +379,7 @@ footer {
 	min-width: fit-content;
 	overflow-x: hidden;
 	overflow-y: auto;
+	padding-bottom: 50px;
 }
 
 .table-fixed-head {
@@ -479,6 +480,10 @@ footer {
 
 .columnAdjust {
 	padding-top: 14px !important;
+}
+
+.allowOverflow {
+	overflow: visible;
 }
 
 
@@ -1169,6 +1174,11 @@ iframe {
 	border-radius: 4px;
 	padding: 4px;
 	margin-left: 10px;
+}
+
+.dropdown-menu .active a,
+.dropdown-menu .active a:hover {
+	background: #3BC7F6;
 }
 
 /*Color Schemes*/

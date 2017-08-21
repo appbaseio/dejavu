@@ -1,5 +1,5 @@
 import React from 'react';
-import { OverlayTrigger, Popover } from 'react-bootstrap';
+import { OverlayTrigger, Popover, DropdownButton, MenuItem } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 /* global feed */
@@ -82,6 +82,22 @@ class Cell extends React.Component {
 		});
 	}
 
+	handleBooleanSelect = (e) => {
+		const nextState = e === '1';
+		if (this.state.data !== nextState) {
+			feed.indexData({
+				type: this.props._type,
+				id: this.props._id,
+				body: {
+					[this.props.columnName]: nextState
+				}
+			});
+			this.setState({
+				data: nextState
+			});
+		}
+	}
+
 	setActive(nextState) {
 		if (!nextState && this.state.data !== this.state.prevData) {
 			feed.indexData({
@@ -117,6 +133,9 @@ class Cell extends React.Component {
 		var _type = this.props._type;
 		var to_display = data;
 		var tdClass = 'column_width columnAdjust';
+		if (typeof data === 'boolean') {
+			tdClass = 'column_width columnAdjust allowOverflow';
+		}
 
 		var columnName = this.props.columnName;
 		var radioId = this.props.unique + 'radio';
@@ -173,9 +192,24 @@ class Cell extends React.Component {
 				onClick={() => this.setActive(true)}
 			>
 				{
-					this.state.active && (typeof data === 'string' || typeof data === 'number') ?
-						<CellInput value={this.state.data} handleChange={this.handleChange} name={columnName} handleBlur={() => this.setActive(false)} /> :
-						to_display
+					typeof data === 'boolean' ?
+						<div className="cell-input-container">
+							<DropdownButton
+								title={this.state.data.toString()}
+								id="datatype-boolean-dropdown"
+								onSelect={this.handleBooleanSelect}
+							>
+								<MenuItem eventKey="1" active={this.state.data}>true</MenuItem>
+								<MenuItem eventKey="2" active={!this.state.data}>false</MenuItem>
+							</DropdownButton>
+						</div> :
+						this.state.active && (typeof data === 'string' || typeof data === 'number') ?
+							<CellInput
+								value={this.state.data}
+								handleChange={this.handleChange}
+								name={columnName}
+								handleBlur={() => this.setActive(false)}
+							/> : to_display
 				}
 			</td>
 		);
