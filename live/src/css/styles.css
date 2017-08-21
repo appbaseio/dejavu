@@ -1163,6 +1163,14 @@ iframe {
 	padding: 3px;
 }
 
+.column-label {
+	background: #3BC7F6;
+	color: #fff;
+	border-radius: 4px;
+	padding: 4px;
+	margin-left: 10px;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
