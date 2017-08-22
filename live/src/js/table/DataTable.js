@@ -20,6 +20,7 @@ class DataTable extends React.Component {
 		var $this = this;
 		var data = this.props._data;
 		var fixed = [], columns, initial_final_cols;
+		const arrayOptions = {};
 		//If render from sort, dont change the order of columns
 		if (!$this.props.sortInfo.active) {
 			if ($this.props.infoObj.showing != 0) {
@@ -48,6 +49,17 @@ class DataTable extends React.Component {
 								column: column
 							};
 							fullColumns.final_cols.push(obj);
+						}
+					}
+					if (Array.isArray(data[each][column])) {
+						if (arrayOptions[column]) {
+							data[each][column].forEach((item) => {
+								if (!arrayOptions[column].includes(item)) {
+									arrayOptions[column].push(item);
+								}
+							});
+						} else {
+							arrayOptions[column] = [...data[each][column]];
 						}
 					}
 				}
@@ -102,6 +114,7 @@ class DataTable extends React.Component {
 						_checked={newRow._checked}
 						actionOnRecord={$this.props.actionOnRecord}
 						datatype={this.props.mappingObj[data[row]._type].properties[each]}
+						arrayOptions={arrayOptions[each]}
 					/>);
 			}
 			rows.push({

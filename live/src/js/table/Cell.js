@@ -1,6 +1,8 @@
 import React from 'react';
 import { OverlayTrigger, Popover, DropdownButton, MenuItem } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 /* global feed */
 
@@ -112,6 +114,19 @@ class Cell extends React.Component {
 		}
 	}
 
+	handleArrayChange = (e) => {
+		const nextState = e.map(item => item.value);
+		this.setState({
+			data: nextState
+		});
+	}
+
+	setSelectActive(nextState) {
+		if (nextState && Array.isArray(this.state.data)) {
+			this.select.focus();
+		}
+	}
+
 	setActive(nextState) {
 		if (!nextState && this.state.data !== this.state.prevData) {
 			this.indexCurrentData();
@@ -121,7 +136,7 @@ class Cell extends React.Component {
 		}
 		this.setState({
 			active: nextState
-		});
+		}, () => this.setSelectActive(nextState));
 	}
 
 	setGeoActive(geo, nextState) {
@@ -164,9 +179,9 @@ class Cell extends React.Component {
 		// in keys.js.
 		var _id = this.props._id;
 		var _type = this.props._type;
-		var to_display = data;
+		var toDisplay = data;
 		var tdClass = 'column_width columnAdjust';
-		if (typeof data === 'boolean') {
+		if (typeof data === 'boolean' || Array.isArray(data)) {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
@@ -184,7 +199,7 @@ class Cell extends React.Component {
 		}
 		if (columnName == 'json') {
 			var prettyData = <Pretty json={data} />
-			to_display = <div className={appIdClass}>
+			toDisplay = <div className={appIdClass}>
 							<span className="theme-element selectrow checkbox">
 								<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
 								 value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
@@ -202,20 +217,20 @@ class Cell extends React.Component {
 		} else {
 			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
 				var prettyData = <Pretty json={data} />
-				to_display = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-								<a href="javascript:void(0);"  className="bracketIcon">
-								</a>
-							</OverlayTrigger>
-				tdClass = 'column_width';
+				toDisplay = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+					<a href="javascript:void(0);"  className="bracketIcon">
+					</a>
+				</OverlayTrigger>
+				// tdClass = 'column_width';
 			}
 			if (typeof data === 'boolean') {
-				to_display = to_display + '';
+				toDisplay = toDisplay + '';
 			}
 			if (typeof data === 'string' || typeof data === 'number') {
-				to_display = this.state.data;
+				toDisplay = this.state.data;
 			}
 			if (this.props.datatype.type === 'geo_point') {
-				to_display = (
+				toDisplay = (
 					<div>
 						<div onClick={() => this.setGeoActive('lat', true)}>
 							<ColumnLabel>Lat</ColumnLabel>
@@ -246,6 +261,20 @@ class Cell extends React.Component {
 					</div>
 				)
 			}
+			if (Array.isArray(data)) {
+				toDisplay = (
+					<Select.Creatable
+						multi
+						value={this.state.data.map(item => ({ value: item, label: item }))}
+						options={this.props.arrayOptions.map(item => ({ value: item, label: item }))}
+						disabled={!this.state.active}
+						onChange={this.handleArrayChange}
+						onBlur={() => this.setActive(false)}
+						placeholder="Enter or select values"
+						ref={(node) => { this.select = node; }}
+					/>
+				);
+			}
 		}
 		return (
 			<td
@@ -274,7 +303,7 @@ class Cell extends React.Component {
 								value={this.state.data}
 								handleChange={this.handleChange}
 								handleBlur={() => this.setActive(false)}
-							/> : to_display
+							/> : toDisplay
 				}
 			</td>
 		);
@@ -284,7 +313,8 @@ class Cell extends React.Component {
 Cell.propTypes = {
 	_id: PropTypes.string.isRequired,
 	_type: PropTypes.string.isRequired,
-	columnName: PropTypes.string.isRequired
+	columnName: PropTypes.string.isRequired,
+	arrayOptions: PropTypes.arrayOf(PropTypes.string)
 };
 
 module.exports = Cell;
