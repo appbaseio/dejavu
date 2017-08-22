@@ -379,7 +379,7 @@ footer {
 	min-width: fit-content;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding-bottom: 50px;
+	padding-bottom: 220px;
 }
 
 .table-fixed-head {
@@ -1195,6 +1195,15 @@ iframe {
 
 .is-disabled .Select-value {
 	color: #333 !important;
+}
+
+.rdtActive {
+	background-color: #3BC7F6 !important;
+	border-radius: 4px !important;
+}
+
+.rdtToday:before {
+	border-bottom: 7px solid #3BC7F6 !important;
 }
 
 /*Color Schemes*/

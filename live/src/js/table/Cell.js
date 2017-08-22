@@ -3,6 +3,9 @@ import { OverlayTrigger, Popover, DropdownButton, MenuItem } from 'react-bootstr
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
+import moment from 'moment';
 
 /* global feed */
 
@@ -114,6 +117,25 @@ class Cell extends React.Component {
 		}
 	}
 
+	handleDatetimeChange = (e) => {
+		const nextState = e.format(this.props.datatype.format);
+		if (nextState !== this.state.prevData) {
+			this.setState({
+				prevData: nextState
+			});
+			feed.indexData({
+				type: this.props._type,
+				id: this.props._id,
+				body: {
+					[this.props.columnName]: nextState
+				}
+			});
+		}
+		this.setState({
+			data: e.format(this.props.datatype.format)
+		});
+	}
+
 	handleArrayChange = (e) => {
 		const nextState = e.map(item => item.value);
 		this.setState({
@@ -181,7 +203,7 @@ class Cell extends React.Component {
 		var _type = this.props._type;
 		var toDisplay = data;
 		var tdClass = 'column_width columnAdjust';
-		if (typeof data === 'boolean' || Array.isArray(data)) {
+		if (typeof data === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
@@ -274,6 +296,15 @@ class Cell extends React.Component {
 						ref={(node) => { this.select = node; }}
 					/>
 				);
+			} else if (this.props.datatype.type === 'date') {
+				toDisplay = (
+					<Datetime
+						value={this.state.data}
+						dateFormat={this.props.datatype.format}
+						timeFormat={false}
+						onChange={this.handleDatetimeChange}
+					/>
+				);
 			}
 		}
 		return (
@@ -297,7 +328,7 @@ class Cell extends React.Component {
 								<MenuItem eventKey="2" active={!this.state.data}>false</MenuItem>
 							</DropdownButton>
 						</div> :
-						this.state.active && (typeof data === 'string' || typeof data === 'number') ?
+						this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
 							<CellInput
 								name={columnName}
 								value={this.state.data}
@@ -315,6 +346,10 @@ Cell.propTypes = {
 	_type: PropTypes.string.isRequired,
 	columnName: PropTypes.string.isRequired,
 	arrayOptions: PropTypes.arrayOf(PropTypes.string)
+};
+
+Cell.defaultProps = {
+	datatype: {}
 };
 
 module.exports = Cell;
