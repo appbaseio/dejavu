@@ -68,7 +68,8 @@
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-select": "^1.0.0-rc.5"
   },
   "author": "",
   "license": "ISC",
