@@ -12,6 +12,7 @@ import moment from 'moment';
 import CellInput from './CellInput';
 import FeatureComponent from '../features/FeatureComponent';
 import ColumnLabel from './ColumnLabel';
+import ErrorModal from '../features/ErrorModal';
 
 const Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
@@ -33,7 +34,9 @@ class Cell extends React.Component {
 			lon: false
 		},
 		prevData: this.props.item,
-		data: this.props.item
+		data: this.props.item,
+		showError: false,
+		errorMessage: ''
 	};
 
 	selectRecord = (ele) => {
@@ -119,6 +122,22 @@ class Cell extends React.Component {
 		});
 	}
 
+	handleErrorMsg = (e) => {
+		if (e.status >= 400) {
+			this.setState({
+				showError: true,
+				errorMessage: e.message
+			});
+		}
+	}
+
+	hideErrorMessage= () => {
+		this.setState({
+			showError: false,
+			errorMessage: ''
+		});
+	}
+
 	setSelectActive(nextState) {
 		if (nextState && Array.isArray(this.state.data)) {
 			this.select.focus();
@@ -169,7 +188,7 @@ class Cell extends React.Component {
 			body: {
 				[this.props.columnName]: nextData
 			}
-		});
+		}, 'updateCell', res => this.handleErrorMsg(res));
 	}
 
 	render() {
@@ -297,6 +316,11 @@ class Cell extends React.Component {
 				className={tdClass}
 				onClick={() => this.setActive(true)}
 			>
+				<ErrorModal
+					errorShow={this.state.showError}
+					errorMessage={this.state.errorMessage}
+					closeErrorModal={this.hideErrorMessage}
+				/>
 				{
 					typeof data === 'boolean' ?
 						<div className="cell-input-container">
