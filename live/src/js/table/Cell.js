@@ -36,7 +36,8 @@ class Cell extends React.Component {
 		prevData: this.props.item,
 		data: this.props.item,
 		showError: false,
-		errorMessage: ''
+		errorMessage: '',
+		showTooltip: false
 	};
 
 	selectRecord = (ele) => {
@@ -78,9 +79,28 @@ class Cell extends React.Component {
 	}
 
 	handleChange = (e) => {
-		this.setState({
-			data: e.target.value
-		});
+		let nextState = e.target.value;
+		if (this.props.datatype.type !== 'string') {
+			if (this.state.showTooltip) {
+				this.setState({
+					showTooltip: false
+				});
+			}
+			nextState = Number(e.target.value);
+			if (!isNaN(nextState)) {
+				this.setState({
+					data: nextState
+				});
+			} else {
+				this.setState({
+					showTooltip: true
+				});
+			}
+		} else {
+			this.setState({
+				data: nextState
+			});
+		}
 	}
 
 	handleGeoChange = (e) => {
@@ -339,6 +359,7 @@ class Cell extends React.Component {
 								value={this.state.data}
 								handleChange={this.handleChange}
 								handleBlur={() => this.setActive(false)}
+								showTooltip={this.state.showTooltip}
 							/> : toDisplay
 				}
 			</td>
