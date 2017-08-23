@@ -7,7 +7,7 @@ import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import moment from 'moment';
 
-/* global feed */
+/* global feed, $ */
 
 import CellInput from './CellInput';
 import FeatureComponent from '../features/FeatureComponent';
@@ -20,8 +20,6 @@ const Pretty = FeatureComponent.Pretty;
 // features.
 const cellWidth = '250px';
 
-// **Cell** defines the properties of each cell in the
-// data table.
 class Cell extends React.Component {
 	static defaultProps = {
 		appIdClass: "appId"
@@ -36,16 +34,6 @@ class Cell extends React.Component {
 		},
 		prevData: this.props.item,
 		data: this.props.item
-	};
-
-	copyId = () => {
-		var range = document.createRange();
-		var selection = window.getSelection();
-		range.selectNodeContents(document.getElementById(this.props.unique));
-		selection.removeAllRanges();
-		selection.addRange(range);
-		$('#copyId').val(this.props._type + '/' + this.props._id).select();
-		document.execCommand("copy");
 	};
 
 	selectRecord = (ele) => {
@@ -104,13 +92,7 @@ class Cell extends React.Component {
 	handleBooleanSelect = (e) => {
 		const nextState = e === '1';
 		if (this.state.data !== nextState) {
-			feed.indexData({
-				type: this.props._type,
-				id: this.props._id,
-				body: {
-					[this.props.columnName]: nextState
-				}
-			});
+			this.indexCurrentData(nextState);
 			this.setState({
 				data: nextState
 			});
@@ -123,13 +105,7 @@ class Cell extends React.Component {
 			this.setState({
 				prevData: nextState
 			});
-			feed.indexData({
-				type: this.props._type,
-				id: this.props._id,
-				body: {
-					[this.props.columnName]: nextState
-				}
-			});
+			this.indexCurrentData(nextState);
 		}
 		this.setState({
 			data: e.format(this.props.datatype.format)
@@ -151,7 +127,7 @@ class Cell extends React.Component {
 
 	setActive(nextState) {
 		if (!nextState && this.state.data !== this.state.prevData) {
-			this.indexCurrentData();
+			this.indexCurrentData(this.state.data);
 			this.setState({
 				prevData: this.state.data
 			});
@@ -163,7 +139,7 @@ class Cell extends React.Component {
 
 	setGeoActive(geo, nextState) {
 		if (!nextState && this.state.data[geo] !== this.state.prevData[geo]) {
-			this.indexCurrentData();
+			this.indexCurrentData(this.state.data);
 		}
 		// update previous state of data
 		this.setState({
@@ -176,12 +152,22 @@ class Cell extends React.Component {
 		});
 	}
 
-	indexCurrentData() {
+	copyId = () => {
+		const range = document.createRange();
+		const selection = window.getSelection();
+		range.selectNodeContents(document.getElementById(this.props.unique));
+		selection.removeAllRanges();
+		selection.addRange(range);
+		$('#copyId').val(this.props._type + '/' + this.props._id).select();
+		document.execCommand('copy');
+	};
+
+	indexCurrentData(nextData) {
 		feed.indexData({
 			type: this.props._type,
 			id: this.props._id,
 			body: {
-				[this.props.columnName]: this.state.data
+				[this.props.columnName]: nextData
 			}
 		});
 	}
@@ -209,12 +195,6 @@ class Cell extends React.Component {
 
 		var columnName = this.props.columnName;
 		var radioId = this.props.unique + 'radio';
-		// cell-data of format ``string`` and ``number`` is rendered inline.
-		// If a field is a JSON object instead, it's displayed as a modal pop-up.
-		// <a href="#"
-		//                         onClick={showJSON.bind(null, data, _type, _id)}>
-		//                         <i className="fa fa-external-link" />
-		//                     </a>;
 		var appIdClass = 'appId';
 		if (this.state.checked) {
 			appIdClass += " showRow";
@@ -294,6 +274,7 @@ class Cell extends React.Component {
 						onBlur={() => this.setActive(false)}
 						placeholder="Enter or select values"
 						ref={(node) => { this.select = node; }}
+						clearable={false}
 					/>
 				);
 			} else if (this.props.datatype.type === 'date') {
