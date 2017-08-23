@@ -360,8 +360,10 @@ var feed = (function() {
 					doc: doc
 				};
 				console.log(recordObject);
-				appbaseRef.update(recordObject).on('data', function() {
-					if (callback) {
+				appbaseRef.update(recordObject).on('data', function(res) {
+					if (method === 'updateCell' && callback) {
+						callback(res);
+					} else if (callback) {
 						return callback();
 					}
 				});
