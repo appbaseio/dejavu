@@ -13,6 +13,7 @@ import CellInput from './CellInput';
 import FeatureComponent from '../features/FeatureComponent';
 import ColumnLabel from './ColumnLabel';
 import ErrorModal from '../features/ErrorModal';
+import getMomentDate from '../helper/getMomentDate';
 
 const Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
@@ -123,7 +124,8 @@ class Cell extends React.Component {
 	}
 
 	handleDatetimeChange = (e) => {
-		const nextState = e.format(this.props.datatype.format);
+		const nextState = e.format(getMomentDate(this.props.datatype.format));
+		console.log(nextState);
 		if (nextState !== this.state.prevData) {
 			this.setState({
 				prevData: nextState
@@ -131,7 +133,7 @@ class Cell extends React.Component {
 			this.indexCurrentData(nextState);
 		}
 		this.setState({
-			data: e.format(this.props.datatype.format)
+			data: e.format(getMomentDate(this.props.datatype.format))
 		});
 	}
 
@@ -319,9 +321,9 @@ class Cell extends React.Component {
 			} else if (this.props.datatype.type === 'date') {
 				toDisplay = (
 					<Datetime
-						value={this.state.data}
-						dateFormat={this.props.datatype.format}
-						timeFormat={false}
+						value={moment(this.state.data, getMomentDate(this.props.datatype.format))}
+						dateFormat={getMomentDate(this.props.datatype.format)}
+						timeFormat={!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date')}
 						onChange={this.handleDatetimeChange}
 					/>
 				);
