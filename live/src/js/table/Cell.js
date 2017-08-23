@@ -105,12 +105,25 @@ class Cell extends React.Component {
 	}
 
 	handleGeoChange = (e) => {
-		const { name, value } = e.target;
-		const { data } = this.state;
-		data[name] = value;
-		this.setState({
-			data
-		});
+		const { name } = e.target;
+		let nextState = e.target.value;
+		if (this.state.showTooltip) {
+			this.setState({
+				showTooltip: false
+			});
+		}
+		if (!isNaN(nextState)) {
+			nextState = Number(e.target.value);
+			const { data } = this.state;
+			data[name] = nextState;
+			this.setState({
+				data
+			});
+		} else {
+			this.setState({
+				showTooltip: true
+			});
+		}
 	}
 
 	handleBooleanSelect = (e) => {
@@ -125,7 +138,6 @@ class Cell extends React.Component {
 
 	handleDatetimeChange = (e) => {
 		const nextState = e.format(getMomentDate(this.props.datatype.format));
-		console.log(nextState);
 		if (nextState !== this.state.prevData) {
 			this.setState({
 				prevData: nextState
@@ -284,6 +296,7 @@ class Cell extends React.Component {
 										value={this.state.data.lat}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lat', false)}
+										showTooltip={this.state.showTooltip}
 									/> :
 									this.state.data.lat
 							}
@@ -297,6 +310,7 @@ class Cell extends React.Component {
 										value={this.state.data.lon}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lon', false)}
+										showTooltip={this.state.showTooltip}
 									/> :
 								this.state.data.lon
 							}
