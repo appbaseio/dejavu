@@ -715,6 +715,23 @@ footer {
 	display: none;
 }
 
+.appId .row-number {
+	position: absolute;
+	left: 0;
+	top: 7px;
+	z-index: 2;
+	display: inline-block;
+	border: 1px solid #aaa;
+	color: #aaa;
+	border-radius: 3px;
+	padding: 0 5px;
+	font-size: 0.85em;
+}
+
+.appId:hover .row-number {
+	display: none;
+}
+
 .appId:hover .selectrow,
 .appId.showRow .selectrow {
 	display: inline-block;

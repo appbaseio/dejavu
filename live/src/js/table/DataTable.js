@@ -115,6 +115,7 @@ class DataTable extends React.Component {
 						actionOnRecord={$this.props.actionOnRecord}
 						datatype={this.props.mappingObj[data[row]._type].properties[each]}
 						arrayOptions={arrayOptions[each]}
+						rowNumber={Number(row)}
 					/>);
 			}
 			rows.push({
