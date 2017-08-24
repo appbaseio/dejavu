@@ -242,7 +242,7 @@ class Cell extends React.Component {
 		var _type = this.props._type;
 		var toDisplay = data;
 		var tdClass = 'column_width columnAdjust';
-		if (typeof data === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
+		if (this.props.datatype.type === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
@@ -365,7 +365,7 @@ class Cell extends React.Component {
 					closeErrorModal={this.hideErrorMessage}
 				/>
 				{
-					typeof data === 'boolean' ?
+					this.props.datatype.type === 'boolean' ?
 						<div className="cell-input-container">
 							<DropdownButton
 								title={this.state.data.toString()}

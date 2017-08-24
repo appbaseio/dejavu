@@ -1227,6 +1227,19 @@ iframe {
 	display: none;
 }
 
+.add-row-button {
+	cursor: pointer;
+	background-color: #3BC7F6;
+	color: #fff;
+	padding: 10px;
+	border-radius: 5px;
+	width: 110px;
+}
+
+.add-row-button:hover {
+	background-color: #2F9ED5;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
