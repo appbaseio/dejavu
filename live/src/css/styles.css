@@ -1177,7 +1177,11 @@ iframe {
 }
 
 .geo-point-container {
-	margin: 10px 0;
+	display: flex;
+}
+
+.geo-point-container input {
+	width: 70px;
 }
 
 .dropdown-menu .active a,

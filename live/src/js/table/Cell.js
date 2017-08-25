@@ -286,7 +286,7 @@ class Cell extends React.Component {
 			}
 			if (this.props.datatype.type === 'geo_point') {
 				toDisplay = (
-					<div>
+					<div className="geo-point-container">
 						<div onClick={() => this.setGeoActive('lat', true)}>
 							<ColumnLabel>Lat</ColumnLabel>
 							{
@@ -301,7 +301,7 @@ class Cell extends React.Component {
 									this.state.data.lat
 							}
 						</div>
-						<div className="geo-point-container" onClick={() => this.setGeoActive('lon', true)}>
+						<div onClick={() => this.setGeoActive('lon', true)}>
 							<ColumnLabel>Lon</ColumnLabel>
 							{
 								this.state.geoActive.lon ?
