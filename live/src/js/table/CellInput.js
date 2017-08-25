@@ -13,9 +13,10 @@ class CellInput extends Component {
 				placement="top"
 				overlay={
 					this.props.showTooltip ?
-						<Tooltip id="tooltip-field-number">This field should be a number</Tooltip> :
+						<Tooltip id="tooltip-field-number">{this.props.tooltipText}</Tooltip> :
 						<Tooltip id="tooltip-field-string" bsClass="tooltip-hidden" />
 				}
+				delay={800}
 			>
 				<input
 					name={this.props.name}
@@ -39,11 +40,13 @@ CellInput.propTypes = {
 	]).isRequired,
 	handleChange: PropTypes.func.isRequired,
 	handleBlur: PropTypes.func.isRequired,
-	showTooltip: PropTypes.bool
+	showTooltip: PropTypes.bool,
+	tooltipText: PropTypes.string
 };
 
 CellInput.defaultProps = {
-	showTooltip: false
+	showTooltip: false,
+	tooltipText: 'This field should be a number'
 };
 
 export default CellInput;

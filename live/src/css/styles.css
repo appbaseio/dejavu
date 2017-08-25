@@ -715,6 +715,23 @@ footer {
 	display: none;
 }
 
+.appId .row-number {
+	position: absolute;
+	left: 0;
+	top: 7px;
+	z-index: 2;
+	display: inline-block;
+	border: 1px solid #aaa;
+	color: #aaa;
+	border-radius: 3px;
+	padding: 0 5px;
+	font-size: 0.85em;
+}
+
+.appId:hover .row-number {
+	display: none;
+}
+
 .appId:hover .selectrow,
 .appId.showRow .selectrow {
 	display: inline-block;
@@ -1180,6 +1197,10 @@ iframe {
 	display: flex;
 }
 
+.geo-point-container .geo-point-value {
+	flex: 1;
+}
+
 .geo-point-container input {
 	width: 70px;
 }
@@ -1212,6 +1233,19 @@ iframe {
 
 .tooltip-hidden {
 	display: none;
+}
+
+.add-row-button {
+	cursor: pointer;
+	background-color: #3BC7F6;
+	color: #fff;
+	padding: 10px;
+	border-radius: 5px;
+	width: 110px;
+}
+
+.add-row-button:hover {
+	background-color: #2F9ED5;
 }
 
 /*Color Schemes*/

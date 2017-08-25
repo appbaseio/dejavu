@@ -87,8 +87,9 @@ class Cell extends React.Component {
 					showTooltip: false
 				});
 			}
-			nextState = Number(e.target.value);
-			if (!isNaN(nextState)) {
+			nextState = e.target.value;
+			const isValid = nextState === '' || nextState === '-';
+			if (!isNaN(nextState) || isValid) {
 				this.setState({
 					data: nextState
 				});
@@ -106,14 +107,17 @@ class Cell extends React.Component {
 
 	handleGeoChange = (e) => {
 		const { name } = e.target;
-		let nextState = e.target.value;
+		const nextState = e.target.value;
 		if (this.state.showTooltip) {
 			this.setState({
 				showTooltip: false
 			});
 		}
-		if (!isNaN(nextState)) {
-			nextState = Number(e.target.value);
+		const min = name === 'lat' ? -90 : -180;
+		const max = name === 'lat' ? 90 : 180;
+		const nextNumber = Number(nextState);
+		const isValid = nextState === '' || nextState === '-';
+		if (isValid || (nextNumber >= min && nextNumber <= max)) {
 			const { data } = this.state;
 			data[name] = nextState;
 			this.setState({
@@ -180,7 +184,13 @@ class Cell extends React.Component {
 
 	setActive(nextState) {
 		if (!nextState && this.state.data !== this.state.prevData) {
-			this.indexCurrentData(this.state.data);
+			if (this.props.datatype.type !== 'string') {
+				if (this.state.data !== '-') {
+					this.indexCurrentData(Number(this.state.data));
+				}
+			} else {
+				this.indexCurrentData(this.state.data);
+			}
 			this.setState({
 				prevData: this.state.data
 			});
@@ -192,7 +202,14 @@ class Cell extends React.Component {
 
 	setGeoActive(geo, nextState) {
 		if (!nextState && this.state.data[geo] !== this.state.prevData[geo]) {
-			this.indexCurrentData(this.state.data);
+			const indexData = {};
+			if (this.state.data.lat) {
+				indexData.lat = Number(this.state.data.lat);
+			}
+			if (this.state.data.lon) {
+				indexData.lon = Number(this.state.data.lon);
+			}
+			this.indexCurrentData(indexData);
 		}
 		// update previous state of data
 		this.setState({
@@ -287,7 +304,7 @@ class Cell extends React.Component {
 			if (this.props.datatype.type === 'geo_point') {
 				toDisplay = (
 					<div className="geo-point-container">
-						<div onClick={() => this.setGeoActive('lat', true)}>
+						<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
 							<ColumnLabel>Lat</ColumnLabel>
 							{
 								this.state.geoActive.lat ?
@@ -296,12 +313,13 @@ class Cell extends React.Component {
 										value={this.state.data.lat}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lat', false)}
+										tooltipText="Lat should be between -90 and +90"
 										showTooltip={this.state.showTooltip}
 									/> :
 									this.state.data.lat
 							}
 						</div>
-						<div onClick={() => this.setGeoActive('lon', true)}>
+						<div className="geo-point-value" onClick={() => this.setGeoActive('lon', true)}>
 							<ColumnLabel>Lon</ColumnLabel>
 							{
 								this.state.geoActive.lon ?
@@ -310,6 +328,7 @@ class Cell extends React.Component {
 										value={this.state.data.lon}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lon', false)}
+										tooltipText="Lon should be between -180 and +180"
 										showTooltip={this.state.showTooltip}
 									/> :
 								this.state.data.lon
