@@ -338,10 +338,17 @@ class Cell extends React.Component {
 				)
 			}
 			if (Array.isArray(data)) {
+				const arrayView = this.state.data.length > 2 ?
+					this.state.data.slice(0, 2).concat([{ value: '...', label: '...' }]) :
+					this.state.data;
 				toDisplay = (
 					<Select.Creatable
 						multi
-						value={this.state.data.map(item => ({ value: item, label: item }))}
+						value={
+							this.state.active ?
+								this.state.data.map(item => ({ value: item, label: item })) :
+								arrayView
+						}
 						options={this.props.arrayOptions.map(item => ({ value: item, label: item }))}
 						disabled={!this.state.active}
 						onChange={this.handleArrayChange}
