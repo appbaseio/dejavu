@@ -320,7 +320,7 @@ class Cell extends React.Component {
 										value={this.state.data.lat}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lat', false)}
-										tooltipText="Lat should be between -90 and +90"
+										tooltipText="Latitude should be a number between -90 and +90"
 										showTooltip={this.state.showTooltip}
 									/> :
 									this.state.data.lat
@@ -335,7 +335,7 @@ class Cell extends React.Component {
 										value={this.state.data.lon}
 										handleChange={this.handleGeoChange}
 										handleBlur={() => this.setGeoActive('lon', false)}
-										tooltipText="Lon should be between -180 and +180"
+										tooltipText="Longitude should be a number between -180 and +180"
 										showTooltip={this.state.showTooltip}
 									/> :
 								this.state.data.lon
