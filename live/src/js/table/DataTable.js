@@ -63,6 +63,20 @@ class DataTable extends React.Component {
 				}
 			}
 		}
+
+		const sortedColumns = fullColumns.columns.slice(1).sort();
+		const sortedFinalColumns = fullColumns.final_cols.slice(1).sort((a, b) => {
+			if (a.column < b.column) {
+				return -1;
+			} else if (a.column > b.column) {
+				return 1;
+			}
+			return 0;
+		});
+
+		fullColumns.columns = [...fullColumns.columns.slice(0, 1), ...sortedColumns];
+		fullColumns.final_cols = [...fullColumns.final_cols.slice(0, 1), ...sortedFinalColumns];
+
 		var rows = [];
 		var visibleColumns = [];
 		var renderColumns = [];
