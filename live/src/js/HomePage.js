@@ -282,7 +282,7 @@ var HomePage = createReactClass({
 			clearInterval(streamingInterval);
 		}
 		catch (e) {}
-		
+
 		// this.setMap();
 		if(appAuth) {
 			setTimeout(this.setMap, 2000)
@@ -843,7 +843,7 @@ var HomePage = createReactClass({
 										reloadData={this.reloadData}
 										exportJsonData= {this.exportJsonData}
 										externalQueryApplied={this.state.externalQueryApplied}
-										externalQueryTotal={this.state.externalQueryTotal} 
+										externalQueryTotal={this.state.externalQueryTotal}
 										removeExternalQuery={this.removeExternalQuery}
 										dejavuExportData={this.state.dejavuExportData}
 									/>
@@ -856,7 +856,7 @@ var HomePage = createReactClass({
 								<div className="full_page_loading hide">
 									<div className="loadingBar"></div>
 									<div className="vertical1">
-									</div> 
+									</div>
 								</div>
 							</div>
 						</div>

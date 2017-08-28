@@ -351,6 +351,7 @@ var feed = (function() {
 			}
 		},
 		indexData: function(recordObject, method, callback) {
+			console.log(recordObject);
 			var self = this;
 			if (method === 'index' || method === 'bulk') {
 				applyIndexOrBulk(method);

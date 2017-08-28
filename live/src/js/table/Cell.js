@@ -259,7 +259,7 @@ class Cell extends React.Component {
 		var _type = this.props._type;
 		var toDisplay = data;
 		var tdClass = 'column_width columnAdjust';
-		if (typeof data === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
+		if (this.props.datatype.type === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
@@ -271,20 +271,27 @@ class Cell extends React.Component {
 		}
 		if (columnName == 'json') {
 			var prettyData = <Pretty json={data} />
-			toDisplay = <div className={appIdClass}>
-							<span className="theme-element selectrow checkbox">
-								<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
-								 value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
-								<label htmlFor={radioId}></label>
-							</span>
-							<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-								<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
-							</OverlayTrigger>
-							<span className="appId_name" onClick={this.copyId}>
-								<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
-								<span className="appId_id" title={_id}>{_id}</span>
-							</span>
-						</div>;
+			toDisplay = (
+				<div className={appIdClass}>
+					<span className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
+						{
+							this.props.rowNumber + 1
+						}
+					</span>
+					<span className="theme-element selectrow checkbox">
+						<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
+							value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
+						<label htmlFor={radioId}></label>
+					</span>
+					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+						<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
+					</OverlayTrigger>
+					<span className="appId_name" onClick={this.copyId}>
+						<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
+						<span className="appId_id" title={_id}>{_id}</span>
+					</span>
+				</div>
+			);
 			tdClass = 'column_width';
 		} else {
 			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
@@ -384,7 +391,7 @@ class Cell extends React.Component {
 					closeErrorModal={this.hideErrorMessage}
 				/>
 				{
-					typeof data === 'boolean' ?
+					this.props.datatype.type === 'boolean' ?
 						<div className="cell-input-container">
 							<DropdownButton
 								title={this.state.data.toString()}
@@ -413,7 +420,8 @@ Cell.propTypes = {
 	_id: PropTypes.string.isRequired,
 	_type: PropTypes.string.isRequired,
 	columnName: PropTypes.string.isRequired,
-	arrayOptions: PropTypes.arrayOf(PropTypes.string)
+	arrayOptions: PropTypes.arrayOf(PropTypes.string),
+	rowNumber: PropTypes.number
 };
 
 Cell.defaultProps = {

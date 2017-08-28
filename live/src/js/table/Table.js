@@ -5,6 +5,7 @@ var Info = require('./Info.js');
 var Column = require('./Column.js');
 var Pretty = FeatureComponent.Pretty;
 var Cell = require('./Cell.js');
+import AddRowButton from './AddRowButton';
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -43,9 +44,10 @@ class Table extends React.Component {
 							</tr>
 						</thead>
 						<tbody className='exp-scrollable'>
-								{this.props.renderRows}
+							{this.props.renderRows}
 						</tbody>
 					</table>
+					<AddRowButton onClick={() => feed.indexData({ type: this.props.selectedTypes[0], body: {} }, 'index')}>+ Add new row</AddRowButton>
 				</div>
 			</div>
 		);
