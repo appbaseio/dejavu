@@ -1,9 +1,7 @@
 var React = require('react');
-var FeatureComponent = require('../features/FeatureComponent.js');
 var PageLoading = require('./PageLoading.js');
 var Info = require('./Info.js');
 var Column = require('./Column.js');
-var Pretty = FeatureComponent.Pretty;
 var Cell = require('./Cell.js');
 var Table = require('./Table.js');
 
@@ -145,22 +143,6 @@ class DataTable extends React.Component {
 					</tr>);
 		});
 
-		//Extra add btn
-		var extraAddBtn = '';
-		//Show only when total records are less than 5
-		if (this.props.infoObj.availableTotal <= 5) {
-			extraAddBtn = <div className="AddExtraBtn">
-							<FeatureComponent.AddDocument
-							types={this.props.Types}
-							addRecord ={this.props.addRecord}
-							getTypeDoc={this.props.getTypeDoc}
-							userTouchAdd={this.props.infoObj.userTouchAdd}
-							link="true"
-							text="&nbsp;&nbsp;Add Data"
-							selectClass="tags-select-big"/>
-						  </div>
-		}
-
 		//Page loading - show while paging
 		var pageLoadingComponent = this.props.pageLoading ?
 			(<PageLoading
@@ -172,31 +154,29 @@ class DataTable extends React.Component {
 		return (
 			<div className="dejavu-table">
 
-			<Info infoObj= {this.props.infoObj}
-			totalRecord= {this.props.totalRecord}
-			filterInfo = {this.props.filterInfo}
-			removeFilter= {this.props.removeFilter}
-			removeSort = {this.props.removeSort}
-			removeTypes = {this.props.removeTypes}
-			removeHidden = {this.props.removeHidden}
-			types={this.props.Types}
-			addRecord = {this.props.addRecord}
-			getTypeDoc= {this.props.getTypeDoc}
-			sortInfo = {this.props.sortInfo}
-			columns = {columns}
-			visibleColumns = {visibleColumns}
-			hiddenColumns = {this.props.hiddenColumns}
-			columnToggle = {this.props.columnToggle}
-			actionOnRecord= {this.props.actionOnRecord}
-			reloadData = {this.props.reloadData}
-			exportJsonData = {this.props.exportJsonData}
-			selectedTypes = {this.props.selectedTypes}
-			externalQueryApplied={this.props.externalQueryApplied}
-			externalQueryTotal={this.props.externalQueryTotal}
-			removeExternalQuery={this.props.removeExternalQuery}
-			dejavuExportData={this.props.dejavuExportData} />
-
-			{extraAddBtn}
+				<Info infoObj= {this.props.infoObj}
+					totalRecord= {this.props.totalRecord}
+					filterInfo = {this.props.filterInfo}
+					removeFilter= {this.props.removeFilter}
+					removeSort = {this.props.removeSort}
+					removeTypes = {this.props.removeTypes}
+					removeHidden = {this.props.removeHidden}
+					types={this.props.Types}
+					addRecord = {this.props.addRecord}
+					getTypeDoc= {this.props.getTypeDoc}
+					sortInfo = {this.props.sortInfo}
+					columns = {columns}
+					visibleColumns = {visibleColumns}
+					hiddenColumns = {this.props.hiddenColumns}
+					columnToggle = {this.props.columnToggle}
+					actionOnRecord= {this.props.actionOnRecord}
+					reloadData = {this.props.reloadData}
+					exportJsonData = {this.props.exportJsonData}
+					selectedTypes = {this.props.selectedTypes}
+					externalQueryApplied={this.props.externalQueryApplied}
+					externalQueryTotal={this.props.externalQueryTotal}
+					removeExternalQuery={this.props.removeExternalQuery}
+					dejavuExportData={this.props.dejavuExportData} />
 
 			<div className="outsideTable">
 				<Table
