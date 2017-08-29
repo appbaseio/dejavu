@@ -385,32 +385,34 @@ class Cell extends React.Component {
 				className={tdClass}
 				onClick={() => this.setActive(true)}
 			>
-				<ErrorModal
-					errorShow={this.state.showError}
-					errorMessage={this.state.errorMessage}
-					closeErrorModal={this.hideErrorMessage}
-				/>
-				{
-					this.props.datatype.type === 'boolean' ?
-						<div className="cell-input-container">
-							<DropdownButton
-								title={this.state.data.toString()}
-								id="datatype-boolean-dropdown"
-								onSelect={this.handleBooleanSelect}
-							>
-								<MenuItem eventKey="1" active={this.state.data}>true</MenuItem>
-								<MenuItem eventKey="2" active={!this.state.data}>false</MenuItem>
-							</DropdownButton>
-						</div> :
-						this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
-							<CellInput
-								name={columnName}
-								value={this.state.data}
-								handleChange={this.handleChange}
-								handleBlur={() => this.setActive(false)}
-								showTooltip={this.state.showTooltip}
-							/> : toDisplay
-				}
+				<div className="cell-content">
+					<ErrorModal
+						errorShow={this.state.showError}
+						errorMessage={this.state.errorMessage}
+						closeErrorModal={this.hideErrorMessage}
+					/>
+					{
+						this.props.datatype.type === 'boolean' ?
+							<div className="cell-input-container">
+								<DropdownButton
+									title={this.state.data.toString()}
+									id="datatype-boolean-dropdown"
+									onSelect={this.handleBooleanSelect}
+								>
+									<MenuItem eventKey="1" active={this.state.data}>true</MenuItem>
+									<MenuItem eventKey="2" active={!this.state.data}>false</MenuItem>
+								</DropdownButton>
+							</div> :
+							this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
+								<CellInput
+									name={columnName}
+									value={this.state.data}
+									handleChange={this.handleChange}
+									handleBlur={() => this.setActive(false)}
+									showTooltip={this.state.showTooltip}
+								/> : toDisplay
+					}
+				</div>
 			</td>
 		);
 	}

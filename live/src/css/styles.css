@@ -1247,6 +1247,14 @@ iframe {
 	background-color: #2F9ED5;
 }
 
+.cell-content {
+	height: 36px;
+}
+
+.Select.Select--multi.is-focused {
+	z-index: 2;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
