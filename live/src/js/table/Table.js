@@ -47,7 +47,15 @@ class Table extends React.Component {
 							{this.props.renderRows}
 						</tbody>
 					</table>
-					<AddRowButton onClick={() => feed.indexData({ type: this.props.selectedTypes[0], body: {} }, 'index')}>+ Add new row</AddRowButton>
+					{
+						this.props.selectedTypes.length ?
+							<AddRowButton
+								onClick={() => feed.indexData({ type: this.props.selectedTypes[0], body: {} }, 'index')}
+							>
+								+ Add new row
+							</AddRowButton> :
+							null
+					}
 				</div>
 			</div>
 		);
