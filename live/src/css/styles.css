@@ -1255,6 +1255,15 @@ iframe {
 	z-index: 2;
 }
 
+.Select.is-disabled .Select-control {
+	border: none;
+}
+
+.rdt input.form-control {
+	border: none;
+	box-shadow: none;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
