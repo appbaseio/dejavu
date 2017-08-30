@@ -67,7 +67,7 @@ label {
 }
 
 .removeFilter {
-	background: #3BC7F6;
+	background: #0087ff;
 	color: #fff;
 	display: inline-block;
 }
@@ -116,7 +116,7 @@ label {
 .removeFilter .close-btn {
 	padding: 5px;
 	display: inline-block;
-	background: skyblue;
+	background: #0087ff;
 	border-top-right-radius: 4px;
 	border-bottom-right-radius: 4px;
 }
@@ -749,7 +749,7 @@ footer {
 	border: 1px solid #eee;
 	line-height: 30px;
 	float: left;
-	color: #3BC7F6;
+	color: #0087ff;
 	position: relative;
 }
 
@@ -934,13 +934,13 @@ iframe {
 	background: #fff;
 	border-radius: 4px;
 	border: 3px solid;
-	border-color: #3BC7F6;
+	border-color: #0087ff;
 }
 
 .modal .modal-header {
 	border: 0;
 	padding: 5px 15px 0 15px;
-	color: #3BC7F6;
+	color: #0087ff;
 }
 
 .modal .modal-header .close {
@@ -958,33 +958,33 @@ iframe {
 	margin-top: 0;
 	background: transparent;
 	opacity: 1;
-	color: #3BC7F6;
+	color: #0087ff;
 }
 
 .modal .btn-success {
 	background: transparent;
-	color: #3BC7F6;
-	border-color: #3BC7F6;
+	color: #0087ff;
+	border-color: #0087ff;
 }
 
 .modal .btn-success:hover {
-	background: #3BC7F6;
+	background: #0087ff;
 	color: #fff;
 }
 
 .modal .btn-info {
 	background: transparent;
-	color: #3BC7F6;
-	border-color: #3BC7F6;
+	color: #0087ff;
+	border-color: #0087ff;
 }
 
 .modal .btn-info:hover {
-	background: #3BC7F6;
+	background: #0087ff;
 	color: #fff;
 }
 
 .modal.modal-info .modal-content {
-	border-color: #3BC7F6;
+	border-color: #0087ff;
 }
 
 .modal.modal-warning .modal-content {
@@ -1206,15 +1206,15 @@ iframe {
 
 .dropdown-menu .active a,
 .dropdown-menu .active a:hover {
-	background: #3BC7F6;
+	background: #0087ff;
 }
 
 .is-focused .Select-control {
-	border-color: #3BC7F6 !important;
+	border-color: #0087ff !important;
 }
 
 .Select-value {
-	color: #3BC7F6 !important;
+	color: #0087ff !important;
 }
 
 .is-disabled .Select-value {
@@ -1222,12 +1222,12 @@ iframe {
 }
 
 .rdtActive {
-	background-color: #3BC7F6 !important;
+	background-color: #0087ff !important;
 	border-radius: 4px !important;
 }
 
 .rdtToday:before {
-	border-bottom: 7px solid #3BC7F6 !important;
+	border-bottom: 7px solid #0087ff !important;
 }
 
 .tooltip-hidden {
@@ -1235,16 +1235,7 @@ iframe {
 }
 
 .add-row-button {
-	cursor: pointer;
-	background-color: #3BC7F6;
-	color: #fff;
-	padding: 10px;
-	border-radius: 5px;
-	width: 110px;
-}
-
-.add-row-button:hover {
-	background-color: #2F9ED5;
+	float: left;
 }
 
 .cell-content {
@@ -1268,18 +1259,18 @@ iframe {
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
 .theme-element.checkbox input[type="radio"]:checked + label::after {
-	background: #3BC7F6;
+	background: #0087ff;
 	color: #fff;
 }
 
 .theme-element.radio label::after,
 .loadingBar {
-	background: #3BC7F6;
+	background: #0087ff;
 }
 
 .btn-primary,
 .autocomplete .autolist li:hover {
-	background: #3BC7F6;
+	background: #0087ff;
 	color: #fff;
 	border-color: transparent;
 }
@@ -1297,7 +1288,7 @@ iframe {
 
 .autocomplete .autolist,
 .select2-container--default.select2-container--focus .select2-selection--multiple {
-	border-color: #3BC7F6;
+	border-color: #0087ff;
 }
 
 .danger-text {
