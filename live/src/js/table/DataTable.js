@@ -4,6 +4,7 @@ var Info = require('./Info.js');
 var Column = require('./Column.js');
 var Cell = require('./Cell.js');
 var Table = require('./Table.js');
+var FeatureComponent = require('../features/FeatureComponent.js');
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -192,16 +193,21 @@ class DataTable extends React.Component {
 					removeExternalQuery={this.props.removeExternalQuery}
 					dejavuExportData={this.props.dejavuExportData} />
 
-			<div className="outsideTable">
-				<Table
-				 renderColumns={renderColumns}
-				 visibleColumns = {visibleColumns}
-				 renderRows={renderRows}
-				 scrollFunction={this.props.scrollFunction}
-				 selectedTypes={this.props.selectedTypes}
-				 filterInfo={this.props.filterInfo} />
-			</div>
-			{pageLoadingComponent}
+				<div className="outsideTable">
+					<Table
+						renderColumns={renderColumns}
+						visibleColumns = {visibleColumns}
+						renderRows={renderRows}
+						scrollFunction={this.props.scrollFunction}
+						selectedTypes={this.props.selectedTypes}
+						filterInfo={this.props.filterInfo}
+						types={this.props.Types}
+						addRecord ={this.props.addRecord}
+						getTypeDoc={this.props.getTypeDoc}
+						userTouchAdd={this.props.infoObj.userTouchAdd}
+					/>
+				</div>
+				{pageLoadingComponent}
 			<input id="copyId" className="hide" />
 			</div>
 		);

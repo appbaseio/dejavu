@@ -5,7 +5,6 @@ var Info = require('./Info.js');
 var Column = require('./Column.js');
 var Pretty = FeatureComponent.Pretty;
 var Cell = require('./Cell.js');
-import AddRowButton from './AddRowButton';
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -47,15 +46,15 @@ class Table extends React.Component {
 							{this.props.renderRows}
 						</tbody>
 					</table>
-					{
-						this.props.selectedTypes.length ?
-							<AddRowButton
-								onClick={() => feed.indexData({ type: this.props.selectedTypes[0], body: {} }, 'index')}
-							>
-								+ Add new row
-							</AddRowButton> :
-							null
-					}
+					<div className="add-row-button">
+						<FeatureComponent.AddDocument
+							types={this.props.types}
+							addRecord ={this.props.addRecord}
+							getTypeDoc={this.props.getTypeDoc}
+							userTouchAdd={this.props.userTouchAdd}
+							selectClass="tags-select-small"
+						/>
+					</div>
 				</div>
 			</div>
 		);
