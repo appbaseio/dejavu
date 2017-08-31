@@ -5,6 +5,7 @@ var Column = require('./Column.js');
 var Cell = require('./Cell.js');
 var Table = require('./Table.js');
 var FeatureComponent = require('../features/FeatureComponent.js');
+import AddColumnButton from './AddColumnButton';
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -47,6 +48,7 @@ class DataTable extends React.Component {
 								type: data[each]['_type'],
 								column: column
 							};
+							console.log(obj);
 							fullColumns.final_cols.push(obj);
 						}
 					}
@@ -63,6 +65,18 @@ class DataTable extends React.Component {
 					}
 				}
 			}
+		}
+
+		// identify and add new columns from mappingObj
+		if (this.props.selectedTypes.length) {
+			const { mappingObj } = this.props;
+			const allProperties = Object.keys(mappingObj[this.props.selectedTypes[0]].properties);
+			allProperties.map((item) => {
+				if (!fullColumns.columns.includes(item)) {
+					fullColumns.columns.push(item);
+					fullColumns.final_cols.push({ column: item, type: this.props.selectedTypes[0] });
+				}
+			});
 		}
 
 		const sortedColumns = fullColumns.columns.slice(1).sort();
@@ -206,6 +220,7 @@ class DataTable extends React.Component {
 						getTypeDoc={this.props.getTypeDoc}
 						userTouchAdd={this.props.infoObj.userTouchAdd}
 					/>
+					<AddColumnButton />
 				</div>
 				{pageLoadingComponent}
 			<input id="copyId" className="hide" />
