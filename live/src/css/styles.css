@@ -86,6 +86,7 @@ label {
 	position: relative;
 	height: 100%;
 	padding-top: 40px;
+	display: flex;
 }
 
 .infoRow {
@@ -1236,6 +1237,10 @@ iframe {
 
 .add-row-button {
 	float: left;
+}
+
+.add-column-button {
+	height: 42px;
 }
 
 .cell-content {
