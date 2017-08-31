@@ -46,15 +46,19 @@ class Table extends React.Component {
 							{this.props.renderRows}
 						</tbody>
 					</table>
-					<div className="add-row-button">
-						<FeatureComponent.AddDocument
-							types={this.props.types}
-							addRecord ={this.props.addRecord}
-							getTypeDoc={this.props.getTypeDoc}
-							userTouchAdd={this.props.userTouchAdd}
-							selectClass="tags-select-small"
-						/>
-					</div>
+					{
+						this.props.selectedTypes.length ?
+							<div className="add-row-button">
+								<FeatureComponent.AddDocument
+									types={this.props.types}
+									addRecord ={this.props.addRecord}
+									getTypeDoc={this.props.getTypeDoc}
+									userTouchAdd={this.props.userTouchAdd}
+									selectClass="tags-select-small"
+								/>
+							</div> :
+							null
+					}
 				</div>
 			</div>
 		);

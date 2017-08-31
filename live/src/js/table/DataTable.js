@@ -48,7 +48,6 @@ class DataTable extends React.Component {
 								type: data[each]['_type'],
 								column: column
 							};
-							console.log(obj);
 							fullColumns.final_cols.push(obj);
 						}
 					}
@@ -220,7 +219,13 @@ class DataTable extends React.Component {
 						getTypeDoc={this.props.getTypeDoc}
 						userTouchAdd={this.props.infoObj.userTouchAdd}
 					/>
-					<AddColumnButton />
+					{
+						this.props.selectedTypes.length ?
+							<AddColumnButton
+								selectedTypes={this.props.selectedTypes}
+							/> :
+							null
+					}
 				</div>
 				{pageLoadingComponent}
 			<input id="copyId" className="hide" />
