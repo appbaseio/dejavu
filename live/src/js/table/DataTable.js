@@ -69,13 +69,15 @@ class DataTable extends React.Component {
 		// identify and add new columns from mappingObj
 		if (this.props.selectedTypes.length) {
 			const { mappingObj } = this.props;
-			const allProperties = Object.keys(mappingObj[this.props.selectedTypes[0]].properties);
-			allProperties.map((item) => {
-				if (!fullColumns.columns.includes(item)) {
-					fullColumns.columns.push(item);
-					fullColumns.final_cols.push({ column: item, type: this.props.selectedTypes[0] });
-				}
-			});
+			this.props.selectedTypes.forEach((selectedType) => {
+				const allProperties = Object.keys(mappingObj[selectedType].properties);
+				allProperties.map((item) => {
+					if (!fullColumns.columns.includes(item)) {
+						fullColumns.columns.push(item);
+						fullColumns.final_cols.push({ column: item, type: selectedType });
+					}
+				});
+			})
 		}
 
 		const sortedColumns = fullColumns.columns.slice(1).sort();
