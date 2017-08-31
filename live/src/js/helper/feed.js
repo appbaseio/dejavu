@@ -440,6 +440,22 @@ var feed = (function() {
 				}
 			});
 		},
+		createMapping: function(type, queryBody) {
+			var createUrl = HOST + '/' + APPNAME + '/_mapping/' + type;
+			return $.ajax({
+				type: 'POST',
+				beforeSend: function(request) {
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: createUrl,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				data: JSON.stringify(queryBody),
+				xhrFields: {
+					withCredentials: true
+				}
+			});
+		},
 		applyQuery: function(url, queryBody) {
 			return $.ajax({
 				type: 'POST',
