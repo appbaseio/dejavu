@@ -437,6 +437,7 @@ footer {
 .dejavu-table .table>tfoot>tr>td,
 .dejavu-table .table>tfoot>tr>th {
 	border-color: #eee;
+	padding: 0;
 }
 
 .jsonTitle {
@@ -475,11 +476,6 @@ footer {
 	width: 250px;
 	max-width: 250px;
 	min-width: 250px;
-	overflow: hidden;
-}
-
-.columnAdjust {
-	padding-top: 14px !important;
 }
 
 .allowOverflow {
@@ -702,13 +698,13 @@ footer {
 .appId {
 	float: left;
 	width: 250px;
-	padding-left: 26px;
+	padding-left: 36px;
 	position: relative;
 }
 
 .appId .selectrow {
 	position: absolute;
-	left: 0;
+	left: 9px;
 	top: -2px;
 	z-index: 2;
 	cursor: pointer;
@@ -717,18 +713,17 @@ footer {
 
 .appId .row-number {
 	position: absolute;
-	left: 0;
+	left: 9px;
 	top: 7px;
 	z-index: 2;
 	display: inline-block;
-	border: 1px solid #aaa;
-	color: #aaa;
-	border-radius: 3px;
-	padding: 0 5px;
-	font-size: 0.85em;
+	color: #0087ff;
+	padding-left: 5px;
+	font-size: 1em;
+
 }
 
-.appId:hover .row-number {
+.row-number:hover {
 	display: none;
 }
 
@@ -769,8 +764,6 @@ footer {
 .appId .appId_name {
 	display: inline-block;
 	float: left;
-	border: 1px solid #eee;
-	border-left: 0;
 	padding-left: 20px;
 	padding-right: 5px;
 	margin-left: -15px;
@@ -780,8 +773,6 @@ footer {
 	height: 34px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	border-top-right-radius: 6px;
-	border-bottom-right-radius: 6px;
 	-webkit-user-select: all;
 	-moz-user-select: all;
 	-ms-user-select: all;
@@ -1182,7 +1173,11 @@ iframe {
 
 .cell-input {
 	border: none;
-	padding: 3px;
+	padding: 7px;
+	height: 50px;
+	resize: none;
+	width: 100%;
+	position: relative;
 }
 
 .column-label {
@@ -1245,6 +1240,27 @@ iframe {
 
 .cell-content {
 	height: 36px;
+	overflow: hidden;
+}
+
+.cell-content.string, .cell-content.integer {
+	padding: 7px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.cell-content.geo_point {
+	line-height: 2.7;
+}
+
+.cell-content.undefined {
+	display: flex;
+	align-items: center;
+}
+
+.cell-content.active {
+	padding: 0;
+	overflow: visible;
 }
 
 .Select.Select--multi.is-focused {

@@ -385,7 +385,7 @@ class Cell extends React.Component {
 				className={tdClass}
 				onClick={() => this.setActive(true)}
 			>
-				<div className="cell-content">
+				<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
 					<ErrorModal
 						errorShow={this.state.showError}
 						errorMessage={this.state.errorMessage}

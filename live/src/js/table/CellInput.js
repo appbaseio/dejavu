@@ -18,7 +18,7 @@ class CellInput extends Component {
 				}
 				delay={800}
 			>
-				<input
+				<textarea
 					name={this.props.name}
 					ref={(node) => { this.inputRef = node; }}
 					type="text"
