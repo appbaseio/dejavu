@@ -203,7 +203,7 @@ body {
 
 .dejavuContainer {
 	border: 1px solid #ddd;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 .dejavuContainer,
@@ -786,7 +786,7 @@ footer {
 
 .left-tab {
 	height: calc(100% - 36px);
-	overflow: auto;
+	overflow-x: hidden;
 }
 
 .tab-content>.active {
@@ -1253,6 +1253,10 @@ iframe {
 	line-height: 2.7;
 }
 
+.cell-input-single {
+	height: 36px;
+}
+
 .cell-content.undefined {
 	display: flex;
 	align-items: center;
@@ -1269,11 +1273,13 @@ iframe {
 
 .Select.is-disabled .Select-control {
 	border: none;
+	background: #fff !important;
 }
 
 .rdt input.form-control {
 	border: none;
 	box-shadow: none;
+	background: transparent;
 }
 
 /*Color Schemes*/

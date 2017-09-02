@@ -58,7 +58,27 @@ class Cell extends React.Component {
 		_type = this.props._type;
 		row = this.props.row;
 		this.props.actionOnRecord.selectRecord(_id, _type, row, checkFlag);
-	};
+	}
+
+	componentDidMount() {
+		if (this.props.arrayOptions && this.props.item === '') {
+			this.setState({
+				data: [],
+				prevData: []
+			})
+		} else if (this.props.datatype.type === 'geo_point' && this.props.item === '') {
+			this.setState({
+				data: {
+					lat: '',
+					lon: ''
+				},
+				prevData: {
+					lat: '',
+					lon: ''
+				}
+			});
+		}
+	}
 
 	componentDidUpdate() {
 		var self = this;
@@ -131,12 +151,13 @@ class Cell extends React.Component {
 	}
 
 	handleBooleanSelect = (e) => {
-		const nextState = e === '1';
+		const nextState = e.value;
 		if (this.state.data !== nextState) {
-			this.indexCurrentData(nextState);
 			this.setState({
-				data: nextState
+				data: nextState,
+				active: false
 			});
+			this.indexCurrentData(nextState);
 		}
 	}
 
@@ -177,7 +198,7 @@ class Cell extends React.Component {
 	}
 
 	setSelectActive(nextState) {
-		if (nextState && Array.isArray(this.state.data)) {
+		if (nextState && (Array.isArray(this.state.data) || this.props.datatype.type === 'boolean')) {
 			this.select.focus();
 		}
 	}
@@ -201,7 +222,7 @@ class Cell extends React.Component {
 	}
 
 	setGeoActive(geo, nextState) {
-		if (!nextState && this.state.data[geo] !== this.state.prevData[geo]) {
+		if (!nextState && this.state.data[geo] !== this.state.prevData[geo] && this.state.data.lat && this.state.data.lon) {
 			const indexData = {};
 			if (this.state.data.lat) {
 				indexData.lat = Number(this.state.data.lat);
@@ -252,7 +273,7 @@ class Cell extends React.Component {
 		var style = {
 			display: vb
 		};
-		var data = this.props.item;
+		const data = this.state.data;
 		// The id of the html element is generated
 		// in keys.js.
 		var _id = this.props._id;
@@ -322,6 +343,7 @@ class Cell extends React.Component {
 										handleBlur={() => this.setGeoActive('lat', false)}
 										tooltipText="Latitude should be a number between -90 and +90"
 										showTooltip={this.state.showTooltip}
+										singleLine
 									/> :
 									this.state.data.lat
 							}
@@ -337,6 +359,7 @@ class Cell extends React.Component {
 										handleBlur={() => this.setGeoActive('lon', false)}
 										tooltipText="Longitude should be a number between -180 and +180"
 										showTooltip={this.state.showTooltip}
+										singleLine
 									/> :
 								this.state.data.lon
 							}
@@ -394,14 +417,18 @@ class Cell extends React.Component {
 					{
 						this.props.datatype.type === 'boolean' ?
 							<div className="cell-input-container">
-								<DropdownButton
+								<Select
+									value={this.state.data}
+									options={[{ value: true, label: 'True' }, { value: false, label: 'False' }]}
+									disabled={!this.state.active}
+									onChange={this.handleBooleanSelect}
 									title={this.state.data.toString()}
-									id="datatype-boolean-dropdown"
 									onSelect={this.handleBooleanSelect}
-								>
-									<MenuItem eventKey="1" active={this.state.data}>true</MenuItem>
-									<MenuItem eventKey="2" active={!this.state.data}>false</MenuItem>
-								</DropdownButton>
+									onBlur={() => this.setActive(false)}
+									placeholder="Select value"
+									ref={(node) => { this.select = node; }}
+									clearable={false}
+								/>
 							</div> :
 							this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
 								<CellInput

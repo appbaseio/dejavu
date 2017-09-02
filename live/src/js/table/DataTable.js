@@ -22,6 +22,7 @@ class DataTable extends React.Component {
 		var fixed = [], columns, initial_final_cols;
 		const arrayOptions = {};
 		//If render from sort, dont change the order of columns
+		// TODO: optimize logic
 		if (!$this.props.sortInfo.active) {
 			if ($this.props.infoObj.showing != 0) {
 				fixed = ['json'];
@@ -51,6 +52,22 @@ class DataTable extends React.Component {
 							fullColumns.final_cols.push(obj);
 						}
 					}
+					if (Array.isArray(data[each][column])) {
+						if (arrayOptions[column]) {
+							data[each][column].forEach((item) => {
+								if (!arrayOptions[column].includes(item)) {
+									arrayOptions[column].push(item);
+								}
+							});
+						} else {
+							arrayOptions[column] = [...data[each][column]];
+						}
+					}
+				}
+			}
+		} else {
+			for (var each in data) {
+				for (var column in data[each]) {
 					if (Array.isArray(data[each][column])) {
 						if (arrayOptions[column]) {
 							data[each][column].forEach((item) => {

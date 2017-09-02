@@ -18,15 +18,27 @@ class CellInput extends Component {
 				}
 				delay={800}
 			>
-				<textarea
-					name={this.props.name}
-					ref={(node) => { this.inputRef = node; }}
-					type="text"
-					value={this.props.value}
-					onChange={e => this.props.handleChange(e)}
-					onBlur={this.props.handleBlur}
-					className="cell-input"
-				/>
+				{
+					this.props.singleLine ?
+						<input
+							name={this.props.name}
+							ref={(node) => { this.inputRef = node; }}
+							type="text"
+							value={this.props.value}
+							onChange={e => this.props.handleChange(e)}
+							onBlur={this.props.handleBlur}
+							className="cell-input-single"
+						/> :
+						<textarea
+							name={this.props.name}
+							ref={(node) => { this.inputRef = node; }}
+							type="text"
+							value={this.props.value}
+							onChange={e => this.props.handleChange(e)}
+							onBlur={this.props.handleBlur}
+							className="cell-input"
+						/>
+				}
 			</OverlayTrigger>
 		);
 	}
@@ -41,12 +53,14 @@ CellInput.propTypes = {
 	handleChange: PropTypes.func.isRequired,
 	handleBlur: PropTypes.func.isRequired,
 	showTooltip: PropTypes.bool,
-	tooltipText: PropTypes.string
+	tooltipText: PropTypes.string,
+	singleLine: PropTypes.bool
 };
 
 CellInput.defaultProps = {
 	showTooltip: false,
-	tooltipText: 'This field should be a number'
+	tooltipText: 'This field should be a number',
+	singleLine: false
 };
 
 export default CellInput;
