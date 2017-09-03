@@ -17,7 +17,7 @@ const AddColumnButton = props => (
 		<div
 			className="add-column-button btn btn-primary"
 		>
-			...
+			<i className="fa fa-plus" />
 		</div>
 	</OverlayTrigger>
 );

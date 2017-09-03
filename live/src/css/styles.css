@@ -422,6 +422,7 @@ footer {
 #data-table {
 	border: 0 !important;
 	background: #fff;
+	margin-bottom: 0px;
 }
 
 #data-table thead tr th:first-child .table-fixed-head {
@@ -720,10 +721,9 @@ footer {
 	color: #0087ff;
 	padding-left: 5px;
 	font-size: 1em;
-
 }
 
-.row-number:hover {
+.appId:hover .row-number {
 	display: none;
 }
 
@@ -1178,6 +1178,13 @@ iframe {
 	resize: none;
 	width: 100%;
 	position: relative;
+  outline: none;
+}
+
+.cell-input:focus {
+	border: 1px solid #0087ff;
+	padding: 5px;
+	box-shadow: 0 0 3px #0087ff;
 }
 
 .column-label {
@@ -1236,6 +1243,8 @@ iframe {
 
 .add-column-button {
 	height: 42px;
+	display: flex;
+	align-items: center;
 }
 
 .cell-content {
@@ -1243,10 +1252,14 @@ iframe {
 	overflow: hidden;
 }
 
-.cell-content.string, .cell-content.integer {
+.cell-content.string, .cell-content.integer, .cell-content.date {
 	padding: 7px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.cell-content.date {
+	padding-left: 10px;
 }
 
 .cell-content.geo_point {
@@ -1255,6 +1268,12 @@ iframe {
 
 .cell-input-single {
 	height: 36px;
+}
+
+.cell-input-single:focus {
+	border: 1px solid #0087ff;
+	padding: 5px;
+	box-shadow: 0 0 3px #0087ff;
 }
 
 .cell-content.undefined {
@@ -1273,13 +1292,14 @@ iframe {
 
 .Select.is-disabled .Select-control {
 	border: none;
-	background: #fff !important;
+	background: transparent !important;
 }
 
 .rdt input.form-control {
-	border: none;
-	box-shadow: none;
 	background: transparent;
+	border: 1px solid #0087ff;
+	padding: 5px;
+	box-shadow: 0 0 3px #0087ff;
 }
 
 /*Color Schemes*/

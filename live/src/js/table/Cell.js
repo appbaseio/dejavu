@@ -294,11 +294,11 @@ class Cell extends React.Component {
 			var prettyData = <Pretty json={data} />
 			toDisplay = (
 				<div className={appIdClass}>
-					<span className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
+					<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
 						{
 							this.props.rowNumber + 1
 						}
-					</span>
+					</div>
 					<span className="theme-element selectrow checkbox">
 						<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
 							value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
@@ -388,13 +388,14 @@ class Cell extends React.Component {
 						clearable={false}
 					/>
 				);
-			} else if (this.props.datatype.type === 'date') {
+			} else if (this.props.datatype.type === 'date' && this.state.active) {
 				toDisplay = (
 					<Datetime
-						value={moment(this.state.data, getMomentDate(this.props.datatype.format))}
+						value={this.state.data}
 						dateFormat={getMomentDate(this.props.datatype.format)}
 						timeFormat={!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date')}
 						onChange={this.handleDatetimeChange}
+						onBlur={() => this.setState({ active: false })}
 					/>
 				);
 			}
