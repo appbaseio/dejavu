@@ -193,8 +193,8 @@ class DataTable extends React.Component {
 		//Page loading - show while paging
 		var pageLoadingComponent = this.props.pageLoading ?
 			(<PageLoading
-										key="123"
-										visibleColumns={visibleColumns}
+				key="123"
+				visibleColumns={visibleColumns}
 										pageLoading={this.props.pageLoading}>
 									</PageLoading>) : '';
 

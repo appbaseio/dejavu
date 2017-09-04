@@ -30,7 +30,7 @@ class Table extends React.Component {
 		var column_width = 250;
 		var elem = document.getElementById('table-scroller');
 		if (elem != null) {
-			elem.style.width = this.props.visibleColumns.length * column_width + 'px';
+			// elem.style.width = this.props.visibleColumns.length * column_width + 'px';
 		}
 		return (
 			<div id='table-container' className="table-container">

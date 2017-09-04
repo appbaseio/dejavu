@@ -20,7 +20,6 @@ const Pretty = FeatureComponent.Pretty;
 // We decided to roll our own as existing
 // libs with React.JS were missing critical
 // features.
-const cellWidth = '250px';
 
 class Cell extends React.Component {
 	static defaultProps = {
@@ -402,7 +401,6 @@ class Cell extends React.Component {
 		}
 		return (
 			<td
-				width={cellWidth}
 				id={this.props.unique}
 				key={this.props.unique}
 				style={style}

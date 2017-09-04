@@ -785,57 +785,57 @@ var HomePage = createReactClass({
 		}
 		var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (queryParams && queryParams.hasOwnProperty('h') ? ' without-h ' : '') + (queryParams && queryParams.hasOwnProperty('f') ? ' without-f ' : '') + (queryParams && queryParams.hasOwnProperty('sidebar') ? ' without-sidebar ' : '') + (this.state.splash ? ' splash-on ' : '');
 		return (<div>
-					<div id='modal' />
-					<div className={containerClass}>
-						<div className="appHeaderContainer">
-						<Header />
-							<div className="appFormContainer">
-								{dejavuForm}
-								<div className="typeContainer">
-								<Sidebar
-										typeProps={{
-											Types:this.state.types,
-											watchTypeHandler:this.watchStock,
-											unwatchTypeHandler:this.unwatchStock,
-											signalColor:this.state.signalColor,
-											signalActive:this.state.signalActive,
-											signalText:this.state.signalText,
-											typeInfo:this.state.typeInfo,
-											selectedTypes: subsetESTypes,
-											cleanTypes: this.state.cleanTypes,
-											connect: this.state.connect
-										}}
-										queryProps={{
-											'externalQuery':this.externalQuery,
-											'externalQueryApplied': this.state.externalQueryApplied,
-											'removeExternalQuery':this.removeExternalQuery,
-											'types': this.state.types
-										}}
-										importer={{
-											appname: this.state.appname,
-											url: this.state.url
-										}}
-									/>
-								</div>
-								<div className="col-xs-12 dataContainer">
-									<DataTable
-										_data={this.state.documents}
-										sortInfo={this.state.sortInfo}
-										filterInfo={this.state.filterInfo}
-										infoObj={this.state.infoObj}
-										totalRecord={this.state.totalRecord}
-										scrollFunction={this.handleScroll}
-										selectedTypes={subsetESTypes}
-										handleSort={this.handleSort}
-										mappingObj={this.state.mappingObj}
-										removeFilter ={this.removeFilter}
-										addRecord = {this.addRecord}
-										getTypeDoc={this.getTypeDoc}
-										Types={this.state.types}
-										removeSort = {this.removeSort}
-										removeHidden = {this.removeHidden}
-										removeTypes = {this.removeTypes}
-										visibleColumns = {this.state.visibleColumns}
+			<div id='modal' />
+			<div className={containerClass}>
+				<div className="appHeaderContainer">
+					<Header />
+					<div className="appFormContainer">
+						{dejavuForm}
+						<div className="typeContainer">
+							<Sidebar
+								typeProps={{
+									Types:this.state.types,
+									watchTypeHandler:this.watchStock,
+									unwatchTypeHandler:this.unwatchStock,
+									signalColor:this.state.signalColor,
+									signalActive:this.state.signalActive,
+									signalText:this.state.signalText,
+									typeInfo:this.state.typeInfo,
+									selectedTypes: subsetESTypes,
+									cleanTypes: this.state.cleanTypes,
+									connect: this.state.connect
+								}}
+								queryProps={{
+									'externalQuery':this.externalQuery,
+									'externalQueryApplied': this.state.externalQueryApplied,
+									'removeExternalQuery':this.removeExternalQuery,
+									'types': this.state.types
+								}}
+								importer={{
+									appname: this.state.appname,
+									url: this.state.url
+								}}
+							/>
+						</div>
+						<div className="col-xs-12 dataContainer">
+							<DataTable
+								_data={this.state.documents}
+								sortInfo={this.state.sortInfo}
+								filterInfo={this.state.filterInfo}
+								infoObj={this.state.infoObj}
+								totalRecord={this.state.totalRecord}
+								scrollFunction={this.handleScroll}
+								selectedTypes={subsetESTypes}
+								handleSort={this.handleSort}
+								mappingObj={this.state.mappingObj}
+								removeFilter ={this.removeFilter}
+								addRecord = {this.addRecord}
+								getTypeDoc={this.getTypeDoc}
+								Types={this.state.types}
+								removeSort = {this.removeSort}
+								removeHidden = {this.removeHidden}
+								removeTypes = {this.removeTypes}
+								visibleColumns = {this.state.visibleColumns}
 										hiddenColumns = {this.state.hiddenColumns}
 										columnToggle ={this.columnToggle}
 										actionOnRecord = {this.state.actionOnRecord}
