@@ -10,7 +10,8 @@
     top: 0;
     width: 100%;
     height: 100%;
-    padding-top: 100px;
+    padding-top: 70px;
+		background: #f8fafb;
 }
 
 .appFormContainer {
@@ -35,13 +36,14 @@
     position: absolute;
     height: auto;
     background: #fff;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #eff0ef;
 }
 
 .header .img-container {
     margin-top: 10px;
     margin-bottom: 10px;
-    text-align: center;
+    text-align: left;
+		padding-left: 15px;
 }
 
 .header .header-img-container {
@@ -49,7 +51,7 @@
 }
 
 .header .img-container img {
-    max-width: 45px;
+    max-width: 35px;
     display: inline-block;
     float: left;
 }
@@ -59,6 +61,8 @@
     font-size: 30px;
     padding-left: 15px;
     float: left;
+		color: #6b7377;
+		font-weight: 800;
 }
 
 .header .tag-line {
@@ -71,7 +75,7 @@
 .header .subscribe {
     position: absolute;
     right: 15px;
-    top: 15px;
+    top: 10px;
     width: 50px;
     height: 50px;
     line-height: 50px;
@@ -81,6 +85,10 @@
 
 .header .subscribe img {
     border-radius: 50%;
+}
+
+.subscribe-icon {
+	color: #bfe1ff;
 }
 
 @media screen and (max-width: 768px) {
