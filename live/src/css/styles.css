@@ -236,7 +236,14 @@ footer {
 
 .mirage_link {
 	position: absolute;
-	left: 47px;
+	left: 55px;
+	border: 1px solid #eee;
+	color: #0087ff;
+}
+
+.mirage_link:hover {
+	color: #0073ff;
+	border-color: #eee;
 }
 
 footer {
@@ -256,8 +263,13 @@ footer {
 
 .init-ES .share-btn {
 	position: absolute;
-	left: 5px;
+	left: 15px;
 	width: 20px;
+}
+
+.share-btn .btn {
+	border: 1px solid #eee;
+	color: #0087ff;
 }
 
 .init-ES h1,
@@ -389,7 +401,7 @@ footer {
 	white-space: nowrap;
 	height: 42px;
 	overflow: inherit !important;
-	background: #fff;
+	background: #f2f2f2;
 }
 
 .table-fixed-head .bracketIcon {
@@ -858,6 +870,10 @@ footer {
 
 #dejavu-sidebar {
 	height: 100%;
+	background-color: white;
+	padding-bottom: 10px;
+	border: 1px solid #eff0f0;
+	margin-top: 5px;
 }
 
 #dejavu-sidebar .tab-content {
@@ -1094,11 +1110,12 @@ iframe {
 	text-align: right;
 	border-radius: 4px;
 	background: #ddd;
-	border: 1px solid #ccc;
+	border: 1px solid #eff0ef;
 }
 
 .hide-url .btn {
 	margin-top: -1px;
+	color: #0087ff;
 }
 
 .hide-url.expand {
@@ -1189,7 +1206,7 @@ iframe {
 }
 
 .column-label {
-	background: #999;
+	background: #ccc;
 	color: #fff;
 	border-radius: 4px;
 	padding: 4px;
@@ -1308,6 +1325,33 @@ iframe {
 	box-shadow: 0 0 3px #0087ff;
 }
 
+.nav-tabs {
+	border: none;
+}
+
+.nav-tabs li {
+	width: 50%;
+	text-align: center;
+}
+
+.nav-tabs li a {
+	color: #0087ff !important;
+	border: none !important;
+	background: #b6e0ff;
+}
+
+.nav-tabs li.active a {
+	color: #0087ff;
+	background: white;
+	border: none;
+}
+
+.nav-tabs li.active a:hover,
+.nav-tabs li.active a:visited {
+	color: #0087ff;
+	border: none;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
@@ -1331,8 +1375,8 @@ iframe {
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-	border-color: #2F9ED5;
-	background: #2F9ED5;
+	border-color: #0073ff;
+	background: #0073ff;
 }
 
 .greyBtn {
