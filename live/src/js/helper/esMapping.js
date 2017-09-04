@@ -54,8 +54,8 @@ export const es2 = {
 	Boolean: {
 		type: 'boolean'
 	},
-	'Geo Shape': {
-		type: 'geo_shape'
+	'Geo Point': {
+		type: 'geo_point'
 	}
 };
 
@@ -115,7 +115,7 @@ export const es5 = {
 	Boolean: {
 		type: 'boolean'
 	},
-	'Geo Shape': {
-		type: 'geo_shape'
+	'Geo Point': {
+		type: 'geo_point'
 	}
 };
