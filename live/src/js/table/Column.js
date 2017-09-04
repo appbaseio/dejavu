@@ -23,15 +23,20 @@ class Column extends React.Component {
 	getDatatype(datatype) {
 		switch (datatype) {
 			case 'string':
-				return 'String';
+				return <img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />;
 			case 'integer':
-				return 'Integer';
+			case 'long':
+				return <i className="fa fa-hashtag column-label-img" />;
 			case 'geo_point':
-				return 'Geo Point';
+			case 'geo_shape':
+				return <i className="fa fa-map-marker column-label-img" />;
 			case 'boolean':
-				return 'Boolean';
+				return <img src="src/img/boolean.svg" width="15px" className="column-label-img" alt="Boolean label" />;
 			case 'date':
-				return 'Date';
+				return <i className="fa fa-calendar column-label-img" />;
+			case 'float':
+			case 'double':
+				return <img src="src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />;
 			default:
 				return datatype;
 		}
@@ -51,14 +56,14 @@ class Column extends React.Component {
 		let analyzed = true;
 		const prettyData = " Clicking on {...} displays the JSON data. ";
 		const itemText = item == 'json' ?
-				(<span>
-					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
-						<a href="javascript:void(0);" className="bracketIcon"></a>
-					</OverlayTrigger>
-					<span>&nbsp;&nbsp;type / id</span>
-				</span>) :
-				(<span onClick={this.sortingInit}>{item}
-				</span>);
+			(<span>
+				<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson jsonTitle">{prettyData}</Popover>}>
+					<a href="javascript:void(0);" className="bracketIcon"></a>
+				</OverlayTrigger>
+				<span>&nbsp;&nbsp;type / id</span>
+			</span>) :
+			(<span onClick={this.sortingInit}>{item}
+			</span>);
 		const thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
 
 		// get the datatype if field is not json & type mapping has properties field
@@ -90,11 +95,11 @@ class Column extends React.Component {
 				<div className={fixedHead}>
 					<div className="headText">
 						<div className={thtextShow}>
-							{itemText}
 							{
 								datatype &&
-								<ColumnLabel>{this.getDatatype(datatype)}</ColumnLabel>
+								this.getDatatype(datatype)
 							}
+							{itemText}
 						</div>
 						<div className="iconList">
 							{sortIcon}

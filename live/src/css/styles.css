@@ -1195,6 +1195,10 @@ iframe {
 	margin: 0 10px;
 }
 
+.column-label-img {
+	margin-right: 10px;
+}
+
 .geo-point-container {
 	display: flex;
 }
