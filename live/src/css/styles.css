@@ -1183,6 +1183,7 @@ iframe {
 
 .cell-input:focus {
 	border: 1px solid #0087ff;
+	border-radius: 3px;
 	padding: 5px;
 	box-shadow: 0 0 3px #0087ff;
 }
@@ -1276,6 +1277,7 @@ iframe {
 
 .cell-input-single:focus {
 	border: 1px solid #0087ff;
+	border-radius: 3px;
 	padding: 5px;
 	box-shadow: 0 0 3px #0087ff;
 }
