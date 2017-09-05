@@ -1,7 +1,9 @@
 import React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
+
 import FilterDropdown from './FilterDropdown';
 import ColumnLabel from './ColumnLabel';
+import ColumnMappingInfo from './ColumnMappingInfo';
 
 const cellWidth = '250px';
 
@@ -20,23 +22,49 @@ class Column extends React.Component {
 		});
 	}
 
+	getMappingPo
+
 	getDatatype(datatype) {
 		switch (datatype) {
 			case 'string':
-				return <img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />
+					</ColumnMappingInfo>
+				);
 			case 'integer':
 			case 'long':
-				return <i className="fa fa-hashtag column-label-img" />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<i className="fa fa-hashtag column-label-img" />
+					</ColumnMappingInfo>
+				);
 			case 'geo_point':
 			case 'geo_shape':
-				return <i className="fa fa-map-marker column-label-img" />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<i className="fa fa-map-marker column-label-img" />
+					</ColumnMappingInfo>
+				);
 			case 'boolean':
-				return <img src="src/img/boolean.svg" width="15px" className="column-label-img" alt="Boolean label" />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<img src="src/img/boolean.svg" width="15px" className="column-label-img" alt="Boolean label" />
+					</ColumnMappingInfo>
+				);
 			case 'date':
-				return <i className="fa fa-calendar column-label-img" />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<i className="fa fa-calendar column-label-img" />
+					</ColumnMappingInfo>
+				);
 			case 'float':
 			case 'double':
-				return <img src="src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />;
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<img src="src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />
+					</ColumnMappingInfo>
+				);
 			default:
 				return datatype;
 		}
