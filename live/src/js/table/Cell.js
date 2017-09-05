@@ -390,7 +390,7 @@ class Cell extends React.Component {
 			} else if (this.props.datatype.type === 'date' && this.state.active) {
 				toDisplay = (
 					<Datetime
-						value={this.state.data}
+						defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
 						dateFormat={getMomentDate(this.props.datatype.format)}
 						timeFormat={!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date')}
 						onChange={this.handleDatetimeChange}
