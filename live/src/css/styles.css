@@ -1357,6 +1357,10 @@ iframe {
 	border: none;
 }
 
+.add-data-text {
+	padding-left: 5px;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,
