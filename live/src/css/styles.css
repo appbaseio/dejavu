@@ -1234,6 +1234,11 @@ iframe {
 	background: #0087ff;
 }
 
+.dropdown-menu.dropdown-menu-right {
+	max-height: 500px;
+	overflow-y: auto;
+}
+
 .is-focused .Select-control {
 	border-color: #0087ff !important;
 }
