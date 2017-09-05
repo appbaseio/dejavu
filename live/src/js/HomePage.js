@@ -836,32 +836,33 @@ var HomePage = createReactClass({
 								removeHidden = {this.removeHidden}
 								removeTypes = {this.removeTypes}
 								visibleColumns = {this.state.visibleColumns}
-										hiddenColumns = {this.state.hiddenColumns}
-										columnToggle ={this.columnToggle}
-										actionOnRecord = {this.state.actionOnRecord}
-										pageLoading={this.state.pageLoading}
-										reloadData={this.reloadData}
-										exportJsonData= {this.exportJsonData}
-										externalQueryApplied={this.state.externalQueryApplied}
-										externalQueryTotal={this.state.externalQueryTotal}
-										removeExternalQuery={this.removeExternalQuery}
-										dejavuExportData={this.state.dejavuExportData}
-									/>
-								</div>
-								{footer}
-								<FeatureComponent.ErrorModal
-									errorShow={this.state.errorShow}
-									closeErrorModal = {this.closeErrorModal}>
-								</FeatureComponent.ErrorModal>
-								<div className="full_page_loading hide">
-									<div className="loadingBar"></div>
-									<div className="vertical1">
-									</div>
-								</div>
+								hiddenColumns = {this.state.hiddenColumns}
+								columnToggle ={this.columnToggle}
+								actionOnRecord = {this.state.actionOnRecord}
+								pageLoading={this.state.pageLoading}
+								reloadData={this.reloadData}
+								exportJsonData= {this.exportJsonData}
+								externalQueryApplied={this.state.externalQueryApplied}
+								externalQueryTotal={this.state.externalQueryTotal}
+								removeExternalQuery={this.removeExternalQuery}
+								dejavuExportData={this.state.dejavuExportData}
+								reloadMapping={this.setMap}
+							/>
+						</div>
+						{footer}
+						<FeatureComponent.ErrorModal
+							errorShow={this.state.errorShow}
+							closeErrorModal = {this.closeErrorModal}>
+						</FeatureComponent.ErrorModal>
+						<div className="full_page_loading hide">
+							<div className="loadingBar"></div>
+							<div className="vertical1">
 							</div>
 						</div>
 					</div>
-				</div>);
+				</div>
+			</div>
+		</div>);
 	},
 });
 

@@ -242,6 +242,7 @@ class DataTable extends React.Component {
 						this.props.selectedTypes.length ?
 							<AddColumnButton
 								selectedTypes={this.props.selectedTypes}
+								reloadMapping={this.props.reloadMapping}
 							/> :
 							null
 					}

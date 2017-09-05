@@ -90,6 +90,7 @@ class CreateColumnForm extends React.Component {
 									}
 								}
 							});
+							setTimeout(this.props.reloadMapping, 1000);
 						}}
 					>
 						Create!
@@ -101,7 +102,8 @@ class CreateColumnForm extends React.Component {
 }
 
 CreateColumnForm.propTypes = {
-	selectedTypes: PropTypes.arrayOf(PropTypes.string)
+	selectedTypes: PropTypes.arrayOf(PropTypes.string),
+	reloadMapping: PropTypes.func
 };
 
 export default CreateColumnForm;
