@@ -14,6 +14,7 @@ import FeatureComponent from '../features/FeatureComponent';
 import ColumnLabel from './ColumnLabel';
 import ErrorModal from '../features/ErrorModal';
 import getMomentDate from '../helper/getMomentDate';
+import getMaxArrayView from '../helper/getMaxArrayView';
 
 const Pretty = FeatureComponent.Pretty;
 // row/column manipulation functions.
@@ -370,8 +371,9 @@ class Cell extends React.Component {
 				)
 			}
 			if (Array.isArray(data)) {
-				const arrayView = this.state.data.length > 2 ?
-					this.state.data.slice(0, 2).concat([{ value: '...', label: '...' }]) :
+				const seperator = getMaxArrayView(data);
+				const arrayView = this.state.data.length > seperator ?
+					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
 					this.state.data;
 				toDisplay = (
 					<Select.Creatable
