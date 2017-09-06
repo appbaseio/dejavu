@@ -455,8 +455,8 @@ Cell.propTypes = {
 	columnName: PropTypes.string.isRequired,
 	arrayOptions: PropTypes.arrayOf(PropTypes.string),
 	rowNumber: PropTypes.number,
-	editable: PropTypes.boolean,
-	datatype: PropTypes.Object	// eslint-disable-line
+	editable: PropTypes.bool,
+	datatype: PropTypes.object	// eslint-disable-line
 };
 
 Cell.defaultProps = {
