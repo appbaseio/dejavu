@@ -440,7 +440,7 @@ var feed = (function() {
 				}
 			});
 		},
-		createMapping: function(type, queryBody) {
+		createMapping: function(type, queryBody, callback) {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping/' + type;
 			return $.ajax({
 				type: 'POST',
@@ -453,7 +453,8 @@ var feed = (function() {
 				data: JSON.stringify(queryBody),
 				xhrFields: {
 					withCredentials: true
-				}
+				},
+				error: res => callback(res.responseJSON)
 			});
 		},
 		applyQuery: function(url, queryBody) {

@@ -4,6 +4,7 @@ import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-b
 
 /* global feed */
 import { es2, dateFormats } from '../helper/esMapping';
+import ErrorModal from '../features/ErrorModal';
 
 class CreateColumnForm extends React.Component {
 	constructor(props) {
@@ -14,7 +15,9 @@ class CreateColumnForm extends React.Component {
 			format: 'YYYY/MM/DD',
 			showError: false,
 			valid: false,
-			selectedType: this.props.selectedTypes[0]
+			selectedType: this.props.selectedTypes[0],
+			credentialsError: false,
+			credentialsErrorMessage: ''
 		};
 	}
 
@@ -50,6 +53,22 @@ class CreateColumnForm extends React.Component {
 		});
 	}
 
+	handleCredentialsErrorMsg = (e) => {
+		if (e.status >= 400) {
+			this.setState({
+				credentialsError: true,
+				credentialsErrorMessage: e.message
+			});
+		}
+	}
+
+	hideCredentialsErrorMessage= () => {
+		this.setState({
+			credentialsError: false,
+			credentialsErrorMessage: ''
+		});
+	}
+
 	handleSubmit = () => {
 		if (this.state.valid) {
 			const mapping = this.state.type === 'Date' ?
@@ -64,7 +83,7 @@ class CreateColumnForm extends React.Component {
 						[this.state.value]: mapping
 					}
 				}
-			});
+			}, this.handleCredentialsErrorMsg);
 			setTimeout(this.props.reloadMapping, 1000);
 		}
 	}
@@ -72,6 +91,11 @@ class CreateColumnForm extends React.Component {
 	render() {
 		return (
 			<div>
+				<ErrorModal
+					errorShow={this.state.credentialsError}
+					errorMessage={this.state.credentialsErrorMessage}
+					closeErrorModal={this.hideCredentialsErrorMessage}
+				/>
 				<h4>Add Field</h4>
 				<form>
 					<FormGroup
