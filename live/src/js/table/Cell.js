@@ -203,43 +203,47 @@ class Cell extends React.Component {
 	}
 
 	setActive(nextState) {
-		if (!nextState && this.state.data !== this.state.prevData) {
-			if (this.props.datatype.type !== 'string') {
-				if (this.state.data !== '-') {
-					this.indexCurrentData(Number(this.state.data));
+		if (this.props.editable) {
+			if (!nextState && this.state.data !== this.state.prevData) {
+				if (this.props.datatype.type !== 'string') {
+					if (this.state.data !== '-') {
+						this.indexCurrentData(Number(this.state.data));
+					}
+				} else {
+					this.indexCurrentData(this.state.data);
 				}
-			} else {
-				this.indexCurrentData(this.state.data);
+				this.setState({
+					prevData: this.state.data
+				});
 			}
 			this.setState({
-				prevData: this.state.data
-			});
+				active: nextState
+			}, () => this.setSelectActive(nextState));
 		}
-		this.setState({
-			active: nextState
-		}, () => this.setSelectActive(nextState));
 	}
 
 	setGeoActive(geo, nextState) {
-		if (!nextState && this.state.data[geo] !== this.state.prevData[geo] && this.state.data.lat && this.state.data.lon) {
-			const indexData = {};
-			if (this.state.data.lat) {
-				indexData.lat = Number(this.state.data.lat);
+		if (this.props.editable) {
+			if (!nextState && this.state.data[geo] !== this.state.prevData[geo] && this.state.data.lat && this.state.data.lon) {
+				const indexData = {};
+				if (this.state.data.lat) {
+					indexData.lat = Number(this.state.data.lat);
+				}
+				if (this.state.data.lon) {
+					indexData.lon = Number(this.state.data.lon);
+				}
+				this.indexCurrentData(indexData);
 			}
-			if (this.state.data.lon) {
-				indexData.lon = Number(this.state.data.lon);
-			}
-			this.indexCurrentData(indexData);
+			// update previous state of data
+			this.setState({
+				prevData: { ...this.state.data }
+			});
+			const geoActive = { ...this.state.geoActive };
+			geoActive[geo] = nextState;
+			this.setState({
+				geoActive
+			});
 		}
-		// update previous state of data
-		this.setState({
-			prevData: { ...this.state.data }
-		});
-		const geoActive = { ...this.state.geoActive };
-		geoActive[geo] = nextState;
-		this.setState({
-			geoActive
-		});
 	}
 
 	copyId = () => {
@@ -320,7 +324,6 @@ class Cell extends React.Component {
 					<a href="javascript:void(0);"  className="bracketIcon">
 					</a>
 				</OverlayTrigger>
-				// tdClass = 'column_width';
 			}
 			if (typeof data === 'boolean') {
 				toDisplay = toDisplay + '';
@@ -451,7 +454,9 @@ Cell.propTypes = {
 	_type: PropTypes.string.isRequired,
 	columnName: PropTypes.string.isRequired,
 	arrayOptions: PropTypes.arrayOf(PropTypes.string),
-	rowNumber: PropTypes.number
+	rowNumber: PropTypes.number,
+	editable: PropTypes.boolean,
+	datatype: PropTypes.Object	// eslint-disable-line
 };
 
 Cell.defaultProps = {

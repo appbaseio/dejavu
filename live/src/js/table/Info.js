@@ -98,18 +98,29 @@ class Info extends React.Component {
 						</span>
 					</div>
 				</div>
+				{
+					this.props.editable ?
+						<button className="btn btn-warning" onClick={this.props.toggleEditView}>
+							<span className="button-icon"><i className="fa fa-pencil-square-o" /></span>Edit View
+						</button> :
+						<button className="btn btn-success" onClick={this.props.toggleEditView}>
+							<span className="button-icon"><i className="fa fa-eye" /></span>Read Only View
+						</button>
+				}
 				<div className="pull-right pd-r0">
 					<ColumnDropdown
 						visibleColumns ={this.props.visibleColumns}
 						columnToggle ={this.props.columnToggle}
 						cols={this.props.columns} />
+
 					<FeatureComponent.AddDocument
 						types={this.props.types}
 						text="Add Data"
-											addRecord ={this.props.addRecord}
-											getTypeDoc={this.props.getTypeDoc}
-											userTouchAdd={this.props.infoObj.userTouchAdd}
-											selectClass="tags-select-small" />
+						addRecord ={this.props.addRecord}
+						getTypeDoc={this.props.getTypeDoc}
+						userTouchAdd={this.props.infoObj.userTouchAdd}
+						selectClass="tags-select-small"
+					/>
 							<div className={typeClass}>
 								<a href="javascript:void(0)" className="removeFilter">
 									<span className="inside-info">

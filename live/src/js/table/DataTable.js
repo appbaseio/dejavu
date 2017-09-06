@@ -16,6 +16,20 @@ var cellWidth = '250px';
 // This has the main properties that define the main data table
 // i.e. the right side.
 class DataTable extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			editable: false
+		};
+	}
+
+	toggleEditView = () => {
+		const nextState = !this.state.editable;
+		this.setState({
+			editable: nextState
+		});
+	}
+
 	render() {
 		var $this = this;
 		var data = this.props._data;
@@ -161,6 +175,7 @@ class DataTable extends React.Component {
 						datatype={this.props.mappingObj[data[row]._type].properties[each]}
 						arrayOptions={arrayOptions[each]}
 						rowNumber={Number(row)}
+						editable={this.state.editable}
 					/>);
 			}
 			rows.push({
@@ -201,29 +216,33 @@ class DataTable extends React.Component {
 		return (
 			<div className="dejavu-table">
 
-				<Info infoObj= {this.props.infoObj}
-					totalRecord= {this.props.totalRecord}
-					filterInfo = {this.props.filterInfo}
-					removeFilter= {this.props.removeFilter}
-					removeSort = {this.props.removeSort}
-					removeTypes = {this.props.removeTypes}
-					removeHidden = {this.props.removeHidden}
+				<Info
+					infoObj={this.props.infoObj}
+					totalRecord={this.props.totalRecord}
+					filterInfo={this.props.filterInfo}
+					removeFilter={this.props.removeFilter}
+					removeSort={this.props.removeSort}
+					removeTypes={this.props.removeTypes}
+					removeHidden={this.props.removeHidden}
 					types={this.props.Types}
-					addRecord = {this.props.addRecord}
-					getTypeDoc= {this.props.getTypeDoc}
-					sortInfo = {this.props.sortInfo}
-					columns = {columns}
-					visibleColumns = {visibleColumns}
-					hiddenColumns = {this.props.hiddenColumns}
-					columnToggle = {this.props.columnToggle}
-					actionOnRecord= {this.props.actionOnRecord}
-					reloadData = {this.props.reloadData}
-					exportJsonData = {this.props.exportJsonData}
-					selectedTypes = {this.props.selectedTypes}
+					addRecord={this.props.addRecord}
+					getTypeDoc={this.props.getTypeDoc}
+					sortInfo={this.props.sortInfo}
+					columns={columns}
+					visibleColumns={visibleColumns}
+					hiddenColumns={this.props.hiddenColumns}
+					columnToggle={this.props.columnToggle}
+					actionOnRecord={this.props.actionOnRecord}
+					reloadData={this.props.reloadData}
+					exportJsonData={this.props.exportJsonData}
+					selectedTypes={this.props.selectedTypes}
 					externalQueryApplied={this.props.externalQueryApplied}
 					externalQueryTotal={this.props.externalQueryTotal}
 					removeExternalQuery={this.props.removeExternalQuery}
-					dejavuExportData={this.props.dejavuExportData} />
+					dejavuExportData={this.props.dejavuExportData}
+					editable={this.state.editable}
+					toggleEditView={this.toggleEditView}
+				/>
 
 				<div className="outsideTable">
 					<Table
@@ -237,9 +256,10 @@ class DataTable extends React.Component {
 						addRecord ={this.props.addRecord}
 						getTypeDoc={this.props.getTypeDoc}
 						userTouchAdd={this.props.infoObj.userTouchAdd}
+						editable={this.state.editable}
 					/>
 					{
-						this.props.selectedTypes.length ?
+						this.props.selectedTypes.length && this.state.editable ?
 							<AddColumnButton
 								selectedTypes={this.props.selectedTypes}
 								mappingObj={this.props.mappingObj}

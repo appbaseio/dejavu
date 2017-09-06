@@ -1361,6 +1361,14 @@ iframe {
 	padding-left: 5px;
 }
 
+.fixed-column {
+	position: fixed;
+}
+
+.button-icon {
+	padding-right: 10px;
+}
+
 /*Color Schemes*/
 
 .theme-element.checkbox input[type="checkbox"]:checked + label::after,

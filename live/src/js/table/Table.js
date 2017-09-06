@@ -47,7 +47,7 @@ class Table extends React.Component {
 						</tbody>
 					</table>
 					{
-						this.props.selectedTypes.length ?
+						this.props.selectedTypes.length && this.props.editable ?
 							<div className="add-row-button">
 								<FeatureComponent.AddDocument
 									types={this.props.types}
