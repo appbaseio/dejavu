@@ -29,7 +29,7 @@ class CreateColumnForm extends React.Component {
 	}
 
 	handleChange = (e) => {
-		if (!this.state.showError) {
+		if (!this.state.showError && e.target.name === 'value') {
 			this.setState({
 				showError: true
 			});
