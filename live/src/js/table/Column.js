@@ -2,7 +2,6 @@ import React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 
 import FilterDropdown from './FilterDropdown';
-import ColumnLabel from './ColumnLabel';
 import ColumnMappingInfo from './ColumnMappingInfo';
 
 const cellWidth = '250px';

@@ -55,6 +55,7 @@ var HomePage = createReactClass({
 				typeCounter: this.typeCounter
 			},
 			errorShow: false,
+			errorMessage: '',
 			historicApps: [],
 			url: '',
 			appname: '',
@@ -469,6 +470,16 @@ var HomePage = createReactClass({
 				recordObject[v2.name] = v2.value;
 		});
 		feed.indexData(recordObject, method, function(res, newTypes) {
+			if (res.status >= 400) {
+				this.setState({
+					errorMessage: res.message
+				});
+				setTimeout(() => {
+					this.setState({
+						errorShow: true
+					});
+				}, 100);
+			}
 			if(method === 'bulk' && res && res.items && res.items.length) {
 				this.reloadData();
 				if(!res.errors) {
@@ -850,10 +861,18 @@ var HomePage = createReactClass({
 							/>
 						</div>
 						{footer}
-						<FeatureComponent.ErrorModal
-							errorShow={this.state.errorShow}
-							closeErrorModal = {this.closeErrorModal}>
-						</FeatureComponent.ErrorModal>
+						{
+							this.state.errorMessage.length ?
+								<FeatureComponent.ErrorModal
+									errorShow={this.state.errorShow}
+									closeErrorModal={this.closeErrorModal}
+									errorMessage={this.state.errorMessage}
+								/> :
+								<FeatureComponent.ErrorModal
+									errorShow={this.state.errorShow}
+									closeErrorModal={this.closeErrorModal}
+								/>
+						}
 						<div className="full_page_loading hide">
 							<div className="loadingBar"></div>
 							<div className="vertical1">
