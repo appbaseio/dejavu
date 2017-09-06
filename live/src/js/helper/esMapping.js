@@ -119,3 +119,11 @@ export const es5 = {
 		type: 'geo_point'
 	}
 };
+
+export const dateFormats = [
+	'YYYY/MM/DD',
+	'basic_date',
+	'epoch_millis',
+	'basic_date_time_no_millis',
+	'basic_date_time'
+];

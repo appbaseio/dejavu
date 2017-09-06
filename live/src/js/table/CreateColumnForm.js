@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
 
 /* global feed */
-import { es2 } from '../helper/esMapping';
+import { es2, dateFormats } from '../helper/esMapping';
 
 class CreateColumnForm extends React.Component {
 	constructor(props) {
@@ -11,6 +11,7 @@ class CreateColumnForm extends React.Component {
 		this.state = {
 			value: '',
 			type: 'Text',
+			format: 'YYYY/MM/DD',
 			showError: false,
 			valid: false,
 			selectedType: this.props.selectedTypes[0]
@@ -51,10 +52,16 @@ class CreateColumnForm extends React.Component {
 
 	handleSubmit = () => {
 		if (this.state.valid) {
+			const mapping = this.state.type === 'Date' ?
+			{
+				...es2[this.state.type],
+				format: this.state.format
+			} :
+			es2[this.state.type];
 			feed.createMapping(this.state.selectedType, {
 				[this.state.selectedType]: {
 					properties: {
-						[this.state.value]: es2[this.state.type]
+						[this.state.value]: mapping
 					}
 				}
 			});
@@ -96,6 +103,25 @@ class CreateColumnForm extends React.Component {
 							}
 						</FormControl>
 					</FormGroup>
+					{
+						this.state.type === 'Date' &&
+						<FormGroup>
+							<ControlLabel>Pick the date format</ControlLabel>
+							<FormControl
+								componentClass="select"
+								placeholder="Select Date Format"
+								value={this.state.format}
+								onChange={this.handleChange}
+								name="format"
+							>
+								{
+									dateFormats.map(item => (
+										<option key={item} value={item}>{item}</option>
+									))
+								}
+							</FormControl>
+						</FormGroup>
+					}
 					<FormGroup>
 						<ControlLabel>Configure the type to add this field into</ControlLabel>
 						<FormControl
