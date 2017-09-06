@@ -113,14 +113,17 @@ class Info extends React.Component {
 						columnToggle ={this.props.columnToggle}
 						cols={this.props.columns} />
 
-					<FeatureComponent.AddDocument
-						types={this.props.types}
-						text="Add Data"
-						addRecord ={this.props.addRecord}
-						getTypeDoc={this.props.getTypeDoc}
-						userTouchAdd={this.props.infoObj.userTouchAdd}
-						selectClass="tags-select-small"
-					/>
+					{
+						this.props.editable &&
+						<FeatureComponent.AddDocument
+							types={this.props.types}
+							text="Add Data"
+							addRecord ={this.props.addRecord}
+							getTypeDoc={this.props.getTypeDoc}
+							userTouchAdd={this.props.infoObj.userTouchAdd}
+							selectClass="tags-select-small"
+						/>
+					}
 							<div className={typeClass}>
 								<a href="javascript:void(0)" className="removeFilter">
 									<span className="inside-info">
