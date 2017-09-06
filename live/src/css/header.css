@@ -65,6 +65,16 @@
 		font-weight: 800;
 }
 
+.header .dejavu-subtitle {
+    display: inline-block;
+    font-size: 20px;
+    padding-left: 15px;
+    float: left;
+		color: #6b7377;
+		font-weight: 400;
+		line-height: 2.4em;
+}
+
 .header .tag-line {
     line-height: 22px;
     font-size: 20px;

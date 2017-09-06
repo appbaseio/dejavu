@@ -15,6 +15,9 @@ class Header extends React.Component {
 						<span className="dejavu-title">
 							dejavu
 						</span>
+						<span className="dejavu-subtitle">
+							the missing Web UI for Elasticsearch
+						</span>
 					</span>
 				</div>
 				{subscribeModal}
