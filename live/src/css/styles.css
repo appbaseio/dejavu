@@ -1276,6 +1276,7 @@ iframe {
 
 .add-row-button {
 	float: left;
+	position: fixed;
 }
 
 .add-column-button {
