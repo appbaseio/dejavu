@@ -1353,13 +1353,11 @@ iframe {
 .nav-tabs li a {
 	color: #0087ff !important;
 	border: none !important;
-	background: #b6e0ff;
 }
 
 .nav-tabs li.active a {
 	color: #0087ff;
-	background: white;
-	border: none;
+	background: #b6e0ff !important;
 }
 
 .nav-tabs li.active a:hover,
