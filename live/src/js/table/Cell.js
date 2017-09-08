@@ -162,16 +162,18 @@ class Cell extends React.Component {
 	}
 
 	handleDatetimeChange = (e) => {
-		const nextState = e.format(getMomentDate(this.props.datatype.format));
-		if (nextState !== this.state.prevData) {
+		if (e.format) {
+			const nextState = e.format(getMomentDate(this.props.datatype.format));
+			if (nextState !== this.state.prevData) {
+				this.setState({
+					prevData: nextState
+				});
+				this.indexCurrentData(nextState);
+			}
 			this.setState({
-				prevData: nextState
+				data: e.format(getMomentDate(this.props.datatype.format))
 			});
-			this.indexCurrentData(nextState);
 		}
-		this.setState({
-			data: e.format(getMomentDate(this.props.datatype.format))
-		});
 	}
 
 	handleArrayChange = (e) => {
@@ -198,7 +200,7 @@ class Cell extends React.Component {
 	}
 
 	setSelectActive(nextState) {
-		if (nextState && (Array.isArray(this.state.data) || this.props.datatype.type === 'boolean')) {
+		if (nextState && (Array.isArray(this.state.data) || this.props.datatype.type === 'boolean' || this.props.datatype.type === 'date')) {
 			this.select.focus();
 		}
 	}
@@ -383,7 +385,7 @@ class Cell extends React.Component {
 								this.state.data.map(item => ({ value: item, label: item })) :
 								arrayView
 						}
-						options={this.props.arrayOptions.map(item => ({ value: item, label: item }))}
+						options={this.props.arrayOptions ? this.props.arrayOptions.map(item => ({ value: item, label: item })) : []}
 						disabled={!this.state.active}
 						onChange={this.handleArrayChange}
 						onBlur={() => this.setActive(false)}
@@ -401,6 +403,9 @@ class Cell extends React.Component {
 						onBlur={(e) => {
 							this.handleDatetimeChange(e);
 							this.setState({ active: false });
+						}}
+						inputProps={{
+							ref: (node) => { this.select = node; }
 						}}
 					/>
 				);
