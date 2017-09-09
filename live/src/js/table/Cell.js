@@ -99,6 +99,10 @@ class Cell extends React.Component {
 		}
 	}
 
+	codemirror = () => {
+		this.editorref = help.setCodeMirror('object-inline-editor');
+	}
+
 	handleChange = (e) => {
 		let nextState = e.target.value;
 		if (this.props.datatype.type !== 'string') {
@@ -323,7 +327,10 @@ class Cell extends React.Component {
 		} else {
 			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
 				var prettyData = <Pretty json={data} />
-				toDisplay = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+				toDisplay = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">
+					{/* <textarea defaultValue={prettyData} id="object-inline-editor" onClick={this.codemirror} /> */}
+					{prettyData}
+				</Popover>}>
 					<a href="javascript:void(0);"  className="bracketIcon">
 					</a>
 				</OverlayTrigger>
