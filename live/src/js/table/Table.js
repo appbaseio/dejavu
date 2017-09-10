@@ -7,7 +7,7 @@ const FeatureComponent = require('../features/FeatureComponent.js');
 // pagination, throbbers, styling etc.
 class Table extends React.Component {
 	componentDidMount() {
-		const elem = document.getElementById('table-scroller');
+		const elem = document.getElementById('exp-scrollable');
 		// We are listning for scroll even so we get notified
 		// when the scroll hits the bottom. For pagination.
 		elem.addEventListener('scroll', this.props.scrollFunction);
@@ -40,6 +40,7 @@ class Table extends React.Component {
 						</thead>
 						<tbody
 							className="exp-scrollable"
+							id="exp-scrollable"
 							style={{
 								maxHeight: window.innerHeight - 320
 							}}
