@@ -1284,7 +1284,8 @@ iframe {
 }
 
 .add-column-button {
-	height: 42px;
+	height: 48px;
+	padding-top: 10px;
 	display: flex;
 	align-items: center;
 }
