@@ -8,6 +8,8 @@ const getMomentDate = (format) => {
 			return 'x';
 		case 'basic_date_time_no_millis':
 			return 'YYYYMMDDTHHmmssZ';
+		case 'date_time_no_millis':
+			return 'YYYY-MM-DDTHHmmssZ';
 		case 'basic_date_time':
 			return 'YYYYMMDDTHHmmss.SSSZ';
 		default:
