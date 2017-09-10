@@ -379,7 +379,6 @@ footer {
 }
 
 .table-container {
-	width: 100%;
 	padding: 5px 0 0 0;
 	box-sizing: border-box;
 	display: inline-block;
@@ -1245,6 +1244,7 @@ iframe {
 }
 
 .dropdown-menu.dropdown-menu-right {
+	z-index: 20;
 	max-height: 500px;
 	overflow-y: auto;
 }
@@ -1285,9 +1285,11 @@ iframe {
 
 .add-column-button {
 	height: 48px;
+	width: 48px;
 	padding-top: 10px;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
 .cell-content {
@@ -1426,7 +1428,7 @@ iframe {
 /* for fixed first column */
 thead#columns {
 	position: relative;
-	z-index: 9;
+	z-index: 4;
 }
 
 thead#columns th#json:first-child {
@@ -1441,8 +1443,12 @@ tbody.exp-scrollable {
 
 tbody.exp-scrollable td.column_width:first-child {
 	position: relative;
-	z-index: 8;
+	z-index: 3;
 	background: #fff;
 
 	box-shadow: 1px 0px 0px 0px #eee;
+}
+
+ul#setApp {
+	z-index: 20;
 }
