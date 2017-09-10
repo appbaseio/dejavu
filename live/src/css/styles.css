@@ -1417,3 +1417,12 @@ iframe {
 .danger-text {
 	color: #FF8484;
 }
+
+/* for fixed first column */
+thead th:first-child {
+	position: relative;
+}
+
+tbody td:first-child {
+	position: relative;
+}

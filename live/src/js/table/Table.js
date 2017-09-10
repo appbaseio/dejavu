@@ -1,4 +1,5 @@
 import React from 'react';
+/* global $ */
 
 const FeatureComponent = require('../features/FeatureComponent.js');
 
@@ -12,6 +13,13 @@ class Table extends React.Component {
 		elem.addEventListener('scroll', this.props.scrollFunction);
 	}
 
+	// for keeping first column fixed
+	handleScroll = () => {
+		// $('thead').css('left', -$('#table-container').scrollLeft());
+		$('thead th:nth-child(1)').css('left', $('#table-container').scrollLeft());
+		$('tbody td:nth-child(1)').css('left', $('#table-container').scrollLeft());
+	}
+
 	render() {
 		var column_width = 250;
 		var elem = document.getElementById('table-scroller');
@@ -19,7 +27,7 @@ class Table extends React.Component {
 			// elem.style.width = this.props.visibleColumns.length * column_width + 'px';
 		}
 		return (
-			<div id="table-container" className="table-container">
+			<div id="table-container" className="table-container" onScroll={this.handleScroll}>
 				<div id="table-scroller" className="table-scroller">
 					<table
 						id="data-table"
