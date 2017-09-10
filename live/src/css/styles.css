@@ -380,7 +380,7 @@ footer {
 
 .table-container {
 	width: 100%;
-	padding: 42px 0 0 0;
+	padding: 5px 0 0 0;
 	box-sizing: border-box;
 	display: inline-block;
 	overflow-x: auto;
@@ -1261,6 +1261,10 @@ iframe {
 	color: #333 !important;
 }
 
+.rdtOpen .rdtPicker {
+	z-index: 8 !important;
+}
+
 .rdtActive {
 	background-color: #0087ff !important;
 	border-radius: 4px !important;
@@ -1419,10 +1423,25 @@ iframe {
 }
 
 /* for fixed first column */
-thead th:first-child {
+thead#columns {
 	position: relative;
+	z-index: 9;
 }
 
-tbody td:first-child {
+thead#columns th#json:first-child {
 	position: relative;
+	z-index: 11;
+	background: #fff;
+}
+
+tbody.exp-scrollable {
+	padding-top: 42px;
+}
+
+tbody.exp-scrollable td.column_width:first-child {
+	position: relative;
+	z-index: 8;
+	background: #fff;
+
+	box-shadow: 1px 0px 0px 0px #eee;
 }
