@@ -328,7 +328,7 @@ class Cell extends React.Component {
 				objectActionOnRecord.id = _id;
 				objectActionOnRecord.row = JSON.stringify(this.props.row.json[columnName], null, 4);
 				toDisplay = (
-					<div>
+					<div className="object-cell-container">
 						<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
 							{prettyData}
 						</Popover>}>

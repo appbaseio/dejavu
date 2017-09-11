@@ -1452,3 +1452,9 @@ tbody.exp-scrollable td.column_width:first-child {
 ul#setApp {
 	z-index: 20;
 }
+
+.object-cell-container {
+	display: flex;
+	align-items: center;
+	padding-left: 7px;
+}
