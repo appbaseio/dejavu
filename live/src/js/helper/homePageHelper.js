@@ -355,7 +355,7 @@ var help = {
 			return indice ===  appname;
 		});
 		var app_match_flag = app_match.length ? true : false;
-		var show_index_info = this.state.url === this.state.es_host ? true : false; 
+		var show_index_info = this.state.url === this.state.es_host ? true : false;
 		return {
 			app_match_flag: app_match_flag,
 			current_appname: appname,
@@ -565,7 +565,7 @@ var help = {
 			var app = {
 				url: config.url,
 				appname: config.appname
-			};  
+			};
 			var historicApps = apps;
 			if(authFlag) {
 				if(historicApps && historicApps.length) {
@@ -576,7 +576,7 @@ var help = {
 					})
 				}
 				if(app.url) {
-					historicApps.push(app); 
+					historicApps.push(app);
 				}
 			}
 			cb({

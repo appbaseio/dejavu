@@ -99,10 +99,6 @@ class Cell extends React.Component {
 		}
 	}
 
-	codemirror = () => {
-		this.editorref = help.setCodeMirror('object-inline-editor');
-	}
-
 	handleChange = (e) => {
 		let nextState = e.target.value;
 		if (this.props.datatype.type !== 'string') {
@@ -326,14 +322,24 @@ class Cell extends React.Component {
 			tdClass = 'column_width';
 		} else {
 			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
-				var prettyData = <Pretty json={data} />
-				toDisplay = <OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">
-					{/* <textarea defaultValue={prettyData} id="object-inline-editor" onClick={this.codemirror} /> */}
-					{prettyData}
-				</Popover>}>
-					<a href="javascript:void(0);"  className="bracketIcon">
-					</a>
-				</OverlayTrigger>
+				var prettyData = <Pretty json={data} />;
+				const objectActionOnRecord = { ...actionOnRecord };
+				objectActionOnRecord.type = _type;
+				objectActionOnRecord.id = _id;
+				objectActionOnRecord.row = JSON.stringify(this.props.row.json, null, 4);
+				toDisplay = (
+					<div>
+						<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
+							{prettyData}
+						</Popover>}>
+							<a href="javascript:void(0);"  className="bracketIcon" />
+						</OverlayTrigger>
+						{
+							this.props.editable &&
+							<FeatureComponent.UpdateDocument actionOnRecord={objectActionOnRecord} currentCell />
+						}
+					</div>
+				);
 			}
 			if (typeof data === 'boolean') {
 				toDisplay = toDisplay + '';
