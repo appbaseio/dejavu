@@ -101,10 +101,10 @@ class Info extends React.Component {
 				{
 					this.props.editable ?
 						<button className="btn btn-warning" onClick={this.props.toggleEditView}>
-							<span className="button-icon"><i className="fa fa-pencil-square-o" /></span>Edit View
+							<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editable View
 						</button> :
 						<button className="btn btn-success" onClick={this.props.toggleEditView}>
-							<span className="button-icon"><i className="fa fa-eye" /></span>Read Only View
+							<span className="button-icon"><i className="fa fa-lock" /></span>Read Only View
 						</button>
 				}
 				<div className="pull-right pd-r0">
