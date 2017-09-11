@@ -1446,7 +1446,7 @@ tbody.exp-scrollable td.column_width:first-child {
 	z-index: 3;
 	background: #fff;
 
-	box-shadow: 1px 0px 0px 0px #eee;
+	box-shadow: -1px 0px 0px 0px #eee, 1px 0px 0px 0px #eee;
 }
 
 ul#setApp {
