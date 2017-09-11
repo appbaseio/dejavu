@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
 
 /* global feed */
-import { es2, dateFormats } from '../helper/esMapping';
+import { es2, es5, dateFormats } from '../helper/esMapping';
 import ErrorModal from '../features/ErrorModal';
 
 class CreateColumnForm extends React.Component {
@@ -17,7 +17,8 @@ class CreateColumnForm extends React.Component {
 			valid: false,
 			selectedType: this.props.selectedTypes[0],
 			credentialsError: false,
-			credentialsErrorMessage: ''
+			credentialsErrorMessage: '',
+			esMapping: feed.getEsVersion() === 2 ? es2 : es5
 		};
 	}
 
@@ -73,10 +74,10 @@ class CreateColumnForm extends React.Component {
 		if (this.state.valid) {
 			const mapping = this.state.type === 'Date' ?
 			{
-				...es2[this.state.type],
+				...this.state.esMapping[this.state.type],
 				format: this.state.format
 			} :
-			es2[this.state.type];
+			this.state.esMapping[this.state.type];
 			feed.createMapping(this.state.selectedType, {
 				[this.state.selectedType]: {
 					properties: {
@@ -121,7 +122,7 @@ class CreateColumnForm extends React.Component {
 							name="type"
 						>
 							{
-								Object.keys(es2).map(item => (
+								Object.keys(this.state.esMapping).map(item => (
 									<option key={item} value={item}>{item}</option>
 								))
 							}

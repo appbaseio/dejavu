@@ -2,7 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
-
+/* global $ */
 // Get data size according to window height
 'use strict';
 
@@ -22,6 +22,7 @@ var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
 var counterStream, streamRef;
+let esVersion = 2;	// default ES version
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
@@ -119,6 +120,27 @@ function beforeInit() {
 			url: config.url,
 			appname: APPNAME
 		};
+
+		// update ES version if not appbase domain
+		if (dejavuURL.indexOf('scalr.api.appbase.io') === -1) {
+			$.ajax({
+				type: 'GET',
+				url: dejavuURL,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: (res) => {
+					const nextVersion = parseInt(res.version.number, 10);
+					if (nextVersion) {
+						esVersion = nextVersion;
+					}
+				},
+				error: () => {
+					console.error('Unable to fetch elasticsearch version');	// eslint-disable-line
+				}
+			});
+		} else {
+			esVersion = 2;
+		}
 		init();
 	}
 }
@@ -427,6 +449,7 @@ var feed = (function() {
 				callback(data);
 			});
 		},
+		getEsVersion: () => esVersion,
 		getMapping: function() {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping';
 			return $.ajax({
