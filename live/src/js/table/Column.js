@@ -64,6 +64,12 @@ class Column extends React.Component {
 						<img src="src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />
 					</ColumnMappingInfo>
 				);
+			case 'object':
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<span className="column-label-img">{'{...}'}</span>
+					</ColumnMappingInfo>
+				);
 			default:
 				return datatype;
 		}
@@ -96,7 +102,11 @@ class Column extends React.Component {
 		// get the datatype if field is not json & type mapping has properties field
 		try {
 			if (item != 'json' && this.props.mappingObj[type] && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
-				datatype = this.props.mappingObj[type]['properties'][item].type;
+				if (this.props.mappingObj[type]['properties'][item].type) {
+					datatype = this.props.mappingObj[type]['properties'][item].type;
+				} else if (this.props.mappingObj[type]['properties'][item].hasOwnProperty('properties')) {
+					datatype = 'object';
+				}
 				analyzed = this.props.mappingObj[type]['properties'][item].index == 'not_analyzed' ? false : true;
 			}
 		}
