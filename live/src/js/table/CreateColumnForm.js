@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio } from 'react-bootstrap';
 
 /* global feed */
 import { es2, es5, dateFormats } from '../helper/esMapping';
@@ -12,6 +12,7 @@ class CreateColumnForm extends React.Component {
 		this.state = {
 			value: '',
 			type: 'Text',
+			complexData: 'default',
 			format: 'YYYY/MM/DD',
 			showError: false,
 			valid: false,
@@ -78,8 +79,25 @@ class CreateColumnForm extends React.Component {
 				format: this.state.format
 			} :
 			this.state.esMapping[this.state.type];
+			const meta = this.props.mappingObj[this.state.selectedType]._meta ?
+			{ ...this.props.mappingObj[this.state.selectedType]._meta } :
+			{
+				dejavuMeta: {}
+			};
+
+			if (this.state.complexData !== 'default') {
+				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
+					meta.dejavuMeta[this.state.value] = this.state.complexData;
+				} else {
+					meta.dejavuMeta = {
+						[this.state.value]: this.state.complexData
+					};
+				}
+			}
+
 			feed.createMapping(this.state.selectedType, {
 				[this.state.selectedType]: {
+					_meta: meta,
 					properties: {
 						[this.state.value]: mapping
 					}
@@ -128,6 +146,22 @@ class CreateColumnForm extends React.Component {
 							}
 						</FormControl>
 					</FormGroup>
+					{
+						(this.state.type === 'Text' || this.state.type === 'SearchableText') &&
+						<FormGroup>
+							<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
+								Default
+							</Radio>
+							{' '}
+							<Radio name="complexData" value="array" inline onChange={this.handleChange} checked={this.state.complexData === 'array'}>
+								Array
+							</Radio>
+							{' '}
+							<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
+								Object
+							</Radio>
+						</FormGroup>
+					}
 					{
 						this.state.type === 'Date' &&
 						<FormGroup>
@@ -178,7 +212,8 @@ class CreateColumnForm extends React.Component {
 
 CreateColumnForm.propTypes = {
 	selectedTypes: PropTypes.arrayOf(PropTypes.string),
-	reloadMapping: PropTypes.func
+	reloadMapping: PropTypes.func,
+	mappingObj: PropTypes.object	// eslint-disable-line
 };
 
 export default CreateColumnForm;

@@ -160,6 +160,15 @@ class DataTable extends React.Component {
 				if (elem) {
 					visibility = elem.style.display;
 				}
+				const type = data[row]._type;
+				const { mappingObj } = this.props;
+				if (mappingObj[type]._meta) {
+					if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
+						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each]) {
+							arrayOptions[each] = [];
+						}
+					}
+				}
 				renderRow.push(
 					<Cell
 						item={newRow[each]}
@@ -185,10 +194,10 @@ class DataTable extends React.Component {
 		}
 		var renderColumns = fullColumns.final_cols.map(function(item) {
 			return (<Column _item={item.column} key={item.column}
-						_type={item.type}
-						_sortInfo={$this.props.sortInfo}
-						handleSort={$this.props.handleSort}
-						mappingObj={$this.props.mappingObj}
+				_type={item.type}
+				_sortInfo={$this.props.sortInfo}
+				handleSort={$this.props.handleSort}
+				mappingObj={$this.props.mappingObj}
 						filterInfo={$this.props.filterInfo}
 						externalQueryApplied={$this.props.externalQueryApplied} />);
 		});
