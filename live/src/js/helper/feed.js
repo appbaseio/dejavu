@@ -2,7 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
-
+/* global $ */
 // Get data size according to window height
 'use strict';
 
@@ -22,6 +22,7 @@ var getMapFlag = false;
 var appAuth = true;
 var exportJsonData = [];
 var counterStream, streamRef;
+let esVersion = 2;	// default ES version
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
@@ -119,6 +120,27 @@ function beforeInit() {
 			url: config.url,
 			appname: APPNAME
 		};
+
+		// update ES version if not appbase domain
+		if (dejavuURL.indexOf('scalr.api.appbase.io') === -1) {
+			$.ajax({
+				type: 'GET',
+				url: dejavuURL,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				success: (res) => {
+					const nextVersion = parseInt(res.version.number, 10);
+					if (nextVersion) {
+						esVersion = nextVersion;
+					}
+				},
+				error: () => {
+					console.error('Unable to fetch elasticsearch version');	// eslint-disable-line
+				}
+			});
+		} else {
+			esVersion = 2;
+		}
 		init();
 	}
 }
@@ -351,6 +373,7 @@ var feed = (function() {
 			}
 		},
 		indexData: function(recordObject, method, callback) {
+			console.log(recordObject);
 			var self = this;
 			if (method === 'index' || method === 'bulk') {
 				applyIndexOrBulk(method);
@@ -360,8 +383,10 @@ var feed = (function() {
 					doc: doc
 				};
 				console.log(recordObject);
-				appbaseRef.update(recordObject).on('data', function() {
-					if (callback) {
+				appbaseRef.update(recordObject).on('data', function(res) {
+					if (method === 'updateCell' && callback) {
+						callback(res);
+					} else if (callback) {
 						return callback();
 					}
 				});
@@ -424,6 +449,7 @@ var feed = (function() {
 				callback(data);
 			});
 		},
+		getEsVersion: () => esVersion,
 		getMapping: function() {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping';
 			return $.ajax({
@@ -435,6 +461,23 @@ var feed = (function() {
 				xhrFields: {
 					withCredentials: true
 				}
+			});
+		},
+		createMapping: function(type, queryBody, callback) {
+			var createUrl = HOST + '/' + APPNAME + '/_mapping/' + type;
+			return $.ajax({
+				type: 'POST',
+				beforeSend: function(request) {
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				},
+				url: createUrl,
+				contentType: 'application/json; charset=utf-8',
+				dataType: 'json',
+				data: JSON.stringify(queryBody),
+				xhrFields: {
+					withCredentials: true
+				},
+				error: res => callback(res.responseJSON)
 			});
 		},
 		applyQuery: function(url, queryBody) {

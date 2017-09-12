@@ -23,7 +23,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-core": "^6.24.1",
-    "babel-eslint": "^7.2.0",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.2.2",
@@ -35,6 +35,12 @@
     "concurrently": "^3.4.0",
     "create-react-class": "^15.5.2",
     "css-loader": "^0.27.3",
+    "eslint": "^3.16.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.0",
+    "eslint-watch": "^3.0.0",
     "file-loader": "^0.10.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
@@ -46,14 +52,7 @@
     "shebang-loader": "0.0.1",
     "style-loader": "^0.15.0",
     "webpack": "^2.3.0",
-    "webpack-dev-server": "^2.4.2",
-    "babel-eslint": "^7.1.1",
-    "eslint": "^3.16.0",
-    "eslint-config-airbnb": "^14.1.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.0",
-    "eslint-watch": "^3.0.0"
+    "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
     "appbase-js": "^0.11.1",
@@ -65,10 +64,13 @@
     "loglevel": "^1.4.1",
     "moment": "^2.18.1",
     "papaparse": "^4.3.3",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",
-    "react-dom": "^15.5.4"
+    "react-datetime": "^2.9.0",
+    "react-dom": "^15.5.4",
+    "react-select": "^1.0.0-rc.5"
   },
   "author": "",
   "license": "ISC",

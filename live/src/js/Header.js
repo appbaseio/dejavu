@@ -13,12 +13,12 @@ class Header extends React.Component {
 					<span className="header-img-container">
 						<img src="assets/img/icon.png" alt="Gem" className="img-responsive"/>
 						<span className="dejavu-title">
-							Dejavu
+							dejavu
+						</span>
+						<span className="dejavu-subtitle">
+							the missing Web UI for Elasticsearch
 						</span>
 					</span>
-				</div>
-				<div className="tag-line">
-					The Missing Web UI for Elasticsearch
 				</div>
 				{subscribeModal}
 			</header>

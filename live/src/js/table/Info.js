@@ -18,7 +18,7 @@ class Info extends React.Component {
 		else {
 			this.setState({
 				selectToggle: true
-			});   
+			});
 			checkbox = true;
 		}
 		this.props.actionOnRecord.selectToggleChange(checkbox);
@@ -59,56 +59,71 @@ class Info extends React.Component {
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
 		return (<div className="infoRow container">
-					<div className=" row">
-						<div className={infoObjClass}>
-							<div className={totalClass}>
-								<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
-								<a
-									href="javascript:void(0);"
-									className="btn btn-default themeBtn m-r10"
-									onClick={this.props.reloadData}>
-									<i className="fa fa-refresh"></i> Reload
-								</a>
-								<span className="info_single">
-									<label>Showing
-										<strong>&nbsp;{infoObj.showing}</strong> of total
-										<strong>&nbsp;{totalRecord}</strong>
-									</label>
-								</span>
-							</div>
-							<div className={selectionClass}>
-							<span className="theme-element checkbox pull-left pd-r10 mt-5">
-								<input
-									 id='selectToggle'
-									 type="checkbox"
-									 key='1'
-									 checked={this.state.selectToggle}
-									 onChange={this.selectToggleChange}
-									 readOnly={false}/>
-									<label htmlFor='selectToggle'></label>
-							</span>
-								<span className="pull-left pd-r10 info_single">
-									<strong>{actionOnRecord.selectedRows.length}</strong> selected of total
-									<strong>&nbsp;{totalRecord}</strong>
-								</span>
-								<span className="pull-left">{UpdateDocument}
-									<FeatureComponent.DeleteDocument
-												actionOnRecord={actionOnRecord}/>
-									<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
-								</span>
-							</div>
-						</div>
-						<div className="pull-right pd-r0">
-							<ColumnDropdown
-										visibleColumns ={this.props.visibleColumns}
-										columnToggle ={this.props.columnToggle}
-										 cols={this.props.columns} />
-							<FeatureComponent.AddDocument
-											types={this.props.types}
-											addRecord ={this.props.addRecord}
-											getTypeDoc={this.props.getTypeDoc}
-											userTouchAdd={this.props.infoObj.userTouchAdd}
-											selectClass="tags-select-small" />
+			<div className=" row">
+				<div className={infoObjClass}>
+					<div className={totalClass}>
+						<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
+						<a
+							href="javascript:void(0);"
+							className="btn btn-default themeBtn m-r10"
+							onClick={this.props.reloadData}>
+							<i className="fa fa-refresh"></i> Reload
+						</a>
+						<span className="info_single">
+							<label>Showing
+								<strong>&nbsp;{infoObj.showing}</strong> of total
+								<strong>&nbsp;{totalRecord}</strong>
+							</label>
+						</span>
+					</div>
+					<div className={selectionClass}>
+						<span className="theme-element checkbox pull-left pd-r10 mt-5">
+							<input
+								id='selectToggle'
+								type="checkbox"
+								key='1'
+								checked={this.state.selectToggle}
+								onChange={this.selectToggleChange}
+								readOnly={false}/>
+							<label htmlFor='selectToggle'></label>
+						</span>
+						<span className="pull-left pd-r10 info_single">
+							<strong>{actionOnRecord.selectedRows.length}</strong> selected of total
+							<strong>&nbsp;{totalRecord}</strong>
+						</span>
+						<span className="pull-left">{UpdateDocument}
+							<FeatureComponent.DeleteDocument
+								actionOnRecord={actionOnRecord}/>
+							<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+						</span>
+					</div>
+				</div>
+				{
+					this.props.editable ?
+						<button className="btn btn-warning" onClick={this.props.toggleEditView}>
+							<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editable View
+						</button> :
+						<button className="btn btn-success" onClick={this.props.toggleEditView}>
+							<span className="button-icon"><i className="fa fa-lock" /></span>Read Only View
+						</button>
+				}
+				<div className="pull-right pd-r0">
+					<ColumnDropdown
+						visibleColumns ={this.props.visibleColumns}
+						columnToggle ={this.props.columnToggle}
+						cols={this.props.columns} />
+
+					{
+						this.props.editable &&
+						<FeatureComponent.AddDocument
+							types={this.props.types}
+							text="Add Data"
+							addRecord ={this.props.addRecord}
+							getTypeDoc={this.props.getTypeDoc}
+							userTouchAdd={this.props.infoObj.userTouchAdd}
+							selectClass="tags-select-small"
+						/>
+					}
 							<div className={typeClass}>
 								<a href="javascript:void(0)" className="removeFilter">
 									<span className="inside-info">
