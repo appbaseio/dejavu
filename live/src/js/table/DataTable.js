@@ -108,6 +108,18 @@ class DataTable extends React.Component {
 						fullColumns.final_cols.push({ column: item, type: selectedType });
 					}
 				});
+				// since a new object type has no mapping added, populate the column from _meta
+				if (mappingObj[selectedType]._meta) {
+					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
+						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
+						metaFields.forEach((item) => {
+							if (!fullColumns.columns.includes(item) && mappingObj[selectedType]._meta.dejavuMeta[item] === 'object') {
+								fullColumns.columns.push(item);
+								fullColumns.final_cols.push({ column: item, type: selectedType });
+							}
+						})
+					}
+				}
 			})
 		}
 
@@ -162,10 +174,13 @@ class DataTable extends React.Component {
 				}
 				const type = data[row]._type;
 				const { mappingObj } = this.props;
+				let isObject = false;
 				if (mappingObj[type]._meta) {
 					if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
 						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each]) {
 							arrayOptions[each] = [];
+						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
+							isObject = true;
 						}
 					}
 				}
@@ -185,6 +200,7 @@ class DataTable extends React.Component {
 						arrayOptions={arrayOptions[each]}
 						rowNumber={Number(row)}
 						editable={this.state.editable}
+						isObject={isObject}
 					/>);
 			}
 			rows.push({

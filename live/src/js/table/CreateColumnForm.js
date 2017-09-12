@@ -95,12 +95,19 @@ class CreateColumnForm extends React.Component {
 				}
 			}
 
+			// for an object type assign no mapping
+			const properties = this.state.complexData === 'object' ?
+			{} :
+			{
+				properties: {
+					[this.state.value]: mapping
+				}
+			};
+
 			feed.createMapping(this.state.selectedType, {
 				[this.state.selectedType]: {
 					_meta: meta,
-					properties: {
-						[this.state.value]: mapping
-					}
+					...properties
 				}
 			}, this.handleCredentialsErrorMsg);
 			setTimeout(this.props.reloadMapping, 1000);
