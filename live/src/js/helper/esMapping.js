@@ -56,6 +56,9 @@ export const es2 = {
 	},
 	'Geo Point': {
 		type: 'geo_point'
+	},
+	'Geo Shape': {
+		type: 'geo_shape'
 	}
 };
 
@@ -117,6 +120,9 @@ export const es5 = {
 	},
 	'Geo Point': {
 		type: 'geo_point'
+	},
+	'Geo Shape': {
+		type: 'geo_shape'
 	}
 };
 
