@@ -19,8 +19,12 @@ class DataTable extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			editable: false
+			editable: getQueryParameters().editable === 'true'
 		};
+	}
+
+	componentDidMount() {
+		setQueryParamerter('editable', this.state.editable);
 	}
 
 	toggleEditView = () => {
@@ -28,6 +32,7 @@ class DataTable extends React.Component {
 		this.setState({
 			editable: nextState
 		});
+		setQueryParamerter('editable', nextState);
 	}
 
 	render() {
