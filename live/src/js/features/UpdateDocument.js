@@ -49,7 +49,7 @@ class UpdateDocument extends React.Component {
 			validate: validateClass
 		});
 		if (validateClass.body) {
-			this.props.actionOnRecord.updateRecord(this.editorref);
+			this.props.actionOnRecord.updateRecord(this.editorref, this.props.columnName);
 		}
 	};
 
@@ -120,7 +120,8 @@ class UpdateDocument extends React.Component {
 }
 
 UpdateDocument.defaultProps = {
-	currentCell: false
+	currentCell: false,
+	columnName: null
 };
 
 module.exports = UpdateDocument;

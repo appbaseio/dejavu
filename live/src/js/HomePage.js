@@ -460,8 +460,8 @@ var HomePage = createReactClass({
 	addRecord: function(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
 	},
-	updateRecord: function(editorref) {
-		help.updateRecord.call(this, editorref, this.indexCall);
+	updateRecord: function(editorref, currentColumn = null) {
+		help.updateRecord.call(this, editorref, this.indexCall, currentColumn);
 	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};

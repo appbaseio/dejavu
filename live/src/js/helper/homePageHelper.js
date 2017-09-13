@@ -501,9 +501,14 @@ var help = {
 			indexCall(form, 'close-modal', indexData.method);
 		}
 	},
-	updateRecord: function(editorref, indexCall) {
+	updateRecord: function(editorref, indexCall, columnName) {
 		var form = $('#updateObjectForm').serializeArray();
 		var indexData = JSON.parse(editorref.getValue().trim());
+		if (columnName) {
+			indexData = {
+				[columnName]: indexData
+			};
+		}
 		var obj = {
 			name: 'body',
 			value: indexData
