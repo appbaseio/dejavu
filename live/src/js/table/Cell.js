@@ -61,27 +61,14 @@ class Cell extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.arrayOptions && this.props.item === '') {
+		this.populateCellData(this.props);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.item !== nextProps.item) {
 			this.setState({
-				data: [],
-				prevData: []
-			})
-		} else if (this.props.datatype.type === 'geo_point' && this.props.item === '') {
-			this.setState({
-				data: {
-					lat: '',
-					lon: ''
-				},
-				prevData: {
-					lat: '',
-					lon: ''
-				}
-			});
-		} else if (this.props.isObject && this.props.item === '') {
-			this.setState({
-				data: {},
-				prevData: {},
-				active: true	// considering each object field active
+				data: nextProps.item,
+				prevData: nextProps.item
 			});
 		}
 	}
@@ -101,6 +88,32 @@ class Cell extends React.Component {
 		if (this.state.checked !== checkFlag) {
 			this.setState({
 				checked: checkFlag
+			});
+		}
+	}
+
+	populateCellData(props) {
+		if (props.arrayOptions && props.item === '') {
+			this.setState({
+				data: [],
+				prevData: []
+			})
+		} else if (props.datatype.type === 'geo_point' && props.item === '') {
+			this.setState({
+				data: {
+					lat: '',
+					lon: ''
+				},
+				prevData: {
+					lat: '',
+					lon: ''
+				}
+			});
+		} else if (props.isObject && props.item === '') {
+			this.setState({
+				data: {},
+				prevData: {},
+				active: true	// considering each object field active
 			});
 		}
 	}
