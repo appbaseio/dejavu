@@ -1457,4 +1457,5 @@ ul#setApp {
 	display: flex;
 	align-items: center;
 	padding-left: 7px;
+	height: 100%;
 }

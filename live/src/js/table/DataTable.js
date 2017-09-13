@@ -191,6 +191,12 @@ class DataTable extends React.Component {
 						}
 					}
 				}
+				const datatype = mappingObj[type].properties[each];
+				if (datatype) {
+					if (datatype.type === 'geo_shape') {
+						isObject = true;
+					}
+				}
 				renderRow.push(
 					<Cell
 						item={newRow[each]}
@@ -203,7 +209,7 @@ class DataTable extends React.Component {
 						row={newRow}
 						_checked={newRow._checked}
 						actionOnRecord={$this.props.actionOnRecord}
-						datatype={this.props.mappingObj[data[row]._type].properties[each]}
+						datatype={datatype}
 						arrayOptions={arrayOptions[each]}
 						rowNumber={Number(row)}
 						editable={this.state.editable}
