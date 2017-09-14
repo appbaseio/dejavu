@@ -1,11 +1,13 @@
-var React = require('react');
+import React from 'react';
+import get from 'lodash/get';
+
+import AddColumnButton from './AddColumnButton';
 var PageLoading = require('./PageLoading.js');
 var Info = require('./Info.js');
 var Column = require('./Column.js');
 var Cell = require('./Cell.js');
 var Table = require('./Table.js');
 var FeatureComponent = require('../features/FeatureComponent.js');
-import AddColumnButton from './AddColumnButton';
 
 // row/column manipulation functions.
 // We decided to roll our own as existing
@@ -73,7 +75,9 @@ class DataTable extends React.Component {
 							fullColumns.final_cols.push(obj);
 						}
 					}
-					if (Array.isArray(data[each][column])) {
+					const type = data[each]['_type'];
+					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
+					if (Array.isArray(data[each][column]) && datatype === 'string') {
 						if (arrayOptions[column]) {
 							data[each][column].forEach((item) => {
 								if (!arrayOptions[column].includes(item)) {
@@ -89,7 +93,9 @@ class DataTable extends React.Component {
 		} else {
 			for (var each in data) {
 				for (var column in data[each]) {
-					if (Array.isArray(data[each][column])) {
+					const type = data[each]['_type'];
+					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
+					if (Array.isArray(data[each][column]) && datatype === 'string') {
 						if (arrayOptions[column]) {
 							data[each][column].forEach((item) => {
 								if (!arrayOptions[column].includes(item)) {
@@ -182,19 +188,27 @@ class DataTable extends React.Component {
 				const type = data[row]._type;
 				const { mappingObj } = this.props;
 				let isObject = false;
+				let isArrayObject = false;
+				const datatype = mappingObj[type].properties[each];
 				if (mappingObj[type]._meta) {
 					if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
-						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each]) {
+						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each] && get(datatype, 'type') === 'string') {
 							arrayOptions[each] = [];
 						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
 							isObject = true;
+						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'array') {
+							isObject = true;
+							isArrayObject = true;
 						}
 					}
 				}
-				const datatype = mappingObj[type].properties[each];
 				if (datatype) {
 					if (datatype.type === 'geo_shape') {
 						isObject = true;
+					}
+					else if (datatype.type === 'string') {
+						isObject = false;
+						isArrayObject = false;
 					}
 				}
 				renderRow.push(
@@ -214,6 +228,7 @@ class DataTable extends React.Component {
 						rowNumber={Number(row)}
 						editable={this.state.editable}
 						isObject={isObject}
+						isArrayObject={isArrayObject}
 					/>);
 			}
 			rows.push({

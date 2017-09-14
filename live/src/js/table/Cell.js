@@ -98,7 +98,7 @@ class Cell extends React.Component {
 				data: [],
 				prevData: []
 			})
-		} else if (props.datatype.type === 'geo_point' && props.item === '') {
+		} else if (props.datatype.type === 'geo_point' && props.item === '' && !props.isObject) {
 			this.setState({
 				data: {
 					lat: '',
@@ -225,7 +225,7 @@ class Cell extends React.Component {
 	}
 
 	setActive(nextState) {
-		if (this.props.editable) {
+		if (this.props.editable && !this.props.isObject) {
 			if (!nextState && this.state.data !== this.state.prevData) {
 				if (this.props.datatype.type !== 'string') {
 					if (this.state.data !== '-') {
@@ -312,6 +312,7 @@ class Cell extends React.Component {
 		var columnName = this.props.columnName;
 		var radioId = this.props.unique + 'radio';
 		var appIdClass = 'appId';
+		const { isObject } = this.props;
 		if (this.state.checked) {
 			appIdClass += " showRow";
 		}
@@ -340,21 +341,23 @@ class Cell extends React.Component {
 			);
 			tdClass = 'column_width';
 		} else {
-			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && this.props.datatype.type !== 'geo_point') {
+			if (typeof data !== 'string' && typeof data !== 'number' && typeof data !== 'boolean' && (isObject || this.props.datatype.type !== 'geo_point')) {
 				var prettyData = <Pretty json={data} />;
 				const objectActionOnRecord = { ...actionOnRecord };
 				objectActionOnRecord.type = _type;
 				objectActionOnRecord.id = _id;
-				objectActionOnRecord.row = JSON.stringify(this.props.row[columnName] || {}, null, 4);
+				objectActionOnRecord.row = JSON.stringify(this.props.row[columnName] || (this.props.isArrayObject ? [] : {}), null, 4);
 				toDisplay = (
 					<div className="object-cell-container">
 						{
-							Object.keys(data).length !== 0 &&
-							<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
-								{prettyData}
-							</Popover>}>
-								<a href="javascript:void(0);"  className="bracketIcon" />
-							</OverlayTrigger>
+							data ?
+								Object.keys(data).length !== 0 &&
+									<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
+										{prettyData}
+									</Popover>}>
+										<a href="javascript:void(0);"  className="bracketIcon" />
+									</OverlayTrigger> :
+							null
 						}
 						{
 							this.props.editable &&
@@ -363,13 +366,13 @@ class Cell extends React.Component {
 					</div>
 				);
 			}
-			if (typeof data === 'boolean') {
+			if (typeof data === 'boolean' && !isObject) {
 				toDisplay = toDisplay + '';
 			}
-			if (typeof data === 'string' || typeof data === 'number') {
+			if ((typeof data === 'string' || typeof data === 'number') && !isObject) {
 				toDisplay = this.state.data;
 			}
-			if (this.props.datatype.type === 'geo_point') {
+			if (this.props.datatype.type === 'geo_point' && !isObject) {
 				toDisplay = (
 					<div className="geo-point-container">
 						<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
@@ -407,7 +410,7 @@ class Cell extends React.Component {
 					</div>
 				)
 			}
-			if (Array.isArray(data)) {
+			if (Array.isArray(data) && !isObject) {
 				const seperator = getMaxArrayView(data);
 				const arrayView = this.state.data.length > seperator ?
 					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
@@ -429,7 +432,7 @@ class Cell extends React.Component {
 						clearable={false}
 					/>
 				);
-			} else if (this.props.datatype.type === 'date' && this.state.active) {
+			} else if (this.props.datatype.type === 'date' && this.state.active && !isObject) {
 				toDisplay = (
 					<Datetime
 						defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
@@ -461,7 +464,7 @@ class Cell extends React.Component {
 						closeErrorModal={this.hideErrorMessage}
 					/>
 					{
-						this.props.datatype.type === 'boolean' ?
+						(this.props.datatype.type === 'boolean' && !isObject) ?
 							<div className="cell-input-container">
 								<Select
 									value={this.state.data}
@@ -499,6 +502,7 @@ Cell.propTypes = {
 	rowNumber: PropTypes.number,
 	editable: PropTypes.bool,
 	isObject: PropTypes.bool,
+	isArrayObject: PropTypes.bool,
 	datatype: PropTypes.object	// eslint-disable-line
 };
 
