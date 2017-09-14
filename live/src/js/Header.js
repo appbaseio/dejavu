@@ -16,7 +16,7 @@ class Header extends React.Component {
 							dejavu
 						</span>
 						<span className="dejavu-subtitle">
-							the missing Web UI for Elasticsearch
+							The missing web UI for Elasticsearch
 						</span>
 					</span>
 				</div>

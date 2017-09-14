@@ -137,36 +137,42 @@ class CreateColumnForm extends React.Component {
 						<FormControl.Feedback />
 						<HelpBlock>Field name should be unique and not _type or _id</HelpBlock>
 					</FormGroup>
-					<FormGroup>
-						<ControlLabel>Pick the data type</ControlLabel>
-						<FormControl
-							componentClass="select"
-							placeholder="Select ES Type"
-							value={this.state.type}
-							onChange={this.handleChange}
-							name="type"
-						>
-							{
-								Object.keys(this.state.esMapping).map(item => (
-									<option key={item} value={item}>{item}</option>
-								))
-							}
-						</FormControl>
-					</FormGroup>
 					{
 						(this.state.type === 'Text' || this.state.type === 'SearchableText') &&
 						<FormGroup>
-							<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
-								Default
-							</Radio>
-							{' '}
-							<Radio name="complexData" value="array" inline onChange={this.handleChange} checked={this.state.complexData === 'array'}>
-								Array
-							</Radio>
-							{' '}
-							<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
-								Object
-							</Radio>
+							<ControlLabel>Pick the data shape</ControlLabel>
+							<FormGroup>
+								<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
+									Primitive
+								</Radio>
+								{' '}
+								<Radio name="complexData" value="array" inline onChange={this.handleChange} checked={this.state.complexData === 'array'}>
+									Array
+								</Radio>
+								{' '}
+								<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
+									Object
+								</Radio>
+							</FormGroup>
+						</FormGroup>
+					}
+					{
+						this.state.complexData !== 'object' &&
+						<FormGroup>
+							<ControlLabel>Pick the data type</ControlLabel>
+							<FormControl
+								componentClass="select"
+								placeholder="Select ES Type"
+								value={this.state.type}
+								onChange={this.handleChange}
+								name="type"
+							>
+								{
+									Object.keys(this.state.esMapping).map(item => (
+										<option key={item} value={item}>{item}</option>
+									))
+								}
+							</FormControl>
 						</FormGroup>
 					}
 					{
