@@ -1297,7 +1297,7 @@ iframe {
 	overflow: hidden;
 }
 
-.cell-content.string, .cell-content.integer, .cell-content.date, .cell-content.double, .cell-content.float {
+.cell-content.string, .cell-content.integer, .cell-content.long, .cell-content.date, .cell-content.double, .cell-content.float {
 	padding: 7px;
 	white-space: nowrap;
 	text-overflow: ellipsis;
