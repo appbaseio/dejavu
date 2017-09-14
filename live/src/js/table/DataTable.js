@@ -114,13 +114,17 @@ class DataTable extends React.Component {
 		if (this.props.selectedTypes.length) {
 			const { mappingObj } = this.props;
 			this.props.selectedTypes.forEach((selectedType) => {
-				const allProperties = Object.keys(mappingObj[selectedType].properties);
-				allProperties.map((item) => {
-					if (!fullColumns.columns.includes(item)) {
-						fullColumns.columns.push(item);
-						fullColumns.final_cols.push({ column: item, type: selectedType });
+				if (mappingObj[selectedType]) {
+					if (mappingObj[selectedType].properties) {
+						const allProperties = Object.keys(mappingObj[selectedType].properties);
+						allProperties.map((item) => {
+							if (!fullColumns.columns.includes(item)) {
+								fullColumns.columns.push(item);
+								fullColumns.final_cols.push({ column: item, type: selectedType });
+							}
+						});
 					}
-				});
+				}
 				// since a new object type has no mapping added, populate the column from _meta
 				if (mappingObj[selectedType]._meta) {
 					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
@@ -152,6 +156,20 @@ class DataTable extends React.Component {
 		var rows = [];
 		var visibleColumns = [];
 		var renderColumns = [];
+		const allDatatypes = this.props.selectedTypes.reduce((allFields, currentType) => {
+			if (this.props.mappingObj[currentType].properties) {
+				return { ...allFields, ...this.props.mappingObj[currentType].properties };
+			}
+			return { ...allFields };
+		}, {});
+		const allMetas = this.props.selectedTypes.reduce((allFields, currentType) => {
+			if (this.props.mappingObj[currentType]._meta) {
+				if (this.props.mappingObj[currentType]._meta.dejavuMeta) {
+					return { ...allFields, ...this.props.mappingObj[currentType]._meta.dejavuMeta };
+				}
+			}
+			return { ...allFields };
+		}, {});
 		for (var row in data) {
 			var newRow = {};
 			var columns = fullColumns.columns;
@@ -189,7 +207,10 @@ class DataTable extends React.Component {
 				const { mappingObj } = this.props;
 				let isObject = false;
 				let isArrayObject = false;
-				const datatype = mappingObj[type].properties[each];
+				let datatype = {};
+				if (mappingObj[type].properties) {
+					datatype = mappingObj[type].properties[each] || allDatatypes[each];
+				}
 				if (mappingObj[type]._meta) {
 					if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
 						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each] && get(datatype, 'type') === 'string') {
@@ -201,6 +222,12 @@ class DataTable extends React.Component {
 							isArrayObject = true;
 						}
 					}
+				}
+				if (allMetas[each] === 'object') {
+					isObject = true;
+				} else if (allMetas[each] === 'array') {
+					isObject = true;
+					isArrayObject = true;
 				}
 				if (datatype) {
 					if (datatype.type === 'geo_shape') {
