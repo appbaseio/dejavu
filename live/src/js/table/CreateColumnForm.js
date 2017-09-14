@@ -42,7 +42,12 @@ class CreateColumnForm extends React.Component {
 		this.setState({
 			[e.target.name]: e.target.value
 		}, () => {
-			const fields = this.props.mappingObj[this.state.selectedType].properties;
+			const fields = this.props.selectedTypes.reduce((allFields, currentType) => {
+				if (this.props.mappingObj[currentType].properties) {
+					return { ...allFields, ...this.props.mappingObj[currentType].properties };
+				}
+				return { ...allFields };
+			}, {});
 			if (!this.state.value || this.state.value === '_type' || this.state.value === '_id' || Object.prototype.hasOwnProperty.call(fields, this.state.value)) {
 				this.setState({
 					valid: false
@@ -137,25 +142,22 @@ class CreateColumnForm extends React.Component {
 						<FormControl.Feedback />
 						<HelpBlock>Field name should be unique and not _type or _id</HelpBlock>
 					</FormGroup>
-					{
-						(this.state.type === 'Text' || this.state.type === 'SearchableText') &&
+					<FormGroup>
+						<ControlLabel>Pick the data shape</ControlLabel>
 						<FormGroup>
-							<ControlLabel>Pick the data shape</ControlLabel>
-							<FormGroup>
-								<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
-									Primitive
-								</Radio>
-								{' '}
-								<Radio name="complexData" value="array" inline onChange={this.handleChange} checked={this.state.complexData === 'array'}>
-									Array
-								</Radio>
-								{' '}
-								<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
-									Object
-								</Radio>
-							</FormGroup>
+							<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
+								Primitive
+							</Radio>
+							{' '}
+							<Radio name="complexData" value="array" inline onChange={this.handleChange} checked={this.state.complexData === 'array'}>
+								Array
+							</Radio>
+							{' '}
+							<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
+								Object
+							</Radio>
 						</FormGroup>
-					}
+					</FormGroup>
 					{
 						this.state.complexData !== 'object' &&
 						<FormGroup>
