@@ -341,7 +341,7 @@ class DataTable extends React.Component {
 					{
 						this.props.selectedTypes.length && this.state.editable ?
 							<AddColumnButton
-								selectedTypes={this.props.selectedTypes}
+								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}
 								reloadMapping={this.props.reloadMapping}
 							/> :
