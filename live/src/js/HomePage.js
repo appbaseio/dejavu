@@ -695,7 +695,10 @@ var HomePage = createReactClass({
 			dejavuExportData: null
 		});
 		const defaultQuery = help.defaultQuery();
-		var activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
+		const activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
+		if (!Object.prototype.hasOwnProperty.call(activeQuery, 'size')) {
+			activeQuery.size = 1000;
+		}
 		this.scrollApi({"activeQuery": activeQuery});
 	},
 	scrollApi: function(info) {
