@@ -390,6 +390,7 @@ footer {
 
 .exp-scrollable {
 	overflow-y: auto;
+	overflow-x: hidden;
 	display: block;
 }
 
@@ -1442,11 +1443,11 @@ tbody.exp-scrollable {
 }
 
 tbody.exp-scrollable td.column_width:first-child {
+	-webkit-box-shadow: -1px 0px 0px 0px #eee, 1px 0px 0px 0px #eee;
+	box-shadow: 0px 0px 0px 1px #eee;
 	position: relative;
 	z-index: 3;
 	background: #fff;
-
-	box-shadow: -1px 0px 0px 0px #eee, 1px 0px 0px 0px #eee;
 }
 
 ul#setApp {
