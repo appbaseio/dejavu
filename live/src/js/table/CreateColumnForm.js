@@ -129,19 +129,41 @@ class CreateColumnForm extends React.Component {
 				/>
 				<h4>Add Field</h4>
 				<form>
-					<FormGroup
-						validationState={this.getValidationState()}
-					>
-						<FormControl
-							type="text"
-							value={this.state.value}
-							placeholder="Field"
-							onChange={this.handleChange}
-							name="value"
-						/>
-						<FormControl.Feedback />
-						<HelpBlock>Field name should be unique and not _type or _id</HelpBlock>
-					</FormGroup>
+					<div className="flex-row">
+						{
+							this.state.complexData !== 'object' &&
+							<FormGroup bsClass="create-column-datatype">
+								<ControlLabel>Data Type</ControlLabel>
+								<FormControl
+									componentClass="select"
+									placeholder="Select ES Type"
+									value={this.state.type}
+									onChange={this.handleChange}
+									name="type"
+								>
+									{
+										Object.keys(this.state.esMapping).map(item => (
+											<option key={item} value={item}>{item}</option>
+										))
+									}
+								</FormControl>
+							</FormGroup>
+						}
+						<FormGroup
+							validationState={this.getValidationState()}
+						>
+							<ControlLabel>Field Name</ControlLabel>
+							<FormControl
+								type="text"
+								value={this.state.value}
+								placeholder="Field"
+								onChange={this.handleChange}
+								name="value"
+							/>
+							<FormControl.Feedback />
+							<HelpBlock>Field name should be unique and not _type or _id</HelpBlock>
+						</FormGroup>
+					</div>
 					<FormGroup>
 						<ControlLabel>Pick the data shape</ControlLabel>
 						<FormGroup>
@@ -158,25 +180,6 @@ class CreateColumnForm extends React.Component {
 							</Radio>
 						</FormGroup>
 					</FormGroup>
-					{
-						this.state.complexData !== 'object' &&
-						<FormGroup>
-							<ControlLabel>Pick the data type</ControlLabel>
-							<FormControl
-								componentClass="select"
-								placeholder="Select ES Type"
-								value={this.state.type}
-								onChange={this.handleChange}
-								name="type"
-							>
-								{
-									Object.keys(this.state.esMapping).map(item => (
-										<option key={item} value={item}>{item}</option>
-									))
-								}
-							</FormControl>
-						</FormGroup>
-					}
 					{
 						this.state.type === 'Date' &&
 						<FormGroup>

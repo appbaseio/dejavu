@@ -1460,3 +1460,11 @@ ul#setApp {
 	padding-left: 7px;
 	height: 100%;
 }
+
+.flex-row {
+	display: flex;
+}
+
+.create-column-datatype {
+	padding-right: 10px;
+}
