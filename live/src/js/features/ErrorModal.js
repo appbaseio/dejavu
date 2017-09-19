@@ -19,7 +19,7 @@ class ErrorModal extends React.Component {
 			<div>
 				<Modal className="modal-danger" show={errorShow} onHide={this.close}>
 					<Modal.Header closeButton>
-						<Modal.Title>Authentication Error</Modal.Title>
+						<Modal.Title>{this.props.errorTitle}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<p>{this.props.errorMessage}</p>
@@ -37,7 +37,8 @@ ErrorModal.propTypes = {
 };
 
 ErrorModal.defaultProps = {
-	errorMessage: "It looks like your app name, username, password combination doesn't match. Check your url and appname and then connect it again."
+	errorTitle: 'Authentication Error',
+	errorMessage: "It looks like your app name, username, password combination doesn't match. Check your url and appname and then connect it again."	// eslint-disable-line
 };
 
 module.exports = ErrorModal;

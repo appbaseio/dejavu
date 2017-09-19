@@ -20,6 +20,7 @@ class CreateColumnForm extends React.Component {
 			valid: false,
 			selectedType: this.props.selectedTypes[0],
 			credentialsError: false,
+			credentialsErrorTitle: '',
 			credentialsErrorMessage: '',
 			isMappingValid: true,
 			esMapping: feed.getEsVersion() === 2 ? es2 : es5
@@ -107,10 +108,19 @@ class CreateColumnForm extends React.Component {
 
 	handleCredentialsErrorMsg = (e) => {
 		if (e.status >= 400) {
-			this.setState({
-				credentialsError: true,
-				credentialsErrorMessage: e.message
-			});
+			if (e.error) {
+				const { type, reason } = e.error;
+				this.setState({
+					credentialsError: true,
+					credentialsErrorTitle: type,
+					credentialsErrorMessage: reason
+				});
+			} else {
+				this.setState({
+					credentialsError: true,
+					credentialsErrorMessage: e.message
+				});
+			}
 		}
 	}
 
@@ -186,6 +196,7 @@ class CreateColumnForm extends React.Component {
 			<div className="create-column-form-container">
 				<ErrorModal
 					errorShow={this.state.credentialsError}
+					errorTitle={this.state.credentialsErrorTitle}
 					errorMessage={this.state.credentialsErrorMessage}
 					closeErrorModal={this.hideCredentialsErrorMessage}
 				/>
