@@ -61,8 +61,8 @@ class Info extends React.Component {
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
 		const editTooltipText = this.props.editable ?
-		'Allows editing cells' :
-		'Editing the cells is disabled';
+		'Editing is enabled, good for performing data operations.' :
+		'Editing is disabled, good for browsing and filtering data.';
 		return (<div className="infoRow container">
 			<div className=" row">
 				<div className={infoObjClass}>
@@ -110,7 +110,7 @@ class Info extends React.Component {
 							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
 						>
 							<button className="btn btn-warning" onClick={this.props.toggleEditView}>
-								<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editable View
+								<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editing
 							</button>
 						</OverlayTrigger> :
 						<OverlayTrigger
@@ -118,7 +118,7 @@ class Info extends React.Component {
 							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
 						>
 							<button className="btn btn-success" onClick={this.props.toggleEditView}>
-								<span className="button-icon"><i className="fa fa-lock" /></span>Read Only View
+								<span className="button-icon"><i className="fa fa-eye" /></span>Viewing
 							</button>
 						</OverlayTrigger>
 				}
