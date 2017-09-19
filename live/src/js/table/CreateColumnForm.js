@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react';	// eslint-disable-line
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 /* global feed, help */
 import { es2, es5, dateFormats } from '../helper/esMapping';
@@ -47,10 +47,13 @@ class CreateColumnForm extends React.Component {
 	}
 
 	isValidJSON = () => {
+		const mappingObj = this.editorref.getValue().trim();
 		try {
-			JSON.parse(this.editorref.getValue().trim());
+			JSON.parse(mappingObj);
 		} catch (e) {
-			console.log('wrong');
+			return false;
+		}
+		if (mappingObj === '{}') {
 			return false;
 		}
 		return true;
@@ -59,6 +62,7 @@ class CreateColumnForm extends React.Component {
 	handleChange = (e) => {
 		const { name } = e.target;
 		const { value } = e.target;
+		const prevComplexData = this.state.complexData;
 		if (!this.state.showError && name === 'value') {
 			this.setState({
 				showError: true
@@ -88,7 +92,11 @@ class CreateColumnForm extends React.Component {
 					valid: true
 				});
 			}
-			if (name === 'type' && value === customMapping) {
+			if (
+				(name === 'type' && value === customMapping) ||
+				// need to set codemirror again if switching to and fro object type
+				(name === 'complexData' && value !== 'object' && this.state.type === customMapping && prevComplexData === 'object')
+			) {
 				this.editorref = help.setCodeMirror('custom-mapping-textarea');
 				this.props.toggleExpand(true);
 			} else if (name === 'type' && value !== customMapping) {
@@ -181,7 +189,9 @@ class CreateColumnForm extends React.Component {
 					errorMessage={this.state.credentialsErrorMessage}
 					closeErrorModal={this.hideCredentialsErrorMessage}
 				/>
-				<h4>Add Field</h4>
+				<div className="flex-row flex-baseline">
+					<h4>Add Field</h4><span className="pad-left">(aka Column)</span>
+				</div>
 				<form>
 					<div className="flex-row">
 						<FormGroup bsClass="create-column-estype">
@@ -216,7 +226,15 @@ class CreateColumnForm extends React.Component {
 						</FormGroup>
 					</div>
 					<FormGroup>
-						<ControlLabel>Pick the data shape</ControlLabel>
+						<ControlLabel>
+							Pick the data shape&nbsp;
+							<OverlayTrigger
+								placement="top"
+								overlay={<Tooltip id="tooltip-explaination">Determines whether the field can hold one or multiple values</Tooltip>}
+							>
+								<i className="fa fa-info-circle" />
+							</OverlayTrigger>
+						</ControlLabel>
 						<FormGroup>
 							<Radio name="complexData" value="default" inline onChange={this.handleChange} checked={this.state.complexData === 'default'}>
 								Primitive
@@ -231,25 +249,6 @@ class CreateColumnForm extends React.Component {
 							</Radio>
 						</FormGroup>
 					</FormGroup>
-					{
-						this.state.type === 'Date' &&
-						<FormGroup>
-							<ControlLabel>Pick the date format</ControlLabel>
-							<FormControl
-								componentClass="select"
-								placeholder="Select Date Format"
-								value={this.state.format}
-								onChange={this.handleChange}
-								name="format"
-							>
-								{
-									dateFormats.map(item => (
-										<option key={item} value={item}>{item}</option>
-									))
-								}
-							</FormControl>
-						</FormGroup>
-					}
 					{
 						this.state.complexData !== 'object' &&
 						<FormGroup>
@@ -270,7 +269,26 @@ class CreateColumnForm extends React.Component {
 						</FormGroup>
 					}
 					{
-						this.state.type === customMapping &&
+						this.state.type === 'Date' && this.state.complexData !== 'object' &&
+						<FormGroup>
+							<ControlLabel>Pick the date format</ControlLabel>
+							<FormControl
+								componentClass="select"
+								placeholder="Select Date Format"
+								value={this.state.format}
+								onChange={this.handleChange}
+								name="format"
+							>
+								{
+									dateFormats.map(item => (
+										<option key={item} value={item}>{item}</option>
+									))
+								}
+							</FormControl>
+						</FormGroup>
+					}
+					{
+						this.state.type === customMapping && this.state.complexData !== 'object' &&
 						<div className="custom-mapping-textarea">
 							<div>
 								<h5>Custom Mapping Object</h5>
@@ -301,7 +319,8 @@ class CreateColumnForm extends React.Component {
 CreateColumnForm.propTypes = {
 	selectedTypes: PropTypes.arrayOf(PropTypes.string),
 	reloadMapping: PropTypes.func,
-	mappingObj: PropTypes.object	// eslint-disable-line
+	mappingObj: PropTypes.object,	// eslint-disable-line
+	toggleExpand: PropTypes.func
 };
 
 export default CreateColumnForm;

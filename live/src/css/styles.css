@@ -1489,3 +1489,11 @@ ul#setApp {
 .alert-message {
 	color: #a94442;
 }
+
+.pad-left {
+	padding-left: 5px;
+}
+
+.flex-baseline {
+	align-items: baseline;
+}
