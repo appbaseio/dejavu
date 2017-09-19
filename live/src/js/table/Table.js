@@ -42,7 +42,7 @@ class Table extends React.Component {
 							className="exp-scrollable"
 							id="exp-scrollable"
 							style={{
-								maxHeight: window.innerHeight - 320
+								maxHeight: window.innerHeight - 280
 							}}
 						>
 							{this.props.renderRows}
