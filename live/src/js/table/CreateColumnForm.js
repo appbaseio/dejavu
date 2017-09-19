@@ -73,7 +73,13 @@ class CreateColumnForm extends React.Component {
 				}
 				return { ...allFields };
 			}, {});
-			if (!this.state.value || this.state.value === '_type' || this.state.value === '_id' || Object.prototype.hasOwnProperty.call(fields, this.state.value)) {
+			if (
+				!this.state.value ||
+				this.state.value === '_type' ||
+				this.state.value === '_id' ||
+				Object.prototype.hasOwnProperty.call(fields, this.state.value) ||
+				/[^A-Za-z0-9_#.$]/g.test(this.state.value)
+			) {
 				this.setState({
 					valid: false
 				});
@@ -206,7 +212,7 @@ class CreateColumnForm extends React.Component {
 								name="value"
 							/>
 							<FormControl.Feedback />
-							<HelpBlock>Field name should be unique and not _type or _id</HelpBlock>
+							<HelpBlock>Should be unique and not _type or _id (_#.$ are allowed)</HelpBlock>
 						</FormGroup>
 					</div>
 					<FormGroup>
@@ -267,7 +273,7 @@ class CreateColumnForm extends React.Component {
 						this.state.type === customMapping &&
 						<div className="custom-mapping-textarea">
 							<div>
-								<h5>Custom Mappings</h5>
+								<h5>Custom Mapping Object</h5>
 								<textarea id="custom-mapping-textarea" rows="7" />
 							</div>
 							{
