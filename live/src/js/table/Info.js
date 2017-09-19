@@ -1,4 +1,6 @@
-var React = require('react');
+import React from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
 
@@ -58,6 +60,9 @@ class Info extends React.Component {
 		var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
+		const editTooltipText = this.props.editable ?
+		'Allows editing cells' :
+		'Editing the cells is disabled';
 		return (<div className="infoRow container">
 			<div className=" row">
 				<div className={infoObjClass}>
@@ -100,12 +105,22 @@ class Info extends React.Component {
 				</div>
 				{
 					this.props.editable ?
-						<button className="btn btn-warning" onClick={this.props.toggleEditView}>
-							<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editable View
-						</button> :
-						<button className="btn btn-success" onClick={this.props.toggleEditView}>
-							<span className="button-icon"><i className="fa fa-lock" /></span>Read Only View
-						</button>
+						<OverlayTrigger
+							placement="top"
+							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
+						>
+							<button className="btn btn-warning" onClick={this.props.toggleEditView}>
+								<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editable View
+							</button>
+						</OverlayTrigger> :
+						<OverlayTrigger
+							placement="top"
+							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
+						>
+							<button className="btn btn-success" onClick={this.props.toggleEditView}>
+								<span className="button-icon"><i className="fa fa-lock" /></span>Read Only View
+							</button>
+						</OverlayTrigger>
 				}
 				<div className="pull-right pd-r0">
 					<ColumnDropdown
