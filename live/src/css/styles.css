@@ -1465,6 +1465,26 @@ ul#setApp {
 	display: flex;
 }
 
-.create-column-datatype {
-	padding-right: 10px;
+.create-column-estype {
+	padding-right: 5px;
+}
+
+.create-column-submit-btn {
+	margin-top: 10px;
+}
+
+.custom-mapping-textarea {
+	margin-bottom: 10px;
+}
+
+#add-column-overlay {
+	max-width: 400px;
+}
+
+#add-column-overlay.expand .arrow {
+	top: 24% !important;
+}
+
+.alert-message {
+	color: #a94442;
 }

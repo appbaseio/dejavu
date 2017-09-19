@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio } from 'react-bootstrap';
 
-/* global feed */
+/* global feed, help */
 import { es2, es5, dateFormats } from '../helper/esMapping';
 import ErrorModal from '../features/ErrorModal';
+
+const customMapping = "I’ve my own mapping"; // eslint-disable-line
 
 class CreateColumnForm extends React.Component {
 	constructor(props) {
@@ -19,8 +21,19 @@ class CreateColumnForm extends React.Component {
 			selectedType: this.props.selectedTypes[0],
 			credentialsError: false,
 			credentialsErrorMessage: '',
+			isMappingValid: true,
 			esMapping: feed.getEsVersion() === 2 ? es2 : es5
 		};
+	}
+
+	componentDidMount() {
+		const nextEsMapping = { ...this.state.esMapping };
+		this.setState({	// eslint-disable-line
+			esMapping: {
+				...nextEsMapping,
+				[customMapping]: 'customMapping'
+			}
+		});
 	}
 
 	getValidationState = () => {
@@ -33,14 +46,26 @@ class CreateColumnForm extends React.Component {
 		return null;
 	}
 
+	isValidJSON = () => {
+		try {
+			JSON.parse(this.editorref.getValue().trim());
+		} catch (e) {
+			console.log('wrong');
+			return false;
+		}
+		return true;
+	}
+
 	handleChange = (e) => {
-		if (!this.state.showError && e.target.name === 'value') {
+		const { name } = e.target;
+		const { value } = e.target;
+		if (!this.state.showError && name === 'value') {
 			this.setState({
 				showError: true
 			});
 		}
 		this.setState({
-			[e.target.name]: e.target.value
+			[name]: value
 		}, () => {
 			const fields = this.props.selectedTypes.reduce((allFields, currentType) => {
 				if (this.props.mappingObj[currentType].properties) {
@@ -57,6 +82,12 @@ class CreateColumnForm extends React.Component {
 					valid: true
 				});
 			}
+			if (name === 'type' && value === customMapping) {
+				this.editorref = help.setCodeMirror('custom-mapping-textarea');
+				this.props.toggleExpand(true);
+			} else if (name === 'type' && value !== customMapping) {
+				this.props.toggleExpand(false);
+			}
 		});
 	}
 
@@ -69,7 +100,7 @@ class CreateColumnForm extends React.Component {
 		}
 	}
 
-	hideCredentialsErrorMessage= () => {
+	hideCredentialsErrorMessage = () => {
 		this.setState({
 			credentialsError: false,
 			credentialsErrorMessage: ''
@@ -78,7 +109,7 @@ class CreateColumnForm extends React.Component {
 
 	handleSubmit = () => {
 		if (this.state.valid) {
-			const mapping = this.state.type === 'Date' ?
+			let mapping = this.state.type === 'Date' ?
 			{
 				...this.state.esMapping[this.state.type],
 				format: this.state.format
@@ -97,6 +128,22 @@ class CreateColumnForm extends React.Component {
 					meta.dejavuMeta = {
 						[this.state.value]: this.state.complexData
 					};
+				}
+			}
+
+			if (this.state.type === customMapping) {
+				if (this.isValidJSON()) {
+					if (!this.state.isMappingValid) {
+						this.setState({
+							isMappingValid: true
+						});
+					}
+					mapping = JSON.parse(this.editorref.getValue().trim());
+				} else {
+					this.setState({
+						isMappingValid: false
+					});
+					return;
 				}
 			}
 
@@ -119,9 +166,10 @@ class CreateColumnForm extends React.Component {
 		}
 	}
 
+
 	render() {
 		return (
-			<div>
+			<div className="create-column-form-container">
 				<ErrorModal
 					errorShow={this.state.credentialsError}
 					errorMessage={this.state.credentialsErrorMessage}
@@ -130,25 +178,22 @@ class CreateColumnForm extends React.Component {
 				<h4>Add Field</h4>
 				<form>
 					<div className="flex-row">
-						{
-							this.state.complexData !== 'object' &&
-							<FormGroup bsClass="create-column-datatype">
-								<ControlLabel>Data Type</ControlLabel>
-								<FormControl
-									componentClass="select"
-									placeholder="Select ES Type"
-									value={this.state.type}
-									onChange={this.handleChange}
-									name="type"
-								>
-									{
-										Object.keys(this.state.esMapping).map(item => (
-											<option key={item} value={item}>{item}</option>
-										))
-									}
-								</FormControl>
-							</FormGroup>
-						}
+						<FormGroup bsClass="create-column-estype">
+							<ControlLabel>Elasticsearch Type</ControlLabel>
+							<FormControl
+								componentClass="select"
+								placeholder="Select Type"
+								value={this.state.selectedType}
+								onChange={this.handleChange}
+								name="selectedType"
+							>
+								{
+									this.props.selectedTypes.map(item => (
+										<option key={item} value={item}>{item}</option>
+									))
+								}
+							</FormControl>
+						</FormGroup>
 						<FormGroup
 							validationState={this.getValidationState()}
 						>
@@ -199,24 +244,43 @@ class CreateColumnForm extends React.Component {
 							</FormControl>
 						</FormGroup>
 					}
-					<FormGroup>
-						<ControlLabel>Configure the type to add this field into</ControlLabel>
-						<FormControl
-							componentClass="select"
-							placeholder="Select Type"
-							value={this.state.selectedType}
-							onChange={this.handleChange}
-							name="selectedType"
-						>
+					{
+						this.state.complexData !== 'object' &&
+						<FormGroup>
+							<ControlLabel>Data Type</ControlLabel>
+							<FormControl
+								componentClass="select"
+								placeholder="Select ES Type"
+								value={this.state.type}
+								onChange={this.handleChange}
+								name="type"
+							>
+								{
+									Object.keys(this.state.esMapping).map(item => (
+										<option key={item} value={item}>{item}</option>
+									))
+								}
+							</FormControl>
+						</FormGroup>
+					}
+					{
+						this.state.type === customMapping &&
+						<div className="custom-mapping-textarea">
+							<div>
+								<h5>Custom Mappings</h5>
+								<textarea id="custom-mapping-textarea" rows="7" />
+							</div>
 							{
-								this.props.selectedTypes.map(item => (
-									<option key={item} value={item}>{item}</option>
-								))
+								!this.state.isMappingValid &&
+								<div>
+									<span className="alert-message">Mapping object should be a valid JSON</span>
+								</div>
 							}
-						</FormControl>
-					</FormGroup>
+						</div>
+					}
 					<Button
 						bsStyle="primary"
+						bsClass="btn btn-primary create-column-submit-btn"
 						disabled={!(this.state.valid)}
 						onClick={this.handleSubmit}
 					>
