@@ -416,7 +416,26 @@ class Cell extends React.Component {
 					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
 					this.state.data;
 				const prettyView = <Pretty json={data} />;
-				toDisplay = (
+				const arrayEditView = (
+					<div>
+						<Select.Creatable
+							multi
+							value={
+								this.state.active ?
+									this.state.data.map(item => ({ value: item, label: item })) :
+								arrayView
+							}
+							options={this.props.arrayOptions ? this.props.arrayOptions.map(item => ({ value: item, label: item })) : []}
+							disabled={!this.state.active}
+							onChange={this.handleArrayChange}
+							onBlur={() => this.setActive(false)}
+							placeholder="Enter or select values"
+							ref={(node) => { this.select = node; }}
+							clearable={false}
+						/>
+					</div>
+				);
+				toDisplay = this.state.data.length > seperator ? (
 					<OverlayTrigger
 						trigger="click" rootClose placement="top" overlay={
 							!this.props.editable ?
@@ -426,25 +445,10 @@ class Cell extends React.Component {
 								<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
 						}
 					>
-						<div>
-							<Select.Creatable
-								multi
-								value={
-									this.state.active ?
-										this.state.data.map(item => ({ value: item, label: item })) :
-									arrayView
-								}
-								options={this.props.arrayOptions ? this.props.arrayOptions.map(item => ({ value: item, label: item })) : []}
-								disabled={!this.state.active}
-								onChange={this.handleArrayChange}
-								onBlur={() => this.setActive(false)}
-								placeholder="Enter or select values"
-								ref={(node) => { this.select = node; }}
-								clearable={false}
-							/>
-						</div>
+						{arrayEditView}
 					</OverlayTrigger>
-				);
+				) :
+				arrayEditView;
 			} else if (this.props.datatype.type === 'date' && this.state.active && !isObject) {
 				toDisplay = (
 					<Datetime
@@ -501,17 +505,19 @@ class Cell extends React.Component {
 									showTooltip={this.state.showTooltip}
 									editable={this.props.editable}
 								/> :
-								<OverlayTrigger
-									trigger="click" rootClose placement="top" overlay={
-										!this.props.editable && typeof data === 'string' ?
-											<Popover id="textPrettyView">
-												{toDisplay}
-											</Popover> :
-											<Popover id="textPrettyView" bsClass="tooltip-hidden" />
-									}
-								>
-									<span>{toDisplay}</span>
-								</OverlayTrigger>
+						toDisplay.length > 37 ?
+							<OverlayTrigger
+								trigger="click" rootClose placement="left" overlay={
+									!this.props.editable && typeof data === 'string' ?
+										<Popover id="textPrettyView">
+											{toDisplay}
+										</Popover> :
+										<Popover id="textPrettyView" bsClass="tooltip-hidden" />
+								}
+							>
+								<span className="string-cell-span">{toDisplay}</span>
+							</OverlayTrigger> :
+							toDisplay
 					}
 				</div>
 			</td>
