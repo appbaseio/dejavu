@@ -447,7 +447,7 @@ var HomePage = createReactClass({
 		var scroller = document.getElementById('exp-scrollable');
 		var infoObj = this.state.infoObj;
 		// Plug in a handler which takes care of infinite scrolling
-		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100 && !this.state.pageLoading) {
+		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight && !this.state.pageLoading) {
 				this.setState({
 					pageLoading: true
 				});
