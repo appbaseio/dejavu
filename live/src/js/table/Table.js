@@ -17,7 +17,7 @@ class Table extends React.Component {
 	handleScroll = () => {
 		// $('thead').css('left', -$('#table-container').scrollLeft());
 		$('thead th:nth-child(1)').css('left', $('#table-container').scrollLeft());
-		$('tbody td:nth-child(1)').css('left', $('#table-container').scrollLeft());
+		$('.first-cell').css('left', $('#table-container').scrollLeft());
 	}
 
 	render() {

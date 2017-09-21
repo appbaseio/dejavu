@@ -471,7 +471,7 @@ class Cell extends React.Component {
 				id={this.props.unique}
 				key={this.props.unique}
 				style={style}
-				className={tdClass}
+				className={`${tdClass} ${columnName === 'json' ? 'first-cell' : ''}`}
 				onClick={() => this.setActive(true)}
 			>
 				<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
