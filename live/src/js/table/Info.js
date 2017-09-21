@@ -1,12 +1,13 @@
 import React from 'react';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
 
 class Info extends React.Component {
 	state = {
-		selectToggle: false
+		selectToggle: false,
+		editable: this.props.editable
 	};
 
 	selectToggleChange = () => {
@@ -25,6 +26,16 @@ class Info extends React.Component {
 		}
 		this.props.actionOnRecord.selectToggleChange(checkbox);
 	};
+
+	handleEditView = (e) => {
+		const nextState = e === '2';
+		if (this.state.editable !== nextState) {
+			this.setState({
+				editable: nextState
+			});
+			setTimeout(this.props.toggleEditView, 10);
+		}
+	}
 
 	componentDidUpdate() {
 		var checkFlag = this.props.actionOnRecord.selectToggle;
@@ -103,25 +114,23 @@ class Info extends React.Component {
 						</span>
 					</div>
 				</div>
-				{
-					this.props.editable ?
-						<OverlayTrigger
-							placement="top"
-							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
-						>
-							<button className="btn btn-warning" onClick={this.props.toggleEditView}>
+				<DropdownButton
+					bsStyle={this.state.editable ? 'warning' : 'success'}
+					title={
+						this.state.editable ?
+							<span>
 								<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editing
-							</button>
-						</OverlayTrigger> :
-						<OverlayTrigger
-							placement="top"
-							overlay={<Tooltip id="tooltip-explaing">{editTooltipText}</Tooltip>}
-						>
-							<button className="btn btn-success" onClick={this.props.toggleEditView}>
+							</span> :
+							<span>
 								<span className="button-icon"><i className="fa fa-eye" /></span>Viewing
-							</button>
-						</OverlayTrigger>
-				}
+							</span>
+					}
+					id="toggle-button-edit-view"
+					onSelect={this.handleEditView}
+				>
+					<MenuItem eventKey="1" active={!this.state.editable}>Read Only View</MenuItem>
+					<MenuItem eventKey="2" active={this.state.editable}>Editable View</MenuItem>
+				</DropdownButton>
 				<div className="pull-right pd-r0">
 					<ColumnDropdown
 						visibleColumns ={this.props.visibleColumns}
