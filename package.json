@@ -70,7 +70,8 @@
     "react-bootstrap": "^0.31.0",
     "react-datetime": "^2.9.0",
     "react-dom": "^15.5.4",
-    "react-select": "^1.0.0-rc.5"
+    "react-select": "^1.0.0-rc.5",
+    "react-spinner": "^0.2.7"
   },
   "author": "",
   "license": "ISC",

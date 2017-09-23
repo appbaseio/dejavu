@@ -1,5 +1,7 @@
 import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
+import Spinner from 'react-spinner';
+import 'react-spinner/react-spinner.css';
 
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
@@ -71,9 +73,6 @@ class Info extends React.Component {
 		var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
-		const editTooltipText = this.props.editable ?
-		'Editing is enabled, good for performing data operations.' :
-		'Editing is disabled, good for browsing and filtering data.';
 		return (<div className="infoRow container">
 			<div className=" row">
 				<div className={infoObjClass}>

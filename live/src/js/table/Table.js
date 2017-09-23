@@ -1,4 +1,5 @@
 import React from 'react';
+import throttle from 'lodash/throttle';
 /* global $ */
 
 const FeatureComponent = require('../features/FeatureComponent.js');
@@ -10,7 +11,8 @@ class Table extends React.Component {
 		const elem = document.getElementById('exp-scrollable');
 		// We are listning for scroll even so we get notified
 		// when the scroll hits the bottom. For pagination.
-		elem.addEventListener('scroll', this.props.scrollFunction);
+		const throttledScroll = throttle(this.props.scrollFunction, 300);
+		elem.addEventListener('scroll', throttledScroll);
 	}
 
 	// for keeping first column fixed
@@ -28,7 +30,14 @@ class Table extends React.Component {
 		}
 		return (
 			<div id="table-container" className="table-container" onScroll={this.handleScroll}>
-				<div id="table-scroller" className="table-scroller">
+				<div
+					id="table-scroller"
+					className="table-scroller"
+					style={{
+						maxHeight: window.innerHeight - 280,
+						overflow: 'hidden'
+					}}
+				>
 					<table
 						id="data-table"
 						className="table table-fixedheader table-bordered"

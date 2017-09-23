@@ -446,12 +446,18 @@ var HomePage = createReactClass({
 	handleScroll: function(event) {
 		var scroller = document.getElementById('exp-scrollable');
 		var infoObj = this.state.infoObj;
+		const top = scroller.scrollTop;
+		const update = (...args) => {
+			this.updateDataOnView(...args);
+			scroller.scrollTop = top;
+		};
 		// Plug in a handler which takes care of infinite scrolling
-		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight && !this.state.pageLoading) {
+		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 10 && !this.state.pageLoading) {
 				this.setState({
 					pageLoading: true
+				}, () => {
+					help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
 				});
-				help.paginateData(this.state.infoObj.total, this.updateDataOnView, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
 		}
 	},
 	handleSort: function(item, type, eve, order) {
