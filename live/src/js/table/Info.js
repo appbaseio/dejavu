@@ -1,7 +1,5 @@
 import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
-import Spinner from 'react-spinner';
-import 'react-spinner/react-spinner.css';
 
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
@@ -9,8 +7,17 @@ var ColumnDropdown = require('./ColumnDropdown.js');
 class Info extends React.Component {
 	state = {
 		selectToggle: false,
-		editable: this.props.editable
+		editable: this.props.editable,
+		loading: false
 	};
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.editable !== this.props.editable) {
+			this.setState({
+				loading: false
+			});
+		}
+	}
 
 	selectToggleChange = () => {
 		var checkFlag, checkbox;
@@ -33,7 +40,8 @@ class Info extends React.Component {
 		const nextState = e === '2';
 		if (this.state.editable !== nextState) {
 			this.setState({
-				editable: nextState
+				editable: nextState,
+				loading: true
 			});
 			setTimeout(this.props.toggleEditView, 10);
 		}
@@ -118,10 +126,24 @@ class Info extends React.Component {
 					title={
 						this.state.editable ?
 							<span>
-								<span className="button-icon"><i className="fa fa-unlock-alt" /></span>Editing
+								<span className="button-icon">
+									{
+										this.state.loading ?
+											<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" /> :
+											<i className="fa fa-unlock-alt" />
+									}
+								</span>
+								Editing
 							</span> :
 							<span>
-								<span className="button-icon"><i className="fa fa-eye" /></span>Viewing
+								<span className="button-icon">
+									{
+										this.state.loading ?
+											<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" /> :
+											<i className="fa fa-eye" />
+									}
+								</span>
+								Viewing
 							</span>
 					}
 					id="toggle-button-edit-view"
