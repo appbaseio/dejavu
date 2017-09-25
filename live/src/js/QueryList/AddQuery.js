@@ -10,7 +10,6 @@ class AddQuery extends React.Component {
 			name: false,
 			type: false,
 			body: false
-
 		}
 	};
 
@@ -46,6 +45,9 @@ class AddQuery extends React.Component {
 	};
 
 	close = () => {
+		this.setState({
+			error: null
+		});
 		Utils.closeModal.call(this);
 	};
 
@@ -169,17 +171,17 @@ class AddQuery extends React.Component {
 					</Modal.Header>
 					<Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
-						<div className={validateClass.name}>
-							<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
-							<div className="col-sm-9">
-								<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" />
-								<span className="help-block">
-									Query name is required.
-								</span>
+							<div className={validateClass.name}>
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
+								<div className="col-sm-9">
+									<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" />
+									<span className="help-block">
+										Query name is required.
+									</span>
+								</div>
 							</div>
-						</div>
-						{Utils.getTypeMarkup('query', validateClass, selectClass)}
-						{Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)}
+							{Utils.getTypeMarkup('query', validateClass, selectClass)}
+							{Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)}
 						</form>
 					</Modal.Body>
 					<Modal.Footer>
