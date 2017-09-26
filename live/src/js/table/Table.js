@@ -60,19 +60,19 @@ class Table extends React.Component {
 							}}
 						>
 							{this.props.renderRows}
-							{
-								this.props.loadingSpinner &&
-								<div
-									className="page-loading-spinner"
-									style={{
-										left: $('#table-container').scrollLeft() + ((window.innerWidth - 270) / 2)
-									}}
-								>
-									<i className="fa fa-spinner fa-spin fa-3x fa-fw page-loading-spinner-icon" />
-								</div>
-							}
 						</tbody>
 					</table>
+					{
+						this.props.loadingSpinner &&
+						<div
+							className="page-loading-spinner"
+							style={{
+								left: $('#table-container').scrollLeft() + ((window.innerWidth - 270) / 2)
+							}}
+						>
+							<i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw page-loading-spinner-icon" aria-hidden="true" />
+						</div>
+					}
 					{
 						this.props.selectedTypes.length && this.props.editable ?
 							<div className="add-row-button">
