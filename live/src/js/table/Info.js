@@ -149,8 +149,28 @@ class Info extends React.Component {
 					id="toggle-button-edit-view"
 					onSelect={this.handleEditView}
 				>
-					<MenuItem eventKey="1" active={!this.state.editable}>Read Only View</MenuItem>
-					<MenuItem eventKey="2" active={this.state.editable}>Editable View</MenuItem>
+					<MenuItem eventKey="1" active={!this.state.editable}>
+						<div className="flex">
+							<div className="flex flex-align-center">
+								<span className="button-icon icon-sm"><i className="fa fa-eye" /></span>
+							</div>
+							<div className="flex flex-column">
+								<b>Viewing</b>
+								Read only view
+							</div>
+						</div>
+					</MenuItem>
+					<MenuItem eventKey="2" active={this.state.editable}>
+						<div className="flex">
+							<div className="flex flex-align-center">
+								<span className="button-icon icon-sm"><i className="fa fa-unlock-alt" /></span>
+							</div>
+							<div className="flex flex-column">
+								<b>Editing</b>
+								Editable view
+							</div>
+						</div>
+					</MenuItem>
 				</DropdownButton>
 				<div className="pull-right pd-r0">
 					<ColumnDropdown

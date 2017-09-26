@@ -1466,6 +1466,22 @@ ul#setApp {
 	display: flex;
 }
 
+.flex {
+	display: flex;
+}
+
+.flex-column {
+	flex-direction: column;
+}
+
+.flex-align-center {
+	align-items: center;
+}
+
+.icon-sm {
+	width: 25px;
+}
+
 .create-column-estype {
 	padding-right: 5px;
 	width: 180px;
