@@ -1440,6 +1440,7 @@ thead#columns th#json:first-child {
 
 tbody.exp-scrollable {
 	padding-top: 42px;
+	padding-bottom: 42px;
 }
 
 tbody.exp-scrollable td.column_width:first-child {
@@ -1500,4 +1501,13 @@ ul#setApp {
 
 .editable-loading {
 	font-size: 16px;
+}
+
+.page-loading-spinner {
+	position: relative;
+	padding-top: 10px;
+}
+
+.page-loading-spinner-icon {
+	font-size: 18px;
 }

@@ -236,7 +236,8 @@ var help = {
 			infoObj: infoObj,
 			visibleColumns: visibleColumns,
 			hiddenColumns: hiddenColumns,
-			pageLoading: false
+			pageLoading: false,
+			loadingSpinner: false
 		};
 	},
 	countTotalRecord: function(total, fromStream, method, totalRecord) {

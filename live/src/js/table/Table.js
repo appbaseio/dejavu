@@ -15,6 +15,11 @@ class Table extends React.Component {
 		elem.addEventListener('scroll', throttledScroll);
 	}
 
+	componentDidUpdate() {
+		// to handle new rows
+		this.handleScroll();
+	}
+
 	// for keeping first column fixed
 	handleScroll = () => {
 		// $('thead').css('left', -$('#table-container').scrollLeft());
@@ -55,6 +60,17 @@ class Table extends React.Component {
 							}}
 						>
 							{this.props.renderRows}
+							{
+								this.props.loadingSpinner &&
+								<div
+									className="page-loading-spinner"
+									style={{
+										left: $('#table-container').scrollLeft() + ((window.innerWidth - 270) / 2)
+									}}
+								>
+									<i className="fa fa-spinner fa-spin fa-3x fa-fw page-loading-spinner-icon" />
+								</div>
+							}
 						</tbody>
 					</table>
 					{

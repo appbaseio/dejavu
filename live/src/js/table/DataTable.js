@@ -337,6 +337,7 @@ class DataTable extends React.Component {
 						getTypeDoc={this.props.getTypeDoc}
 						userTouchAdd={this.props.infoObj.userTouchAdd}
 						editable={this.state.editable}
+						loadingSpinner={this.props.loadingSpinner}
 					/>
 					{
 						this.props.selectedTypes.length && this.state.editable ?
