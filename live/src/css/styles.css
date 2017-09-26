@@ -1511,6 +1511,10 @@ ul#setApp {
 	padding-left: 5px;
 }
 
+.pad-right {
+	padding-right: 5px;
+}
+
 .flex-baseline {
 	align-items: baseline;
 }
@@ -1526,4 +1530,8 @@ ul#setApp {
 
 .page-loading-spinner-icon {
 	font-size: 18px;
+}
+
+.text-sm {
+	font-size: 12px;
 }

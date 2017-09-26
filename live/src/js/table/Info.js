@@ -133,7 +133,7 @@ class Info extends React.Component {
 											<i className="fa fa-unlock-alt" />
 									}
 								</span>
-								Editing
+								<span className="pad-right">Editing</span>
 							</span> :
 							<span>
 								<span className="button-icon">
@@ -143,7 +143,7 @@ class Info extends React.Component {
 											<i className="fa fa-eye" />
 									}
 								</span>
-								Viewing
+								<span className="pad-right">Viewing</span>
 							</span>
 					}
 					id="toggle-button-edit-view"
@@ -156,7 +156,7 @@ class Info extends React.Component {
 							</div>
 							<div className="flex flex-column">
 								<b>Viewing</b>
-								Read only view
+								<span className="text-sm">Read only view</span>
 							</div>
 						</div>
 					</MenuItem>
@@ -167,7 +167,7 @@ class Info extends React.Component {
 							</div>
 							<div className="flex flex-column">
 								<b>Editing</b>
-								Editable view
+								<span className="text-sm">Editable view</span>
 							</div>
 						</div>
 					</MenuItem>
