@@ -454,11 +454,10 @@ var HomePage = createReactClass({
 		};
 		// Plug in a handler which takes care of infinite scrolling
 		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 10 && !this.state.pageLoading) {
-				this.setState({
-					loadingSpinner: true
-				}, () => {
-					help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
-				});
+			this.setState({
+				loadingSpinner: true
+			});
+			help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
 		}
 	},
 	handleSort: function(item, type, eve, order) {
