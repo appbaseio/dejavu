@@ -73,6 +73,28 @@ class Cell extends React.Component {
 		}
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (
+			this.props.item !== nextProps.item ||
+			this.props.visibility !== nextProps.visibility ||
+			this.props._checked !== nextProps._checked ||
+			this.props.actionOnRecord !== nextProps.actionOnRecord ||
+			this.props.arrayOptions !== nextProps.arrayOptions ||
+			this.props.rowNumber !== nextProps.rowNumber ||
+			this.props.editable !== nextProps.editable ||
+			this.props.isObject !== nextProps.isObject ||
+			this.props.isArrayObject !== nextProps.isArrayObject ||
+			this.state.checked !== nextState.checked ||
+			this.state.active !== nextState.active ||
+			this.state.showTooltip !== nextState.showTooltip ||
+			this.state.data !== nextState.data
+		) {
+			// console.log('change', nextProps._id);
+			return true;
+		}
+		return false;
+	}
+
 	componentDidUpdate() {
 		var self = this;
 		var _id = this.props._id;
