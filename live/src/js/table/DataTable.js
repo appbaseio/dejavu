@@ -36,10 +36,10 @@ class DataTable extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props._data !== nextProps._data) {
+		if (this.props._data !== nextProps._data && Array.isArray(nextProps._data)) {
 			const arrayFields = {};
 			const data = nextProps._data;
-			for (let i = 0; i < 5 && i !== data.length; i += 1) {
+			for (let i = 0; i < 10 && i !== data.length; i += 1) {
 				Object.keys(data[i]).forEach((column) => {
 					const type = data[i]._type;
 					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);

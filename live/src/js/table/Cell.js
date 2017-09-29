@@ -70,6 +70,24 @@ class Cell extends React.Component {
 				data: nextProps.item,
 				prevData: nextProps.item
 			});
+		} else if (this.props.arrayOptions !== nextProps.arrayOptions) {
+			this.populateCellData(nextProps);
+		}
+		const { _id, _type } = this.props;
+		let checkFlag = false;
+		if (this.props.actionOnRecord.selectedRows.length) {
+			this.props.actionOnRecord.selectedRows.forEach((v) => {
+				if (v._id === _id && v._type === _type) {
+					checkFlag = true;
+				}
+			});
+		} else {
+			checkFlag = false;
+		}
+		if (this.state.checked !== checkFlag) {
+			this.setState({
+				checked: checkFlag
+			});
 		}
 	}
 
@@ -86,32 +104,14 @@ class Cell extends React.Component {
 			this.props.isArrayObject !== nextProps.isArrayObject ||
 			this.state.checked !== nextState.checked ||
 			this.state.active !== nextState.active ||
+			this.state.geoActive !== nextState.geoActive ||
 			this.state.showTooltip !== nextState.showTooltip ||
-			this.state.data !== nextState.data
+			this.state.data !== nextState.data ||
+			this.props.datatype.type === 'geo_point'
 		) {
-			// console.log('change', nextProps._id);
 			return true;
 		}
 		return false;
-	}
-
-	componentDidUpdate() {
-		var self = this;
-		var _id = this.props._id;
-		var _type = this.props._type;
-		var checkFlag = false;
-		if (this.props.actionOnRecord.selectedRows.length) {
-			this.props.actionOnRecord.selectedRows.forEach(function(v) {
-				if (v._id === _id && v._type === _type)
-					checkFlag = true;
-			});
-		} else
-			checkFlag = false;
-		if (this.state.checked !== checkFlag) {
-			this.setState({
-				checked: checkFlag
-			});
-		}
 	}
 
 	populateCellData(props) {
@@ -430,7 +430,7 @@ class Cell extends React.Component {
 							}
 						</div>
 					</div>
-				)
+				);
 			}
 			if (Array.isArray(data) && !isObject) {
 				const seperator = getMaxArrayView(data);
@@ -447,7 +447,12 @@ class Cell extends React.Component {
 									this.state.data.map(item => ({ value: item, label: item })) :
 								arrayView
 							}
-							options={this.props.arrayOptions ? this.props.arrayOptions.map(item => ({ value: item, label: item })) : []}
+							options={
+								this.props.arrayOptions ?
+									this.props.arrayOptions.map(item => ({ value: item, label: item }))
+									.concat(this.state.data.map(item => ({ value: item, label: item }))) :
+								[]
+							}
 							disabled={!this.state.active}
 							onChange={this.handleArrayChange}
 							onBlur={() => this.setActive(false)}
@@ -556,6 +561,7 @@ Cell.propTypes = {
 	editable: PropTypes.bool,
 	isObject: PropTypes.bool,
 	isArrayObject: PropTypes.bool,
+	actionOnRecord: PropTypes.object,	// eslint-disable-line
 	datatype: PropTypes.object	// eslint-disable-line
 };
 
