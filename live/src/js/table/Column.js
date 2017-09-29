@@ -26,6 +26,7 @@ class Column extends React.Component {
 	getDatatype(datatype) {
 		switch (datatype) {
 			case 'string':
+			case 'text':
 				return (
 					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
 						<img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />

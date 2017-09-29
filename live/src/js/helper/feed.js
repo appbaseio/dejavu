@@ -205,16 +205,15 @@ var feed = (function() {
 	function applyAppbaseSearch(finalUrl, queryBody, cb_succes, cb_error) {
 		$.ajax({
 			type: 'POST',
-			beforeSend: function(request) {
-				request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+			beforeSend: (request) => {
+				if (PASSWORD !== 'test') {
+					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				}
 			},
 			url: finalUrl,
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
 			data: JSON.stringify(queryBody),
-			xhrFields: {
-				withCredentials: true
-			},
 			success: function(res) {
 				cb_succes(res);
 			},
@@ -475,58 +474,54 @@ var feed = (function() {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping';
 			return $.ajax({
 				type: 'GET',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
 				},
-				url: createUrl,
-				xhrFields: {
-					withCredentials: true
-				}
+				url: createUrl
 			});
 		},
 		createMapping: function(type, queryBody, callback) {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping/' + type;
 			return $.ajax({
 				type: 'POST',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
 				},
 				url: createUrl,
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
 				data: JSON.stringify(queryBody),
-				xhrFields: {
-					withCredentials: true
-				},
 				error: res => callback(res.responseJSON)
 			});
 		},
 		applyQuery: function(url, queryBody) {
 			return $.ajax({
 				type: 'POST',
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
 				},
 				url: url,
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
-				data: JSON.stringify(queryBody),
-				xhrFields: {
-					withCredentials: true
-				}
+				data: JSON.stringify(queryBody)
 			});
 		},
 		applyGetQuery: function(temp_config, ajaxType) {
 			var ajaxType = ajaxType ? ajaxType : 'GET';
 			return $.ajax({
 				type: ajaxType,
-				beforeSend: function(request) {
-					request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.username + ':' + temp_config.password));
+				beforeSend: (request) => {
+					if (temp_config.password !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.username + ':' + temp_config.password));
+					}
 				},
-				url: temp_config.url,
-				xhrFields: {
-					withCredentials: true
-				}
+				url: temp_config.url
 			});
 		},
 		filterType: function() {
