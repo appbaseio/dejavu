@@ -25,7 +25,7 @@ class ColumnDropdown extends React.Component {
 				pullRight={true}
 				id='ab-dropdown'
 			>
-			<Dropdown.Toggle className='fa fa-cog'/>
+			<Dropdown.Toggle className="fa fa-cog" />
 			<Dropdown.Menu>
 				<MenuItem header className='centered-text'>Displayed Attributes</MenuItem>
 				<MenuItem divider/>

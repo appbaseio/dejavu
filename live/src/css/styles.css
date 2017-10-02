@@ -1534,3 +1534,7 @@ ul#setApp {
 .text-sm {
 	font-size: 12px;
 }
+
+#ab-dropdown.fa-cog::before {
+	padding-right: 5px;
+}
