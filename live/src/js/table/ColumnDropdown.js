@@ -14,10 +14,19 @@ class ColumnDropdown extends React.Component {
 		var columns = this.props.cols ? this.props.cols : [] ;
 		// We'll get the dropdown menu items i.e. checkboxes
 		// as a list of react components i.e FieldCheckbox.
-		var ColumnsCheckbox = columns.map(function(item, i) {
+		var ColumnsCheckbox = columns.map((item, i) => {
 			var key = dropdownKeyGen(item);
-			if (item != 'json')
-				return <FieldCheckbox columnToggle ={$this.props.columnToggle} key={i} _type={item} _key={key}/>;
+			if (item !== 'json') {
+				return (
+					<FieldCheckbox
+						columnToggle={$this.props.columnToggle}
+						key={i}
+						_type={item}
+						_key={key}
+						checked={this.props.visibleColumns.includes(item)}
+					/>
+				);
+			}
 		});
 		return (
 			<Dropdown

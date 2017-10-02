@@ -119,10 +119,9 @@ var help = {
 				};
 				actionOnRecord.selectedRows.push(obj);
 			});
-		} else
+		} else {
 			actionOnRecord.selectedRows = this.removeSelection(actionOnRecord);
-
-		console.log(actionOnRecord.selectedRows);
+		}
 		return actionOnRecord;
 	},
 	setCodeMirror: function(eleId) {

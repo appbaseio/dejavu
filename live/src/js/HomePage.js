@@ -302,7 +302,7 @@ var HomePage = createReactClass({
 	},
 	afterConnect: function() {
 		if(appAuth) {
-			help.afterConnect.bind(this);
+			help.afterConnect.bind(this)();
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
@@ -319,7 +319,7 @@ var HomePage = createReactClass({
 		help.hideAttribute(hiddenColumns, 'hide');
 	},
 	removeHidden: function() {
-		this.setState(this.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
+		this.setState(help.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
 	},
 	getTotalRecord: function() {
 		var $this = this;
@@ -610,10 +610,9 @@ var HomePage = createReactClass({
 		this.setState(help.removeSort(this.state.documents));
 	},
 	columnToggle: function() {
-		var self = this;
 		var obj = {
-			toggleIt: function(elementId, checked) {
-				self.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
+			toggleIt: (elementId, checked) => {
+				this.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
 			},
 			setVisibleColumn: function() {}
 		};
