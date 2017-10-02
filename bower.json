@@ -1,7 +1,6 @@
 {
   "name": "dejavu",
   "dependencies": {
-    "appbase-js": "0.11.1",
     "jquery": "~2.1.4",
     "react-bootstrap": "~0.25.1",
     "underscore": "~1.8.3",

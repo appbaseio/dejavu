@@ -2,7 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
-/* global $ */
+/* global $, Appbase */
 // Get data size according to window height
 'use strict';
 
@@ -26,12 +26,17 @@ let esVersion = 2;	// default ES version
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
-	appbaseRef = new Appbase({
-		url: dejavuURL,
-		appname: APPNAME,
-		username: USERNAME,
-		password: PASSWORD
-	});
+	appbaseRef = PASSWORD === 'test' ?
+		new Appbase({
+			url: dejavuURL,
+			appname: APPNAME
+		}) :
+		new Appbase({
+			url: dejavuURL,
+			appname: APPNAME,
+			username: USERNAME,
+			password: PASSWORD
+		});
 }
 
 // parse the url and detect username, password
