@@ -372,6 +372,27 @@ var feed = (function() {
 				}, 1000);
 			}
 		},
+		getAggregations: (type, field, callback) => {
+			appbaseRef
+				.search({
+					type,
+					body: {
+						aggs: {
+							field: {
+								terms: { field: `${field}.raw`, size: 100 }
+							}
+						}
+					}
+				})
+				.on('data', (res) => {
+					if (callback) {
+						callback(field, res.aggregations.field.buckets);
+					}
+				})
+				.on('error', (err) => {
+					console.error(err);
+				});
+		},
 		indexData: function(recordObject, method, callback) {
 			console.log(recordObject);
 			var self = this;

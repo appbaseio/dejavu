@@ -453,7 +453,7 @@ var HomePage = createReactClass({
 			scroller.scrollTop = top;
 		};
 		// Plug in a handler which takes care of infinite scrolling
-		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 10 && !this.state.pageLoading) {
+		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 50 && !this.state.pageLoading) {
 			this.setState({
 				loadingSpinner: true
 			});

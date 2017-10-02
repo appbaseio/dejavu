@@ -1,6 +1,8 @@
 import React from 'react';
 import get from 'lodash/get';
 
+/* global feed */
+
 import AddColumnButton from './AddColumnButton';
 var PageLoading = require('./PageLoading.js');
 var Info = require('./Info.js');
@@ -21,7 +23,8 @@ class DataTable extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			editable: getQueryParameters() ? getQueryParameters().editable === 'true' : false
+			editable: getQueryParameters() ? getQueryParameters().editable === 'true' : false,
+			arrayOptions: {}
 		};
 	}
 
@@ -29,6 +32,37 @@ class DataTable extends React.Component {
 		if (getQueryParameters()) {
 			setQueryParamerter('editable', this.state.editable);
 		}
+		// feed.getAggregations('gitxplore-live', 'topics');
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props._data !== nextProps._data && Array.isArray(nextProps._data)) {
+			const arrayFields = {};
+			const data = nextProps._data;
+			for (let i = 0; i < 10 && i !== data.length; i += 1) {
+				Object.keys(data[i]).forEach((column) => {
+					const type = data[i]._type;
+					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
+					if (Array.isArray(data[i][column]) && datatype === 'string') {
+						if (!arrayFields[column]) {
+							arrayFields[column] = type;
+						}
+					}
+				});
+			}
+			Object.keys(arrayFields).forEach((field) => {
+				if (!this.state.arrayOptions[field]) {
+					feed.getAggregations(arrayFields[field], field, this.setArrayOptions);
+				}
+			});
+		}
+	}
+
+	setArrayOptions = (field, options) => {
+		const { arrayOptions } = this.state;
+		const availableOptions = options.map(item => item.key);
+		arrayOptions[field] = availableOptions;
+		this.setState({ arrayOptions });
 	}
 
 	toggleEditView = () => {
@@ -43,7 +77,7 @@ class DataTable extends React.Component {
 		var $this = this;
 		var data = this.props._data;
 		var fixed = [], columns, initial_final_cols;
-		const arrayOptions = {};
+		const { arrayOptions } = this.state;
 		//If render from sort, dont change the order of columns
 		// TODO: optimize logic
 		if (!$this.props.sortInfo.active) {
@@ -73,37 +107,6 @@ class DataTable extends React.Component {
 								column: column
 							};
 							fullColumns.final_cols.push(obj);
-						}
-					}
-					const type = data[each]['_type'];
-					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
-					if (Array.isArray(data[each][column]) && datatype === 'string') {
-						if (arrayOptions[column]) {
-							data[each][column].forEach((item) => {
-								if (!arrayOptions[column].includes(item)) {
-									arrayOptions[column].push(item);
-								}
-							});
-						} else {
-							arrayOptions[column] = [...data[each][column]];
-						}
-					}
-				}
-			}
-		} else {
-			for (var each in data) {
-				for (var column in data[each]) {
-					const type = data[each]['_type'];
-					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
-					if (Array.isArray(data[each][column]) && datatype === 'string') {
-						if (arrayOptions[column]) {
-							data[each][column].forEach((item) => {
-								if (!arrayOptions[column].includes(item)) {
-									arrayOptions[column].push(item);
-								}
-							});
-						} else {
-							arrayOptions[column] = [...data[each][column]];
 						}
 					}
 				}
