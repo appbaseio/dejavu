@@ -187,6 +187,7 @@ class CreateColumnForm extends React.Component {
 				}
 			}, this.handleCredentialsErrorMsg);
 			setTimeout(this.props.reloadMapping, 1000);
+			setTimeout(this.props.reloadData, 1000);
 		}
 	}
 
@@ -331,7 +332,8 @@ CreateColumnForm.propTypes = {
 	selectedTypes: PropTypes.arrayOf(PropTypes.string),
 	reloadMapping: PropTypes.func,
 	mappingObj: PropTypes.object,	// eslint-disable-line
-	toggleExpand: PropTypes.func
+	toggleExpand: PropTypes.func,
+	reloadData: PropTypes.func
 };
 
 export default CreateColumnForm;

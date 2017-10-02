@@ -32,7 +32,6 @@ class DataTable extends React.Component {
 		if (getQueryParameters()) {
 			setQueryParamerter('editable', this.state.editable);
 		}
-		// feed.getAggregations('gitxplore-live', 'topics');
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -348,6 +347,7 @@ class DataTable extends React.Component {
 								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}
 								reloadMapping={this.props.reloadMapping}
+								reloadData={this.props.reloadData}
 							/> :
 							null
 					}

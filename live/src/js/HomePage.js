@@ -77,7 +77,7 @@ var HomePage = createReactClass({
 		delete sdata[index];
 	},
 	resetData: function(total, sdata_key) {
-		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
+		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns, this.state.types, this.state.mappingObj));
 	},
 	// Logic to stream continuous data.
 	// We call the ``getData()`` function in feed.js

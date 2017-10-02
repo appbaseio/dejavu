@@ -176,7 +176,7 @@ var help = {
 			userTouchAdd: userTouchAdd
 		}
 	},
-	resetData: function(total, sdata_key, sortInfo, infoObj, hiddenColumns) {
+	resetData: function(total, sdata_key, sortInfo, infoObj, hiddenColumns, selectedTypes, mappingObj) {
 		var sortedArray = [];
 		var sdata_values = [];
 		Object.keys(sdata).forEach((each) => {
@@ -219,12 +219,35 @@ var help = {
 			});
 		});
 
-		if (availableColumns.length) {
-			hiddenColumns.forEach(function(col, key) {
-				if (availableColumns.indexOf(col) <= -1)
-					hiddenColumns.splice(key, 1);
+		// identify and add new columns from mappingObj
+		if (selectedTypes.length) {
+			selectedTypes.forEach((selectedType) => {
+				if (mappingObj[selectedType]) {
+					if (mappingObj[selectedType].properties) {
+						const allProperties = Object.keys(mappingObj[selectedType].properties);
+						allProperties.forEach((item) => {
+							if (!visibleColumns.includes(item) && !hiddenColumns.includes(item)) {
+								visibleColumns.push(item);
+								availableColumns.push(item);
+							}
+						});
+					}
+				}
+				// since a new object type has no mapping added, populate the column from _meta
+				if (mappingObj[selectedType]._meta) {
+					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
+						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
+						metaFields.forEach((item) => {
+							if (!visibleColumns.includes(item) && !hiddenColumns.includes(item)) {
+								visibleColumns.push(item);
+								availableColumns.push(item);
+							}
+						});
+					}
+				}
 			});
 		}
+
 		//set url
 		input_state.visibleColumns = visibleColumns;
 		input_state.hiddenColumns = hiddenColumns;
