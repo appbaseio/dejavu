@@ -16,17 +16,22 @@ var Utils = function() {
 			</div>
 		);
 	}
-	this.getBodyMarkup = function(method, validateClass, selectClass, userTouch) {
+	this.getBodyMarkup = function(method, validateClass, selectClass, userTouch, defaultValue = '') {
 		var labelText = method === 'query' ? 'Query body' : 'JSON';
 		var smalltext = method === 'query' ? '(JSON)' : (<p>(use array for adding multiple records, <a href={this.bulkExample} target="_blank">see an example</a>.)</p>);
 		var helpText = method === 'query' ? 'Elasticsearch Query is required.' : 'A data document is stored as a JSON object.';
 		return (
 			<div className={validateClass.body}>
-				<label htmlFor="inputPassword3" className="col-sm-3 control-label"> 
+				<label htmlFor="inputPassword3" className="col-sm-3 control-label">
 					{labelText} <div className="small-span">{smalltext}</div>
 				</label>
 				<div className="col-sm-9">
 					<textarea id="setBody" className="form-control" rows="10" name="body"
+						defaultValue={
+							typeof defaultValue === 'object' ?
+								JSON.stringify(defaultValue, null, 4) :
+								defaultValue
+						}
 						onClick={userTouch.bind(null, true)}
 						onFocus={userTouch.bind(null, true)} ></textarea>
 					<span className="help-block">

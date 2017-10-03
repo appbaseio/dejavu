@@ -23,9 +23,17 @@ class QueryList extends React.Component {
 		storageService.setItem('dejavuQueryList', list);
 	};
 
-	includeQuery = (queryObj) => {
-		var querylist = this.filterDeleteQuery(queryObj);
-		querylist.push(queryObj);
+	includeQuery = (queryObj, queryIndex = null) => {
+		let querylist = this.filterDeleteQuery(queryObj);
+		if (queryIndex) {
+			querylist = [
+				...querylist.slice(0, queryIndex),
+				queryObj,
+				...querylist.slice(queryIndex + 1)
+			];
+		} else {
+			querylist.push(queryObj);
+		}
 		this.setHistoricList(querylist);
 		this.setState({
 			querylist: querylist
@@ -106,15 +114,23 @@ class QueryList extends React.Component {
 						<label htmlFor={"query-"+index}>
 							<span className="col-xs-12 query-name">
 								{query.name}
-								<span className="pull-right createdAt">
-									{moment(query.createdAt).format('Do MMM, h:mm a')}
-								</span>
 							</span>
 						</label>
 					</div>
 					<a className="btn btn-grey delete-query" onClick={this.applyDeleteQuery.bind(this, query)}>
 						<i className="fa fa-times"></i>
 					</a>
+					<AddQuery
+						editable
+						queryIndex={index}
+						queryInfo={query}
+						types={this.props.types}
+						selectClass="applyQueryOn"
+						includeQuery={this.includeQuery}
+					/>
+					<span className="pull-right createdAt">
+						{moment(query.createdAt).format('Do MMM, h:mm a')}
+					</span>
 				</li>
 			);
 		}.bind(this));
@@ -132,14 +148,14 @@ class QueryList extends React.Component {
 	render() {
 		return (
 			<div className={"querylist-section"}>
-				<DeleteQuery 
+				<DeleteQuery
 					selectedQuery={this.state.selectedQuery}
 					showModal={this.state.showDeleteQuery}
 					deleteQuery={this.deleteQuery}
 					deleteQueryCb={this.deleteQueryCb} />
 				<ul className="theme-list col-xs-12">
 					<li className="list-item col-xs-12">
-						<AddQuery 
+						<AddQuery
 							types={this.props.types}
 							selectClass="applyQueryOn"
 							includeQuery={this.includeQuery} />
