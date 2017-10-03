@@ -172,6 +172,10 @@ class Info extends React.Component {
 						</div>
 					</MenuItem>
 				</DropdownButton>
+				{
+					this.props.hasImages &&
+					<button className="btn btn-success margin-left">Images</button>
+				}
 				<div className="pull-right pd-r0">
 					<ColumnDropdown
 						visibleColumns ={this.props.visibleColumns}

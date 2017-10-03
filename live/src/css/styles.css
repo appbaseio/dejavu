@@ -1205,7 +1205,7 @@ iframe {
 	resize: none;
 	width: 100%;
 	position: relative;
-  outline: none;
+  	outline: none;
 }
 
 .cell-input:focus {
@@ -1321,6 +1321,16 @@ iframe {
 	border-radius: 3px;
 	padding: 5px;
 	box-shadow: 0 0 3px #0087ff;
+	outline: none;
+}
+
+.cell-img {
+	height: 25px;
+}
+
+.cell-img-container {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .cell-content.undefined {
@@ -1508,6 +1518,10 @@ ul#setApp {
 
 .pad-left {
 	padding-left: 5px;
+}
+
+.margin-left {
+	margin-left: 15px;
 }
 
 .pad-right {

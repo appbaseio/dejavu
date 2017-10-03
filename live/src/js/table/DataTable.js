@@ -24,7 +24,8 @@ class DataTable extends React.Component {
 		super(props);
 		this.state = {
 			editable: getQueryParameters() ? getQueryParameters().editable === 'true' : false,
-			arrayOptions: {}
+			arrayOptions: {},
+			hasImages: false
 		};
 	}
 
@@ -42,6 +43,16 @@ class DataTable extends React.Component {
 				Object.keys(data[i]).forEach((column) => {
 					const type = data[i]._type;
 					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
+					// check for images
+					if (get(this.props.mappingObj[type], ['_meta', 'dejavuMeta', column]) === 'image' && !this.state.hasImages) {
+						this.setState({
+							hasImages: true
+						});
+					} else if (this.state.hasImages) {
+						this.setState({
+							hasImages: false
+						});
+					}
 					if (Array.isArray(data[i][column]) && datatype === 'string') {
 						if (!arrayFields[column]) {
 							arrayFields[column] = type;
@@ -209,6 +220,7 @@ class DataTable extends React.Component {
 				const { mappingObj } = this.props;
 				let isObject = false;
 				let isArrayObject = false;
+				let isImage = false;
 				let datatype = {};
 				if (mappingObj[type].properties) {
 					datatype = mappingObj[type].properties[each] || allDatatypes[each];
@@ -222,6 +234,8 @@ class DataTable extends React.Component {
 						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'array') {
 							isObject = true;
 							isArrayObject = true;
+						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'image') {
+							isImage = true;
 						}
 					}
 				}
@@ -258,6 +272,7 @@ class DataTable extends React.Component {
 						editable={this.state.editable}
 						isObject={isObject}
 						isArrayObject={isArrayObject}
+						isImage={isImage}
 					/>);
 			}
 			rows.push({
@@ -324,6 +339,7 @@ class DataTable extends React.Component {
 					dejavuExportData={this.props.dejavuExportData}
 					editable={this.state.editable}
 					toggleEditView={this.toggleEditView}
+					hasImages={this.state.hasImages}
 				/>
 
 				<div className="outsideTable">

@@ -491,6 +491,29 @@ class Cell extends React.Component {
 						}}
 					/>
 				);
+			} else if (this.props.isImage) {
+				toDisplay = (
+					this.state.active ?
+						(
+							<div>
+								<img src={this.state.data} alt="URL" className="cell-img pad-right" />
+								<CellInput
+									name={columnName}
+									value={this.state.data}
+									handleChange={this.handleChange}
+									handleBlur={() => this.setActive(false)}
+									editable={this.props.editable}
+									singleLine
+								/>
+							</div>
+						) :
+						(
+							<div className="cell-img-container">
+								<img src={this.state.data} alt="URL" className="cell-img pad-right" />
+								{toDisplay}
+							</div>
+						)
+				);
 			}
 		}
 		return (
@@ -523,7 +546,7 @@ class Cell extends React.Component {
 									clearable={false}
 								/>
 							</div> :
-							this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
+							this.state.active && this.props.datatype.type !== 'date' && !this.props.isImage && (typeof data === 'string' || typeof data === 'number') ?
 								<CellInput
 									name={columnName}
 									value={this.state.data}
@@ -562,7 +585,8 @@ Cell.propTypes = {
 	isObject: PropTypes.bool,
 	isArrayObject: PropTypes.bool,
 	actionOnRecord: PropTypes.object,	// eslint-disable-line
-	datatype: PropTypes.object	// eslint-disable-line
+	datatype: PropTypes.object,	// eslint-disable-line
+	isImage: PropTypes.bool
 };
 
 Cell.defaultProps = {
