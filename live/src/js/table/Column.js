@@ -113,7 +113,10 @@ class Column extends React.Component {
 					datatype = this.props.mappingObj[type]['properties'][item].type;
 					if (this.props.mappingObj[type]._meta) {
 						if (this.props.mappingObj[type]._meta.dejavuMeta) {
-							if (this.props.mappingObj[type]._meta.dejavuMeta[item] === 'image') {
+							if (
+								this.props.mappingObj[type]._meta.dejavuMeta[item] &&
+								this.props.mappingObj[type]._meta.dejavuMeta[item].indexOf('image') !== -1
+							) {
 								datatype = 'image';
 							}
 						}

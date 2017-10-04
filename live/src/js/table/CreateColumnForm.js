@@ -96,7 +96,7 @@ class CreateColumnForm extends React.Component {
 			if (
 				(name === 'type' && value === customMapping) ||
 				// need to set codemirror again if switching to and fro object or image type
-				(name === 'complexData' && value !== 'object' && value !== 'image' && this.state.type === customMapping && (prevComplexData === 'object' || prevComplexData === 'image'))
+				(name === 'complexData' && value !== 'object' && this.state.type === customMapping && prevComplexData === 'object')
 			) {
 				this.editorref = help.setCodeMirror('custom-mapping-textarea');
 				this.props.toggleExpand(true);
@@ -145,12 +145,22 @@ class CreateColumnForm extends React.Component {
 				dejavuMeta: {}
 			};
 
-			if (this.state.complexData !== 'default') {
+			if (this.state.type === 'Image') {
 				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
-					meta.dejavuMeta[this.state.value] = this.state.complexData;
+					meta.dejavuMeta[this.state.value] = 'image';
 				} else {
 					meta.dejavuMeta = {
-						[this.state.value]: this.state.complexData
+						[this.state.value]: 'image'
+					};
+				}
+			}
+
+			if (this.state.complexData !== 'default') {
+				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
+					meta.dejavuMeta[this.state.value] = this.state.complexData + (this.state.type === 'Image' ? '-image' : '');
+				} else {
+					meta.dejavuMeta = {
+						[this.state.value]: this.state.complexData + (this.state.type === 'Image' ? '-image' : '')
 					};
 				}
 			}
@@ -171,37 +181,9 @@ class CreateColumnForm extends React.Component {
 				}
 			}
 
-			const imgMapping = feed.getEsVersion() === 2 ?
-			{
-				properties: {
-					[this.state.value]: {
-						type: 'string',
-						fields: {
-							raw: {
-								type: 'string',
-								index: 'not_analyzed'
-							}
-						}
-					}
-				}
-			} :
-			{
-				properties: {
-					[this.state.value]: {
-						type: 'text',
-						fields: {
-							raw: {
-								type: 'keyword',
-								index: 'not_analyzed'
-							}
-						}
-					}
-				}
-			};
-
 			// for an object type assign no mapping
-			const properties = this.state.complexData === 'object' || this.state.complexData === 'image' ?
-			(this.state.complexData === 'object' ? {} : imgMapping) :
+			const properties = this.state.complexData === 'object' ?
+			{} :
 			{
 				properties: {
 					[this.state.value]: mapping
@@ -270,7 +252,7 @@ class CreateColumnForm extends React.Component {
 							Pick the data shape&nbsp;
 							<OverlayTrigger
 								placement="top"
-								overlay={<Tooltip id="tooltip-explaination">Determines whether the field can hold one or multiple values or an image URL</Tooltip>}
+								overlay={<Tooltip id="tooltip-explaination">Determines whether the field can hold one or multiple values</Tooltip>}
 							>
 								<i className="fa fa-info-circle" />
 							</OverlayTrigger>
@@ -287,14 +269,10 @@ class CreateColumnForm extends React.Component {
 							<Radio name="complexData" value="object" inline onChange={this.handleChange} checked={this.state.complexData === 'object'}>
 								Object
 							</Radio>
-							{' '}
-							<Radio name="complexData" value="image" inline onChange={this.handleChange} checked={this.state.complexData === 'image'}>
-								Image URL
-							</Radio>
 						</FormGroup>
 					</FormGroup>
 					{
-						this.state.complexData !== 'object' && this.state.complexData !== 'image' &&
+						this.state.complexData !== 'object' &&
 						<FormGroup>
 							<ControlLabel>Data Type</ControlLabel>
 							<FormControl
@@ -313,7 +291,7 @@ class CreateColumnForm extends React.Component {
 						</FormGroup>
 					}
 					{
-						this.state.type === 'Date' && this.state.complexData !== 'object' && this.state.complexData !== 'image' &&
+						this.state.type === 'Date' && this.state.complexData !== 'object' &&
 						<FormGroup>
 							<ControlLabel>Pick the date format</ControlLabel>
 							<FormControl
@@ -332,7 +310,7 @@ class CreateColumnForm extends React.Component {
 						</FormGroup>
 					}
 					{
-						this.state.type === customMapping && this.state.complexData !== 'object' && this.state.complexData !== 'image' &&
+						this.state.type === customMapping && this.state.complexData !== 'object' &&
 						<div className="custom-mapping-textarea">
 							<div>
 								<h5>Custom Mapping Object</h5>

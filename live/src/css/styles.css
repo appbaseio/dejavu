@@ -1304,6 +1304,15 @@ iframe {
 	text-overflow: ellipsis;
 }
 
+.cell-content.string.active .cell-img-container {
+	display: flex;
+	align-items: center;
+}
+
+.cell-img-container .cell-input-single {
+	flex: 1;
+}
+
 .cell-content.date {
 	padding-left: 10px;
 }
@@ -1551,4 +1560,8 @@ ul#setApp {
 
 #ab-dropdown.fa-cog::before {
 	padding-right: 5px;
+}
+
+.text-muted {
+	color: #aaa;
 }

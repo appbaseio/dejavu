@@ -495,8 +495,7 @@ class Cell extends React.Component {
 				toDisplay = (
 					this.state.active ?
 						(
-							<div>
-								<img src={this.state.data} alt="URL" className="cell-img pad-right" />
+							<div className="cell-img-container">
 								<CellInput
 									name={columnName}
 									value={this.state.data}
@@ -509,8 +508,12 @@ class Cell extends React.Component {
 						) :
 						(
 							<div className="cell-img-container">
-								<img src={this.state.data} alt="URL" className="cell-img pad-right" />
-								{toDisplay}
+								{
+									this.state.data.length ?
+										<img src={this.state.data} alt="URL" className="cell-img pad-right" /> :
+										null
+								}
+								{this.state.data.length ? toDisplay : <span className="text-muted">Enter Image URL</span>}
 							</div>
 						)
 				);

@@ -59,6 +59,15 @@ export const es2 = {
 	},
 	'Geo Shape': {
 		type: 'geo_shape'
+	},
+	Image: {
+		type: 'string',
+		fields: {
+			raw: {
+				type: 'string',
+				index: 'not_analyzed'
+			}
+		}
 	}
 };
 
@@ -123,6 +132,15 @@ export const es5 = {
 	},
 	'Geo Shape': {
 		type: 'geo_shape'
+	},
+	Image: {
+		type: 'text',
+		fields: {
+			raw: {
+				type: 'keyword',
+				index: 'not_analyzed'
+			}
+		}
 	}
 };
 
