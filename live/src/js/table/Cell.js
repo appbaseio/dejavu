@@ -107,7 +107,8 @@ class Cell extends React.Component {
 			this.state.geoActive !== nextState.geoActive ||
 			this.state.showTooltip !== nextState.showTooltip ||
 			this.state.data !== nextState.data ||
-			this.props.datatype.type === 'geo_point'
+			this.props.datatype.type === 'geo_point' ||
+			this.props.loadImages !== nextProps.loadImages
 		) {
 			return true;
 		}
@@ -509,7 +510,7 @@ class Cell extends React.Component {
 						(
 							<div className="cell-img-container">
 								{
-									this.state.data.length ?
+									this.state.data.length && this.props.loadImages ?
 										<img src={this.state.data} alt="URL" className="cell-img pad-right" /> :
 										null
 								}
@@ -589,7 +590,8 @@ Cell.propTypes = {
 	isArrayObject: PropTypes.bool,
 	actionOnRecord: PropTypes.object,	// eslint-disable-line
 	datatype: PropTypes.object,	// eslint-disable-line
-	isImage: PropTypes.bool
+	isImage: PropTypes.bool,
+	loadImages: PropTypes.bool
 };
 
 Cell.defaultProps = {

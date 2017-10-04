@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 var FeatureComponent = require('../features/FeatureComponent.js');
@@ -8,13 +9,20 @@ class Info extends React.Component {
 	state = {
 		selectToggle: false,
 		editable: this.props.editable,
-		loading: false
+		loading: false,
+		loadImages: this.props.loadImages,
+		loadingImages: false
 	};
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.editable !== this.props.editable) {
 			this.setState({
 				loading: false
+			});
+		}
+		if (nextProps.loadImages !== this.props.loadImages) {
+			this.setState({
+				loadingImages: false
 			});
 		}
 	}
@@ -44,6 +52,17 @@ class Info extends React.Component {
 				loading: true
 			});
 			setTimeout(this.props.toggleEditView, 10);
+		}
+	}
+
+	handleLoadingImages = () => {
+		const nextState = !this.state.loadImages;
+		if (this.state.loadImages !== nextState) {
+			this.setState({
+				loadImages: nextState,
+				loadingImages: true
+			});
+			setTimeout(this.props.toggleLoadImages, 10);
 		}
 	}
 
@@ -81,6 +100,9 @@ class Info extends React.Component {
 		var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
+		const loadImagesText = this.state.loadImages ?
+			'Load Images' :
+			'Do not Load Images';
 		return (<div className="infoRow container">
 			<div className=" row">
 				<div className={infoObjClass}>
@@ -174,7 +196,21 @@ class Info extends React.Component {
 				</DropdownButton>
 				{
 					this.props.hasImages &&
-					<button className="btn btn-success margin-left">Images</button>
+					<button
+						className={`btn btn-load-images ${this.state.loadImages ? 'active' : ''} margin-left`}
+						onClick={this.handleLoadingImages}
+					>
+						{
+							this.state.loadingImages ?
+								<span>
+									<span className="button-icon">
+										<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" />
+									</span>
+									{loadImagesText}
+								</span> :
+								loadImagesText
+						}
+					</button>
 				}
 				<div className="pull-right pd-r0">
 					<ColumnDropdown
@@ -252,5 +288,11 @@ class Info extends React.Component {
 				</div>)
 	}
 }
+
+Info.propTypes = {
+	hasImages: PropTypes.bool,
+	loadImages: PropTypes.bool,
+	toggleLoadImages: PropTypes.func
+};
 
 module.exports = Info;

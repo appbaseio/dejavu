@@ -25,7 +25,8 @@ class DataTable extends React.Component {
 		this.state = {
 			editable: getQueryParameters() ? getQueryParameters().editable === 'true' : false,
 			arrayOptions: {},
-			hasImages: false
+			hasImages: false,
+			loadImages: true
 		};
 	}
 
@@ -39,25 +40,25 @@ class DataTable extends React.Component {
 		if (this.props._data !== nextProps._data && Array.isArray(nextProps._data)) {
 			const arrayFields = {};
 			const data = nextProps._data;
+			let hasImages = false;
 			for (let i = 0; i < 10 && i !== data.length; i += 1) {
 				Object.keys(data[i]).forEach((column) => {
 					const type = data[i]._type;
 					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
 					// check for images
-					if (get(this.props.mappingObj[type], ['_meta', 'dejavuMeta', column]) === 'image' && !this.state.hasImages) {
-						this.setState({
-							hasImages: true
-						});
-					} else if (this.state.hasImages) {
-						this.setState({
-							hasImages: false
-						});
+					if (get(this.props.mappingObj[type], ['_meta', 'dejavuMeta', column]) === 'image' && !hasImages) {
+						hasImages = true;
 					}
 					if (Array.isArray(data[i][column]) && datatype === 'string') {
 						if (!arrayFields[column]) {
 							arrayFields[column] = type;
 						}
 					}
+				});
+			}
+			if (this.state.hasImages !== hasImages) {
+				this.setState({
+					hasImages
 				});
 			}
 			Object.keys(arrayFields).forEach((field) => {
@@ -81,6 +82,13 @@ class DataTable extends React.Component {
 			editable: nextState
 		});
 		setQueryParamerter('editable', nextState);
+	}
+
+	toggleLoadImages = () => {
+		const nextState = !this.state.loadImages;
+		this.setState({
+			loadImages: nextState
+		});
 	}
 
 	render() {
@@ -139,7 +147,7 @@ class DataTable extends React.Component {
 					}
 				}
 				// since a new object type has no mapping added, populate the column from _meta
-				if (mappingObj[selectedType]._meta) {
+				if (mappingObj[selectedType] && mappingObj[selectedType]._meta) {
 					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
 						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
 						metaFields.forEach((item) => {
@@ -273,6 +281,7 @@ class DataTable extends React.Component {
 						isObject={isObject}
 						isArrayObject={isArrayObject}
 						isImage={isImage}
+						loadImages={this.state.loadImages}
 					/>);
 			}
 			rows.push({
@@ -340,6 +349,8 @@ class DataTable extends React.Component {
 					editable={this.state.editable}
 					toggleEditView={this.toggleEditView}
 					hasImages={this.state.hasImages}
+					loadImages={this.state.loadImages}
+					toggleLoadImages={this.toggleLoadImages}
 				/>
 
 				<div className="outsideTable">

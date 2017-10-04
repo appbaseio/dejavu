@@ -1565,3 +1565,16 @@ ul#setApp {
 .text-muted {
 	color: #aaa;
 }
+
+.btn-load-images {
+	color: #0087ff;
+	background: transparent;
+	border: 1px solid #eee;
+	box-shadow: none !important;
+}
+
+.btn-load-images:hover, .btn-load-images:focus {
+	outline-color: #b6e0ff;
+	color: #0087ff;
+	background: #e6e6e6;
+}
