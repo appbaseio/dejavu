@@ -481,8 +481,14 @@ class Cell extends React.Component {
 				toDisplay = (
 					<Datetime
 						defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
-						dateFormat={getMomentDate(this.props.datatype.format)}
-						timeFormat={!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date')}
+						dateFormat={
+							this.props.datatype.format === 'basic_time' || this.props.datatype.format === 'basic_time_no_millis' ?
+								false :
+								getMomentDate(this.props.datatype.format)
+						}
+						timeFormat={
+							!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date' || this.props.datatype.format === 'date')
+							}
 						onBlur={(e) => {
 							this.handleDatetimeChange(e);
 							this.setState({ active: false });

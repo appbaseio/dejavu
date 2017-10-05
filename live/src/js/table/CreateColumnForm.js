@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 /* global feed, help */
-import { es2, es5, dateFormats } from '../helper/esMapping';
+import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
 import ErrorModal from '../features/ErrorModal';
 
 const customMapping = "I’ve my own mapping"; // eslint-disable-line
@@ -15,7 +15,7 @@ class CreateColumnForm extends React.Component {
 			value: '',
 			type: 'Text',
 			complexData: 'default',
-			format: 'YYYY/MM/DD',
+			format: 'epoch_millis',
 			showError: false,
 			valid: false,
 			selectedType: this.props.selectedTypes[0],
@@ -303,7 +303,7 @@ class CreateColumnForm extends React.Component {
 							>
 								{
 									dateFormats.map(item => (
-										<option key={item} value={item}>{item}</option>
+										<option key={item} value={item}>{`${item} ${dateHints[item] || ''}`}</option>
 									))
 								}
 							</FormControl>
