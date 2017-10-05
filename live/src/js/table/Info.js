@@ -101,8 +101,11 @@ class Info extends React.Component {
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
 		const loadImagesText = this.state.loadImages ?
-			'Load Images' :
-			'Do not Load Images';
+			'Show Image Thumbnails' :
+			'Hide Image Thumbnails';
+		const loadImagesIcon = this.state.loadImages ?
+			<span className="button-icon icon-sm"><i className="fa fa-check-circle" /></span> :
+			<span className="button-icon icon-sm"><i className="fa fa-times-circle" /></span>;
 		return (<div className="infoRow container">
 			<div className=" row">
 				<div className={infoObjClass}>
@@ -208,7 +211,9 @@ class Info extends React.Component {
 									</span>
 									{loadImagesText}
 								</span> :
-								loadImagesText
+								<span>
+									{loadImagesIcon}{loadImagesText}
+								</span>
 						}
 					</button>
 				}
