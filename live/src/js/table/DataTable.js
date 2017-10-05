@@ -239,7 +239,7 @@ class DataTable extends React.Component {
 							arrayOptions[each] = [];
 						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
 							isObject = true;
-						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'array') {
+						} else if (mappingObj[type]._meta.dejavuMeta[each] && mappingObj[type]._meta.dejavuMeta[each].indexOf('array') !== -1) {
 							isObject = true;
 							isArrayObject = true;
 						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'image') {
@@ -253,7 +253,7 @@ class DataTable extends React.Component {
 					isObject = true;
 					isArrayObject = true;
 				}
-				if (datatype) {
+				if (datatype && allMetas[each] !== 'array-image') {
 					if (datatype.type === 'geo_shape') {
 						isObject = true;
 					}
@@ -282,7 +282,8 @@ class DataTable extends React.Component {
 						isArrayObject={isArrayObject}
 						isImage={isImage}
 						loadImages={this.state.loadImages}
-					/>);
+					/>
+				);
 			}
 			rows.push({
 				'_key': String(data[row]['_id']) + String(data[row]['_type']),
@@ -321,7 +322,6 @@ class DataTable extends React.Component {
 
 		return (
 			<div className="dejavu-table">
-
 				<Info
 					infoObj={this.props.infoObj}
 					totalRecord={this.props.totalRecord}

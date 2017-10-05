@@ -1578,3 +1578,17 @@ ul#setApp {
 	color: #0087ff;
 	background: #e6e6e6;
 }
+
+.enlarged-image {
+	max-height: 250px;
+	max-width: 250px;
+}
+
+.hide-img {
+	display: none;
+}
+
+.img-err-icon {
+	font-size: 20px;
+	color: #f0ad4e;
+}
