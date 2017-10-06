@@ -71,6 +71,12 @@ class Column extends React.Component {
 						<span className="column-label-img">{'{...}'}</span>
 					</ColumnMappingInfo>
 				);
+			case 'image':
+				return (
+					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
+						<i className="fa fa-picture-o column-label-img" />
+					</ColumnMappingInfo>
+				);
 			default:
 				return datatype;
 		}
@@ -105,6 +111,16 @@ class Column extends React.Component {
 			if (item != 'json' && this.props.mappingObj[type] && this.props.mappingObj[type].hasOwnProperty('properties') && typeof this.props.mappingObj[type] != 'undefined' && typeof this.props.mappingObj[type]['properties'][item] != 'undefined') {
 				if (this.props.mappingObj[type]['properties'][item].type) {
 					datatype = this.props.mappingObj[type]['properties'][item].type;
+					if (this.props.mappingObj[type]._meta) {
+						if (this.props.mappingObj[type]._meta.dejavuMeta) {
+							if (
+								this.props.mappingObj[type]._meta.dejavuMeta[item] &&
+								this.props.mappingObj[type]._meta.dejavuMeta[item].indexOf('image') !== -1
+							) {
+								datatype = 'image';
+							}
+						}
+					}
 				} else if (this.props.mappingObj[type]['properties'][item].hasOwnProperty('properties')) {
 					datatype = 'object';
 				}

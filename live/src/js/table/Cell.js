@@ -1,5 +1,5 @@
 import React from 'react';
-import { OverlayTrigger, Popover, DropdownButton, MenuItem } from 'react-bootstrap';
+import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -38,7 +38,8 @@ class Cell extends React.Component {
 		data: this.props.item,
 		showError: false,
 		errorMessage: '',
-		showTooltip: false
+		showTooltip: false,
+		imageLoadError: false
 	};
 
 	selectRecord = (ele) => {
@@ -107,7 +108,9 @@ class Cell extends React.Component {
 			this.state.geoActive !== nextState.geoActive ||
 			this.state.showTooltip !== nextState.showTooltip ||
 			this.state.data !== nextState.data ||
-			this.props.datatype.type === 'geo_point'
+			this.props.datatype.type === 'geo_point' ||
+			this.props.loadImages !== nextProps.loadImages ||
+			this.state.imageLoadError !== nextState.imageLoadError
 		) {
 			return true;
 		}
@@ -310,6 +313,22 @@ class Cell extends React.Component {
 		}, 'updateCell', res => this.handleErrorMsg(res));
 	}
 
+	imageOnLoad = () => {
+		if (this.state.imageLoadError) {
+			this.setState({
+				imageLoadError: false
+			});
+		}
+	}
+
+	imageOnLoadError = () => {
+		if (!this.state.imageLoadError) {
+			this.setState({
+				imageLoadError: true
+			});
+		}
+	}
+
 	render() {
 		var self = this;
 		var actionOnRecord = this.props.actionOnRecord;
@@ -342,23 +361,23 @@ class Cell extends React.Component {
 			var prettyData = <Pretty json={data} />
 			toDisplay = (
 				<div className={appIdClass}>
-					<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
-						{
-							this.props.rowNumber + 1
-						}
-					</div>
-					<span className="theme-element selectrow checkbox">
-						<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
-							value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
-						<label htmlFor={radioId}></label>
-					</span>
-					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-						<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
-					</OverlayTrigger>
-					<span className="appId_name" onClick={this.copyId}>
-						<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
-						<span className="appId_id" title={_id}>{_id}</span>
-					</span>
+				<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
+				{
+					this.props.rowNumber + 1
+				}
+				</div>
+				<span className="theme-element selectrow checkbox">
+				<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
+				value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
+				<label htmlFor={radioId}></label>
+				</span>
+				<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+				<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
+				</OverlayTrigger>
+				<span className="appId_name" onClick={this.copyId}>
+				<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
+				<span className="appId_id" title={_id}>{_id}</span>
+				</span>
 				</div>
 			);
 			tdClass = 'column_width';
@@ -371,20 +390,20 @@ class Cell extends React.Component {
 				objectActionOnRecord.row = JSON.stringify(this.props.row[columnName] || (this.props.isArrayObject ? [] : {}), null, 4);
 				toDisplay = (
 					<div className="object-cell-container">
-						{
-							data ?
-								Object.keys(data).length !== 0 &&
-									<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
-										{prettyData}
-									</Popover>}>
-										<a href="javascript:void(0);"  className="bracketIcon" />
-									</OverlayTrigger> :
-							null
-						}
-						{
-							this.props.editable &&
-							<FeatureComponent.UpdateDocument actionOnRecord={objectActionOnRecord} currentCell columnName={columnName} />
-						}
+					{
+						data ?
+						Object.keys(data).length !== 0 &&
+						<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
+						{prettyData}
+						</Popover>}>
+						<a href="javascript:void(0);"  className="bracketIcon" />
+						</OverlayTrigger> :
+						null
+					}
+					{
+						this.props.editable &&
+						<FeatureComponent.UpdateDocument actionOnRecord={objectActionOnRecord} currentCell columnName={columnName} />
+					}
 					</div>
 				);
 			}
@@ -397,156 +416,210 @@ class Cell extends React.Component {
 			if (this.props.datatype.type === 'geo_point' && !isObject) {
 				toDisplay = (
 					<div className="geo-point-container">
-						<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
-							<ColumnLabel>Lat</ColumnLabel>
-							{
-								this.state.geoActive.lat ?
-									<CellInput
-										name="lat"
-										value={this.state.data.lat}
-										handleChange={this.handleGeoChange}
-										handleBlur={() => this.setGeoActive('lat', false)}
-										tooltipText="Latitude should be a number between -90 and +90"
-										showTooltip={this.state.showTooltip}
-										singleLine
-									/> :
-									this.state.data.lat
-							}
-						</div>
-						<div className="geo-point-value" onClick={() => this.setGeoActive('lon', true)}>
-							<ColumnLabel>Lon</ColumnLabel>
-							{
-								this.state.geoActive.lon ?
-									<CellInput
-										name="lon"
-										value={this.state.data.lon}
-										handleChange={this.handleGeoChange}
-										handleBlur={() => this.setGeoActive('lon', false)}
-										tooltipText="Longitude should be a number between -180 and +180"
-										showTooltip={this.state.showTooltip}
-										singleLine
-									/> :
-								this.state.data.lon
-							}
-						</div>
+					<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
+					<ColumnLabel>Lat</ColumnLabel>
+					{
+						this.state.geoActive.lat ?
+						<CellInput
+						name="lat"
+						value={this.state.data.lat}
+						handleChange={this.handleGeoChange}
+						handleBlur={() => this.setGeoActive('lat', false)}
+						tooltipText="Latitude should be a number between -90 and +90"
+						showTooltip={this.state.showTooltip}
+						singleLine
+						/> :
+						this.state.data.lat
+					}
+					</div>
+					<div className="geo-point-value" onClick={() => this.setGeoActive('lon', true)}>
+					<ColumnLabel>Lon</ColumnLabel>
+					{
+						this.state.geoActive.lon ?
+						<CellInput
+						name="lon"
+						value={this.state.data.lon}
+						handleChange={this.handleGeoChange}
+						handleBlur={() => this.setGeoActive('lon', false)}
+						tooltipText="Longitude should be a number between -180 and +180"
+						showTooltip={this.state.showTooltip}
+						singleLine
+						/> :
+						this.state.data.lon
+					}
+					</div>
 					</div>
 				);
 			}
 			if (Array.isArray(data) && !isObject) {
 				const seperator = getMaxArrayView(data);
 				const arrayView = this.state.data.length > seperator ?
-					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
-					this.state.data;
+				this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
+				this.state.data;
 				const prettyView = <Pretty json={data} />;
 				const arrayEditView = (
 					<div>
-						<Select.Creatable
-							multi
-							value={
-								this.state.active ?
-									this.state.data.map(item => ({ value: item, label: item })) :
-								arrayView
-							}
-							options={
-								this.props.arrayOptions ?
-									this.props.arrayOptions.map(item => ({ value: item, label: item }))
-									.concat(this.state.data.map(item => ({ value: item, label: item }))) :
-								[]
-							}
-							disabled={!this.state.active}
-							onChange={this.handleArrayChange}
-							onBlur={() => this.setActive(false)}
-							placeholder="Enter or select values"
-							ref={(node) => { this.select = node; }}
-							clearable={false}
-						/>
+					<Select.Creatable
+					multi
+					value={
+						this.state.active ?
+						this.state.data.map(item => ({ value: item, label: item })) :
+						arrayView
+					}
+					options={
+						this.props.arrayOptions ?
+						this.props.arrayOptions.map(item => ({ value: item, label: item }))
+						.concat(this.state.data.map(item => ({ value: item, label: item }))) :
+						[]
+					}
+					disabled={!this.state.active}
+					onChange={this.handleArrayChange}
+					onBlur={() => this.setActive(false)}
+					placeholder="Enter or select values"
+					ref={(node) => { this.select = node; }}
+					clearable={false}
+					/>
 					</div>
 				);
 				toDisplay = this.state.data.length > seperator ? (
 					<OverlayTrigger
-						trigger="click" rootClose placement="top" overlay={
-							!this.props.editable ?
-								<Popover id="arrayPrettyView" className="nestedJson">
-									{prettyView}
-								</Popover> :
-								<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
-						}
+					trigger="click" rootClose placement="top" overlay={
+						!this.props.editable ?
+						<Popover id="arrayPrettyView" className="nestedJson">
+						{prettyView}
+						</Popover> :
+						<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
+					}
 					>
-						{arrayEditView}
+					{arrayEditView}
 					</OverlayTrigger>
 				) :
 				arrayEditView;
 			} else if (this.props.datatype.type === 'date' && this.state.active && !isObject) {
 				toDisplay = (
 					<Datetime
-						defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
-						dateFormat={getMomentDate(this.props.datatype.format)}
-						timeFormat={!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date')}
-						onBlur={(e) => {
-							this.handleDatetimeChange(e);
-							this.setState({ active: false });
-						}}
-						inputProps={{
-							ref: (node) => { this.select = node; }
-						}}
+					defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
+					dateFormat={
+						this.props.datatype.format === 'basic_time' || this.props.datatype.format === 'basic_time_no_millis' ?
+						false :
+						getMomentDate(this.props.datatype.format)
+					}
+					timeFormat={
+						!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date' || this.props.datatype.format === 'date')
+					}
+					onBlur={(e) => {
+						this.handleDatetimeChange(e);
+						this.setState({ active: false });
+					}}
+					inputProps={{
+						ref: (node) => { this.select = node; }
+					}}
 					/>
+				);
+			} else if (this.props.isImage) {
+				toDisplay = (
+					this.state.active ?
+					(
+						<div className="cell-img-container">
+						<CellInput
+						name={columnName}
+						value={this.state.data}
+						handleChange={this.handleChange}
+						handleBlur={() => this.setActive(false)}
+						editable={this.props.editable}
+						singleLine
+						/>
+						</div>
+					) :
+					(
+						<div className="cell-img-container">
+							{
+								this.state.data.length && this.props.loadImages ?
+									<OverlayTrigger
+										trigger={['hover', 'focus']} rootClose placement="top" overlay={
+											<Popover id="enlarged-image-view">
+												<img src={this.state.data} alt="Enlarged view" className="enlarged-image" />
+											</Popover>
+										}
+									>
+										<img src={this.state.data} alt="URL" className={`cell-img pad-right ${this.state.imageLoadError ? 'hide-img' : ''}`} onLoad={this.imageOnLoad} onError={this.imageOnLoadError} />
+									</OverlayTrigger> :
+								null
+							}
+							{
+								this.state.imageLoadError && this.props.loadImages &&
+								<span className="pad-right pad-left img-err-icon">
+									<OverlayTrigger
+										trigger={['hover', 'focus']} rootClose placement="top" overlay={
+											<Tooltip id="img-load-err">
+												This link does not appears to be an image
+											</Tooltip>
+										}
+									>
+										<i className="fa fa-exclamation-triangle" aria-hidden="true" />
+									</OverlayTrigger>
+								</span>
+							}
+							{this.state.data.length ? toDisplay : <span className="text-muted">Enter Image URL</span>}
+						</div>
+					)
 				);
 			}
 		}
 		return (
 			<td
-				id={this.props.unique}
-				key={this.props.unique}
-				style={style}
-				className={`${tdClass} ${columnName === 'json' ? 'first-cell' : ''}`}
-				onClick={() => this.setActive(true)}
+			id={this.props.unique}
+			key={this.props.unique}
+			style={style}
+			className={`${tdClass} ${columnName === 'json' ? 'first-cell' : ''}`}
+			onClick={() => this.setActive(true)}
 			>
-				<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
-					<ErrorModal
-						errorShow={this.state.showError}
-						errorMessage={this.state.errorMessage}
-						closeErrorModal={this.hideErrorMessage}
-					/>
-					{
-						(this.props.datatype.type === 'boolean' && !isObject) ?
-							<div className="cell-input-container">
-								<Select
-									value={this.state.data}
-									options={[{ value: true, label: 'True' }, { value: false, label: 'False' }]}
-									disabled={!this.state.active}
-									onChange={this.handleBooleanSelect}
-									title={this.state.data.toString()}
-									onSelect={this.handleBooleanSelect}
-									onBlur={() => this.setActive(false)}
-									placeholder="Select value"
-									ref={(node) => { this.select = node; }}
-									clearable={false}
-								/>
-							</div> :
-							this.state.active && this.props.datatype.type !== 'date' && (typeof data === 'string' || typeof data === 'number') ?
-								<CellInput
-									name={columnName}
-									value={this.state.data}
-									handleChange={this.handleChange}
-									handleBlur={() => this.setActive(false)}
-									showTooltip={this.state.showTooltip}
-									editable={this.props.editable}
-								/> :
-						toDisplay.length > 37 ?
-							<OverlayTrigger
-								trigger="click" rootClose placement="left" overlay={
-									!this.props.editable && typeof data === 'string' ?
-										<Popover id="textPrettyView">
-											{toDisplay}
-										</Popover> :
-										<Popover id="textPrettyView" bsClass="tooltip-hidden" />
-								}
-							>
-								<span className="string-cell-span">{toDisplay}</span>
-							</OverlayTrigger> :
-							toDisplay
-					}
-				</div>
+			<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
+			<ErrorModal
+			errorShow={this.state.showError}
+			errorMessage={this.state.errorMessage}
+			closeErrorModal={this.hideErrorMessage}
+			/>
+			{
+				(this.props.datatype.type === 'boolean' && !isObject) ?
+				<div className="cell-input-container">
+				<Select
+				value={this.state.data}
+				options={[{ value: true, label: 'True' }, { value: false, label: 'False' }]}
+				disabled={!this.state.active}
+				onChange={this.handleBooleanSelect}
+				title={this.state.data.toString()}
+				onSelect={this.handleBooleanSelect}
+				onBlur={() => this.setActive(false)}
+				placeholder="Select value"
+				ref={(node) => { this.select = node; }}
+				clearable={false}
+				/>
+				</div> :
+				this.state.active && this.props.datatype.type !== 'date' && !this.props.isImage && (typeof data === 'string' || typeof data === 'number') ?
+				<CellInput
+				name={columnName}
+				value={this.state.data}
+				handleChange={this.handleChange}
+				handleBlur={() => this.setActive(false)}
+				showTooltip={this.state.showTooltip}
+				editable={this.props.editable}
+				/> :
+				toDisplay.length > 37 ?
+				<OverlayTrigger
+				trigger="click" rootClose placement="left" overlay={
+					!this.props.editable && typeof data === 'string' ?
+					<Popover id="textPrettyView">
+					{toDisplay}
+					</Popover> :
+					<Popover id="textPrettyView" bsClass="tooltip-hidden" />
+				}
+				>
+				<span className="string-cell-span">{toDisplay}</span>
+				</OverlayTrigger> :
+				toDisplay
+			}
+			</div>
 			</td>
 		);
 	}
@@ -562,7 +635,9 @@ Cell.propTypes = {
 	isObject: PropTypes.bool,
 	isArrayObject: PropTypes.bool,
 	actionOnRecord: PropTypes.object,	// eslint-disable-line
-	datatype: PropTypes.object	// eslint-disable-line
+	datatype: PropTypes.object,	// eslint-disable-line
+	isImage: PropTypes.bool,
+	loadImages: PropTypes.bool
 };
 
 Cell.defaultProps = {

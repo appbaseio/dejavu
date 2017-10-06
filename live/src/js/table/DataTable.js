@@ -24,7 +24,9 @@ class DataTable extends React.Component {
 		super(props);
 		this.state = {
 			editable: getQueryParameters() ? getQueryParameters().editable === 'true' : false,
-			arrayOptions: {}
+			arrayOptions: {},
+			hasImages: false,
+			loadImages: true
 		};
 	}
 
@@ -38,15 +40,25 @@ class DataTable extends React.Component {
 		if (this.props._data !== nextProps._data && Array.isArray(nextProps._data)) {
 			const arrayFields = {};
 			const data = nextProps._data;
+			let hasImages = false;
 			for (let i = 0; i < 10 && i !== data.length; i += 1) {
 				Object.keys(data[i]).forEach((column) => {
 					const type = data[i]._type;
 					const datatype = get(this.props.mappingObj[type], ['properties', column, 'type']);
+					// check for images
+					if (get(this.props.mappingObj[type], ['_meta', 'dejavuMeta', column]) === 'image' && !hasImages) {
+						hasImages = true;
+					}
 					if (Array.isArray(data[i][column]) && datatype === 'string') {
 						if (!arrayFields[column]) {
 							arrayFields[column] = type;
 						}
 					}
+				});
+			}
+			if (this.state.hasImages !== hasImages) {
+				this.setState({
+					hasImages
 				});
 			}
 			Object.keys(arrayFields).forEach((field) => {
@@ -70,6 +82,13 @@ class DataTable extends React.Component {
 			editable: nextState
 		});
 		setQueryParamerter('editable', nextState);
+	}
+
+	toggleLoadImages = () => {
+		const nextState = !this.state.loadImages;
+		this.setState({
+			loadImages: nextState
+		});
 	}
 
 	render() {
@@ -128,7 +147,7 @@ class DataTable extends React.Component {
 					}
 				}
 				// since a new object type has no mapping added, populate the column from _meta
-				if (mappingObj[selectedType]._meta) {
+				if (mappingObj[selectedType] && mappingObj[selectedType]._meta) {
 					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
 						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
 						metaFields.forEach((item) => {
@@ -209,6 +228,7 @@ class DataTable extends React.Component {
 				const { mappingObj } = this.props;
 				let isObject = false;
 				let isArrayObject = false;
+				let isImage = false;
 				let datatype = {};
 				if (mappingObj[type].properties) {
 					datatype = mappingObj[type].properties[each] || allDatatypes[each];
@@ -219,9 +239,11 @@ class DataTable extends React.Component {
 							arrayOptions[each] = [];
 						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
 							isObject = true;
-						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'array') {
+						} else if (mappingObj[type]._meta.dejavuMeta[each] && mappingObj[type]._meta.dejavuMeta[each].indexOf('array') !== -1) {
 							isObject = true;
 							isArrayObject = true;
+						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'image') {
+							isImage = true;
 						}
 					}
 				}
@@ -231,7 +253,7 @@ class DataTable extends React.Component {
 					isObject = true;
 					isArrayObject = true;
 				}
-				if (datatype) {
+				if (datatype && allMetas[each] !== 'array-image') {
 					if (datatype.type === 'geo_shape') {
 						isObject = true;
 					}
@@ -258,7 +280,10 @@ class DataTable extends React.Component {
 						editable={this.state.editable}
 						isObject={isObject}
 						isArrayObject={isArrayObject}
-					/>);
+						isImage={isImage}
+						loadImages={this.state.loadImages}
+					/>
+				);
 			}
 			rows.push({
 				'_key': String(data[row]['_id']) + String(data[row]['_type']),
@@ -297,7 +322,6 @@ class DataTable extends React.Component {
 
 		return (
 			<div className="dejavu-table">
-
 				<Info
 					infoObj={this.props.infoObj}
 					totalRecord={this.props.totalRecord}
@@ -324,6 +348,9 @@ class DataTable extends React.Component {
 					dejavuExportData={this.props.dejavuExportData}
 					editable={this.state.editable}
 					toggleEditView={this.toggleEditView}
+					hasImages={this.state.hasImages}
+					loadImages={this.state.loadImages}
+					toggleLoadImages={this.toggleLoadImages}
 				/>
 
 				<div className="outsideTable">

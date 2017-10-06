@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 /* global feed, help */
-import { es2, es5, dateFormats } from '../helper/esMapping';
+import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
 import ErrorModal from '../features/ErrorModal';
 
 const customMapping = "I’ve my own mapping"; // eslint-disable-line
@@ -15,7 +15,7 @@ class CreateColumnForm extends React.Component {
 			value: '',
 			type: 'Text',
 			complexData: 'default',
-			format: 'YYYY/MM/DD',
+			format: 'epoch_millis',
 			showError: false,
 			valid: false,
 			selectedType: this.props.selectedTypes[0],
@@ -95,7 +95,7 @@ class CreateColumnForm extends React.Component {
 			}
 			if (
 				(name === 'type' && value === customMapping) ||
-				// need to set codemirror again if switching to and fro object type
+				// need to set codemirror again if switching to and fro object or image type
 				(name === 'complexData' && value !== 'object' && this.state.type === customMapping && prevComplexData === 'object')
 			) {
 				this.editorref = help.setCodeMirror('custom-mapping-textarea');
@@ -145,12 +145,22 @@ class CreateColumnForm extends React.Component {
 				dejavuMeta: {}
 			};
 
-			if (this.state.complexData !== 'default') {
+			if (this.state.type === 'Image') {
 				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
-					meta.dejavuMeta[this.state.value] = this.state.complexData;
+					meta.dejavuMeta[this.state.value] = 'image';
 				} else {
 					meta.dejavuMeta = {
-						[this.state.value]: this.state.complexData
+						[this.state.value]: 'image'
+					};
+				}
+			}
+
+			if (this.state.complexData !== 'default') {
+				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
+					meta.dejavuMeta[this.state.value] = this.state.complexData + (this.state.type === 'Image' ? '-image' : '');
+				} else {
+					meta.dejavuMeta = {
+						[this.state.value]: this.state.complexData + (this.state.type === 'Image' ? '-image' : '')
 					};
 				}
 			}
@@ -293,7 +303,7 @@ class CreateColumnForm extends React.Component {
 							>
 								{
 									dateFormats.map(item => (
-										<option key={item} value={item}>{item}</option>
+										<option key={item} value={item}>{`${item} ${dateHints[item] || ''}`}</option>
 									))
 								}
 							</FormControl>
