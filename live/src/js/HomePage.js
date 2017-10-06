@@ -32,6 +32,7 @@ var HomePage = createReactClass({
 			infoObj: help.resetInfoObj(this.userTouchAdd),
 			totalRecord: 0,
 			pageLoading: false,
+			loadingSpinner: false,
 			externalQueryApplied: false,
 			externalQueryTotal: 0,
 			extQuery: null,
@@ -55,6 +56,7 @@ var HomePage = createReactClass({
 				typeCounter: this.typeCounter
 			},
 			errorShow: false,
+			errorMessage: '',
 			historicApps: [],
 			url: '',
 			appname: '',
@@ -75,7 +77,7 @@ var HomePage = createReactClass({
 		delete sdata[index];
 	},
 	resetData: function(total, sdata_key) {
-		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns));
+		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns, this.state.types, this.state.mappingObj));
 	},
 	// Logic to stream continuous data.
 	// We call the ``getData()`` function in feed.js
@@ -282,7 +284,7 @@ var HomePage = createReactClass({
 			clearInterval(streamingInterval);
 		}
 		catch (e) {}
-		
+
 		// this.setMap();
 		if(appAuth) {
 			setTimeout(this.setMap, 2000)
@@ -300,7 +302,7 @@ var HomePage = createReactClass({
 	},
 	afterConnect: function() {
 		if(appAuth) {
-			help.afterConnect.bind(this);
+			help.afterConnect.bind(this)();
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
 			// call every 1 min.
@@ -317,7 +319,7 @@ var HomePage = createReactClass({
 		help.hideAttribute(hiddenColumns, 'hide');
 	},
 	removeHidden: function() {
-		this.setState(this.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
+		this.setState(help.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
 	},
 	getTotalRecord: function() {
 		var $this = this;
@@ -443,14 +445,19 @@ var HomePage = createReactClass({
 		}
 	},
 	handleScroll: function(event) {
-		var scroller = document.getElementById('table-scroller');
+		var scroller = document.getElementById('exp-scrollable');
 		var infoObj = this.state.infoObj;
+		const top = scroller.scrollTop;
+		const update = (...args) => {
+			this.updateDataOnView(...args);
+			scroller.scrollTop = top;
+		};
 		// Plug in a handler which takes care of infinite scrolling
-		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 100 && !this.state.pageLoading) {
-				this.setState({
-					pageLoading: true
-				});
-				help.paginateData(this.state.infoObj.total, this.updateDataOnView, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
+		if ((subsetESTypes.length || this.state.externalQueryApplied) && infoObj.showing < infoObj.searchTotal && scroller.scrollTop + scroller.offsetHeight >= scroller.scrollHeight - 50 && !this.state.pageLoading) {
+			this.setState({
+				loadingSpinner: true
+			});
+			help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
 		}
 	},
 	handleSort: function(item, type, eve, order) {
@@ -459,8 +466,8 @@ var HomePage = createReactClass({
 	addRecord: function(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
 	},
-	updateRecord: function(editorref) {
-		help.updateRecord.call(this, editorref, this.indexCall);
+	updateRecord: function(editorref, currentColumn = null) {
+		help.updateRecord.call(this, editorref, this.indexCall, currentColumn);
 	},
 	indexCall: function(form, modalId, method) {
 		var recordObject = {};
@@ -469,6 +476,16 @@ var HomePage = createReactClass({
 				recordObject[v2.name] = v2.value;
 		});
 		feed.indexData(recordObject, method, function(res, newTypes) {
+			if (res.status >= 400) {
+				this.setState({
+					errorMessage: res.message
+				});
+				setTimeout(() => {
+					this.setState({
+						errorShow: true
+					});
+				}, 100);
+			}
 			if(method === 'bulk' && res && res.items && res.items.length) {
 				this.reloadData();
 				if(!res.errors) {
@@ -593,10 +610,9 @@ var HomePage = createReactClass({
 		this.setState(help.removeSort(this.state.documents));
 	},
 	columnToggle: function() {
-		var self = this;
 		var obj = {
-			toggleIt: function(elementId, checked) {
-				self.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
+			toggleIt: (elementId, checked) => {
+				this.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
 			},
 			setVisibleColumn: function() {}
 		};
@@ -684,7 +700,10 @@ var HomePage = createReactClass({
 			dejavuExportData: null
 		});
 		const defaultQuery = help.defaultQuery();
-		var activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
+		const activeQuery = this.getQueryBody() ? this.getQueryBody() : defaultQuery;
+		if (!Object.prototype.hasOwnProperty.call(activeQuery, 'size')) {
+			activeQuery.size = 1000;
+		}
 		this.scrollApi({"activeQuery": activeQuery});
 	},
 	scrollApi: function(info) {
@@ -723,7 +742,7 @@ var HomePage = createReactClass({
 		var self = this;
 		var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
 		var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
-		var esBtn = this.state.connect ? 'btn-primary ': '';
+		var esBtn = this.state.connect ? 'btn-danger ': '';
 		esBtn += 'btn btn-default submit-btn';
 		var shareBtn = this.state.connect ? 'share-btn': 'hide';
 		var url = this.state.url;
@@ -785,83 +804,93 @@ var HomePage = createReactClass({
 		}
 		var containerClass = 'row dejavuContainer '+BRANCH+ (queryParams && queryParams.hasOwnProperty('hf') ? ' without-hf ' : '') + (queryParams && queryParams.hasOwnProperty('h') ? ' without-h ' : '') + (queryParams && queryParams.hasOwnProperty('f') ? ' without-f ' : '') + (queryParams && queryParams.hasOwnProperty('sidebar') ? ' without-sidebar ' : '') + (this.state.splash ? ' splash-on ' : '');
 		return (<div>
-					<div id='modal' />
-					<div className={containerClass}>
-						<div className="appHeaderContainer">
-						<Header />
-							<div className="appFormContainer">
-								{dejavuForm}
-								<div className="typeContainer">
-								<Sidebar
-										typeProps={{
-											Types:this.state.types,
-											watchTypeHandler:this.watchStock,
-											unwatchTypeHandler:this.unwatchStock,
-											signalColor:this.state.signalColor,
-											signalActive:this.state.signalActive,
-											signalText:this.state.signalText,
-											typeInfo:this.state.typeInfo,
-											selectedTypes: subsetESTypes,
-											cleanTypes: this.state.cleanTypes,
-											connect: this.state.connect
-										}}
-										queryProps={{
-											'externalQuery':this.externalQuery,
-											'externalQueryApplied': this.state.externalQueryApplied,
-											'removeExternalQuery':this.removeExternalQuery,
-											'types': this.state.types
-										}}
-										importer={{
-											appname: this.state.appname,
-											url: this.state.url
-										}}
-									/>
-								</div>
-								<div className="col-xs-12 dataContainer">
-									<DataTable
-										_data={this.state.documents}
-										sortInfo={this.state.sortInfo}
-										filterInfo={this.state.filterInfo}
-										infoObj={this.state.infoObj}
-										totalRecord={this.state.totalRecord}
-										scrollFunction={this.handleScroll}
-										selectedTypes={subsetESTypes}
-										handleSort={this.handleSort}
-										mappingObj={this.state.mappingObj}
-										removeFilter ={this.removeFilter}
-										addRecord = {this.addRecord}
-										getTypeDoc={this.getTypeDoc}
-										Types={this.state.types}
-										removeSort = {this.removeSort}
-										removeHidden = {this.removeHidden}
-										removeTypes = {this.removeTypes}
-										visibleColumns = {this.state.visibleColumns}
-										hiddenColumns = {this.state.hiddenColumns}
-										columnToggle ={this.columnToggle}
-										actionOnRecord = {this.state.actionOnRecord}
-										pageLoading={this.state.pageLoading}
-										reloadData={this.reloadData}
-										exportJsonData= {this.exportJsonData}
-										externalQueryApplied={this.state.externalQueryApplied}
-										externalQueryTotal={this.state.externalQueryTotal} 
-										removeExternalQuery={this.removeExternalQuery}
-										dejavuExportData={this.state.dejavuExportData}
-									/>
-								</div>
-								{footer}
+			<div id='modal' />
+			<div className={containerClass}>
+				<div className="appHeaderContainer">
+					<Header />
+					<div className="appFormContainer">
+						{dejavuForm}
+						<div className="typeContainer">
+							<Sidebar
+								typeProps={{
+									Types:this.state.types,
+									watchTypeHandler:this.watchStock,
+									unwatchTypeHandler:this.unwatchStock,
+									signalColor:this.state.signalColor,
+									signalActive:this.state.signalActive,
+									signalText:this.state.signalText,
+									typeInfo:this.state.typeInfo,
+									selectedTypes: subsetESTypes,
+									cleanTypes: this.state.cleanTypes,
+									connect: this.state.connect
+								}}
+								queryProps={{
+									'externalQuery':this.externalQuery,
+									'externalQueryApplied': this.state.externalQueryApplied,
+									'removeExternalQuery':this.removeExternalQuery,
+									'types': this.state.types
+								}}
+								importer={{
+									appname: this.state.appname,
+									url: this.state.url
+								}}
+							/>
+						</div>
+						<div className="col-xs-12 dataContainer">
+							<DataTable
+								_data={this.state.documents}
+								sortInfo={this.state.sortInfo}
+								filterInfo={this.state.filterInfo}
+								infoObj={this.state.infoObj}
+								totalRecord={this.state.totalRecord}
+								scrollFunction={this.handleScroll}
+								selectedTypes={subsetESTypes}
+								handleSort={this.handleSort}
+								mappingObj={this.state.mappingObj}
+								removeFilter ={this.removeFilter}
+								addRecord = {this.addRecord}
+								getTypeDoc={this.getTypeDoc}
+								Types={this.state.types}
+								removeSort = {this.removeSort}
+								removeHidden = {this.removeHidden}
+								removeTypes = {this.removeTypes}
+								visibleColumns = {this.state.visibleColumns}
+								hiddenColumns = {this.state.hiddenColumns}
+								columnToggle ={this.columnToggle}
+								actionOnRecord = {this.state.actionOnRecord}
+								pageLoading={this.state.pageLoading}
+								loadingSpinner={this.state.loadingSpinner}
+								reloadData={this.reloadData}
+								exportJsonData= {this.exportJsonData}
+								externalQueryApplied={this.state.externalQueryApplied}
+								externalQueryTotal={this.state.externalQueryTotal}
+								removeExternalQuery={this.removeExternalQuery}
+								dejavuExportData={this.state.dejavuExportData}
+								reloadMapping={this.setMap}
+							/>
+						</div>
+						{footer}
+						{
+							this.state.errorMessage.length ?
 								<FeatureComponent.ErrorModal
 									errorShow={this.state.errorShow}
-									closeErrorModal = {this.closeErrorModal}>
-								</FeatureComponent.ErrorModal>
-								<div className="full_page_loading hide">
-									<div className="loadingBar"></div>
-									<div className="vertical1">
-									</div> 
-								</div>
+									closeErrorModal={this.closeErrorModal}
+									errorMessage={this.state.errorMessage}
+								/> :
+								<FeatureComponent.ErrorModal
+									errorShow={this.state.errorShow}
+									closeErrorModal={this.closeErrorModal}
+								/>
+						}
+						<div className="full_page_loading hide">
+							<div className="loadingBar"></div>
+							<div className="vertical1">
 							</div>
 						</div>
 					</div>
-				</div>);
+				</div>
+			</div>
+		</div>);
 	},
 });
 

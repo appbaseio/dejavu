@@ -11,14 +11,14 @@ class Header extends React.Component {
 			<header className="header text-center">
 				<div className="img-container">
 					<span className="header-img-container">
-						<img src="assets/img/icon.png" alt="Gem" className="img-responsive"/>
+						<img src="assets/img/Dejavu_Icon.svg" alt="Gem" className="img-responsive"/>
 						<span className="dejavu-title">
-							Dejavu
+							dejavu
+						</span>
+						<span className="dejavu-subtitle">
+							The missing web UI for Elasticsearch
 						</span>
 					</span>
-				</div>
-				<div className="tag-line">
-					The Missing Web UI for Elasticsearch
 				</div>
 				{subscribeModal}
 			</header>

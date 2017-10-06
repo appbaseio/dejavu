@@ -5,3 +5,5 @@ dejavu-unpacked/
 react-codemod
 .DS_Store
 *.log
+react-codemod/
+.vscode/

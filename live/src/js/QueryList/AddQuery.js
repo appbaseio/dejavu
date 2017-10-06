@@ -1,5 +1,7 @@
-var React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
+
 var Utils = require('../helper/utils.js');
 
 class AddQuery extends React.Component {
@@ -10,8 +12,8 @@ class AddQuery extends React.Component {
 			name: false,
 			type: false,
 			body: false
-
-		}
+		},
+		name: this.props.editable ? this.props.queryInfo.name : ''
 	};
 
 	componentDidUpdate() {
@@ -36,7 +38,10 @@ class AddQuery extends React.Component {
 	};
 
 	getType = () => {
-		var typeList = this.props.types.map(function(type) {
+		const allTypes = this.props.editable ?
+			[...new Set(this.props.types.concat(this.props.queryInfo.type))] :
+			this.props.types;
+		const typeList = allTypes.map(function(type) {
 			return {
 				id: type,
 				text: type
@@ -45,12 +50,27 @@ class AddQuery extends React.Component {
 		return typeList;
 	};
 
+	handleChange = (e) => {
+		const { name, value } = e.target;
+		this.setState({
+			[name]: value
+		});
+	}
+
 	close = () => {
+		this.setState({
+			error: null
+		});
 		Utils.closeModal.call(this);
 	};
 
 	open = () => {
 		Utils.openModal.call(this);
+		setTimeout(() => {
+			if (this.props.editable) {
+				$('#applyQueryOn').val(this.props.queryInfo.type).change();
+			}
+		}, 300);
 	};
 
 	validateInput = () => {
@@ -84,7 +104,7 @@ class AddQuery extends React.Component {
 		testQuery.on('data', function(res) {
 			if (!res.hasOwnProperty('error')) {
 				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
-				self.props.includeQuery(queryValues);
+				self.props.includeQuery(queryValues, self.props.queryIndex);
 				self.close();
 			} else {
 				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
@@ -159,27 +179,41 @@ class AddQuery extends React.Component {
 		var selectClass = this.props.selectClass + ' tags-select form-control';
 
 		return (
-			<div className="add-record-container col-xs-12 pd-0">
-				<a href="javascript:void(0);" className="add-record-btn btn btn-primary col-xs-12" title="Add" onClick={this.open} >
-					<i className="fa fa-plus"></i>&nbsp;Add Query
+			<div className={`add-record-container ${this.props.editable ? 'edit-query-container col-xs-5' : 'col-xs-12'} pd-0`}>
+				<a href="javascript:void(0);" className="add-record-btn btn btn-primary col-xs-12" title={this.props.editable ? 'Edit' : 'Add'} onClick={this.open} >
+					{
+						this.props.editable ?
+							<span>Edit Query</span> :
+							<span><i className="fa fa-plus pad-right" />Add Query</span>
+					}
 				</a>
 				<Modal show={this.state.showModal} onHide={this.close}>
 					<Modal.Header closeButton>
-						<Modal.Title>Add Query</Modal.Title>
+						<Modal.Title>
+							{
+								this.props.editable ?
+									'Update' :
+									'Add'
+							}
+						</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
-						<div className={validateClass.name}>
-							<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
-							<div className="col-sm-9">
-								<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" />
-								<span className="help-block">
-									Query name is required.
-								</span>
+							<div className={validateClass.name}>
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
+								<div className="col-sm-9">
+									<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" value={this.state.name} onChange={this.handleChange} />
+									<span className="help-block">
+										Query name is required.
+									</span>
+								</div>
 							</div>
-						</div>
-						{Utils.getTypeMarkup('query', validateClass, selectClass)}
-						{Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)}
+							{Utils.getTypeMarkup('query', validateClass, selectClass)}
+							{
+								this.props.editable ?
+									Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch, this.props.queryInfo.query) :
+									Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch)
+							}
 						</form>
 					</Modal.Body>
 					<Modal.Footer>
@@ -188,7 +222,11 @@ class AddQuery extends React.Component {
 						</div>
 						<Button key="applyQueryBtn" className="applyQueryBtn" bsStyle="success" onClick={this.validateInput}>
 							<i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-							Add
+							{
+								this.props.editable ?
+									'Update' :
+									'Add'
+							}
 						</Button>
 					</Modal.Footer>
 				</Modal>
@@ -196,5 +234,14 @@ class AddQuery extends React.Component {
 		);
 	}
 }
+
+AddQuery.defaultProps = {
+	queryIndex: null
+};
+
+AddQuery.propTypes = {
+	editable: PropTypes.bool,
+	queryInfo: PropTypes.object	// eslint-disable-line
+};
 
 module.exports = AddQuery;

@@ -1,11 +1,31 @@
-var React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
+
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
 
 class Info extends React.Component {
 	state = {
-		selectToggle: false
+		selectToggle: false,
+		editable: this.props.editable,
+		loading: false,
+		loadImages: this.props.loadImages,
+		loadingImages: false
 	};
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.editable !== this.props.editable) {
+			this.setState({
+				loading: false
+			});
+		}
+		if (nextProps.loadImages !== this.props.loadImages) {
+			this.setState({
+				loadingImages: false
+			});
+		}
+	}
 
 	selectToggleChange = () => {
 		var checkFlag, checkbox;
@@ -18,11 +38,33 @@ class Info extends React.Component {
 		else {
 			this.setState({
 				selectToggle: true
-			});   
+			});
 			checkbox = true;
 		}
 		this.props.actionOnRecord.selectToggleChange(checkbox);
 	};
+
+	handleEditView = (e) => {
+		const nextState = e === '2';
+		if (this.state.editable !== nextState) {
+			this.setState({
+				editable: nextState,
+				loading: true
+			});
+			setTimeout(this.props.toggleEditView, 10);
+		}
+	}
+
+	handleLoadingImages = () => {
+		const nextState = !this.state.loadImages;
+		if (this.state.loadImages !== nextState) {
+			this.setState({
+				loadImages: nextState,
+				loadingImages: true
+			});
+			setTimeout(this.props.toggleLoadImages, 10);
+		}
+	}
 
 	componentDidUpdate() {
 		var checkFlag = this.props.actionOnRecord.selectToggle;
@@ -58,57 +100,140 @@ class Info extends React.Component {
 		var totalClass = actionOnRecord.active ? 'hide' : 'col-xs-12 pd-l0';
 		var selectionClass = actionOnRecord.active ? 'col-xs-12 pd-l0' : 'hide';
 		var UpdateDocument = actionOnRecord.selectedRows.length == 1 ? <FeatureComponent.UpdateDocument actionOnRecord={actionOnRecord}/> : '';
+		const loadImagesText = this.state.loadImages ?
+			'Show Image Thumbnails' :
+			'Hide Image Thumbnails';
+		const loadImagesIcon = this.state.loadImages ?
+			<span className="button-icon icon-sm"><i className="fa fa-check-circle" /></span> :
+			<span className="button-icon icon-sm"><i className="fa fa-times-circle" /></span>;
 		return (<div className="infoRow container">
-					<div className=" row">
-						<div className={infoObjClass}>
-							<div className={totalClass}>
-								<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
-								<a
-									href="javascript:void(0);"
-									className="btn btn-default themeBtn m-r10"
-									onClick={this.props.reloadData}>
-									<i className="fa fa-refresh"></i> Reload
-								</a>
-								<span className="info_single">
-									<label>Showing
-										<strong>&nbsp;{infoObj.showing}</strong> of total
-										<strong>&nbsp;{totalRecord}</strong>
-									</label>
+			<div className=" row">
+				<div className={infoObjClass}>
+					<div className={totalClass}>
+						<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
+						<a
+							href="javascript:void(0);"
+							className="btn btn-default themeBtn m-r10"
+							onClick={this.props.reloadData}>
+							<i className="fa fa-refresh"></i> Reload
+						</a>
+						<span className="info_single">
+							<label>Showing
+								<strong>&nbsp;{infoObj.showing}</strong> of total
+								<strong>&nbsp;{totalRecord}</strong>
+							</label>
+						</span>
+					</div>
+					<div className={selectionClass}>
+						<span className="theme-element checkbox pull-left pd-r10 mt-5">
+							<input
+								id='selectToggle'
+								type="checkbox"
+								key='1'
+								checked={this.state.selectToggle}
+								onChange={this.selectToggleChange}
+								readOnly={false}/>
+							<label htmlFor='selectToggle'></label>
+						</span>
+						<span className="pull-left pd-r10 info_single">
+							<strong>{actionOnRecord.selectedRows.length}</strong> selected of total
+							<strong>&nbsp;{totalRecord}</strong>
+						</span>
+						<span className="pull-left">{UpdateDocument}
+							<FeatureComponent.DeleteDocument
+								actionOnRecord={actionOnRecord}/>
+							<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+						</span>
+					</div>
+				</div>
+				<DropdownButton
+					bsStyle={this.state.editable ? 'warning' : 'success'}
+					title={
+						this.state.editable ?
+							<span>
+								<span className="button-icon">
+									{
+										this.state.loading ?
+											<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" /> :
+											<i className="fa fa-unlock-alt" />
+									}
 								</span>
-							</div>
-							<div className={selectionClass}>
-							<span className="theme-element checkbox pull-left pd-r10 mt-5">
-								<input
-									 id='selectToggle'
-									 type="checkbox"
-									 key='1'
-									 checked={this.state.selectToggle}
-									 onChange={this.selectToggleChange}
-									 readOnly={false}/>
-									<label htmlFor='selectToggle'></label>
+								<span className="pad-right">Editing</span>
+							</span> :
+							<span>
+								<span className="button-icon">
+									{
+										this.state.loading ?
+											<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" /> :
+											<i className="fa fa-eye" />
+									}
+								</span>
+								<span className="pad-right">Viewing</span>
 							</span>
-								<span className="pull-left pd-r10 info_single">
-									<strong>{actionOnRecord.selectedRows.length}</strong> selected of total
-									<strong>&nbsp;{totalRecord}</strong>
-								</span>
-								<span className="pull-left">{UpdateDocument}
-									<FeatureComponent.DeleteDocument
-												actionOnRecord={actionOnRecord}/>
-									<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
-								</span>
+					}
+					id="toggle-button-edit-view"
+					onSelect={this.handleEditView}
+				>
+					<MenuItem eventKey="1" active={!this.state.editable}>
+						<div className="flex">
+							<div className="flex flex-align-center">
+								<span className="button-icon icon-sm"><i className="fa fa-eye" /></span>
+							</div>
+							<div className="flex flex-column">
+								<b>Viewing</b>
+								<span className="text-sm">Read only view</span>
 							</div>
 						</div>
-						<div className="pull-right pd-r0">
-							<ColumnDropdown
-										visibleColumns ={this.props.visibleColumns}
-										columnToggle ={this.props.columnToggle}
-										 cols={this.props.columns} />
-							<FeatureComponent.AddDocument
-											types={this.props.types}
-											addRecord ={this.props.addRecord}
-											getTypeDoc={this.props.getTypeDoc}
-											userTouchAdd={this.props.infoObj.userTouchAdd}
-											selectClass="tags-select-small" />
+					</MenuItem>
+					<MenuItem eventKey="2" active={this.state.editable}>
+						<div className="flex">
+							<div className="flex flex-align-center">
+								<span className="button-icon icon-sm"><i className="fa fa-unlock-alt" /></span>
+							</div>
+							<div className="flex flex-column">
+								<b>Editing</b>
+								<span className="text-sm">Editable view</span>
+							</div>
+						</div>
+					</MenuItem>
+				</DropdownButton>
+				{
+					this.props.hasImages &&
+					<button
+						className={`btn btn-load-images ${this.state.loadImages ? 'active' : ''} margin-left`}
+						onClick={this.handleLoadingImages}
+					>
+						{
+							this.state.loadingImages ?
+								<span>
+									<span className="button-icon">
+										<i className="fa fa-spinner fa-spin fa-3x fa-fw editable-loading" />
+									</span>
+									{loadImagesText}
+								</span> :
+								<span>
+									{loadImagesIcon}{loadImagesText}
+								</span>
+						}
+					</button>
+				}
+				<div className="pull-right pd-r0">
+					<ColumnDropdown
+						visibleColumns ={this.props.visibleColumns}
+						columnToggle ={this.props.columnToggle}
+						cols={this.props.columns} />
+
+					{
+						this.props.editable &&
+						<FeatureComponent.AddDocument
+							types={this.props.types}
+							text="Add Data"
+							addRecord ={this.props.addRecord}
+							getTypeDoc={this.props.getTypeDoc}
+							userTouchAdd={this.props.infoObj.userTouchAdd}
+							selectClass="tags-select-small"
+						/>
+					}
 							<div className={typeClass}>
 								<a href="javascript:void(0)" className="removeFilter">
 									<span className="inside-info">
@@ -168,5 +293,11 @@ class Info extends React.Component {
 				</div>)
 	}
 }
+
+Info.propTypes = {
+	hasImages: PropTypes.bool,
+	loadImages: PropTypes.bool,
+	toggleLoadImages: PropTypes.func
+};
 
 module.exports = Info;

@@ -39,7 +39,7 @@ class FilterDropdown extends React.Component {
 		var datatype = this.props.datatype;
 		var applyBtn = this.state.filterValue == '' ? 'true' : 'false';
 		var self = this;
-		
+
 		function createDropItem(method, availableValues) {
 			function filterRender(value, index) {
 				var currentItem;
@@ -64,11 +64,11 @@ class FilterDropdown extends React.Component {
 			});
 			if(newAvailableValues.length) {
 				return (<Dropdown.Menu className="menuItems pull-right">
-							{newAvailableValues}
-							<div className="singleItem">
-								<button className='btn btn-info col-xs-12' onClick={self.applyFilter}>Apply</button>
-							</div>
-						</Dropdown.Menu>);
+					{newAvailableValues}
+					<div className="singleItem">
+						<button className='btn btn-primary col-xs-12' onClick={self.applyFilter}>Apply</button>
+					</div>
+				</Dropdown.Menu>);
 			} else {
 				return null;
 			}
@@ -98,9 +98,9 @@ class FilterDropdown extends React.Component {
 			case 'date':
 				FilterMenuItems = dateFilter;
 				break;
-			case 'boolean': 
+			case 'boolean':
 				FilterMenuItems = booleanFilter;
-			break;    
+			break;
 			default:
 				datatype = null;
 				break;

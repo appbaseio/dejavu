@@ -119,10 +119,9 @@ var help = {
 				};
 				actionOnRecord.selectedRows.push(obj);
 			});
-		} else
+		} else {
 			actionOnRecord.selectedRows = this.removeSelection(actionOnRecord);
-
-		console.log(actionOnRecord.selectedRows);
+		}
 		return actionOnRecord;
 	},
 	setCodeMirror: function(eleId) {
@@ -177,7 +176,7 @@ var help = {
 			userTouchAdd: userTouchAdd
 		}
 	},
-	resetData: function(total, sdata_key, sortInfo, infoObj, hiddenColumns) {
+	resetData: function(total, sdata_key, sortInfo, infoObj, hiddenColumns, selectedTypes, mappingObj) {
 		var sortedArray = [];
 		var sdata_values = [];
 		Object.keys(sdata).forEach((each) => {
@@ -220,12 +219,35 @@ var help = {
 			});
 		});
 
-		if (availableColumns.length) {
-			hiddenColumns.forEach(function(col, key) {
-				if (availableColumns.indexOf(col) <= -1)
-					hiddenColumns.splice(key, 1);
+		// identify and add new columns from mappingObj
+		if (selectedTypes.length) {
+			selectedTypes.forEach((selectedType) => {
+				if (mappingObj[selectedType]) {
+					if (mappingObj[selectedType].properties) {
+						const allProperties = Object.keys(mappingObj[selectedType].properties);
+						allProperties.forEach((item) => {
+							if (!visibleColumns.includes(item) && !hiddenColumns.includes(item)) {
+								visibleColumns.push(item);
+								availableColumns.push(item);
+							}
+						});
+					}
+				}
+				// since a new object type has no mapping added, populate the column from _meta
+				if (mappingObj[selectedType]._meta) {
+					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
+						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
+						metaFields.forEach((item) => {
+							if (!visibleColumns.includes(item) && !hiddenColumns.includes(item)) {
+								visibleColumns.push(item);
+								availableColumns.push(item);
+							}
+						});
+					}
+				}
 			});
 		}
+
 		//set url
 		input_state.visibleColumns = visibleColumns;
 		input_state.hiddenColumns = hiddenColumns;
@@ -236,7 +258,8 @@ var help = {
 			infoObj: infoObj,
 			visibleColumns: visibleColumns,
 			hiddenColumns: hiddenColumns,
-			pageLoading: false
+			pageLoading: false,
+			loadingSpinner: false
 		};
 	},
 	countTotalRecord: function(total, fromStream, method, totalRecord) {
@@ -355,7 +378,7 @@ var help = {
 			return indice ===  appname;
 		});
 		var app_match_flag = app_match.length ? true : false;
-		var show_index_info = this.state.url === this.state.es_host ? true : false; 
+		var show_index_info = this.state.url === this.state.es_host ? true : false;
 		return {
 			app_match_flag: app_match_flag,
 			current_appname: appname,
@@ -501,9 +524,14 @@ var help = {
 			indexCall(form, 'close-modal', indexData.method);
 		}
 	},
-	updateRecord: function(editorref, indexCall) {
+	updateRecord: function(editorref, indexCall, columnName) {
 		var form = $('#updateObjectForm').serializeArray();
 		var indexData = JSON.parse(editorref.getValue().trim());
+		if (columnName) {
+			indexData = {
+				[columnName]: indexData
+			};
+		}
 		var obj = {
 			name: 'body',
 			value: indexData
@@ -565,7 +593,7 @@ var help = {
 			var app = {
 				url: config.url,
 				appname: config.appname
-			};  
+			};
 			var historicApps = apps;
 			if(authFlag) {
 				if(historicApps && historicApps.length) {
@@ -576,7 +604,7 @@ var help = {
 					})
 				}
 				if(app.url) {
-					historicApps.push(app); 
+					historicApps.push(app);
 				}
 			}
 			cb({
