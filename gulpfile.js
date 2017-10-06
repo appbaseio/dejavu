@@ -6,61 +6,61 @@ var minifyCSS = require('gulp-minify-css');
 var concat = require('gulp-concat');
 
 var files = {
-    css: {
-        vendor: [
-            'live/bower_components/font-awesome/css/font-awesome.min.css',
-            'live/bower_components/toastr/toastr.min.css',
-            'live/vendors/highlight/highlight.min.css',
-            'live/bower_components/select2/dist/css/select2.min.css',
-            'live/vendors/awesome-bootstrap-checkbox/checkbox.css',
-            'live/bower_components/codemirror/addon/dialog/dialog.css',
-            'live/bower_components/codemirror/lib/codemirror.css',
-            'live/bower_components/codemirror/addon/fold/foldgutter.css',
-            'live/bower_components/bootstrap/dist/css/bootstrap.min.css'
-        ],
-        custom: ['live/src/css/*.css']
-    },
-    js: {
-        vendor: [
-            'live/bower_components/underscore/underscore-min.js',
-            'live/bower_components/appbase-js/browser/appbase.min.js',
-            'live/bower_components/jquery/dist/jquery.min.js',
-            'live/bower_components/bootstrap/dist/js/bootstrap.min.js',
-            'live/bower_components/toastr/toastr.min.js',
-            'live/bower_components/crypto-js/crypto-js.js',
-            'live/bower_components/codemirror/lib/codemirror.js',
-            'live/bower_components/codemirror/addon/edit/matchbrackets.js',
-            'live/bower_components/codemirror/addon/edit/closebrackets.js',
-            'live/bower_components/codemirror/addon/fold/foldcode.js',
-            'live/bower_components/codemirror/addon/fold/foldgutter.js',
-            'live/bower_components/codemirror/addon/fold/brace-fold.js',
-            'live/bower_components/codemirror/mode/javascript/javascript.js',
-            'live/bower_components/select2/dist/js/select2.full.min.js',
-            'live/bower_components/highlightjs/highlight.pack.min.js',
-            'live/bower_components/lzma/src/lzma.js',
-            'live/bower_components/urlsafe-base64/app.js',
-            'live/bower_components/auth0.js/build/auth0.min.js',
-            'live/bower_components/moment/min/moment.min.js',
-            'live/bower_components/file-saver/FileSaver.min.js'
-        ],
-        custom: [
+	css: {
+		vendor: [
+			'live/bower_components/font-awesome/css/font-awesome.min.css',
+			'live/bower_components/toastr/toastr.min.css',
+			'live/vendors/highlight/highlight.min.css',
+			'live/bower_components/select2/dist/css/select2.min.css',
+			'live/vendors/awesome-bootstrap-checkbox/checkbox.css',
+			'live/bower_components/codemirror/addon/dialog/dialog.css',
+			'live/bower_components/codemirror/lib/codemirror.css',
+			'live/bower_components/codemirror/addon/fold/foldgutter.css',
+			'live/bower_components/bootstrap/dist/css/bootstrap.min.css'
+		],
+		custom: ['live/src/css/*.css']
+	},
+	js: {
+		vendor: [
+			'live/bower_components/underscore/underscore-min.js',
+			'node_modules/appbase-js/dist/appbase.js',
+			'live/bower_components/jquery/dist/jquery.min.js',
+			'live/bower_components/bootstrap/dist/js/bootstrap.min.js',
+			'live/bower_components/toastr/toastr.min.js',
+			'live/bower_components/crypto-js/crypto-js.js',
+			'live/bower_components/codemirror/lib/codemirror.js',
+			'live/bower_components/codemirror/addon/edit/matchbrackets.js',
+			'live/bower_components/codemirror/addon/edit/closebrackets.js',
+			'live/bower_components/codemirror/addon/fold/foldcode.js',
+			'live/bower_components/codemirror/addon/fold/foldgutter.js',
+			'live/bower_components/codemirror/addon/fold/brace-fold.js',
+			'live/bower_components/codemirror/mode/javascript/javascript.js',
+			'live/bower_components/select2/dist/js/select2.full.min.js',
+			'live/bower_components/highlightjs/highlight.pack.min.js',
+			'live/bower_components/lzma/src/lzma.js',
+			'live/bower_components/urlsafe-base64/app.js',
+			'live/bower_components/auth0.js/build/auth0.min.js',
+			'live/bower_components/moment/min/moment.min.js',
+			'live/bower_components/file-saver/FileSaver.min.js'
+		],
+		custom: [
 
-        ]
-    },
-    folders: {
-        assets: 'live/assets/**/*',
-        dist: 'live/dist/**/*',
-        src: 'live/src/**/*',
-        vendors: 'live/vendors/**/*',
-        buttons: 'live/buttons/**/*',
-        importer: 'live/importer/**/*'
-    },
-    moveFiles: [
-        'live/index.html',
-        'live/config.js',
-        'manifest.json',
-        'background.js'
-    ]
+		]
+	},
+	folders: {
+		assets: 'live/assets/**/*',
+		dist: 'live/dist/**/*',
+		src: 'live/src/**/*',
+		vendors: 'live/vendors/**/*',
+		buttons: 'live/buttons/**/*',
+		importer: 'live/importer/**/*'
+	},
+	moveFiles: [
+		'live/index.html',
+		'live/config.js',
+		'manifest.json',
+		'background.js'
+	]
 };
 
 gulp.task('vendorcss', function() {

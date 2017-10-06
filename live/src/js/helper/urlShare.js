@@ -10,7 +10,7 @@ function createUrl(inputs, cb) {
 	compress(inputs, compressCb.bind(this));
 
 	function compressCb(error, ciphertext) {
-		var allowParams = ['hf','h','f','query','sidebar','type','subscribe', 'importer'];
+		const allowParams = ['hf', 'h', 'f', 'query', 'sidebar', 'type', 'subscribe', 'importer', 'editable'];
 		if (!error) {
 			dejavuUrl = ciphertext;
 			let finalUrl = '';
@@ -72,16 +72,19 @@ function getUrl(cb) {
 
 // convertToUrl
 function convertToUrl(type) {
-	var ciphertext = dejavuUrl;
-	var final_url = '';
-	if (type == 'gh-pages') {
-		final_url = 'appbaseio.github.io/dejavu/live/#?input_state=' + ciphertext;
-	} else if (type == 'appbaseio') {
-		final_url = 'https://appbase.io/scalr/' + input_state.appname + '/browser/#?input_state=' + ciphertext;
+	const ciphertext = dejavuUrl;
+	let finalUrl = '';
+	if (type === 'gh-pages') {
+		finalUrl = 'appbaseio.github.io/dejavu/live/#?input_state=' + ciphertext;
+	} else if (type === 'appbaseio') {
+		finalUrl = 'https://appbase.io/scalr/' + input_state.appname + '/browser/#?input_state=' + ciphertext;
 	} else {
-		final_url = window.location.protocol + '//' + window.location.host + '#?input_state=' + ciphertext;
+		finalUrl = window.location.protocol + '//' + window.location.host + '#?input_state=' + ciphertext;
 	}
-	return final_url;
+	if (getQueryParameters().editable) {
+		finalUrl += `&editable=${getQueryParameters().editable}`;
+	}
+	return finalUrl;
 }
 
 function mirageLink(cb) {
@@ -150,13 +153,31 @@ function decompress(compressed, cb) {
 }
 
 function getQueryParameters(str) {
-	let hash = window.location.hash.split('#');
+	var tempurl = decodeURIComponent(window.location.href);
+	let hash = tempurl.split('#');
 	if (hash.length > 1) {
 		return (str || hash[1]).replace(/(^\?)/, '').split("&").map(function(n) {
 			return n = n.split("="), this[n[0]] = n[1], this }.bind({}))[0];
 	} else {
 		return null;
 	}
+}
+
+function setQueryParamerter(param, value) {
+	const currentUrl = decodeURIComponent(window.location.href);
+	let nextUrl = currentUrl;
+	const currentParam = getQueryParameters(currentUrl)[param];
+	if (currentParam === undefined) {
+		nextUrl = `${nextUrl}&${param}=${value}`;
+	} else {
+		const initialIndex = currentUrl.indexOf(`&${param}=`);
+		const finalIndex = currentUrl.indexOf('&', initialIndex + 1);
+		nextUrl = `${currentUrl.substring(0, initialIndex)}&${param}=${value}`;
+		if (finalIndex !== -1) {
+			nextUrl = `${nextUrl}${currentUrl.substring(finalIndex)}`;
+		}
+	}
+	window.location.href = nextUrl;
 }
 
 function initialize() {

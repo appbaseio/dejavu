@@ -1,8 +1,5 @@
-var React = require('react');
+import React from 'react';
 
-// The problem with checkboxes in bootstrap and react-bootstrap while using
-// them in react is that if you keep the fields checked by default, the don't
-// uncheck like I mean forever. This is an issue in the react-bootstrap.
 class FieldCheckbox extends React.Component {
 	constructor(props) {
 		super(props);
@@ -55,10 +52,10 @@ class FieldCheckbox extends React.Component {
 		return (
 			<div className='ab-menu-item'>
 				<div className="checkbox theme-element">
-					<input 
-					id={key} 
+					<input
+					id={key}
 					type="checkbox" key={key}
-					defaultChecked={this.state.isChecked} 
+					checked={this.props.checked}
 					onChange={this.check.bind(this, this.props._type)} readOnly={false}/>
 					<label htmlFor={key}> {this.props._type} </label>
 				</div>

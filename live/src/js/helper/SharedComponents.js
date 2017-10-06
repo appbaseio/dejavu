@@ -3,7 +3,7 @@ var AppSelect = require('../AppSelect.js');
 var ShareLink = require('../features/ShareLink.js');
 
 export const ComposeQuery = (props) => (
-	<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default"> 
+	<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default">
 		Query View <i className="fa fa-external-link-square"></i>
 	</a>
 );
@@ -14,7 +14,7 @@ export const InitialForm = (props) => (
 			<div className="vertical1">
 				<div className="esContainer">
 					<div className="img-container">
-						<img src="assets/img/icon.png" />
+						<img src="assets/img/Dejavu_Icon.svg" />
 					</div>
 					<div>
 					  <h1>Déjà vu</h1>

@@ -23,7 +23,7 @@
 }
 
 .querylist-section .theme-list .createdAt {
-	font-size: 10px;
+	margin-top: 6px;
 }
 
 .querylist-section .theme-list li.list-item {
@@ -42,13 +42,18 @@
 	font-size: 10px;
 }
 
-.querylist-section .theme-list li.list-item:hover, 
+.querylist-section .theme-list li.list-item:hover,
 .querylist-section .theme-list li.list-item.active {
 	background: #dedede;
 }
 
 .querylist-section .theme-list li.list-item:hover .delete-query {
+	display: flex;
+}
+
+.querylist-section .theme-list li.list-item:hover .edit-query-container {
 	display: inline-block;
+	float: left;
 }
 
 .querylist-section .theme-list li.list-item.list-title {
@@ -63,6 +68,10 @@
 	z-index: 2;
 	display: none;
 }
+.querylist-section .theme-list li.list-item .edit-query-container {
+	display: none;
+}
+
 .querylist-section .theme-list li.list-item .delete-query i {
 	background: #dedede;
 	color: #333;

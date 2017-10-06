@@ -21,7 +21,7 @@
 		"class-methods-use-this": 0,
 		"max-lines": ["error", 300],
 		"indent": [2, "tab", { "SwitchCase": 1 }],
-		"quotes": ["error", "double"],
+		"quotes": ["error", "single"],
 		"import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
 		"comma-dangle": ["error", "never"],
 		"object-curly-spacing": [2, "always"],

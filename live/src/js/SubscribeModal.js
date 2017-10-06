@@ -98,7 +98,7 @@ class SubscribeModal extends React.Component {
 	};
 
 	showIcon = () => {
-		var icon = (<i className="fa fa-envelope-o"></i>);
+		var icon = (<i className="fa fa-envelope subscribe-icon"></i>);
 		if (this.state.profile) {
 			icon = (<i className="fa fa-check"></i>);
 		}
