@@ -1,15 +1,15 @@
-import "babel-polyfill";
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Importer = require('../../live/src/js/features/Importer.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import Importer from '../../live/src/js/features/Importer';
 
 function onClose() {
-	const isDejavuUrl = sessionStorage.getItem("dejavuUrl");
-	if(isDejavuUrl) {
-		sessionStorage.removeItem("dejavuUrl");
+	const isDejavuUrl = sessionStorage.getItem('dejavuUrl');
+	if (isDejavuUrl) {
+		sessionStorage.removeItem('dejavuUrl');
 		window.location.href = isDejavuUrl;
 	} else {
-		window.location.href = "../live/index.html";
+		window.location.href = '../live/index.html';
 	}
 }
 
