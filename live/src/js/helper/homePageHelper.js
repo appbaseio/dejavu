@@ -234,7 +234,7 @@ var help = {
 					}
 				}
 				// since a new object type has no mapping added, populate the column from _meta
-				if (mappingObj[selectedType]._meta) {
+				if (mappingObj[selectedType] && mappingObj[selectedType]._meta) {
 					if (Object.prototype.hasOwnProperty.call(mappingObj[selectedType]._meta, 'dejavuMeta')) {
 						const metaFields = Object.keys(mappingObj[selectedType]._meta.dejavuMeta);
 						metaFields.forEach((item) => {
