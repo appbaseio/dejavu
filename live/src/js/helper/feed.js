@@ -433,12 +433,7 @@ var feed = (function() {
 				});
 			}
 		},
-		deleteRecord: function(selectedRows, callback) {
-			var deleteArray = selectedRows.map(function(v) {
-				return { 'delete': v };
-			});
-			console.log(deleteArray);
-
+		deleteRecord: (selectedRows, callback) => {
 			function deleteData(sdata, data) {
 				selectedRows.forEach(function(v) {
 					if (typeof sdata[data] !== 'undefined') {
@@ -449,16 +444,33 @@ var feed = (function() {
 				});
 			}
 
-			appbaseRef.bulk({
-				body: deleteArray
-			}).on('data', function(data) {
-				for (var record in sdata) {
-					if (sdata.hasOwnProperty(record)) {
-						deleteData(sdata, record);
+			if (selectedRows.length === 1) {
+				appbaseRef.delete({
+					type: selectedRows[0]._type,
+					id: selectedRows[0]._id
+				})
+					.on('data', (res) => {
+						callback(sdata);
+					})
+					.on('error', (err) => {
+						console.error('Error while trying to delete: ', err);
+					});
+			} else {
+				const deleteArray = selectedRows.map(function(v) {
+					return { delete: v };
+				});
+
+				appbaseRef.bulk({
+					body: deleteArray
+				}).on('data', function(data) {
+					for (var record in sdata) {
+						if (sdata.hasOwnProperty(record)) {
+							deleteData(sdata, record);
+						}
 					}
-				}
-				callback(sdata);
-			});
+					callback(sdata);
+				});
+			}
 		},
 		getSingleDoc: function(type, callback) {
 			appbaseRef.search({
