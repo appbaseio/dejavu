@@ -116,7 +116,7 @@ Roadmap for version `2.0.0` release, subject to change:
 2. git checkout dev
 3. npm install
 4. bower install
-5. npm start (open dejavu in the browser on http://localhost:1358/live)
+5. npm start (open dejavu in the browser on http://localhost:1358)
 
 #### Local Build
 
