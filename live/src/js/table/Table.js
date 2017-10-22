@@ -1,6 +1,6 @@
 import React from 'react';
 import throttle from 'lodash/throttle';
-/* global $ */
+/* global $, getQueryParameters */
 
 const FeatureComponent = require('../features/FeatureComponent.js');
 
@@ -33,13 +33,17 @@ class Table extends React.Component {
 		if (elem != null) {
 			// elem.style.width = this.props.visibleColumns.length * column_width + 'px';
 		}
+		let maxHeight = window.innerHeight - ((getQueryParameters() && getQueryParameters().hf) ? 150 : 280);
+		if (maxHeight > 780) {
+			maxHeight = 780;
+		}
 		return (
 			<div id="table-container" className="table-container" onScroll={this.handleScroll}>
 				<div
 					id="table-scroller"
 					className="table-scroller"
 					style={{
-						maxHeight: window.innerHeight - 280,
+						maxHeight,
 						overflow: 'hidden'
 					}}
 				>
@@ -56,7 +60,7 @@ class Table extends React.Component {
 							className="exp-scrollable"
 							id="exp-scrollable"
 							style={{
-								maxHeight: window.innerHeight - 280
+								maxHeight
 							}}
 						>
 							{this.props.renderRows}

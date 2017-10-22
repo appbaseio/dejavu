@@ -454,31 +454,31 @@ class Cell extends React.Component {
 			if (Array.isArray(data) && !isObject) {
 				const seperator = getMaxArrayView(data);
 				const arrayView = this.state.data.length > seperator ?
-				this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
-				this.state.data;
+					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
+					this.state.data;
 				const prettyView = <Pretty json={data} />;
 				const arrayEditView = (
 					<div>
-					<Select.Creatable
-					multi
-					value={
-						this.state.active ?
-						this.state.data.map(item => ({ value: item, label: item })) :
-						arrayView
-					}
-					options={
-						this.props.arrayOptions ?
-						this.props.arrayOptions.map(item => ({ value: item, label: item }))
-						.concat(this.state.data.map(item => ({ value: item, label: item }))) :
-						[]
-					}
-					disabled={!this.state.active}
-					onChange={this.handleArrayChange}
-					onBlur={() => this.setActive(false)}
-					placeholder="Enter or select values"
-					ref={(node) => { this.select = node; }}
-					clearable={false}
-					/>
+						<Select.Creatable
+							multi
+							value={
+								this.state.active ?
+								this.state.data.map(item => ({ value: item, label: item })) :
+								arrayView
+							}
+							options={
+								this.props.arrayOptions ?
+								this.props.arrayOptions.map(item => ({ value: item, label: item }))
+								.concat(this.state.data.map(item => ({ value: item, label: item }))) :
+								[]
+							}
+							disabled={!this.state.active}
+							onChange={this.handleArrayChange}
+							onBlur={() => this.setActive(false)}
+							placeholder="Enter or select values"
+							ref={(node) => { this.select = node; }}
+							clearable={false}
+						/>
 					</div>
 				);
 				toDisplay = this.state.data.length > seperator ? (
@@ -568,42 +568,42 @@ class Cell extends React.Component {
 		}
 		return (
 			<td
-			id={this.props.unique}
-			key={this.props.unique}
-			style={style}
-			className={`${tdClass} ${columnName === 'json' ? 'first-cell' : ''}`}
-			onClick={() => this.setActive(true)}
+				id={this.props.unique}
+				key={this.props.unique}
+				style={style}
+				className={`${tdClass} ${columnName === 'json' ? 'first-cell' : ''}`}
+				onClick={() => this.setActive(true)}
 			>
-			<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
-			<ErrorModal
-			errorShow={this.state.showError}
-			errorMessage={this.state.errorMessage}
-			closeErrorModal={this.hideErrorMessage}
-			/>
-			{
-				(this.props.datatype.type === 'boolean' && !isObject) ?
-				<div className="cell-input-container">
-				<Select
-				value={this.state.data}
-				options={[{ value: true, label: 'True' }, { value: false, label: 'False' }]}
-				disabled={!this.state.active}
-				onChange={this.handleBooleanSelect}
-				title={this.state.data.toString()}
-				onSelect={this.handleBooleanSelect}
-				onBlur={() => this.setActive(false)}
-				placeholder="Select value"
-				ref={(node) => { this.select = node; }}
-				clearable={false}
-				/>
-				</div> :
+				<div className={`cell-content ${Array.isArray(data) ? 'array' : this.props.datatype.type} ${this.state.active ? 'active' : ''}`}>
+					<ErrorModal
+						errorShow={this.state.showError}
+						errorMessage={this.state.errorMessage}
+						closeErrorModal={this.hideErrorMessage}
+					/>
+					{
+						(this.props.datatype.type === 'boolean' && !isObject) ?
+							<div className="cell-input-container">
+								<Select
+									value={this.state.data}
+									options={[{ value: true, label: 'True' }, { value: false, label: 'False' }]}
+									disabled={!this.state.active}
+									onChange={this.handleBooleanSelect}
+									title={this.state.data.toString()}
+									onSelect={this.handleBooleanSelect}
+									onBlur={() => this.setActive(false)}
+									placeholder="Select value"
+									ref={(node) => { this.select = node; }}
+									clearable={false}
+								/>
+							</div> :
 				this.state.active && this.props.datatype.type !== 'date' && !this.props.isImage && (typeof data === 'string' || typeof data === 'number') ?
 				<CellInput
-				name={columnName}
-				value={this.state.data}
-				handleChange={this.handleChange}
-				handleBlur={() => this.setActive(false)}
-				showTooltip={this.state.showTooltip}
-				editable={this.props.editable}
+					name={columnName}
+					value={this.state.data}
+					handleChange={this.handleChange}
+					handleBlur={() => this.setActive(false)}
+					showTooltip={this.state.showTooltip}
+					editable={this.props.editable}
 				/> :
 				toDisplay.length > 37 ?
 				<OverlayTrigger
