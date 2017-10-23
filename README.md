@@ -12,7 +12,7 @@ dejavu: The Missing Web UI for Elasticsearch
   d. [Importing JSON or CSV Data](#importing-json-or-csv-data)  
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
-5. **[Build Locally](#5-build-locally)**  
+5. **[Build Locally / Contributing](#5-build-locally)**  
 6. **[Get Dejavu](#6-get-dejavu)**  
   a. [Docker Installation](#docker-installation)  
   b. [Hosted Alternatives](#hosted-alternatives)
@@ -103,38 +103,7 @@ Roadmap for version `2.0.0` release, subject to change:
 
 ### 5. Build Locally
 
-`dev` branch is the bleeding edge version of dejavu, all new changes go here.
-
-`chrome-extension` branch is where we make chrome extension related changes.
-
-`gh-pages` branch is for the hosted app, as well as for the version that runs on https://dashboard.appbase.io.
-
-
-#### Local Installation
-
-1. git clone https://github.com/appbaseio/dejavu
-2. git checkout dev
-3. npm install
-4. bower install
-5. npm start (open dejavu in the browser on http://localhost:1358/live)
-
-#### Local Build
-
-#### `chrome-extension` branch: Chrome extension
-
-```sh
-$ npm run build_chrome_extension
-```
-
-#### `gh-pages` branch: Github hosted pages
-
-```sh
-$ npm run build_gh_pages
-```
-
-#### How to Contribute
-
-The source code is under the ``live/src`` directory. You can make pull requests against the ``dev`` branch.
+See the **[CONTRIBUTING File](https://raw.githubusercontent.com/appbaseio/dejavu/dev/CONTRIBUTING.md)**
 
 ---
 
