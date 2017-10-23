@@ -178,13 +178,13 @@ class DataTable extends React.Component {
 		var visibleColumns = [];
 		var renderColumns = [];
 		const allDatatypes = this.props.selectedTypes.reduce((allFields, currentType) => {
-			if (this.props.mappingObj[currentType].properties) {
+			if (this.props.mappingObj[currentType] && this.props.mappingObj[currentType].properties) {
 				return { ...allFields, ...this.props.mappingObj[currentType].properties };
 			}
 			return { ...allFields };
 		}, {});
 		const allMetas = this.props.selectedTypes.reduce((allFields, currentType) => {
-			if (this.props.mappingObj[currentType]._meta) {
+			if (this.props.mappingObj[currentType] && this.props.mappingObj[currentType]._meta) {
 				if (this.props.mappingObj[currentType]._meta.dejavuMeta) {
 					return { ...allFields, ...this.props.mappingObj[currentType]._meta.dejavuMeta };
 				}

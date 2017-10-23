@@ -113,7 +113,7 @@ Roadmap for version `2.0.0` release, subject to change:
 #### Local Installation
 
 1. git clone https://github.com/appbaseio/dejavu
-2. git checkout master
+2. git checkout dev
 3. npm install
 4. bower install
 5. npm start (open dejavu in the browser on http://localhost:1358/live)
