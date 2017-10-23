@@ -262,6 +262,10 @@ class DataTable extends React.Component {
 						isArrayObject = false;
 					}
 				}
+				// for array fields that are not created via dejavu
+				if (datatype && Object.hasOwnProperty.call(datatype, 'properties')) {
+					isObject = true;
+				}
 				renderRow.push(
 					<Cell
 						item={newRow[each]}
