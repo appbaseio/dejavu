@@ -110,7 +110,8 @@ class Cell extends React.Component {
 			this.state.data !== nextState.data ||
 			this.props.datatype.type === 'geo_point' ||
 			this.props.loadImages !== nextProps.loadImages ||
-			this.state.imageLoadError !== nextState.imageLoadError
+			this.state.imageLoadError !== nextState.imageLoadError ||
+			this.state.showError !== nextState.showError
 		) {
 			return true;
 		}
