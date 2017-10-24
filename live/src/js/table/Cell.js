@@ -457,8 +457,8 @@ class Cell extends React.Component {
 			if (Array.isArray(data) && !isObject) {
 				const seperator = getMaxArrayView(data);
 				const arrayView = this.state.data.length > seperator ?
-					this.state.data.slice(0, seperator).concat([{ value: '...', label: '...' }]) :
-					this.state.data;
+					this.state.data.slice(0, seperator).map(item => ({ value: item, label: item })).concat([{ value: '...', label: '...' }]) :
+					this.state.data.map(item => ({ value: item, label: item }));
 				const prettyView = <Pretty json={data} />;
 				const arrayEditView = (
 					<div>
