@@ -362,22 +362,24 @@ class Cell extends React.Component {
 			var prettyData = <Pretty json={data} />
 			toDisplay = (
 				<div className={appIdClass}>
-				<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
-				{
-					this.props.rowNumber + 1
-				}
-				</div>
-				<span className="theme-element selectrow checkbox">
-				<input onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
-				value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}/>
-				<label htmlFor={radioId}></label>
-				</span>
-				<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-				<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
-				</OverlayTrigger>
-				<span className="appId_name" onClick={this.copyId}>
-				<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
-				<span className="appId_id" title={_id}>{_id}</span>
+					<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
+						{
+							this.props.rowNumber + 1
+						}
+					</div>
+					<span className="theme-element selectrow checkbox">
+						<input
+							onChange={this.selectRecord} className="rowSelectionCheckbox" type="checkbox" name="selectRecord"
+							value={_id} data-type={_type} data-row={row} id={radioId} checked={this.state.checked}
+						/>
+						<label htmlFor={radioId} />
+					</span>
+					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
+					<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
+					</OverlayTrigger>
+					<span className="appId_name" onClick={this.copyId}>
+					<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
+					<span className="appId_id" title={_id}>{_id}</span>
 				</span>
 				</div>
 			);
@@ -417,38 +419,38 @@ class Cell extends React.Component {
 			if (this.props.datatype.type === 'geo_point' && !isObject) {
 				toDisplay = (
 					<div className="geo-point-container">
-					<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
-					<ColumnLabel>Lat</ColumnLabel>
-					{
-						this.state.geoActive.lat ?
-						<CellInput
-						name="lat"
-						value={this.state.data.lat}
-						handleChange={this.handleGeoChange}
-						handleBlur={() => this.setGeoActive('lat', false)}
-						tooltipText="Latitude should be a number between -90 and +90"
-						showTooltip={this.state.showTooltip}
-						singleLine
-						/> :
-						this.state.data.lat
-					}
-					</div>
-					<div className="geo-point-value" onClick={() => this.setGeoActive('lon', true)}>
-					<ColumnLabel>Lon</ColumnLabel>
-					{
-						this.state.geoActive.lon ?
-						<CellInput
-						name="lon"
-						value={this.state.data.lon}
-						handleChange={this.handleGeoChange}
-						handleBlur={() => this.setGeoActive('lon', false)}
-						tooltipText="Longitude should be a number between -180 and +180"
-						showTooltip={this.state.showTooltip}
-						singleLine
-						/> :
-						this.state.data.lon
-					}
-					</div>
+						<div className="geo-point-value" onClick={() => this.setGeoActive('lat', true)}>
+							<ColumnLabel>Lat</ColumnLabel>
+							{
+								this.state.geoActive.lat ?
+									<CellInput
+										name="lat"
+										value={this.state.data.lat}
+										handleChange={this.handleGeoChange}
+										handleBlur={() => this.setGeoActive('lat', false)}
+										tooltipText="Latitude should be a number between -90 and +90"
+										showTooltip={this.state.showTooltip}
+										singleLine
+									/> :
+								this.state.data.lat
+							}
+						</div>
+						<div className="geo-point-value" onClick={() => this.setGeoActive('lon', true)}>
+							<ColumnLabel>Lon</ColumnLabel>
+							{
+								this.state.geoActive.lon ?
+									<CellInput
+										name="lon"
+										value={this.state.data.lon}
+										handleChange={this.handleGeoChange}
+										handleBlur={() => this.setGeoActive('lon', false)}
+										tooltipText="Longitude should be a number between -180 and +180"
+										showTooltip={this.state.showTooltip}
+										singleLine
+									/> :
+									this.state.data.lon
+							}
+						</div>
 					</div>
 				);
 			}
@@ -499,22 +501,22 @@ class Cell extends React.Component {
 			} else if (this.props.datatype.type === 'date' && this.state.active && !isObject) {
 				toDisplay = (
 					<Datetime
-					defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
-					dateFormat={
-						this.props.datatype.format === 'basic_time' || this.props.datatype.format === 'basic_time_no_millis' ?
-						false :
-						getMomentDate(this.props.datatype.format)
-					}
-					timeFormat={
-						!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date' || this.props.datatype.format === 'date')
-					}
-					onBlur={(e) => {
-						this.handleDatetimeChange(e);
-						this.setState({ active: false });
-					}}
-					inputProps={{
-						ref: (node) => { this.select = node; }
-					}}
+						defaultValue={moment(this.state.data, getMomentDate(this.props.datatype.format))}
+						dateFormat={
+							this.props.datatype.format === 'basic_time' || this.props.datatype.format === 'basic_time_no_millis' ?
+							false :
+							getMomentDate(this.props.datatype.format)
+						}
+						timeFormat={
+							!(this.props.datatype.format === 'YYYY/MM/DD' || this.props.datatype.format === 'basic_date' || this.props.datatype.format === 'date')
+						}
+						onBlur={(e) => {
+							this.handleDatetimeChange(e);
+							this.setState({ active: false });
+						}}
+						inputProps={{
+							ref: (node) => { this.select = node; }
+						}}
 					/>
 				);
 			} else if (this.props.isImage) {
@@ -522,14 +524,14 @@ class Cell extends React.Component {
 					this.state.active ?
 					(
 						<div className="cell-img-container">
-						<CellInput
-						name={columnName}
-						value={this.state.data}
-						handleChange={this.handleChange}
-						handleBlur={() => this.setActive(false)}
-						editable={this.props.editable}
-						singleLine
-						/>
+							<CellInput
+								name={columnName}
+								value={this.state.data}
+								handleChange={this.handleChange}
+								handleBlur={() => this.setActive(false)}
+								editable={this.props.editable}
+								singleLine
+							/>
 						</div>
 					) :
 					(
