@@ -33,7 +33,7 @@ class Table extends React.Component {
 		if (elem != null) {
 			// elem.style.width = this.props.visibleColumns.length * column_width + 'px';
 		}
-		let maxHeight = window.innerHeight - ((getQueryParameters() && getQueryParameters().hf) ? 150 : 280);
+		let maxHeight = window.innerHeight - ((getQueryParameters() && getQueryParameters().hf === 'false') ? 150 : 280);
 		if (maxHeight > 780) {
 			maxHeight = 780;
 		}
