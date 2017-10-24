@@ -662,7 +662,7 @@ var HomePage = createReactClass({
 		$('.loadingBtn').addClass('loading');
 		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
 			this.setState({
-				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes)
+				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
 			});
 		}.bind(this));
 	},

@@ -689,7 +689,7 @@ var help = {
 		config = temp_config;
 		return temp_config;
 	},
-	deleteRecord: function(infoObj, actionOnRecord, removeSelection, resetData, getStreamingTypes) {
+	deleteRecord: function(infoObj, actionOnRecord, removeSelection, resetData, getStreamingTypes, reloadData) {
 		$('.loadingBtn').removeClass('loading');
 		$('#close-delete-modal').click();
 		$('.close').click();
@@ -698,6 +698,7 @@ var help = {
 		resetData();
 		setTimeout(function() {
 			getStreamingTypes();
+			reloadData();
 		}.bind(this), 1000);
 		return infoObj;
 	},
