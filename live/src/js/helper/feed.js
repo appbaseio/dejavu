@@ -26,17 +26,21 @@ let esVersion = 2;	// default ES version
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
-	appbaseRef = PASSWORD === 'test' ?
-		new Appbase({
-			url: dejavuURL,
-			appname: APPNAME
-		}) :
-		new Appbase({
-			url: dejavuURL,
-			appname: APPNAME,
-			username: USERNAME,
-			password: PASSWORD
-		});
+	// appbaseRef = PASSWORD === 'test' ?
+	// 	new Appbase({
+	// 		url: dejavuURL,
+	// 		appname: APPNAME
+	// 	}) :
+	// 	new Appbase({
+	// 		url: dejavuURL,
+	// 		appname: APPNAME,
+	// 		username: USERNAME,
+	// 		password: PASSWORD
+	// 	});
+	appbaseRef = new Appbase({
+		url: dejavuURL,
+		appname: APPNAME
+	})
 }
 
 // parse the url and detect username, password

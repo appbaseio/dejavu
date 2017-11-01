@@ -21,8 +21,6 @@ class Column extends React.Component {
 		});
 	}
 
-	getMappingPo
-
 	getDatatype(datatype) {
 		switch (datatype) {
 			case 'string':

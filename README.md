@@ -2,19 +2,18 @@ dejavu: The Missing Web UI for Elasticsearch
 ====
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md)  ![React Version](https://img.shields.io/badge/react-v15.6-brightgreen.svg)
-[![Code Climate](https://codeclimate.com/github/appbaseio/dejaVu/badges/gpa.svg)](https://codeclimate.com/github/appbaseio/dejaVu)
 
-1. **[Dejavu: Intro](#1-dejavu-intro)**   
-2. **[Features](#2-features)**  
-  a. [Filter Views](#filter-views)  
-  b. [Modern UI Elements](#modern-ui-elements)  
-  c. [Realtime Data Updates](#realtime-data-updates)  
-  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)  
+1. **[Dejavu: Intro](#1-dejavu-intro)**
+2. **[Features](#2-features)**
+  a. [Filter Views](#filter-views)
+  b. [Modern UI Elements](#modern-ui-elements)
+  c. [Realtime Data Updates](#realtime-data-updates)
+  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
-5. **[Build Locally / Contributing](#5-build-locally)**  
-6. **[Get Dejavu](#6-get-dejavu)**  
-  a. [Docker Installation](#docker-installation)  
+5. **[Build Locally / Contributing](#5-build-locally)**
+6. **[Get Dejavu](#6-get-dejavu)**
+  a. [Docker Installation](#docker-installation)
   b. [Hosted Alternatives](#hosted-alternatives)
 
 ---
@@ -37,7 +36,7 @@ Starting version `1.0.0`, dejavu is the only web UI that supports importing data
 
 Sort through the data, find things visually, hide irrelevant data and make sense of all the numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``string`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
-dejavu also supports local filters like column sorting and showing a subset of columns. 
+dejavu also supports local filters like column sorting and showing a subset of columns.
 
 dejavu also supports query filtered view, where a user can write an Elasticsearch query and the data view will be filtered according to the query.
 
@@ -85,7 +84,7 @@ This newly supported feature allows importing CSV or JSON data directly into Ela
 :fireworks: We just hit the 1.0.0 roadmap.
 
 - [x] Battle-testing with different datasets
-- [x] Feature support for advanced filtering   
+- [x] Feature support for advanced filtering
 <s>Offline detection and reconnection for realtime updates</s>
 - [x] Performance improvements while scrolling
 - [x] Support for importing and exporting data
@@ -115,7 +114,7 @@ See the **[CONTRIBUTING File](https://raw.githubusercontent.com/appbaseio/dejavu
 ```
 docker run -p 1358:1358 -d appbaseio/dejavu
 open http://localhost:1358/live
-```   
+```
 
 You can also run a specific version of **dejavu** by specifying a tag. For example, version `1.0.0` can be used by specifying the ``docker run -p 1358:1358 appbaseio/dejavu:1.0.0`` command.
 
