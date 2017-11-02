@@ -251,8 +251,7 @@ var feed = (function() {
 					match_all: {}
 				}
 			};
-			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var dataSize = Object.keys(sdata).length;
+			queryBody = queryBody || defaultQueryBody;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			var typesString = types;
 			try {
