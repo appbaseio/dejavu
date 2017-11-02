@@ -6,16 +6,7 @@
 // Get data size according to window height
 'use strict';
 
-function getDataSize() {
-	var mininum_data_size = 20;
-	var winHeight = $(window).height() - 150;
-	var rowHeight = 51;
-	var min_rows = Math.ceil(winHeight / rowHeight);
-	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
-	return rows;
-}
-
-const DATA_SIZE = getDataSize();
+const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
 var appbaseRef;
 var getMapFlag = false;
@@ -269,7 +260,7 @@ var feed = (function() {
 			} catch (e) {
 				console.log(e, types);
 			}
-			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE)
+			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + DATA_SIZE
 				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
