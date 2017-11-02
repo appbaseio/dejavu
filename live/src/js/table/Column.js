@@ -1,5 +1,6 @@
 import React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
+import get from 'lodash/get';
 
 import FilterDropdown from './FilterDropdown';
 import ColumnMappingInfo from './ColumnMappingInfo';
@@ -103,6 +104,7 @@ class Column extends React.Component {
 			(<span onClick={this.sortingInit}>{item}
 			</span>);
 		const thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
+		let showSort = true;
 
 		// get the datatype if field is not json & type mapping has properties field
 		try {
@@ -128,12 +130,23 @@ class Column extends React.Component {
 		catch (err) {
 			console.log(err);
 		}
+
+		if (datatype === 'string' || datatype === 'text') {
+			const mappingForType = this.props.mappingObj[type];
+			if (get(mappingForType, ['properties', item, 'index']) !== 'not_analyzed') {
+				const typeFields = get(mappingForType, ['properties', item, 'fields']);
+				if (typeFields && Object.keys(typeFields).some(innerField => typeFields[innerField].index === 'not_analyzed')) {
+					showSort = true;
+				} else {
+					showSort = false;
+				}
+			}
+		}
 		// console.log(type, item);
 		// Allow sorting if item is not the first column
 		// here first column is  json = type/id
 		const sortIcon = (item == 'json') ? <span></span> : <span className="sortIcon"  onClick={this.sortingInit}>
-			<i className="fa fa-chevron-up asc-icon" />
-			<i className="fa fa-chevron-down desc-icon" />
+			<i className="fa fa-sort" />
 		</span>;
 		const filterRow = this.props.externalQueryApplied ? '' : (
 			<span className="filterIcon">
@@ -160,6 +173,7 @@ class Column extends React.Component {
 								datatype !== 'geo_point' &&
 								datatype !== 'geo_location' &&
 								datatype !== 'object' &&
+								showSort &&
 								sortIcon
 							}
 							{filterRow}
