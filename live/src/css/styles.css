@@ -641,8 +641,8 @@ footer {
 	opacity: 0.2;
 }
 
-.headText:hover .sortIcon,
-.headText:hover .filterBtn,
+.sortIcon:hover,
+.filterBtn:hover,
 .headText.active .sortIcon,
 .headText.active .filterBtn {
 	opacity: 1;
