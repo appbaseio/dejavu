@@ -475,7 +475,7 @@ var HomePage = createReactClass({
 	},
 	handleSort: function(item, type, eve, order) {
 		const dataMapping = get(this.state.mappingObj, [type, 'properties', item]);
-		if (!dataMapping) {
+		if (!dataMapping && (order === undefined)) {
 			return;
 		}
 		let sortString = '&sort=';
