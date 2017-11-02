@@ -26,21 +26,17 @@ let esVersion = 2;	// default ES version
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
-	// appbaseRef = PASSWORD === 'test' ?
-	// 	new Appbase({
-	// 		url: dejavuURL,
-	// 		appname: APPNAME
-	// 	}) :
-	// 	new Appbase({
-	// 		url: dejavuURL,
-	// 		appname: APPNAME,
-	// 		username: USERNAME,
-	// 		password: PASSWORD
-	// 	});
-	appbaseRef = new Appbase({
-		url: dejavuURL,
-		appname: APPNAME
-	})
+	appbaseRef = PASSWORD === 'test' ?
+		new Appbase({
+			url: dejavuURL,
+			appname: APPNAME
+		}) :
+		new Appbase({
+			url: dejavuURL,
+			appname: APPNAME,
+			username: USERNAME,
+			password: PASSWORD
+		});
 }
 
 // parse the url and detect username, password
@@ -237,7 +233,7 @@ var feed = (function() {
 
 	// paginate and show new results when user scrolls
 	// to the bottom of the existing results.
-	function paginationSearch(typeName, from, callback, queryBody) {
+	function paginationSearch(typeName, from, callback, queryBody, sortString) {
 		if (typeName !== null) {
 			var defaultQueryBody = {
 				query: {
@@ -246,7 +242,8 @@ var feed = (function() {
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
 			var typesString = typeName.join(',');
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE;
+			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE
+				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				callback(res.hits.hits);
 			});
@@ -256,7 +253,7 @@ var feed = (function() {
 	// applies a searchStream() query on a particular ``type``
 	// to establish a continuous query connection.
 	// use applyAppbaseSearch to get the data
-	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery) {
+	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery, sortString) {
 		if (types !== null) {
 			var defaultQueryBody = {
 				query: {
@@ -272,7 +269,8 @@ var feed = (function() {
 			} catch (e) {
 				console.log(e, types);
 			}
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
+			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE)
+				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
 					var hits, flag, total;
@@ -340,9 +338,9 @@ var feed = (function() {
 		},
 		// ``paginateData()`` scrolls new results using the
 		// datatable's current length.
-		paginateData: function(total, callback, queryBody, types) {
+		paginateData: function(total, callback, queryBody, types, sortString) {
 			types = types ? types : subsetESTypes;
-			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null);
+			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null, sortString);
 		},
 		// gets all the types of the current app;
 		getTypes: function(callback) {
@@ -628,6 +626,10 @@ var feed = (function() {
 		filterQuery: function(filterQuerys, typeName, callback, setTotal) {
 			this.queryBody = this.generateFilterQuery(filterQuerys);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
+		},
+		applySort: function (type, callback, filteredQueries, setTotal, sortString) {
+			const filteredQuery = this.generateFilterQuery(filteredQueries);
+			applyStreamSearch(type, callback, filteredQuery, setTotal, null, sortString);
 		},
 		generateFilterQuery(filterQuerys) {
 			var queries = [];

@@ -322,10 +322,10 @@ var help = {
 		}
 		return selectedTypes;
 	},
-	paginateData: function(total, updateDataOnView, queryBody, selectedTypes) {
+	paginateData: function(total, updateDataOnView, queryBody, selectedTypes, sortString) {
 		feed.paginateData(total, function(update) {
 			updateDataOnView(update);
-		}.bind(this), queryBody, selectedTypes);
+		}.bind(this), queryBody, selectedTypes, sortString);
 	},
 	getStreamingTypes: function(getTotalRecord, unwatchStock, setChromeTypes) {
 		if (typeof APPNAME == 'undefined' || APPNAME == null) {
@@ -717,7 +717,7 @@ var help = {
 		});
 		return actionOnRecord;
 	},
-	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns, ) {
+	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns, ) { // TODO: check trailing comma
 		if (!checked) {
 			//visible columns - update
 			visibleColumns = visibleColumns.filter(function(v){
@@ -747,17 +747,17 @@ var help = {
 			hiddenColumns: hiddenColumns
 		};
 	},
-	removeSort: function(docs) {
-		var sortedArray = help.sortIt(docs, '_type', false);
+	removeSort: function(sortInfo) {
 		if(input_state.hasOwnProperty('sortInfo')) {
 			delete input_state.sortInfo;
 			createUrl(input_state);
 		}
 		return {
-			documents: sortedArray,
-			sortInfo: {
-				active: false
-			}
+			sortInfo: Object.assign(
+				{},
+				sortInfo,
+				{ active: false }
+			)
 		};
 	},
 	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn) {

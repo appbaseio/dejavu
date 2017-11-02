@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 var React = require('react');
 var createReactClass = require('create-react-class');
 var DataTable = require('./table/DataTable.js');
@@ -146,8 +148,9 @@ var HomePage = createReactClass({
 			this.filterSampleData(update);
 		}
 
-		//Set sort from url
-		if(decryptedData.sortInfo) {
+		// Set sort from url
+		console.log('dec', decryptedData)
+		if (decryptedData.sortInfo) {
 			this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
 		}
 	},
@@ -457,11 +460,68 @@ var HomePage = createReactClass({
 			this.setState({
 				loadingSpinner: true
 			});
-			help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
+			let sortString = '';
+			if (this.state.sortInfo.column) {
+				sortString += '&sort=' + this.state.sortInfo.column + (this.state.sortInfo.reverse ? ':desc' : '');
+			}
+			help.paginateData(
+				this.state.infoObj.total,
+				update,
+				this.getQueryBody(),
+				help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied),
+				sortString
+			);
 		}
 	},
 	handleSort: function(item, type, eve, order) {
-		this.setState(help.handleSort(item, type, eve, order, this.state.documents));
+		const dataMapping = get(this.state.mappingObj, [type, 'properties', item]);
+		if (!dataMapping) {
+			return;
+		}
+		let sortString = '&sort=';
+		const dataMappingType = get(dataMapping, 'type');
+		if (dataMappingType === 'string' || dataMappingType === 'text') {
+			if (get(dataMapping, 'index') === 'not_analyzed') {
+				sortString += item;
+			} else {
+				const dataMappingFields = get(dataMapping, 'fields');
+				if (dataMappingFields) {
+					const fieldNonAnalyzed = Object
+						.keys(dataMappingFields)
+						.find(innerField => dataMappingFields[innerField].index === 'not_analyzed');
+					if (fieldNonAnalyzed) {
+						sortString += `${item}.${fieldNonAnalyzed}`;
+					} else {
+						sortString += item;
+					}
+				}
+			}
+		} else {
+			sortString += item;
+		}
+		// reverse the order if previous reverse state was false
+		if (this.state.sortInfo.column === item && !this.state.sortInfo.reverse) {
+			sortString += ':desc';
+		}
+		feed.applySort(
+			subsetESTypes,	// subset es types
+			(update, fromStream, total) => {
+				if (!fromStream) {
+					sdata = [];
+					this.resetData(total);
+				}
+				setTimeout(function() {
+					if (update != null)
+						this.updateDataOnView(update);
+				}.bind(this), 500);
+			},
+			this.state.filterInfo.appliedFilter,
+			(total, fromStream, method) => {
+				this.streamCallback(total, fromStream, method);
+				this.setState(help.handleSort(item, type, eve, order, this.state.documents));
+			},
+			sortString
+		);
 	},
 	addRecord: function(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
@@ -607,7 +667,7 @@ var HomePage = createReactClass({
 		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
 	},
 	removeSort: function() {
-		this.setState(help.removeSort(this.state.documents));
+		this.setState(help.removeSort(this.state.sortInfo));
 	},
 	columnToggle: function() {
 		var obj = {

@@ -98,34 +98,32 @@ class DataTable extends React.Component {
 		const { arrayOptions } = this.state;
 		//If render from sort, dont change the order of columns
 		// TODO: optimize logic
-		if (!$this.props.sortInfo.active) {
-			if ($this.props.infoObj.showing != 0) {
-				fixed = ['json'];
-				columns = ['json'];
-				initial_final_cols = [{column: 'json', type: ''}];
-			} else {
-				fixed = [];
-				columns = [];
-				initial_final_cols = [];
-			}
+		if ($this.props.infoObj.showing != 0) {
+			fixed = ['json'];
+			columns = ['json'];
+			initial_final_cols = [{column: 'json', type: ''}];
+		} else {
+			fixed = [];
+			columns = [];
+			initial_final_cols = [];
+		}
 
-			fullColumns = {
-				type: '',
-				columns: columns,
-				final_cols: initial_final_cols
-			};
-			for (var each in data) {
-				fullColumns.type = data[each]['_type'];
-				for (var column in data[each]) {
-					if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked') {
-						if (fullColumns.columns.indexOf(column) <= -1) {
-							fullColumns.columns.push(column);
-							var obj = {
-								type: data[each]['_type'],
-								column: column
-							};
-							fullColumns.final_cols.push(obj);
-						}
+		fullColumns = {
+			type: '',
+			columns: columns,
+			final_cols: initial_final_cols
+		};
+		for (var each in data) {
+			fullColumns.type = data[each]['_type'];
+			for (var column in data[each]) {
+				if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked' && column !== '_score' && column !== 'sort') {
+					if (fullColumns.columns.indexOf(column) <= -1) {
+						fullColumns.columns.push(column);
+						var obj = {
+							type: data[each]['_type'],
+							column: column
+						};
+						fullColumns.final_cols.push(obj);
 					}
 				}
 			}

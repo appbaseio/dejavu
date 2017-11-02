@@ -154,7 +154,14 @@ class Column extends React.Component {
 							{itemText}
 						</div>
 						<div className="iconList">
-							{sortIcon}
+							{
+								// hide string fields not having not_analyzed
+								datatype !== 'boolean' &&
+								datatype !== 'geo_point' &&
+								datatype !== 'geo_location' &&
+								datatype !== 'object' &&
+								sortIcon
+							}
 							{filterRow}
 						</div>
 					</div>
