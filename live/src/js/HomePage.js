@@ -149,7 +149,6 @@ var HomePage = createReactClass({
 		}
 
 		// Set sort from url
-		console.log('dec', decryptedData)
 		if (decryptedData.sortInfo) {
 			this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
 		}
@@ -478,6 +477,7 @@ var HomePage = createReactClass({
 		if (!dataMapping && (order === undefined)) {
 			return;
 		}
+		const scrollLeft = document.getElementById('table-container').scrollLeft;
 		let sortString = '&sort=';
 		const dataMappingType = get(dataMapping, 'type');
 		if (dataMappingType === 'string' || dataMappingType === 'text') {
@@ -513,6 +513,7 @@ var HomePage = createReactClass({
 				setTimeout(function() {
 					if (update != null)
 						this.updateDataOnView(update);
+						document.getElementById('table-container').scrollLeft = scrollLeft;
 				}.bind(this), 500);
 			},
 			this.state.filterInfo.appliedFilter,
