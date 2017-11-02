@@ -717,7 +717,7 @@ var help = {
 		});
 		return actionOnRecord;
 	},
-	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns, ) { // TODO: check trailing comma
+	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns) {
 		if (!checked) {
 			//visible columns - update
 			visibleColumns = visibleColumns.filter(function(v){
