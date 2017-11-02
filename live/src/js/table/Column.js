@@ -145,8 +145,16 @@ class Column extends React.Component {
 		// console.log(type, item);
 		// Allow sorting if item is not the first column
 		// here first column is  json = type/id
+		let sortOrderIcon = <i className="fa fa-sort-asc" />;
+		if (sortInfo.column === item && sortInfo.reverse) {
+			sortOrderIcon = <i className="fa fa-sort-desc" />;
+		}
 		const sortIcon = (item == 'json') ? <span></span> : <span className="sortIcon"  onClick={this.sortingInit}>
-			<i className="fa fa-sort" />
+			{
+				sortInfo.column === item ?
+					sortOrderIcon :
+					<i className="fa fa-sort" />
+			}
 		</span>;
 		const filterRow = this.props.externalQueryApplied ? '' : (
 			<span className="filterIcon">
