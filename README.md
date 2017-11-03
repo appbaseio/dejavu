@@ -10,9 +10,8 @@ Thus started the journey of dejavu, with a goal of 100% client side rendering an
 ### 1. Dejavu Intro
 
 docker run -p 1358:1358 -d appbaseio/dejavu
-open http://localhost:1358
+open http://localhost:1358/live
 
-```
 
 To run the chrome extension directly from github, do the following:
 
@@ -26,7 +25,7 @@ You can also run a specific version of **dejavu** by specifying a tag. For examp
 
 ![Load unpacked extension](https://i.imgur.com/AK52iP6.png)
 
-Click on "Load unpacked extension..".
+Click on `Load unpacked extension...`
 
 ![](https://i.imgur.com/tDbvAkf.png)
 
