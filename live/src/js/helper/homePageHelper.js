@@ -54,7 +54,7 @@ var help = {
 			sortOrder = reverse ? -1 : 1;
 			if (property == 'json')
 				property = '_type';
-			if (isNaN(a[property]))
+			if (isNaN(a[property]) && !Array.isArray(a[property]))
 				var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
 			else
 				var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
@@ -190,8 +190,8 @@ var help = {
 
 		//if sort is already applied
 		if (sortInfo.active) {
-			sortedArray = help.sortIt(sdata_values, sortInfo.column, sortInfo.reverse);
-
+			// sortedArray = help.sortIt(sdata_values, sortInfo.column, sortInfo.reverse);
+			sortedArray = sdata_values;
 		}
 		//by default sort it by typename by passing json field
 		else if (!sdata_key) {
@@ -322,10 +322,10 @@ var help = {
 		}
 		return selectedTypes;
 	},
-	paginateData: function(total, updateDataOnView, queryBody, selectedTypes) {
+	paginateData: function(total, updateDataOnView, queryBody, selectedTypes, sortString) {
 		feed.paginateData(total, function(update) {
 			updateDataOnView(update);
-		}.bind(this), queryBody, selectedTypes);
+		}.bind(this), queryBody, selectedTypes, sortString);
 	},
 	getStreamingTypes: function(getTotalRecord, unwatchStock, setChromeTypes) {
 		if (typeof APPNAME == 'undefined' || APPNAME == null) {
@@ -502,6 +502,7 @@ var help = {
 		var storObj = {
 			active: true,
 			column: item,
+			type: type,
 			reverse: order
 		};
 		res.sortInfo = storObj;
@@ -513,7 +514,7 @@ var help = {
 		input_state.sortInfo = sort_state;
 		createUrl(input_state);
 		var sortedArray = help.sortIt(docs, item, order);
-		res.documents = sortedArray;
+		res.documents = docs;
 		return res;
 	},
 	addRecord: function(editorref, indexCall) {
@@ -689,7 +690,7 @@ var help = {
 		config = temp_config;
 		return temp_config;
 	},
-	deleteRecord: function(infoObj, actionOnRecord, removeSelection, resetData, getStreamingTypes) {
+	deleteRecord: function(infoObj, actionOnRecord, removeSelection, resetData, getStreamingTypes, reloadData) {
 		$('.loadingBtn').removeClass('loading');
 		$('#close-delete-modal').click();
 		$('.close').click();
@@ -698,6 +699,7 @@ var help = {
 		resetData();
 		setTimeout(function() {
 			getStreamingTypes();
+			reloadData();
 		}.bind(this), 1000);
 		return infoObj;
 	},
@@ -716,7 +718,7 @@ var help = {
 		});
 		return actionOnRecord;
 	},
-	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns, ) {
+	toggleIt: function(elementId, checked, visibleColumns, hiddenColumns) {
 		if (!checked) {
 			//visible columns - update
 			visibleColumns = visibleColumns.filter(function(v){
@@ -746,20 +748,20 @@ var help = {
 			hiddenColumns: hiddenColumns
 		};
 	},
-	removeSort: function(docs) {
-		var sortedArray = help.sortIt(docs, '_type', false);
+	removeSort: function(sortInfo) {
 		if(input_state.hasOwnProperty('sortInfo')) {
 			delete input_state.sortInfo;
 			createUrl(input_state);
 		}
 		return {
-			documents: sortedArray,
-			sortInfo: {
-				active: false
-			}
+			sortInfo: Object.assign(
+				{},
+				sortInfo,
+				{ active: false }
+			)
 		};
 	},
-	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn) {
+	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn, callback) {
 		var appliedFilter = filterInfo.appliedFilter;
 		appliedFilter.splice(index, 1);
 		var obj = {
@@ -783,6 +785,9 @@ var help = {
 			removeSelection();
 		} else {
 			applyFilterFn(subsetESTypes);
+		}
+		if (callback) {
+			setTimeout(callback, 700);
 		}
 		return {
 			filterInfo: obj

@@ -98,34 +98,32 @@ class DataTable extends React.Component {
 		const { arrayOptions } = this.state;
 		//If render from sort, dont change the order of columns
 		// TODO: optimize logic
-		if (!$this.props.sortInfo.active) {
-			if ($this.props.infoObj.showing != 0) {
-				fixed = ['json'];
-				columns = ['json'];
-				initial_final_cols = [{column: 'json', type: ''}];
-			} else {
-				fixed = [];
-				columns = [];
-				initial_final_cols = [];
-			}
+		if ($this.props.infoObj.showing != 0) {
+			fixed = ['json'];
+			columns = ['json'];
+			initial_final_cols = [{column: 'json', type: ''}];
+		} else {
+			fixed = [];
+			columns = [];
+			initial_final_cols = [];
+		}
 
-			fullColumns = {
-				type: '',
-				columns: columns,
-				final_cols: initial_final_cols
-			};
-			for (var each in data) {
-				fullColumns.type = data[each]['_type'];
-				for (var column in data[each]) {
-					if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked') {
-						if (fullColumns.columns.indexOf(column) <= -1) {
-							fullColumns.columns.push(column);
-							var obj = {
-								type: data[each]['_type'],
-								column: column
-							};
-							fullColumns.final_cols.push(obj);
-						}
+		fullColumns = {
+			type: '',
+			columns: columns,
+			final_cols: initial_final_cols
+		};
+		for (var each in data) {
+			fullColumns.type = data[each]['_type'];
+			for (var column in data[each]) {
+				if (fixed.indexOf(column) <= -1 && column != '_id' && column != '_type' && column != '_checked' && column !== '_score' && column !== 'sort') {
+					if (fullColumns.columns.indexOf(column) <= -1) {
+						fullColumns.columns.push(column);
+						var obj = {
+							type: data[each]['_type'],
+							column: column
+						};
+						fullColumns.final_cols.push(obj);
 					}
 				}
 			}
@@ -203,7 +201,16 @@ class DataTable extends React.Component {
 				// right.
 				if (fixed.indexOf(columns[each]) <= -1) {
 					if (data[row].hasOwnProperty([columns[each]])) {
-						var cell = data[row][columns[each]];
+						const cell = data[row][columns[each]];
+						if (
+							Array.isArray(cell) &&
+							this.props.sortInfo &&
+							this.props.sortInfo.active &&
+							this.props.sortInfo.column === columns[each] &&
+							this.props.sortInfo.reverse
+						) {
+							cell.reverse();
+						}
 						newRow[columns[each]] = cell;
 					} else {
 						// Just to make sure it doesn't display
@@ -261,6 +268,10 @@ class DataTable extends React.Component {
 						isObject = false;
 						isArrayObject = false;
 					}
+				}
+				// for array fields that are not created via dejavu
+				if (datatype && Object.hasOwnProperty.call(datatype, 'properties')) {
+					isObject = true;
 				}
 				renderRow.push(
 					<Cell
@@ -354,6 +365,17 @@ class DataTable extends React.Component {
 				/>
 
 				<div className="outsideTable">
+					{
+						this.props.isLoadingData &&
+						<div
+							className="sort-loading-spinner"
+							style={{
+								paddingLeft: (window.innerWidth - 270) / 2
+							}}
+						>
+							<i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw page-loading-spinner-icon" aria-hidden="true" />
+						</div>
+					}
 					<Table
 						renderColumns={renderColumns}
 						visibleColumns = {visibleColumns}
@@ -367,9 +389,10 @@ class DataTable extends React.Component {
 						userTouchAdd={this.props.infoObj.userTouchAdd}
 						editable={this.state.editable}
 						loadingSpinner={this.props.loadingSpinner}
+						isLoadingData={this.props.isLoadingData}
 					/>
 					{
-						this.props.selectedTypes.length && this.state.editable ?
+						this.props.selectedTypes.length && this.state.editable && !this.props.isLoadingData ?
 							<AddColumnButton
 								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}

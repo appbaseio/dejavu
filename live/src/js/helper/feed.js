@@ -6,16 +6,7 @@
 // Get data size according to window height
 'use strict';
 
-function getDataSize() {
-	var mininum_data_size = 20;
-	var winHeight = $(window).height() - 150;
-	var rowHeight = 51;
-	var min_rows = Math.ceil(winHeight / rowHeight);
-	var rows = min_rows < mininum_data_size ? mininum_data_size : min_rows;
-	return rows;
-}
-
-const DATA_SIZE = getDataSize();
+const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
 var appbaseRef;
 var getMapFlag = false;
@@ -47,22 +38,24 @@ function filterUrl(url) {
 			password: 'test',
 			url: url
 		};
-		var urlsplit = url.split(':');
-		try {
-			obj.username = urlsplit[1].replace('//', '');
-			var httpPrefix = url.split('://');
-			if (urlsplit[2]) {
-				var pwsplit = urlsplit[2].split('@');
-				obj.password = pwsplit[0];
-				if (url.indexOf('@') !== -1) {
-					obj.url = httpPrefix[0] + '://' + pwsplit[1];
-					if (urlsplit[3]) {
-						obj.url += ':' + urlsplit[3];
+		if (url.indexOf('@') !== -1) {
+			var urlsplit = url.split(':');
+			try {
+				obj.username = urlsplit[1].replace('//', '');
+				var httpPrefix = url.split('://');
+				if (urlsplit[2]) {
+					var pwsplit = urlsplit[2].split('@');
+					obj.password = pwsplit[0];
+					if (url.indexOf('@') !== -1) {
+						obj.url = httpPrefix[0] + '://' + pwsplit[1];
+						if (urlsplit[3]) {
+							obj.url += ':' + urlsplit[3];
+						}
 					}
 				}
+			} catch (e) {
+				console.log(e);
 			}
-		} catch (e) {
-			console.log(e);
 		}
 		return obj;
 	} else {
@@ -233,7 +226,7 @@ var feed = (function() {
 
 	// paginate and show new results when user scrolls
 	// to the bottom of the existing results.
-	function paginationSearch(typeName, from, callback, queryBody) {
+	function paginationSearch(typeName, from, callback, queryBody, sortString) {
 		if (typeName !== null) {
 			var defaultQueryBody = {
 				query: {
@@ -242,7 +235,8 @@ var feed = (function() {
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
 			var typesString = typeName.join(',');
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE;
+			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE
+				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				callback(res.hits.hits);
 			});
@@ -252,15 +246,14 @@ var feed = (function() {
 	// applies a searchStream() query on a particular ``type``
 	// to establish a continuous query connection.
 	// use applyAppbaseSearch to get the data
-	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery) {
+	function applyStreamSearch(types, callback, queryBody, setTotal, streamQuery, sortString) {
 		if (types !== null) {
 			var defaultQueryBody = {
 				query: {
 					match_all: {}
 				}
 			};
-			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var dataSize = Object.keys(sdata).length;
+			queryBody = queryBody || defaultQueryBody;
 			sdata = {}; // we can't reliably keep state once type info changes, hence we fetch everything again.
 			var typesString = types;
 			try {
@@ -268,7 +261,8 @@ var feed = (function() {
 			} catch (e) {
 				console.log(e, types);
 			}
-			var finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + Math.max(dataSize, DATA_SIZE);
+			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + 0 + '&size=' + DATA_SIZE
+				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
 				try {
 					var hits, flag, total;
@@ -336,9 +330,9 @@ var feed = (function() {
 		},
 		// ``paginateData()`` scrolls new results using the
 		// datatable's current length.
-		paginateData: function(total, callback, queryBody, types) {
+		paginateData: function(total, callback, queryBody, types, sortString) {
 			types = types ? types : subsetESTypes;
-			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null);
+			paginationSearch(types, Object.keys(sdata).length, callback, (queryBody !== null) ? queryBody : null, sortString);
 		},
 		// gets all the types of the current app;
 		getTypes: function(callback) {
@@ -624,6 +618,10 @@ var feed = (function() {
 		filterQuery: function(filterQuerys, typeName, callback, setTotal) {
 			this.queryBody = this.generateFilterQuery(filterQuerys);
 			applyStreamSearch(typeName, callback, this.queryBody, setTotal);
+		},
+		applySort: function (type, callback, filteredQueries, setTotal, sortString) {
+			const filteredQuery = this.generateFilterQuery(filteredQueries);
+			applyStreamSearch(type, callback, filteredQuery, setTotal, null, sortString);
 		},
 		generateFilterQuery(filterQuerys) {
 			var queries = [];

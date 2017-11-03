@@ -641,8 +641,8 @@ footer {
 	opacity: 0.2;
 }
 
-.headText:hover .sortIcon,
-.headText:hover .filterBtn,
+.sortIcon:hover,
+.filterBtn:hover,
 .headText.active .sortIcon,
 .headText.active .filterBtn {
 	opacity: 1;
@@ -1266,6 +1266,10 @@ iframe {
 	z-index: 8 !important;
 }
 
+.display-none {
+	display: none;
+}
+
 .rdtActive {
 	background-color: #0087ff !important;
 	border-radius: 4px !important;
@@ -1548,6 +1552,10 @@ ul#setApp {
 .page-loading-spinner {
 	position: absolute;
 	padding-top: 10px;
+}
+
+.sort-loading-spinner {
+	padding-top: 20px;
 }
 
 .page-loading-spinner-icon {
