@@ -201,7 +201,16 @@ class DataTable extends React.Component {
 				// right.
 				if (fixed.indexOf(columns[each]) <= -1) {
 					if (data[row].hasOwnProperty([columns[each]])) {
-						var cell = data[row][columns[each]];
+						const cell = data[row][columns[each]];
+						if (
+							Array.isArray(cell) &&
+							this.props.sortInfo &&
+							this.props.sortInfo.active &&
+							this.props.sortInfo.column === columns[each] &&
+							this.props.sortInfo.reverse
+						) {
+							cell.reverse();
+						}
 						newRow[columns[each]] = cell;
 					} else {
 						// Just to make sure it doesn't display
