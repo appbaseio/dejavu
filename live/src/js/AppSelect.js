@@ -17,7 +17,7 @@ class AppSelect extends React.Component {
 				searchValue: config.appname,
 				touched: true
 			});
-		}  
+		}
 	}
 
 	handleInput = (event) => {

@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 var React = require('react');
 var createReactClass = require('create-react-class');
 var DataTable = require('./table/DataTable.js');
@@ -33,6 +35,7 @@ var HomePage = createReactClass({
 			totalRecord: 0,
 			pageLoading: false,
 			loadingSpinner: false,
+			isLoadingData: false,
 			externalQueryApplied: false,
 			externalQueryTotal: 0,
 			extQuery: null,
@@ -146,9 +149,9 @@ var HomePage = createReactClass({
 			this.filterSampleData(update);
 		}
 
-		//Set sort from url
-		if(decryptedData.sortInfo) {
-			this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
+		// Set sort from url
+		if (decryptedData.sortInfo) {
+			this.handleSort(decryptedData.sortInfo.column, decryptedData.sortInfo.type, null, decryptedData.sortInfo.reverse);
 		}
 	},
 	streamCallback: function(total, fromStream, method) {
@@ -457,11 +460,75 @@ var HomePage = createReactClass({
 			this.setState({
 				loadingSpinner: true
 			});
-			help.paginateData(this.state.infoObj.total, update, this.getQueryBody(), help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied));
+			let sortString = '';
+			if (this.state.sortInfo.column) {
+				sortString += '&sort=' + this.state.sortInfo.column + (this.state.sortInfo.reverse ? ':desc' : '');
+			}
+			help.paginateData(
+				this.state.infoObj.total,
+				update,
+				this.getQueryBody(),
+				help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied),
+				sortString
+			);
 		}
 	},
 	handleSort: function(item, type, eve, order) {
-		this.setState(help.handleSort(item, type, eve, order, this.state.documents));
+		const dataMapping = get(this.state.mappingObj, [type, 'properties', item]);
+		if (!dataMapping && (order === undefined)) {
+			return;
+		}
+		this.setState({ isLoadingData: true });
+		const scrollContainer = document.getElementById('table-container');
+		const scrollLeft = scrollContainer ? scrollContainer.scrollLeft : 0;
+		let sortString = '&sort=';
+		const dataMappingType = get(dataMapping, 'type');
+		if (dataMappingType === 'string' || dataMappingType === 'text') {
+			if (get(dataMapping, 'index') === 'not_analyzed') {
+				sortString += item;
+			} else {
+				const dataMappingFields = get(dataMapping, 'fields');
+				if (dataMappingFields) {
+					const fieldNonAnalyzed = Object
+						.keys(dataMappingFields)
+						.find(innerField => dataMappingFields[innerField].index === 'not_analyzed');
+					if (fieldNonAnalyzed) {
+						sortString += `${item}.${fieldNonAnalyzed}`;
+					} else {
+						sortString += item;
+					}
+				}
+			}
+		} else {
+			sortString += item;
+		}
+		// reverse the order if previous reverse state was false
+		if ((this.state.sortInfo.column === item && !this.state.sortInfo.reverse) || order) {
+			sortString += ':desc';
+		}
+		feed.applySort(
+			subsetESTypes,	// subset es types
+			(update, fromStream, total) => {
+				if (!fromStream) {
+					sdata = [];
+					this.resetData(total);
+				}
+				setTimeout(function() {
+					if (update != null)
+						this.updateDataOnView(update);
+						this.setState({ isLoadingData: false })
+						if (scrollContainer) {
+							scrollContainer.scrollLeft = scrollLeft;
+						}
+				}.bind(this), 500);
+			},
+			this.state.filterInfo.appliedFilter,
+			(total, fromStream, method) => {
+				this.streamCallback(total, fromStream, method);
+				this.setState(help.handleSort(item, type, eve, order, this.state.documents));
+			},
+			sortString
+		);
 	},
 	addRecord: function(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
@@ -551,6 +618,7 @@ var HomePage = createReactClass({
 		const helpFilter = help.applyFilter.call(this, typeName, columnName, method, value, analyzed, this.state.filterInfo);
 		this.setState(helpFilter);
 		var filterInfo = helpFilter.filterInfo;
+		this.setState({ isLoadingData: true });
 		// method, columnName, filterVal, subsetESTypes, analyzed
 		if (typeName != '' && typeName != null) {
 			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
@@ -561,6 +629,7 @@ var HomePage = createReactClass({
 				setTimeout(function() {
 					if (update != null)
 						this.updateDataOnView(update);
+						this.setState({ isLoadingData: false });
 				}.bind(this), 500);
 			}.bind(this), function(total, fromStream, method) {
 				this.streamCallback(total, fromStream, method);
@@ -604,10 +673,12 @@ var HomePage = createReactClass({
 		}
 	},
 	removeFilter: function(index) {
-		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
+		this.setState({ isLoadingData: true });
+		const callback = () => this.setState({ isLoadingData: false });
+		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter, callback));
 	},
 	removeSort: function() {
-		this.setState(help.removeSort(this.state.documents));
+		this.setState(help.removeSort(this.state.sortInfo));
 	},
 	columnToggle: function() {
 		var obj = {
@@ -662,7 +733,7 @@ var HomePage = createReactClass({
 		$('.loadingBtn').addClass('loading');
 		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
 			this.setState({
-				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes)
+				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
 			});
 		}.bind(this));
 	},
@@ -867,6 +938,7 @@ var HomePage = createReactClass({
 								removeExternalQuery={this.removeExternalQuery}
 								dejavuExportData={this.state.dejavuExportData}
 								reloadMapping={this.setMap}
+								isLoadingData={this.state.isLoadingData}
 							/>
 						</div>
 						{footer}
