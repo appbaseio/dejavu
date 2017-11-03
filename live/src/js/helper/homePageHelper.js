@@ -760,7 +760,7 @@ var help = {
 			)
 		};
 	},
-	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn) {
+	removeFilter: function(index, externalQueryApplied, filterInfo, applyFilter, resetData, getStreamingData, removeSelection, applyFilterFn, callback) {
 		var appliedFilter = filterInfo.appliedFilter;
 		appliedFilter.splice(index, 1);
 		var obj = {
@@ -784,6 +784,9 @@ var help = {
 			removeSelection();
 		} else {
 			applyFilterFn(subsetESTypes);
+		}
+		if (callback) {
+			setTimeout(callback, 700);
 		}
 		return {
 			filterInfo: obj

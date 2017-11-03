@@ -1550,6 +1550,10 @@ ul#setApp {
 	padding-top: 10px;
 }
 
+.sort-loading-spinner {
+	padding-top: 20px;
+}
+
 .page-loading-spinner-icon {
 	font-size: 18px;
 }

@@ -35,6 +35,7 @@ var HomePage = createReactClass({
 			totalRecord: 0,
 			pageLoading: false,
 			loadingSpinner: false,
+			isLoadingData: false,
 			externalQueryApplied: false,
 			externalQueryTotal: 0,
 			extQuery: null,
@@ -477,6 +478,7 @@ var HomePage = createReactClass({
 		if (!dataMapping && (order === undefined)) {
 			return;
 		}
+		this.setState({ isLoadingData: true });
 		const scrollLeft = document.getElementById('table-container').scrollLeft;
 		let sortString = '&sort=';
 		const dataMappingType = get(dataMapping, 'type');
@@ -513,6 +515,7 @@ var HomePage = createReactClass({
 				setTimeout(function() {
 					if (update != null)
 						this.updateDataOnView(update);
+						this.setState({ isLoadingData: false })
 						document.getElementById('table-container').scrollLeft = scrollLeft;
 				}.bind(this), 500);
 			},
@@ -612,6 +615,7 @@ var HomePage = createReactClass({
 		const helpFilter = help.applyFilter.call(this, typeName, columnName, method, value, analyzed, this.state.filterInfo);
 		this.setState(helpFilter);
 		var filterInfo = helpFilter.filterInfo;
+		this.setState({ isLoadingData: true });
 		// method, columnName, filterVal, subsetESTypes, analyzed
 		if (typeName != '' && typeName != null) {
 			feed.filterQuery(filterInfo.appliedFilter, subsetESTypes, function(update, fromStream, total) {
@@ -622,6 +626,7 @@ var HomePage = createReactClass({
 				setTimeout(function() {
 					if (update != null)
 						this.updateDataOnView(update);
+						this.setState({ isLoadingData: false });
 				}.bind(this), 500);
 			}.bind(this), function(total, fromStream, method) {
 				this.streamCallback(total, fromStream, method);
@@ -665,7 +670,9 @@ var HomePage = createReactClass({
 		}
 	},
 	removeFilter: function(index) {
-		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter));
+		this.setState({ isLoadingData: true });
+		const callback = () => this.setState({ isLoadingData: false });
+		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter, callback));
 	},
 	removeSort: function() {
 		this.setState(help.removeSort(this.state.sortInfo));
@@ -928,6 +935,7 @@ var HomePage = createReactClass({
 								removeExternalQuery={this.removeExternalQuery}
 								dejavuExportData={this.state.dejavuExportData}
 								reloadMapping={this.setMap}
+								isLoadingData={this.state.isLoadingData}
 							/>
 						</div>
 						{footer}
