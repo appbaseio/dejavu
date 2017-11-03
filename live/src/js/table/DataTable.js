@@ -357,30 +357,31 @@ class DataTable extends React.Component {
 
 				<div className="outsideTable">
 					{
-						this.props.isLoadingData ?
-							<div
-								className="sort-loading-spinner"
-								style={{
-									paddingLeft: (window.innerWidth - 270) / 2
-								}}
-							>
-								<i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw page-loading-spinner-icon" aria-hidden="true" />
-							</div> :
-							<Table
-								renderColumns={renderColumns}
-								visibleColumns = {visibleColumns}
-								renderRows={renderRows}
-								scrollFunction={this.props.scrollFunction}
-								selectedTypes={this.props.selectedTypes}
-								filterInfo={this.props.filterInfo}
-								types={this.props.Types}
-								addRecord ={this.props.addRecord}
-								getTypeDoc={this.props.getTypeDoc}
-								userTouchAdd={this.props.infoObj.userTouchAdd}
-								editable={this.state.editable}
-								loadingSpinner={this.props.loadingSpinner}
-							/>
+						this.props.isLoadingData &&
+						<div
+							className="sort-loading-spinner"
+							style={{
+								paddingLeft: (window.innerWidth - 270) / 2
+							}}
+						>
+							<i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw page-loading-spinner-icon" aria-hidden="true" />
+						</div>
 					}
+					<Table
+						renderColumns={renderColumns}
+						visibleColumns = {visibleColumns}
+						renderRows={renderRows}
+						scrollFunction={this.props.scrollFunction}
+						selectedTypes={this.props.selectedTypes}
+						filterInfo={this.props.filterInfo}
+						types={this.props.Types}
+						addRecord ={this.props.addRecord}
+						getTypeDoc={this.props.getTypeDoc}
+						userTouchAdd={this.props.infoObj.userTouchAdd}
+						editable={this.state.editable}
+						loadingSpinner={this.props.loadingSpinner}
+						isLoadingData={this.props.isLoadingData}
+					/>
 					{
 						this.props.selectedTypes.length && this.state.editable && !this.props.isLoadingData ?
 							<AddColumnButton

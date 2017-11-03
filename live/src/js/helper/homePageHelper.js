@@ -54,7 +54,7 @@ var help = {
 			sortOrder = reverse ? -1 : 1;
 			if (property == 'json')
 				property = '_type';
-			if (isNaN(a[property]))
+			if (isNaN(a[property]) && !Array.isArray(a[property]))
 				var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
 			else
 				var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
@@ -190,8 +190,8 @@ var help = {
 
 		//if sort is already applied
 		if (sortInfo.active) {
-			sortedArray = help.sortIt(sdata_values, sortInfo.column, sortInfo.reverse);
-
+			// sortedArray = help.sortIt(sdata_values, sortInfo.column, sortInfo.reverse);
+			sortedArray = sdata_values;
 		}
 		//by default sort it by typename by passing json field
 		else if (!sdata_key) {
@@ -502,6 +502,7 @@ var help = {
 		var storObj = {
 			active: true,
 			column: item,
+			type: type,
 			reverse: order
 		};
 		res.sortInfo = storObj;
@@ -513,7 +514,7 @@ var help = {
 		input_state.sortInfo = sort_state;
 		createUrl(input_state);
 		var sortedArray = help.sortIt(docs, item, order);
-		res.documents = sortedArray;
+		res.documents = docs;
 		return res;
 	},
 	addRecord: function(editorref, indexCall) {

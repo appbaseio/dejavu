@@ -38,7 +38,7 @@ class Table extends React.Component {
 			maxHeight = 780;
 		}
 		return (
-			<div id="table-container" className="table-container" onScroll={this.handleScroll}>
+			<div id="table-container" className={`table-container ${this.props.isLoadingData ? 'display-none' : ''}`} onScroll={this.handleScroll}>
 				<div
 					id="table-scroller"
 					className="table-scroller"

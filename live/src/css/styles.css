@@ -1266,6 +1266,10 @@ iframe {
 	z-index: 8 !important;
 }
 
+.display-none {
+	display: none;
+}
+
 .rdtActive {
 	background-color: #0087ff !important;
 	border-radius: 4px !important;

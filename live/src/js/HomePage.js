@@ -151,7 +151,7 @@ var HomePage = createReactClass({
 
 		// Set sort from url
 		if (decryptedData.sortInfo) {
-			this.handleSort(decryptedData.sortInfo.column, null, null, decryptedData.sortInfo.reverse);
+			this.handleSort(decryptedData.sortInfo.column, decryptedData.sortInfo.type, null, decryptedData.sortInfo.reverse);
 		}
 	},
 	streamCallback: function(total, fromStream, method) {
@@ -479,7 +479,8 @@ var HomePage = createReactClass({
 			return;
 		}
 		this.setState({ isLoadingData: true });
-		const scrollLeft = document.getElementById('table-container').scrollLeft;
+		const scrollContainer = document.getElementById('table-container');
+		const scrollLeft = scrollContainer ? scrollContainer.scrollLeft : 0;
 		let sortString = '&sort=';
 		const dataMappingType = get(dataMapping, 'type');
 		if (dataMappingType === 'string' || dataMappingType === 'text') {
@@ -502,7 +503,7 @@ var HomePage = createReactClass({
 			sortString += item;
 		}
 		// reverse the order if previous reverse state was false
-		if (this.state.sortInfo.column === item && !this.state.sortInfo.reverse) {
+		if ((this.state.sortInfo.column === item && !this.state.sortInfo.reverse) || order) {
 			sortString += ':desc';
 		}
 		feed.applySort(
@@ -516,7 +517,9 @@ var HomePage = createReactClass({
 					if (update != null)
 						this.updateDataOnView(update);
 						this.setState({ isLoadingData: false })
-						document.getElementById('table-container').scrollLeft = scrollLeft;
+						if (scrollContainer) {
+							scrollContainer.scrollLeft = scrollLeft;
+						}
 				}.bind(this), 500);
 			},
 			this.state.filterInfo.appliedFilter,
