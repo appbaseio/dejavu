@@ -38,22 +38,24 @@ function filterUrl(url) {
 			password: 'test',
 			url: url
 		};
-		var urlsplit = url.split(':');
-		try {
-			obj.username = urlsplit[1].replace('//', '');
-			var httpPrefix = url.split('://');
-			if (urlsplit[2]) {
-				var pwsplit = urlsplit[2].split('@');
-				obj.password = pwsplit[0];
-				if (url.indexOf('@') !== -1) {
-					obj.url = httpPrefix[0] + '://' + pwsplit[1];
-					if (urlsplit[3]) {
-						obj.url += ':' + urlsplit[3];
+		if (url.indexOf('@') !== -1) {
+			var urlsplit = url.split(':');
+			try {
+				obj.username = urlsplit[1].replace('//', '');
+				var httpPrefix = url.split('://');
+				if (urlsplit[2]) {
+					var pwsplit = urlsplit[2].split('@');
+					obj.password = pwsplit[0];
+					if (url.indexOf('@') !== -1) {
+						obj.url = httpPrefix[0] + '://' + pwsplit[1];
+						if (urlsplit[3]) {
+							obj.url += ':' + urlsplit[3];
+						}
 					}
 				}
+			} catch (e) {
+				console.log(e);
 			}
-		} catch (e) {
-			console.log(e);
 		}
 		return obj;
 	} else {
