@@ -5,17 +5,17 @@ dejavu: The Missing Web UI for Elasticsearch
  [![Docker Pulls](https://img.shields.io/docker/pulls/appbaseio/dejavu.svg)](https://hub.docker.com/r/appbaseio/dejavu/)
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**
-2. **[Features](#2-features)**
-  a. [Filter Views](#filter-views)
-  b. [Modern UI Elements](#modern-ui-elements)
-  c. [Realtime Data Updates](#realtime-data-updates)
-  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)
+2. **[Features](#2-features)**  
+  a. [Filter Views](#filter-views)  
+  b. [Modern UI Elements](#modern-ui-elements)  
+  c. [Realtime Data Updates](#realtime-data-updates)  
+  d. [Importing JSON or CSV Data](#importing-json-or-csv-data)  
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
 6. **[Get Dejavu](#6-get-dejavu)**
-  a. [Docker Installation](#docker-installation)
-  b. [Hosted Alternatives](#hosted-alternatives)
+  a. [Docker Installation](#docker-installation)  
+  b. [Hosted Alternatives](#hosted-alternatives)  
 
 ---
 
