@@ -2,7 +2,7 @@
 // authentication and streaming data from your
 // endpoint.
 // **Configs:** Appname and Credentials
-/* global $, Appbase */
+/* global $, Appbase, config */
 // Get data size according to window height
 'use strict';
 
@@ -14,6 +14,7 @@ var appAuth = true;
 var exportJsonData = [];
 var counterStream, streamRef;
 let esVersion = 2;	// default ES version
+const appbaseApi = 'api-staging.appbase.io';	// scalr.api.appbase.io
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
@@ -80,7 +81,7 @@ if (BRANCH === 'dev' || BRANCH === 'master' || BRANCH === 'gh-pages') {
 		APPNAME = res.appname;
 		USERNAME = res.username;
 		PASSWORD = res.password;
-		APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@scalr.api.appbase.io';
+		APPURL = 'https://' + USERNAME + ':' + PASSWORD + '@' + appbaseApi;
 		storageService.setItem('esurl', APPURL);
 		storageService.setItem('appname', APPNAME);
 		config = {
@@ -120,7 +121,7 @@ function beforeInit() {
 		};
 
 		// update ES version if not appbase domain
-		if (dejavuURL.indexOf('scalr.api.appbase.io') === -1) {
+		if (dejavuURL.indexOf(appbaseApi) === -1) {
 			$.ajax({
 				type: 'GET',
 				url: dejavuURL,
@@ -137,7 +138,44 @@ function beforeInit() {
 				}
 			});
 		} else {
-			esVersion = 2;
+			if (config && config.url) {
+				$.ajax({
+					type: 'GET',
+					beforeSend: (request) => {
+						if (PASSWORD !== 'test') {
+							request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+						}
+					},
+					url: config.url + '/' + config.appname + '/_settings?human',
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json',
+					success: (res) => {
+						if (
+							res &&
+							res[APPNAME] &&
+							res[APPNAME].settings &&
+							res[APPNAME].settings.index &&
+							res[APPNAME].settings.index.version &&
+							res[APPNAME].settings.index.version.created_string
+						) {
+							const nextVersion = parseInt(res[APPNAME].settings.index.version.created_string, 10);
+							if (nextVersion) {
+								esVersion = nextVersion;
+							} else {
+								esVersion = 2;
+							}
+						} else {
+							esVersion = 2;	// set fallback version
+						}
+					},
+					error: () => {
+						console.error('Unable to fetch elasticsearch version');	// eslint-disable-line
+						esVersion = 2;	// set fallback version
+					}
+				});
+			} else {
+				esVersion = 2;
+			}
 		}
 		init();
 	}
@@ -485,6 +523,7 @@ var feed = (function() {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping';
 			return $.ajax({
 				type: 'GET',
+				contentType: 'application/json',
 				beforeSend: (request) => {
 					if (PASSWORD !== 'test') {
 						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
@@ -527,6 +566,7 @@ var feed = (function() {
 			var ajaxType = ajaxType ? ajaxType : 'GET';
 			return $.ajax({
 				type: ajaxType,
+				contentType: 'application/json',
 				beforeSend: (request) => {
 					if (temp_config.password !== 'test') {
 						request.setRequestHeader('Authorization', 'Basic ' + btoa(temp_config.username + ':' + temp_config.password));
