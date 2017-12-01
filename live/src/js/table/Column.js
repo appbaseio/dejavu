@@ -26,6 +26,7 @@ class Column extends React.Component {
 		switch (datatype) {
 			case 'string':
 			case 'text':
+			case 'keyword':
 				return (
 					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
 						<img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />
@@ -131,7 +132,7 @@ class Column extends React.Component {
 			console.log(err);
 		}
 
-		if (datatype === 'string' || datatype === 'text') {
+		if (datatype === 'string' || datatype === 'text' || datatype === 'keyword') {
 			const mappingForType = this.props.mappingObj[type];
 			if (get(mappingForType, ['properties', item, 'index']) !== 'not_analyzed') {
 				const typeFields = get(mappingForType, ['properties', item, 'fields']);
