@@ -18,7 +18,7 @@ class Login extends React.Component {
 
 	login = (provider) => {
 		const baseURL = window.location.protocol+"//"+window.location.host+window.location.pathname;
-		const redirectTo = "https://accapi-staging.appbase.io/login/"+provider+"?next="+baseURL;
+		const redirectTo = "https://accapi.appbase.io/login/"+provider+"?next="+baseURL;
 		localStorage.setItem("dejavuHash", window.location.hash);
 		const importerValue = this.props.directImporter ? "directImporter" : "true";
 		localStorage.setItem("importer", importerValue);

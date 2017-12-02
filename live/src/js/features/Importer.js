@@ -31,7 +31,7 @@ class Importer extends React.Component {
 	checkLoggedIn = (show) => {
 		this.userInfo = null;
 		this.apps = {};
-		this.address = "https://accapi-staging.appbase.io/";
+		this.address = "https://accapi.appbase.io/";
 		$.ajaxSetup({
 			crossDomain: true,
 			xhrFields: {

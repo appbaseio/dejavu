@@ -14,7 +14,7 @@ var appAuth = true;
 var exportJsonData = [];
 var counterStream, streamRef;
 let esVersion = 2;	// default ES version
-const appbaseApi = 'api-staging.appbase.io';	// scalr.api.appbase.io
+const appbaseApi = 'scalr.api.appbase.io';	// scalr.api.appbase.io
 
 // Instantiating appbase ref with the global configs defined above.
 function init() {
