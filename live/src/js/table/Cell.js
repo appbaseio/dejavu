@@ -146,7 +146,7 @@ class Cell extends React.Component {
 
 	handleChange = (e) => {
 		let nextState = e.target.value;
-		if (this.props.datatype.type !== 'string') {
+		if (this.props.datatype.type !== 'string' && this.props.datatype.type !== 'text') {
 			if (this.state.showTooltip) {
 				this.setState({
 					showTooltip: false
@@ -253,7 +253,7 @@ class Cell extends React.Component {
 	setActive(nextState) {
 		if (this.props.editable && !this.props.isObject) {
 			if (!nextState && this.state.data !== this.state.prevData) {
-				if (this.props.datatype.type !== 'string') {
+				if (this.props.datatype.type !== 'string' && this.props.datatype.type !== 'text') {
 					if (this.state.data !== '-') {
 						this.indexCurrentData(Number(this.state.data));
 					}
