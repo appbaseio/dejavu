@@ -655,7 +655,7 @@ var help = {
 		var str = null;
 		if(hits.length > 999) {
 			var scrollObj = {
-				'scroll': '1m',
+				'scroll': '5m',
 				'scroll_id': data._scroll_id
 			};
 			scrollApi({"activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});
