@@ -110,7 +110,11 @@ class Info extends React.Component {
 			<div className=" row">
 				<div className={infoObjClass}>
 					<div className={totalClass}>
-						<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
+						<FeatureComponent.ExportasJson
+							dejavuExportData={this.props.dejavuExportData}
+							exportJsonData={this.props.exportJsonData}
+							fields={['_index', '_type', '_id', '_score', ...this.props.columns.slice(1)]}
+						/>
 						<a
 							href="javascript:void(0);"
 							className="btn btn-default themeBtn m-r10"
