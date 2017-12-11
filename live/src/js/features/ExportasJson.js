@@ -38,7 +38,7 @@ class ImportData extends React.Component {
 				delete item._source;
 				return this.flatten(item)
 			});
-			const newData = Papa.unparse(exportData, config);
+			const newData = Papa.unparse({ data: exportData, fields: this.props.fields });
 			const file = new File([newData], "data.csv", { type: "text/comma-separated-values;charset=utf-8" });
 			saveAs(file);
 		} catch(e) {
