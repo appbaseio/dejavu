@@ -124,6 +124,11 @@ function beforeInit() {
 		if (dejavuURL.indexOf(appbaseApi) === -1) {
 			$.ajax({
 				type: 'GET',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
 				url: dejavuURL,
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',

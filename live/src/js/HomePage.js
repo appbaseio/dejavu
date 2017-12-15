@@ -491,7 +491,10 @@ var HomePage = createReactClass({
 				if (dataMappingFields) {
 					const fieldNonAnalyzed = Object
 						.keys(dataMappingFields)
-						.find(innerField => dataMappingFields[innerField].index === 'not_analyzed');
+						.find(
+							innerField => dataMappingFields[innerField].index === 'not_analyzed' ||
+								dataMappingFields[innerField].type === 'keyword'
+						); // checks for a raw field in appbase or related field in other generic clusters for sort
 					if (fieldNonAnalyzed) {
 						sortString += `${item}.${fieldNonAnalyzed}`;
 					} else {
