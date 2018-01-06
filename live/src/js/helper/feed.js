@@ -537,6 +537,61 @@ var feed = (function() {
 				url: createUrl
 			});
 		},
+		getSettings: function() {
+			var createUrl = HOST + '/' + APPNAME + '/_settings';
+			return $.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
+		setSettings: function(settings) {
+			var createUrl = HOST + '/' + APPNAME + '/_settings';
+			return $.ajax({
+				type: 'PUT',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				dataType: 'json',
+				data: JSON.stringify(settings),
+				error: res => callback(res.responseJSON),
+				url: createUrl
+			});
+		},
+		closeApp: function () {
+			var createUrl = HOST + '/' + APPNAME + '/_close';
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
+		openApp: function () {
+			var createUrl = HOST + '/' + APPNAME + '/_open';
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
 		createMapping: function(type, queryBody, callback) {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping/' + type;
 			return $.ajax({
