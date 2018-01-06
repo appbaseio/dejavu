@@ -40,6 +40,7 @@ var HomePage = createReactClass({
 			externalQueryTotal: 0,
 			extQuery: null,
 			mappingObj: {},
+			settingsObj: {},
 			actionOnRecord: {
 				active: false,
 				id: null,
@@ -315,6 +316,9 @@ var HomePage = createReactClass({
 			this.setState({
 				url: config.url
 			});
+
+			// after the app has connected optimistically fetch settings
+			this.reloadSettings();
 		}
 	},
 	componentDidUpdate: function() {
@@ -761,6 +765,11 @@ var HomePage = createReactClass({
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
 	},
+	reloadSettings: function() {
+		feed.getSettings()
+			.done(data => this.setState({ settingsObj: data }))
+			.fail(() => console.warn('Unable to fetch settings'))
+	},
 	userTouchAdd: function(flag){
 		this.userTouchFlag = flag;
 	},
@@ -921,6 +930,7 @@ var HomePage = createReactClass({
 								selectedTypes={subsetESTypes}
 								handleSort={this.handleSort}
 								mappingObj={this.state.mappingObj}
+								settingsObj={get(this.state.settingsObj, [this.state.appname, 'settings'])}
 								removeFilter ={this.removeFilter}
 								addRecord = {this.addRecord}
 								getTypeDoc={this.getTypeDoc}
@@ -935,6 +945,7 @@ var HomePage = createReactClass({
 								pageLoading={this.state.pageLoading}
 								loadingSpinner={this.state.loadingSpinner}
 								reloadData={this.reloadData}
+								reloadSettings={this.reloadSettings}
 								exportJsonData= {this.exportJsonData}
 								externalQueryApplied={this.state.externalQueryApplied}
 								externalQueryTotal={this.state.externalQueryTotal}

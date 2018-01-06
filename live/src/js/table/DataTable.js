@@ -396,8 +396,10 @@ class DataTable extends React.Component {
 							<AddColumnButton
 								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}
+								settingsObj={this.props.settingsObj}
 								reloadMapping={this.props.reloadMapping}
 								reloadData={this.props.reloadData}
+								reloadSettings={this.props.reloadSettings}
 							/> :
 							null
 					}
