@@ -436,9 +436,18 @@ var HomePage = createReactClass({
 					$this.setApps(true);
 					getMapFlag = true;
 				}
-				$this.setState({
-					mappingObj: mappingObjData[APPNAME]['mappings']
-				});
+				// check for aliasing
+				if (get(mappingObjData, [APPNAME, 'mappings'])) {
+					$this.setState({
+						mappingObj: mappingObjData[APPNAME]['mappings']
+					});
+				} else if (get(Object.values(mappingObjData)[0], 'mappings')) {
+					$this.setState({
+						mappingObj: Object.values(mappingObjData)[0].mappings
+					});
+				} else {
+					console.error('Unable to determine mappings');
+				}
 			}).error(function(xhr){
 				if(xhr.status == 401){
 					$this.setState({
