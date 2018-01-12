@@ -1,9 +1,11 @@
 import React from 'react';	// eslint-disable-line
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import get from 'lodash/get';
 
 /* global feed, help */
 import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
+import analyzerSettings from '../helper/analyzerSettings';
 import ErrorModal from '../features/ErrorModal';
 
 const customMapping = "I’ve my own mapping"; // eslint-disable-line
@@ -190,17 +192,52 @@ class CreateColumnForm extends React.Component {
 				}
 			};
 
-			feed.createMapping(this.state.selectedType, {
-				[this.state.selectedType]: {
-					_meta: meta,
-					...properties
-				}
-			}, this.handleCredentialsErrorMsg);
-			setTimeout(this.props.reloadMapping, 1000);
-			setTimeout(this.props.reloadData, 1000);
+			// check if the analyzers required by special text fields are not present
+			const currentAnalyzers = get(this.props.settingsObj, ['index', 'analysis', 'analyzer']);
+			console.log('currentAnalyzers', currentAnalyzers);
+			if (
+				// if analyzers with same name not present or there is no analyzer, create them
+				(this.state.type === 'Text' || this.state.type === 'SearchableText')
+				&& (
+					(
+						currentAnalyzers
+						&& !currentAnalyzers.autosuggest_analyzer
+						&& !currentAnalyzers.ngram_analyzer
+					) || !currentAnalyzers
+				)
+			) {
+				feed.closeApp()
+					.then(() => {
+						feed.setSettings(analyzerSettings);
+					})
+					.then(() => {
+						feed.openApp();
+					})
+					.done(() => {
+						this.createMappings(meta, properties);
+						this.props.reloadSettings();
+					})
+					.fail((err) => {
+						// eslint-disable-next-line
+						console.error('Unable to add analyzer settings', err);
+						feed.openApp();
+					});
+			} else {
+				this.createMappings(meta, properties);
+			}
 		}
 	}
 
+	createMappings(meta, properties) {
+		feed.createMapping(this.state.selectedType, {
+			[this.state.selectedType]: {
+				_meta: meta,
+				...properties
+			}
+		}, this.handleCredentialsErrorMsg);
+		setTimeout(this.props.reloadMapping, 1000);
+		setTimeout(this.props.reloadData, 1000);
+	}
 
 	render() {
 		return (
@@ -342,8 +379,10 @@ CreateColumnForm.propTypes = {
 	selectedTypes: PropTypes.arrayOf(PropTypes.string),
 	reloadMapping: PropTypes.func,
 	mappingObj: PropTypes.object,	// eslint-disable-line
+	settingsObj: PropTypes.object,	// eslint-disable-line
 	toggleExpand: PropTypes.func,
-	reloadData: PropTypes.func
+	reloadData: PropTypes.func,
+	reloadSettings: PropTypes.func
 };
 
 export default CreateColumnForm;
