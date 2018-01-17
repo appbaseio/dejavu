@@ -452,7 +452,27 @@ var HomePage = createReactClass({
 			});
 			let sortString = '';
 			if (this.state.sortInfo.column) {
-				sortString += '&sort=' + this.state.sortInfo.column + (this.state.sortInfo.reverse ? ':desc' : '');
+				let { column } = this.state.sortInfo;
+				const dataMapping = get(this.state.mappingObj, [this.state.sortInfo.type, 'properties', column]);
+				const dataMappingType = get(dataMapping, 'type');
+
+				if (dataMappingType === 'string' || dataMappingType === 'text') {
+					if (get(dataMapping, 'index') !== 'not_analyzed') {
+						const dataMappingFields = get(dataMapping, 'fields');
+						if (dataMappingFields) {
+							const fieldNonAnalyzed = Object
+								.keys(dataMappingFields)
+								.find(
+									innerField => dataMappingFields[innerField].index === 'not_analyzed' ||
+										dataMappingFields[innerField].type === 'keyword'
+								); // checks for a raw field in appbase or related field in other generic clusters for sort
+							if (fieldNonAnalyzed) {
+								column = `${column}.${fieldNonAnalyzed}`;
+							}
+						}
+					}
+				}
+				sortString += '&sort=' + column + (this.state.sortInfo.reverse ? ':desc' : '');
 			}
 			help.paginateData(
 				this.state.infoObj.total,
