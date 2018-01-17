@@ -283,19 +283,10 @@ var HomePage = createReactClass({
 	},
 
 	init_map_stream: function() {
-		try {
-			clearInterval(this.mappingInterval);
-			clearInterval(streamingInterval);
-		}
-		catch (e) {}
-
 		// this.setMap();
 		if(appAuth) {
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
-			// call every 1 min.
-			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 		}
 	},
@@ -309,9 +300,6 @@ var HomePage = createReactClass({
 			help.afterConnect.bind(this)();
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
-			// call every 1 min.
-			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 			this.setState({
 				url: config.url
@@ -445,8 +433,6 @@ var HomePage = createReactClass({
 						errorShow: true
 					});
 					appAuth = false;
-					clearInterval(this.mappingInterval);
-					clearInterval(streamingInterval);
 				}
 			});
 		}
