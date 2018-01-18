@@ -380,32 +380,33 @@ var feed = (function() {
 		// gets all the types of the current app;
 		getTypes: function(callback) {
 			if (typeof APPNAME !== 'undefined') {
-				this.filterType().done(function(data) {
-					var buckets = data.aggregations.count_by_type.buckets;
-					var types = buckets.filter(function(bucket) {
-						return bucket.doc_count > 0;
-					});
-					types = types.map(function(bucket) {
-						return bucket.key;
-					});
-					if (types.length) {
-						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-							esTypes = types.slice();
+				appbaseRef.getTypes()
+					.on('data', function(types) {
+						if (types.length) {
+							types = types.filter(type => ![
+								'.percolator',
+								'~percolator',
+								'.logs',
+								'~logs'
+							].includes(type));
+							if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+								esTypes = types.slice();
+								if (callback !== null) {
+									return callback(types);
+								}
+							}
+						} else {
+							esTypes = types;
 							if (callback !== null) {
 								return callback(types);
 							}
 						}
-					} else {
-						esTypes = types;
-						if (callback !== null) {
-							return callback(types);
-						}
-					}
-				}).error(function(xhr) {
-					console.log(xhr);
-					clearInterval(streamingInterval);
-					console.log('error in retrieving types: ', xhr);
-				});
+					})
+					.on('error', function (err) {
+						console.log(err);
+						clearInterval(streamingInterval);
+						console.log('error in retrieving types: ', err);
+					});
 			} else {
 				var $this = this;
 				setTimeout(function() {

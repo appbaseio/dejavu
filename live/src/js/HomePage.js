@@ -87,7 +87,7 @@ var HomePage = createReactClass({
 	// We call the ``getData()`` function in feed.js
 	// which returns a single json document(record).
 	updateDataOnView: function(update, total) {
-		if (!Array.isArray(update)) {
+		if (update && !Array.isArray(update)) {
 			update = this.flatten(update, this.injectLink);
 			var key = rowKeyGen(update);
 
@@ -138,7 +138,7 @@ var HomePage = createReactClass({
 				newTransition(_key);
 			}
 			this.setSampleData(update);
-		} else { // when update is an array
+		} else if (Array.isArray(update)) { // when update is an array
 			for (var each = 0; each < update.length; each++) {
 				update[each] = this.flatten(update[each], this.injectLink);
 				var key = rowKeyGen(update[each]);
