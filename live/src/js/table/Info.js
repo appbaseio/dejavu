@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
+import ignoredTypes from '../helper/getIgnoredTypes';
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
 
@@ -24,6 +25,19 @@ class Info extends React.Component {
 			this.setState({
 				loadingImages: false
 			});
+		}
+
+		// sets the mode to editing if there are no user types present
+		// waits for the app to connect to get the actual types
+		if (this.props.connect !== nextProps.connect && nextProps.connect) {
+			if (
+				// either no types or some type not included in the ignoredTypes
+				(!nextProps.types.length
+				|| !nextProps.types.some(type => !ignoredTypes.includes(type)))
+				&& !this.state.editable
+			) {
+				this.handleEditView('2');
+			}
 		}
 	}
 

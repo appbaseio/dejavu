@@ -362,6 +362,7 @@ class DataTable extends React.Component {
 					hasImages={this.state.hasImages}
 					loadImages={this.state.loadImages}
 					toggleLoadImages={this.toggleLoadImages}
+					connect={this.props.connect}
 				/>
 
 				<div className="outsideTable">

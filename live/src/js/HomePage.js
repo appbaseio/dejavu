@@ -968,6 +968,7 @@ var HomePage = createReactClass({
 								dejavuExportData={this.state.dejavuExportData}
 								reloadMapping={this.setMap}
 								isLoadingData={this.state.isLoadingData}
+								connect={this.state.connect}
 							/>
 						</div>
 						{footer}
