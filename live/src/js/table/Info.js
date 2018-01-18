@@ -150,6 +150,18 @@ class Info extends React.Component {
 						</span>
 					</div>
 				</div>
+				{
+					infoObjClass === 'hide'
+					&& (
+						<a
+							href="javascript:void(0);"
+							className="btn btn-default themeBtn m-r10"
+							onClick={this.props.reloadData}
+						>
+							<i className="fa fa-refresh"></i> Reload
+						</a>
+					)
+				}
 				<DropdownButton
 					bsStyle={this.state.editable ? 'warning' : 'success'}
 					title={
