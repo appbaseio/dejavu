@@ -1509,6 +1509,11 @@ ul#setApp {
 	width: 180px;
 }
 
+.create-column-estype .Select-input,
+.create-column-estype .Select-control {
+	height: 32px;
+}
+
 .create-column-submit-btn {
 	margin-top: 10px;
 }

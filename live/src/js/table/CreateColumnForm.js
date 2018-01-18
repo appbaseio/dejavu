@@ -2,6 +2,7 @@ import React from 'react';	// eslint-disable-line
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import get from 'lodash/get';
+import { Creatable } from 'react-select';
 
 /* global feed, help */
 import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
@@ -108,6 +109,15 @@ class CreateColumnForm extends React.Component {
 		});
 	}
 
+	handleTypeChange = ({ value }) => {
+		this.handleChange({
+			target: {
+				name: 'selectedType',
+				value
+			}
+		});
+	}
+
 	handleCredentialsErrorMsg = (e) => {
 		if (e.status >= 400) {
 			if (e.error) {
@@ -194,7 +204,6 @@ class CreateColumnForm extends React.Component {
 
 			// check if the analyzers required by special text fields are not present
 			const currentAnalyzers = get(this.props.settingsObj, ['index', 'analysis', 'analyzer']);
-			console.log('currentAnalyzers', currentAnalyzers);
 			if (
 				// if analyzers with same name not present or there is no analyzer, create them
 				(this.state.type === 'Text' || this.state.type === 'SearchableText')
@@ -255,19 +264,22 @@ class CreateColumnForm extends React.Component {
 					<div className="flex-row">
 						<FormGroup bsClass="create-column-estype">
 							<ControlLabel>Elasticsearch Type</ControlLabel>
-							<FormControl
-								componentClass="select"
-								placeholder="Select Type"
+							<Creatable
 								value={this.state.selectedType}
-								onChange={this.handleChange}
-								name="selectedType"
-							>
-								{
-									this.props.selectedTypes.map(item => (
-										<option key={item} value={item}>{item}</option>
-									))
-								}
-							</FormControl>
+								placeholder="Select Type"
+								onChange={this.handleTypeChange}
+								options={this.props.selectedTypes
+									.concat(
+										this.props.selectedTypes.includes(this.state.selectedType)
+											? []
+											: this.state.selectedType
+									)
+									.map(item => ({
+										value: item,
+										label: item
+									}))}
+								clearable={false}
+							/>
 						</FormGroup>
 						<FormGroup
 							validationState={this.getValidationState()}
