@@ -151,11 +151,12 @@ class CreateColumnForm extends React.Component {
 				format: this.state.format
 			} :
 			this.state.esMapping[this.state.type];
-			const meta = this.props.mappingObj[this.state.selectedType]._meta ?
-			{ ...this.props.mappingObj[this.state.selectedType]._meta } :
-			{
-				dejavuMeta: {}
-			};
+			const meta = this.props.mappingObj[this.state.selectedType]
+				&& this.props.mappingObj[this.state.selectedType]._meta
+					? { ...this.props.mappingObj[this.state.selectedType]._meta }
+					: {
+						dejavuMeta: {}
+					};
 
 			if (this.state.type === 'Image') {
 				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
@@ -266,7 +267,8 @@ class CreateColumnForm extends React.Component {
 							<ControlLabel>Elasticsearch Type</ControlLabel>
 							<Creatable
 								value={this.state.selectedType}
-								placeholder="Select Type"
+								placeholder="Select or Create Type"
+								promptTextCreator={label => `Create type "${label}"`}
 								onChange={this.handleTypeChange}
 								options={this.props.selectedTypes
 									.concat(

@@ -90,6 +90,11 @@ label {
 	display: flex;
 }
 
+.outsideTable.center {
+	justify-content: center;
+	align-items: center;
+}
+
 .infoRow {
 	position: absolute;
 	width: 100%;
@@ -1295,6 +1300,11 @@ iframe {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.add-column-button.alt {
+	height: 40px;
+	width: 130px;
 }
 
 .cell-content {

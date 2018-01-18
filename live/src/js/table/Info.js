@@ -257,7 +257,7 @@ class Info extends React.Component {
 						this.props.editable &&
 						<FeatureComponent.AddDocument
 							types={this.props.types}
-							text="Add Data"
+							text="Insert JSON"
 							addRecord ={this.props.addRecord}
 							getTypeDoc={this.props.getTypeDoc}
 							userTouchAdd={this.props.infoObj.userTouchAdd}
