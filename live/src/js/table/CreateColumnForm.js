@@ -234,6 +234,9 @@ class CreateColumnForm extends React.Component {
 					this.props.reloadSettings();
 				}
 			}
+			setTimeout(() => {
+				document.body.click();	// hack for react-bootstrap overlay
+			}, 1500);
 		}
 	}
 
