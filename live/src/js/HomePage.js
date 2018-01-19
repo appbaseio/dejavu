@@ -767,6 +767,9 @@ var HomePage = createReactClass({
 		}.bind(this));
 	},
 	connectPlayPause: function() {
+		if (this.state.url.startsWith('http://') && window.location.protocol === 'https:') {
+			toastr.warning('You are trying to load http content over https');
+		}
 		if(!help.getReloadFlag()) {
 			alert('Url or appname should not be empty.');
 		} else {
