@@ -361,7 +361,8 @@ var HomePage = createReactClass({
 				delete input_state.sortInfo;
 				createUrl(input_state);
 			}
-			window.stop();
+			// TODO: cleanup - no clue
+			// window.stop();
 			subsetESTypes.push(typeName);
 			this.applyGetStream();
 			input_state.selectedType = subsetESTypes;
@@ -783,6 +784,7 @@ var HomePage = createReactClass({
 	reloadSettings: function() {
 		feed.getSettings()
 			.done(data => this.setState({ settingsObj: data }))
+			.done(this.getStreamingTypes)
 			.fail(() => console.warn('Unable to fetch settings'))
 	},
 	userTouchAdd: function(flag){
