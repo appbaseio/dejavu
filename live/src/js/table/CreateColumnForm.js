@@ -217,13 +217,9 @@ class CreateColumnForm extends React.Component {
 				)
 			) {
 				feed.closeApp()
+					.then(() => feed.setSettings(analyzerSettings))
+					.then(() => feed.openApp())
 					.then(() => {
-						feed.setSettings(analyzerSettings);
-					})
-					.then(() => {
-						feed.openApp();
-					})
-					.done(() => {
 						this.createMappings(meta, properties);
 						this.props.reloadSettings();
 					})
@@ -234,6 +230,9 @@ class CreateColumnForm extends React.Component {
 					});
 			} else {
 				this.createMappings(meta, properties);
+				if (!this.props.selectedTypes.includes(this.state.selectedType)) {
+					this.props.reloadSettings();
+				}
 			}
 		}
 	}
