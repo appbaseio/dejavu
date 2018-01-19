@@ -783,6 +783,7 @@ var HomePage = createReactClass({
 	},
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
+		this.getStreamingTypes();
 	},
 	reloadSettings: function() {
 		feed.getSettings()
