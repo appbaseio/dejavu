@@ -438,7 +438,7 @@ var HomePage = createReactClass({
 					console.error('Unable to determine mappings');
 				}
 			}).error(function(xhr){
-				if(xhr.status == 401){
+				if(xhr.status === 401 || xhr.status === 404){
 					$this.setState({
 						errorShow: true
 					});
