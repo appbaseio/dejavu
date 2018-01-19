@@ -1,9 +1,12 @@
 import React from 'react';	// eslint-disable-line
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import get from 'lodash/get';
+import { Creatable } from 'react-select';
 
 /* global feed, help */
 import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
+import analyzerSettings from '../helper/analyzerSettings';
 import ErrorModal from '../features/ErrorModal';
 
 const customMapping = "I’ve my own mapping"; // eslint-disable-line
@@ -106,6 +109,15 @@ class CreateColumnForm extends React.Component {
 		});
 	}
 
+	handleTypeChange = ({ value }) => {
+		this.handleChange({
+			target: {
+				name: 'selectedType',
+				value
+			}
+		});
+	}
+
 	handleCredentialsErrorMsg = (e) => {
 		if (e.status >= 400) {
 			if (e.error) {
@@ -139,11 +151,12 @@ class CreateColumnForm extends React.Component {
 				format: this.state.format
 			} :
 			this.state.esMapping[this.state.type];
-			const meta = this.props.mappingObj[this.state.selectedType]._meta ?
-			{ ...this.props.mappingObj[this.state.selectedType]._meta } :
-			{
-				dejavuMeta: {}
-			};
+			const meta = this.props.mappingObj[this.state.selectedType]
+				&& this.props.mappingObj[this.state.selectedType]._meta
+					? { ...this.props.mappingObj[this.state.selectedType]._meta }
+					: {
+						dejavuMeta: {}
+					};
 
 			if (this.state.type === 'Image') {
 				if (Object.prototype.hasOwnProperty.call(meta, 'dejavuMeta')) {
@@ -190,17 +203,50 @@ class CreateColumnForm extends React.Component {
 				}
 			};
 
-			feed.createMapping(this.state.selectedType, {
-				[this.state.selectedType]: {
-					_meta: meta,
-					...properties
+			// check if the analyzers required by special text fields are not present
+			const currentAnalyzers = get(this.props.settingsObj, ['index', 'analysis', 'analyzer']);
+			if (
+				// if analyzers with same name not present or there is no analyzer, create them
+				(this.state.type === 'Text' || this.state.type === 'SearchableText')
+				&& (
+					(
+						currentAnalyzers
+						&& !currentAnalyzers.autosuggest_analyzer
+						&& !currentAnalyzers.ngram_analyzer
+					) || !currentAnalyzers
+				)
+			) {
+				feed.closeApp()
+					.then(() => feed.setSettings(analyzerSettings))
+					.then(() => feed.openApp())
+					.then(() => {
+						this.createMappings(meta, properties);
+						this.props.reloadSettings();
+					})
+					.fail((err) => {
+						// eslint-disable-next-line
+						console.error('Unable to add analyzer settings', err);
+						feed.openApp();
+					});
+			} else {
+				this.createMappings(meta, properties);
+				if (!this.props.selectedTypes.includes(this.state.selectedType)) {
+					this.props.reloadSettings();
 				}
-			}, this.handleCredentialsErrorMsg);
-			setTimeout(this.props.reloadMapping, 1000);
-			setTimeout(this.props.reloadData, 1000);
+			}
 		}
 	}
 
+	createMappings(meta, properties) {
+		feed.createMapping(this.state.selectedType, {
+			[this.state.selectedType]: {
+				_meta: meta,
+				...properties
+			}
+		}, this.handleCredentialsErrorMsg);
+		setTimeout(this.props.reloadMapping, 1000);
+		setTimeout(this.props.reloadData, 1000);
+	}
 
 	render() {
 		return (
@@ -218,19 +264,23 @@ class CreateColumnForm extends React.Component {
 					<div className="flex-row">
 						<FormGroup bsClass="create-column-estype">
 							<ControlLabel>Elasticsearch Type</ControlLabel>
-							<FormControl
-								componentClass="select"
-								placeholder="Select Type"
+							<Creatable
 								value={this.state.selectedType}
-								onChange={this.handleChange}
-								name="selectedType"
-							>
-								{
-									this.props.selectedTypes.map(item => (
-										<option key={item} value={item}>{item}</option>
-									))
-								}
-							</FormControl>
+								placeholder="Select or Create Type"
+								promptTextCreator={label => `Create type "${label}"`}
+								onChange={this.handleTypeChange}
+								options={this.props.selectedTypes
+									.concat(
+										this.props.selectedTypes.includes(this.state.selectedType)
+											? []
+											: this.state.selectedType
+									)
+									.map(item => ({
+										value: item,
+										label: item
+									}))}
+								clearable={false}
+							/>
 						</FormGroup>
 						<FormGroup
 							validationState={this.getValidationState()}
@@ -342,8 +392,10 @@ CreateColumnForm.propTypes = {
 	selectedTypes: PropTypes.arrayOf(PropTypes.string),
 	reloadMapping: PropTypes.func,
 	mappingObj: PropTypes.object,	// eslint-disable-line
+	settingsObj: PropTypes.object,	// eslint-disable-line
 	toggleExpand: PropTypes.func,
-	reloadData: PropTypes.func
+	reloadData: PropTypes.func,
+	reloadSettings: PropTypes.func
 };
 
 export default CreateColumnForm;

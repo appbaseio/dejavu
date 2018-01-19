@@ -9,7 +9,8 @@ export const es2 = {
 			autosuggest: {
 				type: 'string',
 				index: 'analyzed',
-				analyzer: 'autosuggest_analyzer'
+				analyzer: 'autosuggest_analyzer',
+				search_analyzer: 'simple'
 			}
 		},
 		analyzer: 'standard',
@@ -25,12 +26,14 @@ export const es2 = {
 			search: {
 				type: 'string',
 				index: 'analyzed',
-				analyzer: 'ngram_analyzer'
+				analyzer: 'ngram_analyzer',
+				search_analyzer: 'simple'
 			},
 			autosuggest: {
 				type: 'string',
 				index: 'analyzed',
-				analyzer: 'autosuggest_analyzer'
+				analyzer: 'autosuggest_analyzer',
+				search_analyzer: 'simple'
 			}
 		},
 		analyzer: 'standard',
@@ -82,7 +85,8 @@ export const es5 = {
 			autosuggest: {
 				type: 'text',
 				index: 'analyzed',
-				analyzer: 'autosuggest_analyzer'
+				analyzer: 'autosuggest_analyzer',
+				search_analyzer: 'simple'
 			}
 		},
 		analyzer: 'standard',
@@ -98,12 +102,14 @@ export const es5 = {
 			search: {
 				type: 'text',
 				index: 'analyzed',
-				analyzer: 'ngram_analyzer'
+				analyzer: 'ngram_analyzer',
+				search_analyzer: 'simple'
 			},
 			autosuggest: {
 				type: 'text',
 				index: 'analyzed',
-				analyzer: 'autosuggest_analyzer'
+				analyzer: 'autosuggest_analyzer',
+				search_analyzer: 'simple'
 			}
 		},
 		analyzer: 'standard',

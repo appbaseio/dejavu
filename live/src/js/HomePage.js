@@ -40,6 +40,7 @@ var HomePage = createReactClass({
 			externalQueryTotal: 0,
 			extQuery: null,
 			mappingObj: {},
+			settingsObj: {},
 			actionOnRecord: {
 				active: false,
 				id: null,
@@ -86,7 +87,7 @@ var HomePage = createReactClass({
 	// We call the ``getData()`` function in feed.js
 	// which returns a single json document(record).
 	updateDataOnView: function(update, total) {
-		if (!Array.isArray(update)) {
+		if (update && !Array.isArray(update)) {
 			update = this.flatten(update, this.injectLink);
 			var key = rowKeyGen(update);
 
@@ -137,7 +138,7 @@ var HomePage = createReactClass({
 				newTransition(_key);
 			}
 			this.setSampleData(update);
-		} else { // when update is an array
+		} else if (Array.isArray(update)) { // when update is an array
 			for (var each = 0; each < update.length; each++) {
 				update[each] = this.flatten(update[each], this.injectLink);
 				var key = rowKeyGen(update[each]);
@@ -282,19 +283,10 @@ var HomePage = createReactClass({
 	},
 
 	init_map_stream: function() {
-		try {
-			clearInterval(this.mappingInterval);
-			clearInterval(streamingInterval);
-		}
-		catch (e) {}
-
 		// this.setMap();
 		if(appAuth) {
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
-			// call every 1 min.
-			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 		}
 	},
@@ -308,13 +300,13 @@ var HomePage = createReactClass({
 			help.afterConnect.bind(this)();
 			setTimeout(this.setMap, 2000)
 			setTimeout(this.getStreamingTypes, 2000);
-			// call every 1 min.
-			this.mappingInterval = setInterval(this.setMap, 60 * 1000);
-			streamingInterval = setInterval(this.getStreamingTypes, 60 * 1000);
 			this.getTotalRecord();
 			this.setState({
 				url: config.url
 			});
+
+			// after the app has connected optimistically fetch settings
+			this.reloadSettings();
 		}
 	},
 	componentDidUpdate: function() {
@@ -369,7 +361,8 @@ var HomePage = createReactClass({
 				delete input_state.sortInfo;
 				createUrl(input_state);
 			}
-			window.stop();
+			// TODO: cleanup - no clue
+			// window.stop();
 			subsetESTypes.push(typeName);
 			this.applyGetStream();
 			input_state.selectedType = subsetESTypes;
@@ -432,17 +425,24 @@ var HomePage = createReactClass({
 					$this.setApps(true);
 					getMapFlag = true;
 				}
-				$this.setState({
-					mappingObj: mappingObjData[APPNAME]['mappings']
-				});
+				// check for aliasing
+				if (get(mappingObjData, [APPNAME, 'mappings'])) {
+					$this.setState({
+						mappingObj: mappingObjData[APPNAME]['mappings']
+					});
+				} else if (get(Object.values(mappingObjData)[0], 'mappings')) {
+					$this.setState({
+						mappingObj: Object.values(mappingObjData)[0].mappings
+					});
+				} else {
+					console.error('Unable to determine mappings');
+				}
 			}).error(function(xhr){
-				if(xhr.status == 401){
+				if(xhr.status === 401 || xhr.status === 404){
 					$this.setState({
 						errorShow: true
 					});
 					appAuth = false;
-					clearInterval(this.mappingInterval);
-					clearInterval(streamingInterval);
 				}
 			});
 		}
@@ -462,7 +462,27 @@ var HomePage = createReactClass({
 			});
 			let sortString = '';
 			if (this.state.sortInfo.column) {
-				sortString += '&sort=' + this.state.sortInfo.column + (this.state.sortInfo.reverse ? ':desc' : '');
+				let { column } = this.state.sortInfo;
+				const dataMapping = get(this.state.mappingObj, [this.state.sortInfo.type, 'properties', column]);
+				const dataMappingType = get(dataMapping, 'type');
+
+				if (dataMappingType === 'string' || dataMappingType === 'text') {
+					if (get(dataMapping, 'index') !== 'not_analyzed') {
+						const dataMappingFields = get(dataMapping, 'fields');
+						if (dataMappingFields) {
+							const fieldNonAnalyzed = Object
+								.keys(dataMappingFields)
+								.find(
+									innerField => dataMappingFields[innerField].index === 'not_analyzed' ||
+										dataMappingFields[innerField].type === 'keyword'
+								); // checks for a raw field in appbase or related field in other generic clusters for sort
+							if (fieldNonAnalyzed) {
+								column = `${column}.${fieldNonAnalyzed}`;
+							}
+						}
+					}
+				}
+				sortString += '&sort=' + column + (this.state.sortInfo.reverse ? ':desc' : '');
 			}
 			help.paginateData(
 				this.state.infoObj.total,
@@ -491,7 +511,10 @@ var HomePage = createReactClass({
 				if (dataMappingFields) {
 					const fieldNonAnalyzed = Object
 						.keys(dataMappingFields)
-						.find(innerField => dataMappingFields[innerField].index === 'not_analyzed');
+						.find(
+							innerField => dataMappingFields[innerField].index === 'not_analyzed' ||
+								dataMappingFields[innerField].type === 'keyword'
+						); // checks for a raw field in appbase or related field in other generic clusters for sort
 					if (fieldNonAnalyzed) {
 						sortString += `${item}.${fieldNonAnalyzed}`;
 					} else {
@@ -744,6 +767,9 @@ var HomePage = createReactClass({
 		}.bind(this));
 	},
 	connectPlayPause: function() {
+		if (this.state.url.startsWith('http://') && window.location.protocol === 'https:') {
+			toastr.warning('You are trying to load http content over https');
+		}
 		if(!help.getReloadFlag()) {
 			alert('Url or appname should not be empty.');
 		} else {
@@ -757,6 +783,12 @@ var HomePage = createReactClass({
 	},
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
+	},
+	reloadSettings: function() {
+		feed.getSettings()
+			.done(data => this.setState({ settingsObj: data }))
+			.done(this.getStreamingTypes)
+			.fail(() => console.warn('Unable to fetch settings'))
 	},
 	userTouchAdd: function(flag){
 		this.userTouchFlag = flag;
@@ -918,6 +950,7 @@ var HomePage = createReactClass({
 								selectedTypes={subsetESTypes}
 								handleSort={this.handleSort}
 								mappingObj={this.state.mappingObj}
+								settingsObj={get(this.state.settingsObj, [this.state.appname, 'settings'])}
 								removeFilter ={this.removeFilter}
 								addRecord = {this.addRecord}
 								getTypeDoc={this.getTypeDoc}
@@ -932,6 +965,7 @@ var HomePage = createReactClass({
 								pageLoading={this.state.pageLoading}
 								loadingSpinner={this.state.loadingSpinner}
 								reloadData={this.reloadData}
+								reloadSettings={this.reloadSettings}
 								exportJsonData= {this.exportJsonData}
 								externalQueryApplied={this.state.externalQueryApplied}
 								externalQueryTotal={this.state.externalQueryTotal}
@@ -939,6 +973,7 @@ var HomePage = createReactClass({
 								dejavuExportData={this.state.dejavuExportData}
 								reloadMapping={this.setMap}
 								isLoadingData={this.state.isLoadingData}
+								connect={this.state.connect}
 							/>
 						</div>
 						{footer}

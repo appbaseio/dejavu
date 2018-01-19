@@ -11,14 +11,14 @@ var help = {
 					}
 				}
 			}
+			data['json'] = data['_source'];
+			if (data['_source'])
+				delete data['_source'];
+			if (data['_index'])
+				delete data['_index'];
+			if (data['_score'])
+				delete data['_score'];
 		}
-		data['json'] = data['_source'];
-		if (data['_source'])
-			delete data['_source'];
-		if (data['_index'])
-			delete data['_index'];
-		if (data['_score'])
-			delete data['_score'];
 
 		return {
 			data: data,
@@ -655,7 +655,7 @@ var help = {
 		var str = null;
 		if(hits.length > 999) {
 			var scrollObj = {
-				'scroll': '1m',
+				'scroll': '5m',
 				'scroll_id': data._scroll_id
 			};
 			scrollApi({"activeQuery": scrollObj, "scroll": true, "scroll_id": data._scroll_id});

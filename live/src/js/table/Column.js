@@ -102,7 +102,7 @@ class Column extends React.Component {
 				</OverlayTrigger>
 				<span>&nbsp;&nbsp;type / id</span>
 			</span>) :
-			(<span onClick={this.sortingInit}>{item}
+			(<span>{item}
 			</span>);
 		const thtextShow = item == 'json' ? 'leftGap thtextShow' : 'thtextShow';
 		let showSort = true;
@@ -131,12 +131,18 @@ class Column extends React.Component {
 		catch (err) {
 			console.log(err);
 		}
-
 		if (datatype === 'string' || datatype === 'text' || datatype === 'keyword') {
 			const mappingForType = this.props.mappingObj[type];
-			if (get(mappingForType, ['properties', item, 'index']) !== 'not_analyzed') {
+			if (
+				get(mappingForType, ['properties', item, 'index']) !== 'not_analyzed' &&
+				get(mappingForType, ['properties', item, 'type']) !== 'keyword'
+			) {
 				const typeFields = get(mappingForType, ['properties', item, 'fields']);
-				if (typeFields && Object.keys(typeFields).some(innerField => typeFields[innerField].index === 'not_analyzed')) {
+				if (
+					typeFields &&
+					Object.keys(typeFields)
+						.some(innerField => typeFields[innerField].index === 'not_analyzed' || typeFields[innerField].type === 'keyword')
+				) {
 					showSort = true;
 				} else {
 					showSort = false;
