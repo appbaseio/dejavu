@@ -1238,6 +1238,10 @@ iframe {
 
 .geo-point-container .geo-point-value {
 	flex: 1;
+	max-width: 125px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .geo-point-container input {
