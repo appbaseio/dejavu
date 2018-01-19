@@ -237,20 +237,22 @@ class DataTable extends React.Component {
 				let isArrayObject = false;
 				let isImage = false;
 				let datatype = {};
-				if (mappingObj[type].properties) {
-					datatype = mappingObj[type].properties[each] || allDatatypes[each];
-				}
-				if (mappingObj[type]._meta) {
-					if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
-						if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each] && get(datatype, 'type') === 'string') {
-							arrayOptions[each] = [];
-						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
-							isObject = true;
-						} else if (mappingObj[type]._meta.dejavuMeta[each] && mappingObj[type]._meta.dejavuMeta[each].indexOf('array') !== -1) {
-							isObject = true;
-							isArrayObject = true;
-						} else if (mappingObj[type]._meta.dejavuMeta[each] === 'image') {
-							isImage = true;
+				if (mappingObj[type]) {
+					if (mappingObj[type].properties) {
+						datatype = mappingObj[type].properties[each] || allDatatypes[each];
+					}
+					if (mappingObj[type]._meta) {
+						if (mappingObj[type]._meta.hasOwnProperty('dejavuMeta')) {
+							if (mappingObj[type]._meta.dejavuMeta[each] === 'array' && !arrayOptions[each] && get(datatype, 'type') === 'string') {
+								arrayOptions[each] = [];
+							} else if (mappingObj[type]._meta.dejavuMeta[each] === 'object') {
+								isObject = true;
+							} else if (mappingObj[type]._meta.dejavuMeta[each] && mappingObj[type]._meta.dejavuMeta[each].indexOf('array') !== -1) {
+								isObject = true;
+								isArrayObject = true;
+							} else if (mappingObj[type]._meta.dejavuMeta[each] === 'image') {
+								isImage = true;
+							}
 						}
 					}
 				}
@@ -362,9 +364,10 @@ class DataTable extends React.Component {
 					hasImages={this.state.hasImages}
 					loadImages={this.state.loadImages}
 					toggleLoadImages={this.toggleLoadImages}
+					connect={this.props.connect}
 				/>
 
-				<div className="outsideTable">
+				<div className={`outsideTable ${this.props.selectedTypes.length ? '' : 'center'}`}>
 					{
 						this.props.isLoadingData &&
 						<div
@@ -392,7 +395,7 @@ class DataTable extends React.Component {
 						isLoadingData={this.props.isLoadingData}
 					/>
 					{
-						this.props.selectedTypes.length && this.state.editable && !this.props.isLoadingData ?
+						this.state.editable && !this.props.isLoadingData ?
 							<AddColumnButton
 								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}
@@ -400,6 +403,7 @@ class DataTable extends React.Component {
 								reloadMapping={this.props.reloadMapping}
 								reloadData={this.props.reloadData}
 								reloadSettings={this.props.reloadSettings}
+								visibleTypes={this.props.selectedTypes}
 							/> :
 							null
 					}

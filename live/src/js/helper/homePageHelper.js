@@ -11,14 +11,14 @@ var help = {
 					}
 				}
 			}
+			data['json'] = data['_source'];
+			if (data['_source'])
+				delete data['_source'];
+			if (data['_index'])
+				delete data['_index'];
+			if (data['_score'])
+				delete data['_score'];
 		}
-		data['json'] = data['_source'];
-		if (data['_source'])
-			delete data['_source'];
-		if (data['_index'])
-			delete data['_index'];
-		if (data['_score'])
-			delete data['_score'];
 
 		return {
 			data: data,
