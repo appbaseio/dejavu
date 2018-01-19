@@ -389,12 +389,13 @@ var feed = (function() {
 								'.logs',
 								'~logs'
 							].includes(type));
-							if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-								esTypes = types.slice();
-								if (callback !== null) {
-									return callback(types);
-								}
+							if (callback !== null) {
+								return callback(types);
 							}
+							// TODO: cleanup
+							// if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+							// 	esTypes = types.slice();
+							// }
 						} else {
 							esTypes = types;
 							if (callback !== null) {
