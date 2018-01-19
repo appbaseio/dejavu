@@ -124,6 +124,11 @@ function beforeInit() {
 		if (dejavuURL.indexOf(appbaseApi) === -1) {
 			$.ajax({
 				type: 'GET',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
 				url: dejavuURL,
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
@@ -375,32 +380,34 @@ var feed = (function() {
 		// gets all the types of the current app;
 		getTypes: function(callback) {
 			if (typeof APPNAME !== 'undefined') {
-				this.filterType().done(function(data) {
-					var buckets = data.aggregations.count_by_type.buckets;
-					var types = buckets.filter(function(bucket) {
-						return bucket.doc_count > 0;
-					});
-					types = types.map(function(bucket) {
-						return bucket.key;
-					});
-					if (types.length) {
-						if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
-							esTypes = types.slice();
+				appbaseRef.getTypes()
+					.on('data', function(types) {
+						if (types.length) {
+							types = types.filter(type => ![
+								'.percolator',
+								'~percolator',
+								'.logs',
+								'~logs'
+							].includes(type));
+							if (callback !== null) {
+								return callback(types);
+							}
+							// TODO: cleanup
+							// if (JSON.stringify(esTypes.sort()) !== JSON.stringify(types.sort())) {
+							// 	esTypes = types.slice();
+							// }
+						} else {
+							esTypes = types;
 							if (callback !== null) {
 								return callback(types);
 							}
 						}
-					} else {
-						esTypes = types;
-						if (callback !== null) {
-							return callback(types);
-						}
-					}
-				}).error(function(xhr) {
-					console.log(xhr);
-					clearInterval(streamingInterval);
-					console.log('error in retrieving types: ', xhr);
-				});
+					})
+					.on('error', function (err) {
+						console.log(err);
+						clearInterval(streamingInterval);
+						console.log('error in retrieving types: ', err);
+					});
 			} else {
 				var $this = this;
 				setTimeout(function() {
@@ -523,6 +530,61 @@ var feed = (function() {
 			var createUrl = HOST + '/' + APPNAME + '/_mapping';
 			return $.ajax({
 				type: 'GET',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
+		getSettings: function() {
+			var createUrl = HOST + '/' + APPNAME + '/_settings';
+			return $.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
+		setSettings: function(settings) {
+			var createUrl = HOST + '/' + APPNAME + '/_settings';
+			return $.ajax({
+				type: 'PUT',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				dataType: 'json',
+				data: JSON.stringify(settings),
+				error: res => callback(res.responseJSON),
+				url: createUrl
+			});
+		},
+		closeApp: function () {
+			var createUrl = HOST + '/' + APPNAME + '/_close';
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: createUrl
+			});
+		},
+		openApp: function () {
+			var createUrl = HOST + '/' + APPNAME + '/_open';
+			return $.ajax({
+				type: 'POST',
 				contentType: 'application/json',
 				beforeSend: (request) => {
 					if (PASSWORD !== 'test') {

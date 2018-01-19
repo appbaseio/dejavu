@@ -90,6 +90,11 @@ label {
 	display: flex;
 }
 
+.outsideTable.center {
+	justify-content: center;
+	align-items: center;
+}
+
 .infoRow {
 	position: absolute;
 	width: 100%;
@@ -1233,6 +1238,10 @@ iframe {
 
 .geo-point-container .geo-point-value {
 	flex: 1;
+	max-width: 125px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .geo-point-container input {
@@ -1295,6 +1304,11 @@ iframe {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.add-column-button.alt {
+	height: 40px;
+	width: 130px;
 }
 
 .cell-content {
@@ -1507,6 +1521,11 @@ ul#setApp {
 .create-column-estype {
 	padding-right: 5px;
 	width: 180px;
+}
+
+.create-column-estype .Select-input,
+.create-column-estype .Select-control {
+	height: 32px;
 }
 
 .create-column-submit-btn {

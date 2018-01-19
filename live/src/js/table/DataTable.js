@@ -362,9 +362,10 @@ class DataTable extends React.Component {
 					hasImages={this.state.hasImages}
 					loadImages={this.state.loadImages}
 					toggleLoadImages={this.toggleLoadImages}
+					connect={this.props.connect}
 				/>
 
-				<div className="outsideTable">
+				<div className={`outsideTable ${this.props.selectedTypes.length ? '' : 'center'}`}>
 					{
 						this.props.isLoadingData &&
 						<div
@@ -392,12 +393,15 @@ class DataTable extends React.Component {
 						isLoadingData={this.props.isLoadingData}
 					/>
 					{
-						this.props.selectedTypes.length && this.state.editable && !this.props.isLoadingData ?
+						this.state.editable && !this.props.isLoadingData ?
 							<AddColumnButton
 								selectedTypes={this.props.Types}
 								mappingObj={this.props.mappingObj}
+								settingsObj={this.props.settingsObj}
 								reloadMapping={this.props.reloadMapping}
 								reloadData={this.props.reloadData}
+								reloadSettings={this.props.reloadSettings}
+								visibleTypes={this.props.selectedTypes}
 							/> :
 							null
 					}

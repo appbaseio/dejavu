@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 import CreateColumnForm from './CreateColumnForm';
 
@@ -31,13 +32,21 @@ class AddColumnButton extends Component {
 				}
 			>
 				<div
-					className="add-column-button btn btn-primary"
+					className={`add-column-button ${this.props.visibleTypes.length ? '' : 'alt'} btn btn-primary`}
 				>
 					<i className="fa fa-plus" />
+					{
+						!this.props.visibleTypes.length
+						&& <span> &nbsp;&nbsp;Add Data Field</span>
+					}
 				</div>
 			</OverlayTrigger>
 		);
 	}
 }
+
+AddColumnButton.propTypes = {
+	visibleTypes: PropTypes.arrayOf(PropTypes.string)
+};
 
 export default AddColumnButton;

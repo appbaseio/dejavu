@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
+import ignoredTypes from '../helper/getIgnoredTypes';
 var FeatureComponent = require('../features/FeatureComponent.js');
 var ColumnDropdown = require('./ColumnDropdown.js');
 
@@ -24,6 +25,19 @@ class Info extends React.Component {
 			this.setState({
 				loadingImages: false
 			});
+		}
+
+		// sets the mode to editing if there are no user types present
+		// waits for the app to connect to get the actual types
+		if (this.props.connect !== nextProps.connect && nextProps.connect) {
+			if (
+				// either no types or some type not included in the ignoredTypes
+				(!nextProps.types.length
+				|| !nextProps.types.some(type => !ignoredTypes.includes(type)))
+				&& !this.state.editable
+			) {
+				this.handleEditView('2');
+			}
 		}
 	}
 
@@ -110,7 +124,11 @@ class Info extends React.Component {
 			<div className=" row">
 				<div className={infoObjClass}>
 					<div className={totalClass}>
-						<FeatureComponent.ExportasJson dejavuExportData={this.props.dejavuExportData} exportJsonData = {this.props.exportJsonData} />
+						<FeatureComponent.ExportasJson
+							dejavuExportData={this.props.dejavuExportData}
+							exportJsonData={this.props.exportJsonData}
+							fields={['_index', '_type', '_id', '_score', ...this.props.columns.slice(1)]}
+						/>
 						<a
 							href="javascript:void(0);"
 							className="btn btn-default themeBtn m-r10"
@@ -146,6 +164,18 @@ class Info extends React.Component {
 						</span>
 					</div>
 				</div>
+				{
+					infoObjClass === 'hide'
+					&& (
+						<a
+							href="javascript:void(0);"
+							className="btn btn-default themeBtn m-r10"
+							onClick={this.props.reloadData}
+						>
+							<i className="fa fa-refresh"></i> Reload
+						</a>
+					)
+				}
 				<DropdownButton
 					bsStyle={this.state.editable ? 'warning' : 'success'}
 					title={
@@ -227,7 +257,7 @@ class Info extends React.Component {
 						this.props.editable &&
 						<FeatureComponent.AddDocument
 							types={this.props.types}
-							text="Add Data"
+							text="Insert JSON"
 							addRecord ={this.props.addRecord}
 							getTypeDoc={this.props.getTypeDoc}
 							userTouchAdd={this.props.infoObj.userTouchAdd}
