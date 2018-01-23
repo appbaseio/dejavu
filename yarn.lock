@@ -105,18 +105,17 @@ anymatch@^1.3.0:
     arrify "^1.0.0"
     micromatch "^2.1.5"
 
-appbase-js@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-2.1.0.tgz#6d3c065bef10da50b012cff9aae0bb85df602f88"
+appbase-js@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-2.2.6.tgz#5fcd9af48dcf82d3e198b936f0c08c77e0dc1f15"
   dependencies:
     babel-polyfill "^6.26.0"
     es6-promise "^4.1.1"
     eventemitter2 "^4.1.2"
     fetch-everywhere "^1.0.5"
-    guid "0.0.12"
     json-stable-stringify "^1.0.1"
     stream "^0.0.2"
-    url "^0.11.0"
+    url-parser-lite "^0.1.0"
     ws "^2.2.0"
 
 aproba@^1.0.3:
@@ -3279,10 +3278,6 @@ graceful-fs@~1.2.0:
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
-
-guid@0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/guid/-/guid-0.0.12.tgz#9137c52b185f7de12490b9bebcc1660b9025fe0c"
 
 gulp-concat@^2.6.1:
   version "2.6.1"
@@ -6776,6 +6771,10 @@ url-parse@^1.1.8:
   dependencies:
     querystringify "~1.0.0"
     requires-port "1.0.x"
+
+url-parser-lite@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/url-parser-lite/-/url-parser-lite-0.1.0.tgz#4679720fd7448d42357d1c8c0a6ece95174e864e"
 
 url-regex@^3.0.0:
   version "3.2.0"
