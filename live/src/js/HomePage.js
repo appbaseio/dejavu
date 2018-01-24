@@ -784,6 +784,8 @@ var HomePage = createReactClass({
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
 		this.getStreamingTypes();
+		// reload mappings
+		this.setMap();
 	},
 	reloadSettings: function() {
 		feed.getSettings()
