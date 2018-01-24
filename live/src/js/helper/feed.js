@@ -151,7 +151,7 @@ function beforeInit() {
 							request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
 						}
 					},
-					url: config.url + '/' + config.appname + '/_settings?human',
+					url: 'https://' + appbaseApi + '/' + config.appname + '/_settings?human',
 					contentType: 'application/json; charset=utf-8',
 					dataType: 'json',
 					success: (res) => {
