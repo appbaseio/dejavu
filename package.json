@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "1.3.2",
+  "version": "1.4.1",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -13,8 +13,8 @@
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
     "build": "bower update --allow-root && npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
-    "build_chrome_extension": "gulp cleanUnpacked && npm run build && gulp chromeBuild",
-    "build_gh_pages": "bower update && gulp ghpagesBuild"
+    "build_chrome_extension": "bower update --allow-root && gulp chromeBuild",
+    "build_gh_pages": "bower update --allow-root && gulp ghpagesBuild"
   },
   "repository": {
     "type": "git",
@@ -55,7 +55,7 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
-    "appbase-js": "^2.1.0",
+    "appbase-js": "^2.2.6",
     "babel": "^6.23.0",
     "classnames": "^2.2.5",
     "fbemitter": "^2.1.1",
