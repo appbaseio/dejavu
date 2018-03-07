@@ -64,6 +64,10 @@ function filterUrl(url) {
 	}
 }
 
+function isAppbaseUrl() {
+	return config && config.url.indexOf(appbaseApi) !== -1;
+}
+
 //If default = true then take it from config.js
 var browse_url = window.location.href;
 var flag_url = browse_url.split('?default=')[1] === 'true' || browse_url.split('?default=')[1] === true;
@@ -217,23 +221,25 @@ var feed = (function() {
 			counterStream.stop();
 		}
 
-		counterStream = appbaseRef.searchStream({
-			type: types,
-			body: query
-		}).on('data', function(res2) {
-			//For update data
-			if (res2._updated) {
-				console.log('Updated');
-			} else if (res2._deleted) {
-				setTotal(0, true, 'delete');
-			}
-			//For Index data
-			else {
-				setTotal(0, true, 'index');
-			}
-		}).on('error', function(err) {
-			console.log('caught a stream error', err);
-		});
+		if (isAppbaseUrl()) {
+			counterStream = appbaseRef.searchStream({
+				type: types,
+				body: query
+			}).on('data', function(res2) {
+				//For update data
+				if (res2._updated) {
+					console.log('Updated');
+				} else if (res2._deleted) {
+					setTotal(0, true, 'delete');
+				}
+				//For Index data
+				else {
+					setTotal(0, true, 'index');
+				}
+			}).on('error', function(err) {
+				console.log('caught a stream error', err);
+			});
+		}
 	}
 
 	function allowOtherOperation() {
@@ -336,18 +342,20 @@ var feed = (function() {
 				streamRef.stop();
 			}
 
-			// get new data updates
-			streamRef = appbaseRef.searchStream({
-				type: types,
-				body: queryBody
-			}).on('data', function(res) {
-				if (res.hasOwnProperty('_updated')) {
-					delete res._updated;
-				}
-				callback(res, true);
-			}).on('error', function(err) {
-				console.log('caught a stream error', err);
-			});
+			if (isAppbaseUrl()) {
+				// get new data updates
+				streamRef = appbaseRef.searchStream({
+					type: types,
+					body: queryBody
+				}).on('data', function(res) {
+					if (res.hasOwnProperty('_updated')) {
+						delete res._updated;
+					}
+					callback(res, true);
+				}).on('error', function(err) {
+					console.log('caught a stream error', err);
+				});
+			}
 		}
 	}
 
