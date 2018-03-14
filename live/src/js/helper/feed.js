@@ -480,7 +480,7 @@ var feed = (function() {
 				});
 			}
 		},
-		deleteRecord: (selectedRows, callback) => {
+		deleteRecord: (selectedRows, callback, errorHandler) => {
 			function deleteData(sdata, data) {
 				selectedRows.forEach(function(v) {
 					if (typeof sdata[data] !== 'undefined') {
@@ -496,10 +496,16 @@ var feed = (function() {
 					type: selectedRows[0]._type,
 					id: selectedRows[0]._id
 				})
-					.on('data', (res) => {
-						callback(sdata);
-					})
+				.on('data', (res) => {
+					if (res.status && errorHandler && res.status >= 400) {
+						errorHandler(res);
+					}
+					callback(sdata);
+				})
 					.on('error', (err) => {
+						if (errorHandler) {
+							errorHandler(err);
+						}
 						console.error('Error while trying to delete: ', err);
 					});
 			} else {
@@ -516,6 +522,12 @@ var feed = (function() {
 						}
 					}
 					callback(sdata);
+				})
+				.on('error', (err) => {
+					if (errorHandler) {
+						errorHandler(err);
+					}
+					console.error('Error while trying to delete: ', err);
 				});
 			}
 		},

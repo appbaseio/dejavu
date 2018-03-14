@@ -754,11 +754,26 @@ var HomePage = createReactClass({
 	},
 	deleteRecord: function() {
 		$('.loadingBtn').addClass('loading');
-		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
-			this.setState({
-				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
-			});
-		}.bind(this));
+		feed.deleteRecord(
+			this.state.actionOnRecord.selectedRows,
+			function(update) {
+				this.setState({
+					infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
+				});
+			}.bind(this),
+			(res) => {
+				if (res.status >= 400) {
+					this.setState({
+						errorMessage: res.message
+					});
+					setTimeout(() => {
+						this.setState({
+							errorShow: true
+						});
+					}, 100);
+				}
+			}
+		);
 	},
 	initEs:function(){
 		const temp_config = help.initEs();
