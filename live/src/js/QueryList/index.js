@@ -41,12 +41,14 @@ class QueryList extends React.Component {
 	};
 
 	applyQuery = (query) => {
-		if (this.props.externalQueryApplied) {
-			if (this.state.selectedQuery.name !== query.name) {
+		if (!query.operation || query.operation === 'view') {
+			if (this.props.externalQueryApplied) {
+				if (this.state.selectedQuery.name !== query.name) {
+					this.justApplyQuery(query);
+				}
+			} else {
 				this.justApplyQuery(query);
 			}
-		} else {
-			this.justApplyQuery(query);
 		}
 	};
 
@@ -104,18 +106,9 @@ class QueryList extends React.Component {
 			return (
 				<li key={index} className={"list-item col-xs-12 "+ (this.props.externalQueryApplied && query.name === this.state.selectedQuery.name ? 'active' : '')}>
 					<div className="theme-element radio">
-						<input
-							id={"query-"+index}
-							type="radio"
-							checked={this.isChecked(query.name)}
-							onChange={this.applyQuery.bind(this, query)}
-							readOnly={false}
-							/>
-						<label htmlFor={"query-"+index}>
-							<span className="col-xs-12 query-name">
-								{query.name}
-							</span>
-						</label>
+						<span className="col-xs-12 query-name">
+							{query.name}
+						</span>
 					</div>
 					<a className="btn btn-grey delete-query" onClick={this.applyDeleteQuery.bind(this, query)}>
 						<i className="fa fa-times"></i>

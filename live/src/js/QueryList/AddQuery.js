@@ -1,6 +1,8 @@
+/* global feed, $ */
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Radio } from 'react-bootstrap';
 
 var Utils = require('../helper/utils.js');
 
@@ -13,7 +15,8 @@ class AddQuery extends React.Component {
 			type: false,
 			body: false
 		},
-		name: this.props.editable ? this.props.queryInfo.name : ''
+		name: this.props.editable ? this.props.queryInfo.name : '',
+		operation: (this.props.queryInfo && this.props.queryInfo.operation) || 'view'
 	};
 
 	componentDidUpdate() {
@@ -57,6 +60,12 @@ class AddQuery extends React.Component {
 		});
 	}
 
+	handleOperation = (operation) => {
+		this.setState({
+			operation
+		});
+	}
+
 	close = () => {
 		this.setState({
 			error: null
@@ -79,7 +88,8 @@ class AddQuery extends React.Component {
 			name: document.getElementById('setName').value,
 			query: this.editorref.getValue(),
 			createdAt: new Date().getTime(),
-			type: document.getElementById('applyQueryOn').value
+			type: document.getElementById('applyQueryOn').value,
+			operation: this.state.operation
 		};
 		validateClass.touch = true;
 		validateClass.name = queryValues.name == '' ? false : true;
@@ -100,24 +110,63 @@ class AddQuery extends React.Component {
 		$('.applyQueryBtn').addClass('loading');
 		$('.applyQueryBtn').attr('disabled', true);
 		var self = this;
-		var testQuery = feed.testQuery(queryValues.type, JSON.parse(queryValues.query));
-		testQuery.on('data', function(res) {
-			if (!res.hasOwnProperty('error')) {
-				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
-				self.props.includeQuery(queryValues, self.props.queryIndex);
-				self.close();
-			} else {
-				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+		if (!queryValues.operation || queryValues.operation === 'view') {
+			var testQuery = feed.testQuery(queryValues.type, JSON.parse(queryValues.query));
+			testQuery.on('data', function(res) {
+				if (!res.hasOwnProperty('error')) {
+					$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+					self.props.includeQuery(queryValues, self.props.queryIndex);
+					self.close();
+				} else {
+					$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+					self.setState({
+						error: res.error
+					});
+				}
+			}).on('error', function(err) {
 				self.setState({
-					error: res.error
+					error: err
 				});
-			}
-		}).on('error', function(err) {
-			self.setState({
-				error: err
+				$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
 			});
-			$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
-		});
+		} else {
+			if (queryValues.operation === 'update') {
+				const queryResult = feed.testUpdateQuery(
+					queryValues.type[0], JSON.parse(queryValues.query)
+				);
+				queryResult
+					.then((res) => {
+						$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+						self.props.includeQuery(queryValues, self.props.queryIndex);
+						self.close();
+						toastr.success(res.updated + ' records updated');
+					})
+					.fail((err) => {
+						self.setState({
+							error: err
+						});
+						$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+					});
+			} else if (queryValues.operation === 'delete') {
+				const queryResult = feed.testDeleteQuery(
+					queryValues.type[0], JSON.parse(queryValues.query)
+				);
+				queryResult
+					.then((res) => {
+						console.log(res)
+						$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+						self.props.includeQuery(queryValues, self.props.queryIndex);
+						self.close();
+						toastr.success(res.deleted + ' records deleted');
+					})
+					.fail((err) => {
+						self.setState({
+							error: err
+						});
+						$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
+					});
+			}
+		}
 	};
 
 	IsJsonString = (str) => {
@@ -183,7 +232,7 @@ class AddQuery extends React.Component {
 				<a href="javascript:void(0);" className="add-record-btn btn btn-primary col-xs-12" title={this.props.editable ? 'Edit' : 'Add'} onClick={this.open} >
 					{
 						this.props.editable ?
-							<span>Edit Query</span> :
+							<span>Edit</span> :
 							<span><i className="fa fa-plus pad-right" />Add Query</span>
 					}
 				</a>
@@ -209,6 +258,20 @@ class AddQuery extends React.Component {
 								</div>
 							</div>
 							{Utils.getTypeMarkup('query', validateClass, selectClass)}
+							<div className="form-group">
+								<label htmlFor="operation" className="col-sm-3 control-label">Operation</label>
+								<div className="col-sm-9">
+									<Radio name="operation" onChange={() => this.handleOperation('view')} checked={this.state.operation === 'view'} inline>
+										View
+									</Radio>{' '}
+									<Radio name="operation" onChange={() => this.handleOperation('update')} checked={this.state.operation === 'update'} inline>
+										Update by Query
+									</Radio>{' '}
+									<Radio name="operation" onChange={() => this.handleOperation('delete')} checked={this.state.operation === 'delete'} inline>
+										Delete by Query
+									</Radio>
+								</div>
+							</div>
 							{
 								this.props.editable ?
 									Utils.getBodyMarkup('query', validateClass, selectClass, this.userTouch, this.props.queryInfo.query) :
@@ -222,11 +285,7 @@ class AddQuery extends React.Component {
 						</div>
 						<Button key="applyQueryBtn" className="applyQueryBtn" bsStyle="success" onClick={this.validateInput}>
 							<i className="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-							{
-								this.props.editable ?
-									'Update' :
-									'Add'
-							}
+							Apply Query
 						</Button>
 					</Modal.Footer>
 				</Modal>

@@ -688,6 +688,34 @@ var feed = (function() {
 				body: queryBody
 			});
 		},
+		testUpdateQuery: function(type, queryBody) {
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: APPURL + '/' + type + '/_update_by_query',
+				dataType: 'json',
+				data: JSON.stringify(queryBody)
+			})
+		},
+		testDeleteQuery: function(type, queryBody) {
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: APPURL + '/' + type + '/_delete_by_query',
+				dataType: 'json',
+				data: JSON.stringify(queryBody)
+			})
+		},
 		getTotalRecord: function() {
 			// get historical data
 			return appbaseRef.search({
