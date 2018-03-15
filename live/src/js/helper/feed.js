@@ -8,6 +8,7 @@
 
 const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
+var customHeaders = null;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
@@ -29,6 +30,10 @@ function init() {
 			username: USERNAME,
 			password: PASSWORD
 		});
+}
+
+function initWithHeaders() {
+	appbaseRef.setHeaders(customHeaders);
 }
 
 // parse the url and detect username, password

@@ -235,7 +235,7 @@ footer {
 	background: #f8fafb;
 	padding: 5px;
 	padding-right: 130px;
-	padding-left: 169px;
+	padding-left: 250px;
 }
 
 .init-ES {
@@ -276,9 +276,26 @@ footer {
 	width: 20px;
 }
 
-.share-btn .btn {
+.splash-on .btn-header {
+	display: none;
+}
+
+.init-ES .btn-header {
+	position: absolute;
+	left: 170px;
+}
+
+.share-btn .btn, .init-ES .btn-header {
 	border: 1px solid #eee;
 	color: #0087ff;
+}
+
+#custom-header-overlay {
+	max-width: 400px;
+}
+
+.custom-headers-form {
+	width: 300px;
 }
 
 .init-ES h1,
@@ -1528,7 +1545,8 @@ ul#setApp {
 	height: 32px;
 }
 
-.create-column-submit-btn {
+.create-column-submit-btn,
+.custom-headers-submit {
 	margin-top: 10px;
 }
 

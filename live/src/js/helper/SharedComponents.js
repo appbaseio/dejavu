@@ -1,4 +1,6 @@
 var React = require('react');
+import { OverlayTrigger, Popover } from 'react-bootstrap';
+import CustomHeadersForm from '../features/CustomHeadersForm';
 var AppSelect = require('../AppSelect.js');
 var ShareLink = require('../features/ShareLink.js');
 
@@ -23,6 +25,18 @@ export const InitialForm = (props) => (
 					</div>
 					<ShareLink btn={props.shareBtn}> </ShareLink>
 					{props.composeQuery}
+					<OverlayTrigger
+						trigger="click"
+						rootClose
+						placement="right"
+						overlay={
+							<Popover id="custom-header-overlay">
+								<CustomHeadersForm />
+							</Popover>
+						}
+					>
+						<a className="btn btn-default btn-header">Headers</a>
+					</OverlayTrigger>
 					<div className="splashIn">
 						<div className="col-xs-6 m-0 pd-0 pr-5 form-group">
 							<div className="url-container">
@@ -46,7 +60,7 @@ export const InitialForm = (props) => (
 							<i className="fa fa-list"></i>
 							&nbsp;&nbsp;Fetch Indices
 						</a>
-						<a className={props.esBtn} onClick={props.connectPlayPause}>
+						<a className={`${props.esBtn} m-l10`} onClick={props.connectPlayPause}>
 							<i className={props.playClass}></i>
 							<i className={props.pauseClass}></i>
 							{props.esText}
