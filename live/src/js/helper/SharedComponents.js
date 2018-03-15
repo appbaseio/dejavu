@@ -51,16 +51,24 @@ export const InitialForm = (props) => (
 								</span>
 							</div>
 						</div>
-						<div className="form-group m-0 col-xs-4 pd-0 pr-5">
+						<div className="form-group m-0 col-xs-5 pd-0 pr-5 flex flex-align-center">
 							<AppSelect {...props.appSelect} />
+							{
+								!props.connect
+								&& (
+									<span className="flex flex-align-center">
+										<span className="m-l10">or</span>
+										<a className="btn btn-default m-l10" onClick={() => props.fetchIndices(props.indexUrl)}>
+											<i className="fa fa-list"></i>
+											&nbsp;&nbsp;Fetch Indices
+										</a>
+									</span>
+								)
+							}
 						</div>
 					</div>
 					<div className="submit-btn-container">
-						<a className="btn btn-default" onClick={() => props.fetchIndices(props.indexUrl)}>
-							<i className="fa fa-list"></i>
-							&nbsp;&nbsp;Fetch Indices
-						</a>
-						<a className={`${props.esBtn} m-l10`} onClick={props.connectPlayPause}>
+						<a className={props.esBtn} onClick={props.connectPlayPause}>
 							<i className={props.playClass}></i>
 							<i className={props.pauseClass}></i>
 							{props.esText}

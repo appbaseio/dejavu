@@ -796,7 +796,7 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	fetchIndices: (indexUrl) => {
+	fetchIndices: function(indexUrl) {
 		feed.getIndicesAliases(indexUrl)
 			.done((res) => {
 				const apps = JSON.parse(storageService.getItem('historicApps'));
@@ -811,8 +811,13 @@ var HomePage = createReactClass({
 					appsObject[app.appname] = true;
 					return true
 				});
+				// update in state todo
+				// focus on app dropdown
+				this.setState({
+					historicApps: uniqueApps
+				});
 				storageService.setItem('historicApps', JSON.stringify(uniqueApps));
-				window.location.reload();
+				document.getElementById('appname-aka-index').focus();
 			})
 			.fail(err => console.error(err))
 	},
@@ -933,6 +938,7 @@ var HomePage = createReactClass({
 					composeQuery={composeQuery}
 					fetchIndices={self.fetchIndices}
 					indexUrl={self.state.url}
+					connect={self.state.connect}
 				/>
 			);
 			return form;

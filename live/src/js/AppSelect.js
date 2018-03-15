@@ -85,6 +85,7 @@ class AppSelect extends React.Component {
 						type="text"
 						value={searchValue}
 						name="appname"
+						id="appname-aka-index"
 						placeholder="Appname (aka index) goes here"
 						onChange={this.handleInput}
 						onFocus={this.focusInput} onBlur={this.blurInput} {...opts}/>
