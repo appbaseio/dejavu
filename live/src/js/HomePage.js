@@ -796,6 +796,26 @@ var HomePage = createReactClass({
 			}
 		}
 	},
+	fetchIndices: (indexUrl) => {
+		feed.getIndicesAliases(indexUrl)
+			.done((res) => {
+				const apps = JSON.parse(storageService.getItem('historicApps'));
+				const newApps = apps.concat(Object.keys(res).map(key => ({
+					appname: key, url: indexUrl
+				})));
+				const appsObject = {};
+				const uniqueApps = newApps.filter(app => {
+					if(appsObject[app.appname]) {
+						return false;
+					}
+					appsObject[app.appname] = true;
+					return true
+				});
+				storageService.setItem('historicApps', JSON.stringify(uniqueApps));
+				window.location.reload();
+			})
+			.fail(err => console.error(err))
+	},
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
 		this.getStreamingTypes();
@@ -911,6 +931,8 @@ var HomePage = createReactClass({
 					esText={esText}
 					splash={self.state.splash}
 					composeQuery={composeQuery}
+					fetchIndices={self.fetchIndices}
+					indexUrl={self.state.url}
 				/>
 			);
 			return form;

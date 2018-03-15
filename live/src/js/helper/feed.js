@@ -738,6 +738,18 @@ var feed = (function() {
 				return null;
 			}
 		},
+		getIndicesAliases: function(indexUrl) {
+			return $.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: indexUrl + '/_aliases'
+			});
+		},
 		checkIndex: function(url, appname) {
 			return this.executeIndexOperation(url, appname);
 		},

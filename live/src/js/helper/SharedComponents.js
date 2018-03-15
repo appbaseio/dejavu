@@ -24,10 +24,7 @@ export const InitialForm = (props) => (
 					<ShareLink btn={props.shareBtn}> </ShareLink>
 					{props.composeQuery}
 					<div className="splashIn">
-						<div className="form-group m-0 col-xs-4 pd-0 pr-5">
-							<AppSelect {...props.appSelect} />
-						</div>
-						<div className="col-xs-8 m-0 pd-0 pr-5 form-group">
+						<div className="col-xs-6 m-0 pd-0 pr-5 form-group">
 							<div className="url-container">
 								<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 									value={props.url}
@@ -40,8 +37,15 @@ export const InitialForm = (props) => (
 								</span>
 							</div>
 						</div>
+						<div className="form-group m-0 col-xs-4 pd-0 pr-5">
+							<AppSelect {...props.appSelect} />
+						</div>
 					</div>
 					<div className="submit-btn-container">
+						<a className="btn btn-default" onClick={() => props.fetchIndices(props.indexUrl)}>
+							<i className="fa fa-list"></i>
+							&nbsp;&nbsp;Fetch Indices
+						</a>
 						<a className={props.esBtn} onClick={props.connectPlayPause}>
 							<i className={props.playClass}></i>
 							<i className={props.pauseClass}></i>
