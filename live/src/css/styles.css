@@ -42,6 +42,10 @@ label {
 	margin-left: 10px;
 }
 
+.m-l15 {
+	margin-left: 15px;
+}
+
 .m-0 {
 	margin: 0;
 }
@@ -235,7 +239,7 @@ footer {
 	background: #f8fafb;
 	padding: 5px;
 	padding-right: 130px;
-	padding-left: 275px;
+	padding-left: 165px;
 }
 
 .init-ES {
@@ -276,13 +280,9 @@ footer {
 	width: 20px;
 }
 
-.splash-on .btn-header {
-	display: none;
-}
-
 .init-ES .btn-header {
-	position: absolute;
-	left: 170px;
+	/* position: absolute;
+	left: 170px; */
 }
 
 .share-btn .btn, .init-ES .btn-header {

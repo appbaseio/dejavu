@@ -1,62 +1,102 @@
 import React from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+
+/* global feed, customHeaders, initWithHeaders */
 
 class CustomHeadersForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isValid: true
+			headers: customHeaders || [{
+				key: '',
+				value: ''
+			}]
 		};
-		this.isValidJson = this.isValidJson.bind(this);
+		this.add = this.add.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	componentDidMount() {
-		this.editorref = help.setCodeMirror('custom-headers-textarea');
-		if (customHeaders) {
-			this.editorref.setValue(JSON.stringify(customHeaders));
+	add() {
+		const { headers } = this.state;
+		if (headers[headers.length - 1].key.trim() === '' || headers[headers.length - 1].value.trim() === '') {
+			return;
 		}
+		this.setState({
+			headers: headers.concat({
+				key: '',
+				value: ''
+			})
+		});
 	}
 
-	isValidJson(json) {
-		try {
-			JSON.parse(json);
-		} catch (e) {
-			return false;
-		}
-		return true;
+	handleChange(e) {
+		const { headers } = this.state;
+		const { name, value } = e.target;
+		const [key, index] = name.split('-');
+		const insertObject = {
+			...headers[index],
+			[key]: value
+		};
+		const newHeaders = [
+			...headers.slice(0, index),
+			insertObject,
+			...headers.slice(index + 1)
+		];
+		this.setState({
+			headers: newHeaders
+		});
 	}
 
 	handleSubmit() {
-		const headersObj = this.editorref.getValue().trim();
-		if (this.isValidJson(headersObj)) {
-			customHeaders = JSON.parse(headersObj);
-			setTimeout(() => {
-				initWithHeaders();
-				document.body.click();	// hack for react-bootstrap overlay
-			}, 1500);
-		} else {
-			this.setState({
-				isValid: false
-			});
+		const newHeaders = this.state.headers.filter(header => (
+			header.key.trim() !== '' && header.value.trim() !== ''
+		));
+		if (newHeaders.length) {
+			customHeaders = newHeaders;
+			initWithHeaders();
+			this.props.toggleShow();
 		}
 	}
 
 	render() {
 		return (
-			<div className="custom-headers-form">
-				<textarea id="custom-headers-textarea" rows="7" />
-				{
-					!this.state.isValid &&
-					<div>
-						<span className="alert-message">Headers object should be a valid JSON</span>
-					</div>
-				}
-				<button className="btn btn-primary custom-headers-submit" onClick={this.handleSubmit}>
-					Update
-				</button>
-			</div>
+			<Modal show onHide={this.props.toggleShow}>
+				<Modal.Header closeButton>
+						<Modal.Title>Add Custom Headers</Modal.Title>
+					</Modal.Header>
+				<Modal.Body>
+						<form className="form-horizontal" id="updateObjectForm">
+							<div className="form-group">
+								<div className="col-xs-6 mb-10">Key</div>
+								<div className="col-xs-6 mb-10">Value</div>
+								{
+									this.state.headers.map((header, index) => (
+										<div key={index}>
+											<div className="col-xs-6 mt-10">
+												<input type="text" onChange={this.handleChange} name={`key-${index}`} className="form-control" value={header.key} />
+											</div>
+											<div className="col-xs-6 mt-10">
+												<input type="text" onChange={this.handleChange} name={`value-${index}`} className="form-control" value={header.value} />
+											</div>
+										</div>
+									))
+								}
+								<Button className="btn-primary m-l15 mt-10" onClick={this.add}>Add</Button>
+							</div>
+						</form>
+					</Modal.Body>
+				<Modal.Footer>
+			<Button className="btn-primary" onClick={this.handleSubmit}>Update</Button>
+		  </Modal.Footer>
+			</Modal>
 		);
 	}
 }
+
+CustomHeadersForm.propTypes = {
+	toggleShow: PropTypes.func
+};
 
 export default CustomHeadersForm;

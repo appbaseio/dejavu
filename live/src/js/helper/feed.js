@@ -33,7 +33,11 @@ function init() {
 }
 
 function initWithHeaders() {
-	appbaseRef.setHeaders(customHeaders);
+	if (customHeaders && customHeaders.length) {
+		appbaseRef.setHeaders(customHeaders.reduce((acc, head) => Object.assign(acc, {
+			[head.key]: head.value
+		}), {}));
+	}
 }
 
 // parse the url and detect username, password
