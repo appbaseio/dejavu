@@ -1245,6 +1245,21 @@ iframe {
 	margin: 0 10px;
 }
 
+.app-label {
+	color: #fff;
+	border-radius: 3px;
+	padding: 3px;
+	margin: 0 10px;
+}
+
+.app-label--primary {
+	background: #0087ff;
+}
+
+.app-label--success {
+	background: #5cb85c;
+}
+
 .column-label-img {
 	margin-right: 10px;
 }
@@ -1529,6 +1544,10 @@ ul#setApp {
 
 .flex-align-center {
 	align-items: center;
+}
+
+.flex-justify-space-between {
+	justify-content: space-between;
 }
 
 .icon-sm {

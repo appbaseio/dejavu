@@ -1,6 +1,7 @@
 //This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
 var React = require('react');
+import Label from './AppLabel';
 
 class AppSelect extends React.Component {
 	state = {
@@ -75,7 +76,13 @@ class AppSelect extends React.Component {
 		}
 
 		var options = optionsArr.map((app, index) => (
-			<li key={index} onClick={this.selectOption.bind(this, app.appname)}>{app.appname}</li>
+			<li key={index} onClick={this.selectOption.bind(this, app.appname)}>
+				<span className="flex flex-align-center flex-justify-space-between">{app.appname}
+					<Label success={app.fetched}>
+						{app.fetched ? 'Fetched' : 'Cached'}
+					</Label>
+				</span>
+			</li>
 		));
 
 		var searchValue = this.state.searchValue;

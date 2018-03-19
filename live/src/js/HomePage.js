@@ -800,9 +800,12 @@ var HomePage = createReactClass({
 		feed.getIndicesAliases(indexUrl)
 			.done((res) => {
 				const apps = JSON.parse(storageService.getItem('historicApps'));
-				const newApps = apps.concat(Object.keys(res).map(key => ({
-					appname: key, url: indexUrl
-				})));
+				const newApps = [
+					...(Object.keys(res).map(key => ({
+						appname: key, url: indexUrl, fetched: true
+					}))),
+					...apps
+				];
 				const appsObject = {};
 				const uniqueApps = newApps.filter(app => {
 					if(appsObject[app.appname]) {
