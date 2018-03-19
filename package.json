@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -73,7 +73,7 @@
     "react-select": "^1.0.0-rc.5"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/appbaseio/dejavu/issues"
   },
