@@ -465,11 +465,16 @@ var feed = (function() {
 				};
 				console.log(recordObject);
 				appbaseRef.update(recordObject).on('data', function(res) {
+					if (res.status >= 400) {
+						return callback(res);
+					}
 					if (method === 'updateCell' && callback) {
 						callback(res);
 					} else if (callback) {
 						return callback();
 					}
+				}).on('error', function(err) {
+					return callback(err);
 				});
 			}
 
