@@ -1246,14 +1246,14 @@ iframe {
 }
 
 .app-label {
-	color: #fff;
 	border-radius: 3px;
 	padding: 2px 4px;
 	margin: 0 10px;
 }
 
 .app-label--primary {
-	background: #999;
+	color: black;
+	background: #eee;
 }
 
 .app-label--success {
