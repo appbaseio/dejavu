@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-/* global feed, customHeaders, initWithHeaders */
+/* global APPNAME, customHeaders, initWithHeaders */
 
 class CustomHeadersForm extends React.Component {
 	constructor(props) {
@@ -55,6 +55,9 @@ class CustomHeadersForm extends React.Component {
 		));
 		if (newHeaders.length) {
 			customHeaders = newHeaders;
+			const allHeaders = JSON.parse(localStorage.getItem('customHeaders')) || {};
+			allHeaders[APPNAME] = newHeaders;
+			localStorage.setItem('customHeaders', JSON.stringify(allHeaders));
 			initWithHeaders();
 			this.props.toggleShow();
 		}

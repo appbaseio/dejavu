@@ -280,6 +280,17 @@ var HomePage = createReactClass({
 			appAuth = true;
 			self.init_map_stream();
 		},500);
+		const currentApp = document.getElementById('appname-aka-index').value;
+		const allHeaders = localStorage.getItem('customHeaders');
+		if (allHeaders) {
+			const parsedHeaders = JSON.parse(allHeaders);
+			console.log('ph', parsedHeaders)
+			if (parsedHeaders[currentApp]) {
+				customHeaders = parsedHeaders[currentApp];
+			} else {
+				customHeaders = null;
+			}
+		}
 	},
 
 	init_map_stream: function() {
@@ -876,6 +887,13 @@ var HomePage = createReactClass({
 		help.setApps.call(this, authFlag, this.getApps, (info) => {
 			this.setState(info);
 		});
+		const allHeaders = localStorage.getItem('customHeaders');
+		if (allHeaders) {
+			const parsedHeaders = JSON.parse(allHeaders);
+			if (parsedHeaders[this.state.appname]) {
+				customHeaders = parsedHeaders[this.state.appname];
+			}
+		}
 	},
 	setConfig: function(url) {
 		this.setState({

@@ -12,7 +12,7 @@ AppLabel.defaultProps = {
 };
 
 AppLabel.propTypes = {
-	children: PropTypes.element,
+	children: PropTypes.string,
 	success: PropTypes.bool
 };
 
