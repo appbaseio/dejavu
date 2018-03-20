@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 /* global APPNAME, customHeaders, initWithHeaders */
@@ -67,7 +67,15 @@ class CustomHeadersForm extends React.Component {
 		return (
 			<Modal show onHide={this.props.toggleShow}>
 				<Modal.Header closeButton>
-						<Modal.Title>Add Custom Headers</Modal.Title>
+						<Modal.Title>
+							Add Custom Headers&nbsp;
+							<OverlayTrigger
+								placement="bottom"
+								overlay={<Tooltip id="tooltip-explaination">These headers will be sent with every request made from the current app view.</Tooltip>}
+							>
+								<i className="fa fa-info-circle" />
+							</OverlayTrigger>
+						</Modal.Title>
 					</Modal.Header>
 				<Modal.Body>
 						<form className="form-horizontal" id="updateObjectForm">
@@ -86,12 +94,12 @@ class CustomHeadersForm extends React.Component {
 										</div>
 									))
 								}
-								<Button className="btn-primary m-l15 mt-10" onClick={this.add}>Add</Button>
+								<Button className="btn-primary m-l15 mt-10" onClick={this.add}>+</Button>
 							</div>
 						</form>
 					</Modal.Body>
 				<Modal.Footer>
-			<Button className="btn-primary" onClick={this.handleSubmit}>Update</Button>
+			<Button className="btn-primary" onClick={this.handleSubmit}>Apply</Button>
 		  </Modal.Footer>
 			</Modal>
 		);
