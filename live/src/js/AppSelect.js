@@ -1,6 +1,7 @@
 //This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
 var React = require('react');
+import UrlParser from 'url-parser-lite';
 import Label from './AppLabel';
 
 class AppSelect extends React.Component {
@@ -78,7 +79,7 @@ class AppSelect extends React.Component {
 		var options = optionsArr.map((app, index) => (
 			<li key={index} onClick={this.selectOption.bind(this, app.appname)}>
 				<span className="flex flex-align-center flex-justify-space-between">{app.appname}
-					<Label success={app.fetched} />
+					<Label>{UrlParser(app.url).host}</Label>
 				</span>
 			</li>
 		));
