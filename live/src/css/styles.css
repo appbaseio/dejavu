@@ -1252,8 +1252,9 @@ iframe {
 }
 
 .app-label--primary {
-	color: black;
+	color: #333;
 	background: #eee;
+	font-size: 10px;
 }
 
 .app-label--success {
