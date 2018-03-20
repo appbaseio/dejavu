@@ -3,14 +3,16 @@ var Utils = function() {
 	this.bulkExample = 'https://gist.githubusercontent.com/siddharthlatest/5f580917f575d72dee182caa5b5ed1b3/raw/c0f80b5410f4d7c84d37d49f2d1f5dd11a03a78e/bulk_add_dejavu.json';
 	this.getTypeMarkup = function(method, validateClass, selectClass) {
 		var id = method === 'query' ? 'applyQueryOn' : 'setType';
+		var labelText = method === 'query' ? 'Type': 'Document Type';
+		var smallText = method === 'query' ? '(optional)': '';
 		return (
 			<div className={validateClass.type}>
-				<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka table)</span></label>
+				<label htmlFor="inputEmail3" className="col-sm-3 control-label">{labelText} <div className="small-span">{smallText}</div></label>
 				<div className="col-sm-9">
 					<select id={id} className={selectClass} multiple="multiple" name="type">
 					</select>
 					<span className="help-block">
-						Type on which the query will be applied.
+						Type on which the request will be applied.
 					</span>
 				</div>
 			</div>
@@ -19,7 +21,7 @@ var Utils = function() {
 	this.getBodyMarkup = function(method, validateClass, selectClass, userTouch, defaultValue = '') {
 		var labelText = method === 'query' ? 'Query body' : 'JSON';
 		var smalltext = method === 'query' ? '(JSON)' : (<p>(use array for adding multiple records, <a href={this.bulkExample} target="_blank">see an example</a>.)</p>);
-		var helpText = method === 'query' ? 'Elasticsearch Query should be valid JSON.' : 'A data document is stored as a JSON object.';
+		var helpText = method === 'query' ? 'Elasticsearch Query should be a valid JSON.' : 'A data document is stored as a JSON object.';
 		return (
 			<div className={validateClass.body}>
 				<label htmlFor="inputPassword3" className="col-sm-3 control-label">

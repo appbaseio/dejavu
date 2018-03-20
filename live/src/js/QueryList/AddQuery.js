@@ -88,17 +88,17 @@ class AddQuery extends React.Component {
 			name: document.getElementById('setName').value,
 			query: this.editorref.getValue(),
 			createdAt: new Date().getTime(),
-			type: document.getElementById('applyQueryOn').value,
+			type: document.getElementById('applyQueryOn').value || '',
 			operation: this.state.operation
 		};
 		validateClass.touch = true;
 		validateClass.name = queryValues.name == '' ? false : true;
 		validateClass.body = this.IsJsonString(queryValues.query);
-		validateClass.type = queryValues.type == '' ? false : true;
+		validateClass.type = queryValues.type == '' ? true : true;
 		this.setState({
 			validate: validateClass
 		});
-		if (validateClass.name && validateClass.body && validateClass.type) {
+		if (validateClass.name && validateClass.body) {
 			queryValues.type = $('#applyQueryOn').val();
 			this.validateQuery(queryValues);
 			// this.props.includeQuery(queryValues);
@@ -131,6 +131,7 @@ class AddQuery extends React.Component {
 			});
 		} else {
 			if (queryValues.operation === 'update') {
+				console.log("queryValues: ", queryValues)
 				const queryResult = feed.testUpdateQuery(
 					queryValues.type[0], JSON.parse(queryValues.query)
 				);
@@ -249,11 +250,11 @@ class AddQuery extends React.Component {
 					<Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
 							<div className={validateClass.name}>
-								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Query Name</label>
 								<div className="col-sm-9">
-									<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" value={this.state.name} onChange={this.handleChange} />
+									<input type="text" className="form-control" id="setName" placeholder="A unique name to save this query by .." name="name" value={this.state.name} onChange={this.handleChange} />
 									<span className="help-block">
-										Query name is required.
+										Query Name is required.
 									</span>
 								</div>
 							</div>
