@@ -48,9 +48,10 @@ export class InitialForm extends React.Component {
 									<div className="flex">
 									<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 										value={props.url}
+										onBlur={() => props.fetchIndices(props.indexUrl)}
 										onChange={props.valChange}  {...props.opts} />
 										{
-											!props.connect
+											!props.connect && props.showFetchIndex
 											&& (
 												<span className="flex flex-align-center fetch-indices-container">
 													<a className="btn btn-default m-l10" onClick={() => props.fetchIndices(props.indexUrl)}>

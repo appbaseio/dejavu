@@ -67,7 +67,8 @@ var HomePage = createReactClass({
 			splash: true,
 			hideUrl: false,
 			cleanTypes: false,
-			dejavuExportData: null
+			dejavuExportData: null,
+			showFetchIndex: false
 		};
 	},
 	flatten: function(data, callback) {
@@ -834,8 +835,16 @@ var HomePage = createReactClass({
 				setTimeout(() => {
 					document.getElementById('appname-aka-index').focus();
 				}, 1000);
+				this.setState({
+					showFetchIndex: true
+				});
 			})
-			.fail(err => console.error(err))
+			.fail(err => {
+				console.error(err);
+				this.setState({
+					showFetchIndex: false
+				});
+			})
 	},
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
@@ -962,6 +971,7 @@ var HomePage = createReactClass({
 					fetchIndices={self.fetchIndices}
 					indexUrl={self.state.url}
 					connect={self.state.connect}
+					showFetchIndex={self.state.showFetchIndex}
 				/>
 			);
 			return form;
