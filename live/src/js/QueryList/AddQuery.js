@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Radio } from 'react-bootstrap';
+import { Modal, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 var Utils = require('../helper/utils.js');
 
@@ -262,13 +262,31 @@ class AddQuery extends React.Component {
 								<label htmlFor="operation" className="col-sm-3 control-label">Operation</label>
 								<div className="col-sm-9">
 									<Radio name="operation" onChange={() => this.handleOperation('view')} checked={this.state.operation === 'view'} inline>
-										View
+										View Data&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">View data that matches the below query clause.</Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>{' '}
 									<Radio name="operation" onChange={() => this.handleOperation('update')} checked={this.state.operation === 'update'} inline>
-										Update by Query
+										Update by Query&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">Update data that matches the below query clause. Updates are permanent, use with care. </Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>{' '}
 									<Radio name="operation" onChange={() => this.handleOperation('delete')} checked={this.state.operation === 'delete'} inline>
-										Delete by Query
+										Delete by Query&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">Delete data that matches the below query clause. Deletes are permanent, use with care. </Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>
 								</div>
 							</div>
