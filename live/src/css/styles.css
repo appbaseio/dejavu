@@ -42,6 +42,10 @@ label {
 	margin-left: 10px;
 }
 
+.m-l15 {
+	margin-left: 15px;
+}
+
 .m-0 {
 	margin: 0;
 }
@@ -235,7 +239,7 @@ footer {
 	background: #f8fafb;
 	padding: 5px;
 	padding-right: 130px;
-	padding-left: 169px;
+	padding-left: 165px;
 }
 
 .init-ES {
@@ -276,9 +280,22 @@ footer {
 	width: 20px;
 }
 
-.share-btn .btn {
+.init-ES .btn-header {
+	/* position: absolute;
+	left: 170px; */
+}
+
+.share-btn .btn, .init-ES .btn-header {
 	border: 1px solid #eee;
 	color: #0087ff;
+}
+
+#custom-header-overlay {
+	max-width: 400px;
+}
+
+.custom-headers-form {
+	width: 300px;
 }
 
 .init-ES h1,
@@ -1154,7 +1171,7 @@ iframe {
 .pageLoading .loadingBar,
 .full_page_loading .loadingBar {
 	display: block;
-	animation: shift-rightwards 0.5s ease-in-out infinite;
+	animation: shift-rightwards 2s ease-in-out infinite;
 	animation-delay: .2s
 }
 
@@ -1226,6 +1243,21 @@ iframe {
 	border-radius: 4px;
 	padding: 4px;
 	margin: 0 10px;
+}
+
+.app-label {
+	color: #fff;
+	border-radius: 3px;
+	padding: 2px 4px;
+	margin: 0 10px;
+}
+
+.app-label--primary {
+	background: #999;
+}
+
+.app-label--success {
+	background: #5cb85c;
 }
 
 .column-label-img {
@@ -1514,6 +1546,10 @@ ul#setApp {
 	align-items: center;
 }
 
+.flex-justify-space-between {
+	justify-content: space-between;
+}
+
 .icon-sm {
 	width: 25px;
 }
@@ -1528,7 +1564,8 @@ ul#setApp {
 	height: 32px;
 }
 
-.create-column-submit-btn {
+.create-column-submit-btn,
+.custom-headers-submit {
 	margin-top: 10px;
 }
 
@@ -1554,6 +1591,14 @@ ul#setApp {
 
 .margin-left {
 	margin-left: 15px;
+}
+
+.fetch-indices-container {
+	display: none;
+}
+
+.splash-on .fetch-indices-container {
+	display: block;
 }
 
 .pad-right {

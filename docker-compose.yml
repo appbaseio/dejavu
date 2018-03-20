@@ -1,0 +1,17 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:latest
+    container_name: elasticsearch
+    command: elasticsearch -Ecluster.name=catalog -Ebootstrap.memory_lock=true -Ehttp.port=9200 -Ehttp.cors.allow-origin="http://localhost:1358" -Ehttp.cors.enabled=true -Ehttp.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Ehttp.cors.allow-credentials=true -Ediscovery.zen.unicast.hosts=elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+     - "9200:9200"
+  dejavu:
+    image: appbaseio/dejavu:latest
+    container_name: dejavu
+    ports:
+     - "1358:1358"
+    links:
+      - elasticsearch

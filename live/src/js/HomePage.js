@@ -280,6 +280,17 @@ var HomePage = createReactClass({
 			appAuth = true;
 			self.init_map_stream();
 		},500);
+		const currentApp = document.getElementById('appname-aka-index').value;
+		const allHeaders = localStorage.getItem('customHeaders');
+		if (allHeaders) {
+			const parsedHeaders = JSON.parse(allHeaders);
+			console.log('ph', parsedHeaders)
+			if (parsedHeaders[currentApp]) {
+				customHeaders = parsedHeaders[currentApp];
+			} else {
+				customHeaders = null;
+			}
+		}
 	},
 
 	init_map_stream: function() {
@@ -754,11 +765,26 @@ var HomePage = createReactClass({
 	},
 	deleteRecord: function() {
 		$('.loadingBtn').addClass('loading');
-		feed.deleteRecord(this.state.actionOnRecord.selectedRows, function(update) {
-			this.setState({
-				infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
-			});
-		}.bind(this));
+		feed.deleteRecord(
+			this.state.actionOnRecord.selectedRows,
+			function(update) {
+				this.setState({
+					infoObj: help.deleteRecord.call(this, this.state.infoObj, this.state.actionOnRecord, this.removeSelection, this.resetData, this.getStreamingTypes, this.reloadData)
+				});
+			}.bind(this),
+			(res) => {
+				if (res.status >= 400) {
+					this.setState({
+						errorMessage: res.message
+					});
+					setTimeout(() => {
+						this.setState({
+							errorShow: true
+						});
+					}, 100);
+				}
+			}
+		);
 	},
 	initEs:function(){
 		const temp_config = help.initEs();
@@ -781,8 +807,41 @@ var HomePage = createReactClass({
 			}
 		}
 	},
+	fetchIndices: function(indexUrl) {
+		feed.getIndicesAliases(indexUrl)
+			.done((res) => {
+				const apps = JSON.parse(storageService.getItem('historicApps'));
+				const newApps = [
+					...(Object.keys(res).map(key => ({
+						appname: key, url: indexUrl, fetched: true
+					}))),
+					...apps
+				];
+				const appsObject = {};
+				const uniqueApps = newApps.filter(app => {
+					if(appsObject[app.appname]) {
+						return false;
+					}
+					appsObject[app.appname] = true;
+					return true
+				});
+				// update in state todo
+				// focus on app dropdown
+				this.setState({
+					historicApps: uniqueApps
+				});
+				storageService.setItem('historicApps', JSON.stringify(uniqueApps));
+				setTimeout(() => {
+					document.getElementById('appname-aka-index').focus();
+				}, 1000);
+			})
+			.fail(err => console.error(err))
+	},
 	reloadData: function(){
 		this.getStreamingData(subsetESTypes);
+		this.getStreamingTypes();
+		// reload mappings
+		this.setMap();
 	},
 	reloadSettings: function() {
 		feed.getSettings()
@@ -828,6 +887,13 @@ var HomePage = createReactClass({
 		help.setApps.call(this, authFlag, this.getApps, (info) => {
 			this.setState(info);
 		});
+		const allHeaders = localStorage.getItem('customHeaders');
+		if (allHeaders) {
+			const parsedHeaders = JSON.parse(allHeaders);
+			if (parsedHeaders[this.state.appname]) {
+				customHeaders = parsedHeaders[this.state.appname];
+			}
+		}
 	},
 	setConfig: function(url) {
 		this.setState({
@@ -893,6 +959,9 @@ var HomePage = createReactClass({
 					esText={esText}
 					splash={self.state.splash}
 					composeQuery={composeQuery}
+					fetchIndices={self.fetchIndices}
+					indexUrl={self.state.url}
+					connect={self.state.connect}
 				/>
 			);
 			return form;
