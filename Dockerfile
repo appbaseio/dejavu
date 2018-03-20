@@ -1,18 +1,18 @@
-FROM node:8.9.0-alpine
+FROM node:9.8.0-alpine
 MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
 
 RUN apk add --no-cache git
 
-RUN npm install -g bower
-RUN npm install -g http-server
+RUN yarn global add bower
+RUN yarn global add http-server
 
 ADD . /dejavu
 
-RUN npm install
+RUN yarn
 RUN bower install --allow-root
-RUN npm run build
+RUN yarn build
 
 EXPOSE 1358
 CMD ["http-server", "-p 1358"]
