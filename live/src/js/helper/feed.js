@@ -8,6 +8,7 @@
 
 const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
+var customHeaders = null;
 var appbaseRef;
 var getMapFlag = false;
 var appAuth = true;
@@ -29,6 +30,14 @@ function init() {
 			username: USERNAME,
 			password: PASSWORD
 		});
+}
+
+function initWithHeaders() {
+	if (customHeaders && customHeaders.length) {
+		appbaseRef.setHeaders(customHeaders.reduce((acc, head) => Object.assign(acc, {
+			[head.key]: head.value
+		}), {}));
+	}
 }
 
 // parse the url and detect username, password
@@ -62,6 +71,10 @@ function filterUrl(url) {
 	} else {
 		return null;
 	}
+}
+
+function isAppbaseUrl() {
+	return config && config.url.indexOf(appbaseApi) !== -1;
 }
 
 //If default = true then take it from config.js
@@ -217,23 +230,25 @@ var feed = (function() {
 			counterStream.stop();
 		}
 
-		counterStream = appbaseRef.searchStream({
-			type: types,
-			body: query
-		}).on('data', function(res2) {
-			//For update data
-			if (res2._updated) {
-				console.log('Updated');
-			} else if (res2._deleted) {
-				setTotal(0, true, 'delete');
-			}
-			//For Index data
-			else {
-				setTotal(0, true, 'index');
-			}
-		}).on('error', function(err) {
-			console.log('caught a stream error', err);
-		});
+		if (isAppbaseUrl()) {
+			counterStream = appbaseRef.searchStream({
+				type: types,
+				body: query
+			}).on('data', function(res2) {
+				//For update data
+				if (res2._updated) {
+					console.log('Updated');
+				} else if (res2._deleted) {
+					setTotal(0, true, 'delete');
+				}
+				//For Index data
+				else {
+					setTotal(0, true, 'index');
+				}
+			}).on('error', function(err) {
+				console.log('caught a stream error', err);
+			});
+		}
 	}
 
 	function allowOtherOperation() {
@@ -336,18 +351,20 @@ var feed = (function() {
 				streamRef.stop();
 			}
 
-			// get new data updates
-			streamRef = appbaseRef.searchStream({
-				type: types,
-				body: queryBody
-			}).on('data', function(res) {
-				if (res.hasOwnProperty('_updated')) {
-					delete res._updated;
-				}
-				callback(res, true);
-			}).on('error', function(err) {
-				console.log('caught a stream error', err);
-			});
+			if (isAppbaseUrl()) {
+				// get new data updates
+				streamRef = appbaseRef.searchStream({
+					type: types,
+					body: queryBody
+				}).on('data', function(res) {
+					if (res.hasOwnProperty('_updated')) {
+						delete res._updated;
+					}
+					callback(res, true);
+				}).on('error', function(err) {
+					console.log('caught a stream error', err);
+				});
+			}
 		}
 	}
 
@@ -448,11 +465,16 @@ var feed = (function() {
 				};
 				console.log(recordObject);
 				appbaseRef.update(recordObject).on('data', function(res) {
+					if (res.status >= 400) {
+						return callback(res);
+					}
 					if (method === 'updateCell' && callback) {
 						callback(res);
 					} else if (callback) {
 						return callback();
 					}
+				}).on('error', function(err) {
+					return callback(err);
 				});
 			}
 
@@ -472,7 +494,7 @@ var feed = (function() {
 				});
 			}
 		},
-		deleteRecord: (selectedRows, callback) => {
+		deleteRecord: (selectedRows, callback, errorHandler) => {
 			function deleteData(sdata, data) {
 				selectedRows.forEach(function(v) {
 					if (typeof sdata[data] !== 'undefined') {
@@ -488,10 +510,16 @@ var feed = (function() {
 					type: selectedRows[0]._type,
 					id: selectedRows[0]._id
 				})
-					.on('data', (res) => {
-						callback(sdata);
-					})
+				.on('data', (res) => {
+					if (res.status && errorHandler && res.status >= 400) {
+						errorHandler(res);
+					}
+					callback(sdata);
+				})
 					.on('error', (err) => {
+						if (errorHandler) {
+							errorHandler(err);
+						}
 						console.error('Error while trying to delete: ', err);
 					});
 			} else {
@@ -508,6 +536,12 @@ var feed = (function() {
 						}
 					}
 					callback(sdata);
+				})
+				.on('error', (err) => {
+					if (errorHandler) {
+						errorHandler(err);
+					}
+					console.error('Error while trying to delete: ', err);
 				});
 			}
 		},
@@ -668,6 +702,34 @@ var feed = (function() {
 				body: queryBody
 			});
 		},
+		testUpdateQuery: function(type, queryBody) {
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: APPURL + '/' + type + '/_update_by_query',
+				dataType: 'json',
+				data: JSON.stringify(queryBody)
+			})
+		},
+		testDeleteQuery: function(type, queryBody) {
+			return $.ajax({
+				type: 'POST',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: APPURL + '/' + type + '/_delete_by_query',
+				dataType: 'json',
+				data: JSON.stringify(queryBody)
+			})
+		},
 		getTotalRecord: function() {
 			// get historical data
 			return appbaseRef.search({
@@ -689,6 +751,18 @@ var feed = (function() {
 			} else {
 				return null;
 			}
+		},
+		getIndicesAliases: function(indexUrl) {
+			return $.ajax({
+				type: 'GET',
+				contentType: 'application/json',
+				beforeSend: (request) => {
+					if (PASSWORD !== 'test') {
+						request.setRequestHeader('Authorization', 'Basic ' + btoa(USERNAME + ':' + PASSWORD));
+					}
+				},
+				url: indexUrl + '/_aliases'
+			});
 		},
 		checkIndex: function(url, appname) {
 			return this.executeIndexOperation(url, appname);
