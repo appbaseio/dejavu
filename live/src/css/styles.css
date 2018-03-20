@@ -1521,6 +1521,7 @@ tbody.exp-scrollable td.column_width:first-child {
 
 ul#setApp {
 	z-index: 20;
+	max-height: 200px;
 }
 
 .object-cell-container {
