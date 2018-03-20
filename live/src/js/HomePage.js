@@ -820,7 +820,9 @@ var HomePage = createReactClass({
 					historicApps: uniqueApps
 				});
 				storageService.setItem('historicApps', JSON.stringify(uniqueApps));
-				document.getElementById('appname-aka-index').focus();
+				setTimeout(() => {
+					document.getElementById('appname-aka-index').focus();
+				}, 1000);
 			})
 			.fail(err => console.error(err))
 	},

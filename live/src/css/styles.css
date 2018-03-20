@@ -1247,13 +1247,13 @@ iframe {
 
 .app-label {
 	color: #fff;
-	border-radius: 3px;
+	border-radius: 50%;
 	padding: 3px;
 	margin: 0 10px;
 }
 
 .app-label--primary {
-	background: #0087ff;
+	background: #ccc;
 }
 
 .app-label--success {

@@ -78,9 +78,7 @@ class AppSelect extends React.Component {
 		var options = optionsArr.map((app, index) => (
 			<li key={index} onClick={this.selectOption.bind(this, app.appname)}>
 				<span className="flex flex-align-center flex-justify-space-between">{app.appname}
-					<Label success={app.fetched}>
-						{app.fetched ? 'Fetched' : 'Cached'}
-					</Label>
+					<Label success={app.fetched} />
 				</span>
 			</li>
 		));

@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const AppLabel = ({ children, success }) => (
-	<span className={`app-label ${success ? 'app-label--success' : 'app-label--primary'}`}>
-		{children}
-	</span>
+const AppLabel = ({ success }) => (
+	<span className={`app-label ${success ? 'app-label--success' : 'app-label--primary'}`} />
 );
 
 AppLabel.defaultProps = {
@@ -12,10 +10,6 @@ AppLabel.defaultProps = {
 };
 
 AppLabel.propTypes = {
-	children: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.number
-	]),
 	success: PropTypes.bool
 };
 
