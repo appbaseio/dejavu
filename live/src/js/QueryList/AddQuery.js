@@ -88,21 +88,17 @@ class AddQuery extends React.Component {
 			name: document.getElementById('setName').value,
 			query: this.editorref.getValue(),
 			createdAt: new Date().getTime(),
-			type: document.getElementById('applyQueryOn').value || '',
+			type: document.getElementById('applyQueryOn').value || [],
 			operation: this.state.operation
 		};
 		validateClass.touch = true;
-		validateClass.name = queryValues.name == '' ? false : true;
+		validateClass.name = queryValues.name === '' ? false : true;
 		validateClass.body = this.IsJsonString(queryValues.query);
-		validateClass.type = queryValues.type == '' ? true : true;
 		this.setState({
 			validate: validateClass
 		});
 		if (validateClass.name && validateClass.body) {
-			queryValues.type = $('#applyQueryOn').val();
 			this.validateQuery(queryValues);
-			// this.props.includeQuery(queryValues);
-			// this.close();
 		}
 	};
 
@@ -133,7 +129,7 @@ class AddQuery extends React.Component {
 			if (queryValues.operation === 'update') {
 				console.log("queryValues: ", queryValues)
 				const queryResult = feed.testUpdateQuery(
-					queryValues.type[0], JSON.parse(queryValues.query)
+					queryValues.type, JSON.parse(queryValues.query)
 				);
 				queryResult
 					.then((res) => {
@@ -150,7 +146,7 @@ class AddQuery extends React.Component {
 					});
 			} else if (queryValues.operation === 'delete') {
 				const queryResult = feed.testDeleteQuery(
-					queryValues.type[0], JSON.parse(queryValues.query)
+					queryValues.type, JSON.parse(queryValues.query)
 				);
 				queryResult
 					.then((res) => {
