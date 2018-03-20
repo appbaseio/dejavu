@@ -87,7 +87,7 @@ class UpdateDocument extends React.Component {
 					<Modal.Body>
 						<form className="form-horizontal" id="updateObjectForm">
 							<div className="form-group">
-								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Type <span className="small-span">(aka Table)</span></label>
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Document Type</label>
 								<div className="col-sm-9">
 									<input type="text" className="form-control" id="type" name="type" value={actionOnRecord.type} readOnly />
 								</div>
@@ -100,7 +100,7 @@ class UpdateDocument extends React.Component {
 								</div>
 							</div>
 							<div className={validateClass.body}>
-								<label htmlFor="inputPassword3" className="col-sm-3 control-label">JSON <span className="small-span">(partial object)</span></label>
+								<label htmlFor="inputPassword3" className="col-sm-3 control-label">JSON <br /><span className="small-span">(partial object)</span></label>
 								<div className="col-sm-9">
 									<textarea id="setBodyUpdate" className="form-control" rows="10" name="body" defaultValue={actionOnRecord.row}></textarea>
 									<span className="help-block">
