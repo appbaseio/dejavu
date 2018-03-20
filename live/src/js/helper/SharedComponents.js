@@ -45,9 +45,22 @@ export class InitialForm extends React.Component {
 						<div className="splashIn">
 							<div className="col-xs-7 m-0 pd-0 pr-5 form-group">
 								<div className="url-container">
+									<div className="flex">
 									<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 										value={props.url}
 										onChange={props.valChange}  {...props.opts} />
+										{
+											!props.connect
+											&& (
+												<span className="flex flex-align-center fetch-indices-container">
+													<a className="btn btn-default m-l10" onClick={() => props.fetchIndices(props.indexUrl)}>
+														<i className="fa fa-list"></i>
+														&nbsp;&nbsp;Fetch Indices
+													</a>
+												</span>
+											)
+										}
+									</div>
 									<span className={props.hideUrl} style={props.hideEye}>
 										<a className="btn btn-default"
 											onClick={props.hideUrlChange}>
@@ -59,18 +72,6 @@ export class InitialForm extends React.Component {
 							</div>
 							<div className="form-group m-0 col-xs-5 pd-0 pr-5 flex flex-align-center">
 								<AppSelect {...props.appSelect} />
-								{
-									!props.connect
-									&& (
-										<span className="flex flex-align-center">
-											<span className="m-l10">or</span>
-											<a className="btn btn-default m-l10" onClick={() => props.fetchIndices(props.indexUrl)}>
-												<i className="fa fa-list"></i>
-												&nbsp;&nbsp;Fetch Indices
-											</a>
-										</span>
-									)
-								}
 							</div>
 						</div>
 						{

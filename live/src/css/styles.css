@@ -1593,6 +1593,14 @@ ul#setApp {
 	margin-left: 15px;
 }
 
+.fetch-indices-container {
+	display: none;
+}
+
+.splash-on .fetch-indices-container {
+	display: block;
+}
+
 .pad-right {
 	padding-right: 5px;
 }
