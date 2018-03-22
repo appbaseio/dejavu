@@ -53,7 +53,7 @@ Moreover, any filtered view can be exported back as a JSON or CSV file.
 
 ![Enhanced Filtering with Queries](https://i.imgur.com/HGEEYfu.gif)
 
-dejavu also supports query filtered view, where a user can write an Elasticsearch query and the data view will be filtered according to the query.
+Dejavu also supports showing filtered views based on an Elasticsearch query, as well as bulk updating or deleting documents via the query DSL.
 
 #### Modern UI elements
 
