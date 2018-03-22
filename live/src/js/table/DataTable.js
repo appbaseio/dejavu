@@ -96,7 +96,7 @@ class DataTable extends React.Component {
 		var data = this.props._data;
 		var fixed = [], columns, initial_final_cols;
 		const { arrayOptions } = this.state;
-		//If render from sort, dont change the order of columns
+		//If render from sort, don't change the order of columns
 		// TODO: optimize logic
 		if ($this.props.infoObj.showing != 0) {
 			fixed = ['json'];
@@ -316,7 +316,7 @@ class DataTable extends React.Component {
 
 		var renderRows1 = [];
 
-		// //If render from sort, dont render the coumns
+		// //If render from sort, don't render the coumns
 		var renderRows = rows.map(function(item, key) {
 			var _key = item['_key'];
 			var row = item['row'];
