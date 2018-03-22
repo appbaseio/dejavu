@@ -8,7 +8,7 @@ dejavu: The missing Web UI for Elasticsearch
 2. **[Features](#2-features)**  
   a. [Easily Connect to Indices](#easily-connect-and-remember-indices)  
   b. [Visual Filters](#visual-filters)  
-  c. [Enhanced Filtering with Queries](#enhanced-filtering-with-queries)
+  c. [Enhanced Filtering with Queries](#enhanced-filtering-with-queries)  
   d. [Modern UI Elements](#modern-ui-elements)  
   e. [Realtime Data Updates](#realtime-data-updates)  
   f. [Import JSON or CSV Data](#import-json-or-csv-data)  
