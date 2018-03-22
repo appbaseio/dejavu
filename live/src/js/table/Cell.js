@@ -456,9 +456,9 @@ class Cell extends React.Component {
 				);
 			}
 			if (Array.isArray(data) && !isObject) {
-				const seperator = getMaxArrayView(data);
-				const arrayView = this.state.data.length > seperator ?
-					this.state.data.slice(0, seperator).map(item => ({ value: item, label: item })).concat([{ value: '...', label: '...' }]) :
+				const separator = getMaxArrayView(data);
+				const arrayView = this.state.data.length > separator ?
+					this.state.data.slice(0, separator).map(item => ({ value: item, label: item })).concat([{ value: '...', label: '...' }]) :
 					this.state.data.map(item => ({ value: item, label: item }));
 				const prettyView = <Pretty json={data} />;
 				const arrayEditView = (
@@ -485,7 +485,7 @@ class Cell extends React.Component {
 						/>
 					</div>
 				);
-				toDisplay = this.state.data.length > seperator ? (
+				toDisplay = this.state.data.length > separator ? (
 					<OverlayTrigger
 					trigger="click" rootClose placement="top" overlay={
 						!this.props.editable ?
