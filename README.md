@@ -43,7 +43,7 @@ Dejavu allows you to connect to any of the indexes present in your cluster and a
 
 #### Visual Filters
 
-![Filter Views](http://i.imgur.com/sE90O10.gif)
+![Filter Views](https://i.imgur.com/WzS1kTN.gif)
 
 Sort through the data, find things visually, hide irrelevant data and make sense of all the text, numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``text`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
@@ -51,13 +51,13 @@ Moreover, any filtered view can be exported back as a JSON or CSV file.
 
 #### Enhanced Filtering with Queries
 
-![Enhanced Filtering with Queries]()
+![Enhanced Filtering with Queries](https://i.imgur.com/HGEEYfu.gif)
 
 dejavu also supports query filtered view, where a user can write an Elasticsearch query and the data view will be filtered according to the query.
 
 #### Modern UI elements
 
-![Pagination](http://i.imgur.com/IAX0kLX.gif)
+![Pagination](https://i.imgur.com/sEfSPwc.gif)
 
 It's not uncommon to have thousands of documents in your index. Dejavu supports an infinite scroll based UI, pagination is so old school.
 
@@ -65,7 +65,7 @@ Dejavu also supports browsing data from multiple types, updating data either ind
 
 #### Realtime Data Updates
 
-![Realtime data updates](http://i.imgur.com/z0Ey4BN.gif)
+![Realtime data updates](https://i.imgur.com/GrROJqz.gif)
 
 dejavu uses a websockets based API and subscribes for data changes for the current filtered view. For this to work, the Elasticsearch server needs to support a websockets based publish API. Currently, you can take advantage of this feature by hosting your data with appbase.io.
 
