@@ -125,7 +125,7 @@ Roadmap beyond v2:
 
 ### 5. Build Locally
 
-See the **[CONTRIBUTING File](https://raw.githubusercontent.com/appbaseio/dejavu/dev/CONTRIBUTING.md)**
+See the **[CONTRIBUTING File](./CONTRIBUTING.md)**
 
 ---
 
