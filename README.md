@@ -67,7 +67,7 @@ Dejavu also supports browsing data from multiple types, updating data either ind
 
 ![Realtime data updates](https://i.imgur.com/GrROJqz.gif)
 
-dejavu uses a websockets-based API and subscribes for data changes for the current filtered view. For this to work, the Elasticsearch server needs to support a websockets-based publish API. Currently, you can take advantage of this feature by hosting your data with appbase.io.
+dejavu uses a websockets based API and subscribes for data changes for the current filtered view. For this to work, the Elasticsearch server needs to support a websockets based publish API. Currently, you can take advantage of this feature by hosting your data with appbase.io.
 
 
 #### Import JSON or CSV Data
