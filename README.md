@@ -23,9 +23,9 @@ dejavu: The missing Web UI for Elasticsearch
 
 ### 1. Dejavu Intro
 
-**dejavu** is the missing web UI for Elasticsearch. Existing web UIs leave much to be desired or are built with server side page rendering techniques that make it less responsive and bulkier to run (I am looking at you, Kibana).
+**dejavu** is the missing web UI for Elasticsearch. Existing web UIs leave much to be desired or are built with server-side page rendering techniques that make it less responsive and bulkier to run (I am looking at you, Kibana).
 
-We started building dejavu with a goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates) with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://opensource.appbase.io/dejavu/live), [as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh) or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
+We started building dejavu with the goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates) for Elasticsearch with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://opensource.appbase.io/dejavu/live), [as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh) or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
 
 Starting `v1.0`, dejavu is the only Elasticsearch web UI that supports importing data via JSON and CSV files, as well as defining field mappings from the GUI.
 
@@ -39,15 +39,15 @@ With the latest `v1.5`, we support the ability of creating custom headers so you
 
 ![Connect to an Index](https://i.imgur.com/TksvSAS.gif)
 
-Dejavu allows you to connect to any of the indexes present in your cluster and also caches each connected index locally so they are easily accessible when you are browsing again.
+Dejavu allows you to connect to any of the indexes present in your cluster and also caches each connected index locally so they are easily accessible when browsing again.
 
 #### Visual Filters
 
 ![Filter Views](https://i.imgur.com/WzS1kTN.gif)
 
-Sort through the data, find things visually, hide irrelevant data and make sense of all the text, numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``text`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly a numeric field allows filtering on ranges and a date field allows filtering data by dates.
+Sort through the data, find information visually, hide irrelevant data and make sense of all the text, numbers and dates. Filters work by identifying data mappings from the Elasticsearch index. If dejavu sees a ``text`` field, it will provide filters for **search**, **has** and **has not** and is also mindful if the data is analyzed. Similarly, a numeric field allows filtering on ranges and a date field allows filtering data by dates.
 
-Moreover, any filtered view can be exported back as a JSON or CSV file.
+Moreover, any filtered view can be exported as a JSON or CSV file.
 
 #### Enhanced Filtering with Queries
 
