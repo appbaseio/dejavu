@@ -59,7 +59,7 @@ Dejavu also supports showing filtered views based on an Elasticsearch query, as 
 
 ![Pagination](https://i.imgur.com/sEfSPwc.gif)
 
-It's not uncommon to have thousands of documents in your index. Dejavu supports an infinite scroll-based UI, pagination is so old school.
+It's not uncommon to have thousands of documents in your index. Dejavu supports an infinite scroll based UI, pagination is so old school.
 
 Dejavu also supports browsing data from multiple types, updating data either individually or via queries in bulk. Deletions are also supported.
 
