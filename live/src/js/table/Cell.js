@@ -316,7 +316,7 @@ class Cell extends React.Component {
 			}
 		};
 
-		if (_mapping && _mapping._parent && _mapping._routing && _mapping._routing.required) {
+		if (_mapping && _mapping._parent && _mapping._routing && _mapping._routing.path && _mapping._routing.required) {
 			data.parent = row[_mapping._routing.path];
 		}
 
