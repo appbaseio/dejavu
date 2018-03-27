@@ -306,13 +306,21 @@ class Cell extends React.Component {
 	};
 
 	indexCurrentData(nextData) {
-		feed.indexData({
-			type: this.props._type,
-			id: this.props._id,
+		const { _type, _id, columnName, row, _mapping } = this.props;
+
+		const data = {
+			type: _type,
+			id: _id,
 			body: {
-				[this.props.columnName]: nextData
+				[columnName]: nextData
 			}
-		}, 'updateCell', res => this.handleErrorMsg(res));
+		};
+
+		if (_mapping && _mapping._parent && _mapping._routing && _mapping._routing.path && _mapping._routing.required) {
+			data.parent = row[_mapping._routing.path];
+		}
+
+		feed.indexData(data, 'updateCell', res => this.handleErrorMsg(res));
 	}
 
 	imageOnLoad = () => {

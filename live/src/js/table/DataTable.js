@@ -283,6 +283,7 @@ class DataTable extends React.Component {
 						columnName={each}
 						_id={data[row]['_id']}
 						_type={data[row]['_type']}
+						_mapping={mappingObj[type]}
 						visibility={visibility}
 						row={newRow}
 						_checked={newRow._checked}
