@@ -12,11 +12,12 @@ class ImportData extends React.Component {
 	componentDidUpdate() {}
 
 	close = () => {
-		var thisRef = this;
-		$(".close").click(function(e) {
-			thisRef.state.exportClose = true;
+		$(".close").click((e) => {
+			this.setState({
+				exportClose: true
+			});
 		});
-		
+
 		if(this.state.exportClose) {
 		 	this.setState({
 				showModal: false
