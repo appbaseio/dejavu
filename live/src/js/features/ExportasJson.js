@@ -5,20 +5,29 @@ import { Modal, Button } from 'react-bootstrap';
 
 class ImportData extends React.Component {
 	state = {
-		showModal: false
+		showModal: false,
+		exportClose: false
 	};
 
 	componentDidUpdate() {}
 
 	close = () => {
-		this.setState({
-			showModal: false
+		var thisRef = this;
+		$(".modal-content").click(function(e) {
+			thisRef.state.exportClose = true;
 		});
+		
+		if(this.state.exportClose) {
+		 	this.setState({
+				showModal: false
+			});
+		}
 	};
 
 	open = () => {
 		this.setState({
-			showModal: true
+			showModal: true,
+			exportClose: false
 		}, () => {
 			$('.modal-text').hide();
 		});
