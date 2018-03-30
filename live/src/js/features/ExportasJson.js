@@ -13,7 +13,7 @@ class ImportData extends React.Component {
 
 	close = () => {
 		var thisRef = this;
-		$(".modal-content").click(function(e) {
+		$(".close").click(function(e) {
 			thisRef.state.exportClose = true;
 		});
 		
