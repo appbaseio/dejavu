@@ -5,7 +5,7 @@ import get from 'lodash/get';
 import { Creatable } from 'react-select';
 
 /* global feed, help */
-import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
+import { es2, es5, es6, dateFormats, dateHints } from '../helper/esMapping';
 import analyzerSettings from '../helper/analyzerSettings';
 import ErrorModal from '../features/ErrorModal';
 
@@ -26,7 +26,8 @@ class CreateColumnForm extends React.Component {
 			credentialsErrorTitle: '',
 			credentialsErrorMessage: '',
 			isMappingValid: true,
-			esMapping: feed.getEsVersion() === 2 ? es2 : es5
+			esMapping: feed.getEsVersion() === 2 ? es2 :
+					(feed.getEsVersion() === 5 ? es5 : es6)
 		};
 	}
 
