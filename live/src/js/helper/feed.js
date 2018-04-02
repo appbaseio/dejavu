@@ -292,7 +292,7 @@ var feed = (function() {
 				}
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var typesString = typeName.join(',');
+			var typesString = Array.isArray(typeName) ? typeName.join(',') : typeName;
 			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE
 				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
