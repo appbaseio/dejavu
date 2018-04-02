@@ -306,13 +306,21 @@ class Cell extends React.Component {
 	};
 
 	indexCurrentData(nextData) {
-		feed.indexData({
-			type: this.props._type,
-			id: this.props._id,
+		const { _type, _id, columnName, row, _mapping } = this.props;
+
+		const data = {
+			type: _type,
+			id: _id,
 			body: {
-				[this.props.columnName]: nextData
+				[columnName]: nextData
 			}
-		}, 'updateCell', res => this.handleErrorMsg(res));
+		};
+
+		if (_mapping && _mapping._parent && _mapping._routing && _mapping._routing.path && _mapping._routing.required) {
+			data.parent = row[_mapping._routing.path];
+		}
+
+		feed.indexData(data, 'updateCell', res => this.handleErrorMsg(res));
 	}
 
 	imageOnLoad = () => {
@@ -456,9 +464,9 @@ class Cell extends React.Component {
 				);
 			}
 			if (Array.isArray(data) && !isObject) {
-				const seperator = getMaxArrayView(data);
-				const arrayView = this.state.data.length > seperator ?
-					this.state.data.slice(0, seperator).map(item => ({ value: item, label: item })).concat([{ value: '...', label: '...' }]) :
+				const separator = getMaxArrayView(data);
+				const arrayView = this.state.data.length > separator ?
+					this.state.data.slice(0, separator).map(item => ({ value: item, label: item })).concat([{ value: '...', label: '...' }]) :
 					this.state.data.map(item => ({ value: item, label: item }));
 				const prettyView = <Pretty json={data} />;
 				const arrayEditView = (
@@ -485,7 +493,7 @@ class Cell extends React.Component {
 						/>
 					</div>
 				);
-				toDisplay = this.state.data.length > seperator ? (
+				toDisplay = this.state.data.length > separator ? (
 					<OverlayTrigger
 					trigger="click" rootClose placement="top" overlay={
 						!this.props.editable ?
