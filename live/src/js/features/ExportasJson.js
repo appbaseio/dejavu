@@ -1,5 +1,7 @@
 //This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
+// saveAs is injected globally from bower
+/* global saveAs */
 var React = require('react');
 import { Modal, Button } from 'react-bootstrap';
 
