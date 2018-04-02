@@ -1520,6 +1520,16 @@ tbody.exp-scrollable td.column_width:first-child {
 	background: #fff;
 }
 
+.single-menu-item-filter {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 10px;
+}
+
+.single-menu-item-filter label {
+	flex: 1;
+}
+
 ul#setApp {
 	z-index: 20;
 	max-height: 200px;
