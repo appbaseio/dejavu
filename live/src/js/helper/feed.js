@@ -231,8 +231,10 @@ var feed = (function() {
 		}
 
 		if (isAppbaseUrl()) {
+			if (types.length == 0)
+				types = ['*']
 			counterStream = appbaseRef.searchStream({
-				type: types,
+				type: types || '*',
 				body: query
 			}).on('data', function(res2) {
 				//For update data
@@ -353,6 +355,8 @@ var feed = (function() {
 
 			if (isAppbaseUrl()) {
 				// get new data updates
+				if (types.length == 0)
+					types = ['*']
 				streamRef = appbaseRef.searchStream({
 					type: types,
 					body: queryBody
