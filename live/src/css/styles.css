@@ -1141,7 +1141,7 @@ iframe {
 	display: block;
 	text-align: right;
 	border-radius: 4px;
-	background: #ddd;
+	background: #edeeef;
 	border: 1px solid #eff0ef;
 }
 
@@ -1518,6 +1518,16 @@ tbody.exp-scrollable td.column_width:first-child {
 	position: relative;
 	z-index: 3;
 	background: #fff;
+}
+
+.single-menu-item-filter {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 10px;
+}
+
+.single-menu-item-filter label {
+	flex: 1;
 }
 
 ul#setApp {

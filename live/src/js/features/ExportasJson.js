@@ -1,24 +1,36 @@
 //This contains the extra features like
 //Import data, Export Data, Add document, Pretty Json
+// saveAs is injected globally from bower
+/* global saveAs */
 var React = require('react');
 import { Modal, Button } from 'react-bootstrap';
 
 class ImportData extends React.Component {
 	state = {
-		showModal: false
+		showModal: false,
+		exportClose: false
 	};
 
 	componentDidUpdate() {}
 
 	close = () => {
-		this.setState({
-			showModal: false
+		$(".close").click((e) => {
+			this.setState({
+				exportClose: true
+			});
 		});
+
+		if(this.state.exportClose) {
+		 	this.setState({
+				showModal: false
+			});
+		}
 	};
 
 	open = () => {
 		this.setState({
-			showModal: true
+			showModal: true,
+			exportClose: false
 		}, () => {
 			$('.modal-text').hide();
 		});

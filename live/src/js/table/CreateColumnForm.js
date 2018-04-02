@@ -2,10 +2,10 @@ import React from 'react';	// eslint-disable-line
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import get from 'lodash/get';
-import { Creatable } from 'react-select';
+import Select, { Creatable } from 'react-select';
 
 /* global feed, help */
-import { es2, es5, dateFormats, dateHints } from '../helper/esMapping';
+import { es2, es5, es6, dateFormats, dateHints } from '../helper/esMapping';
 import analyzerSettings from '../helper/analyzerSettings';
 import ErrorModal from '../features/ErrorModal';
 
@@ -26,7 +26,8 @@ class CreateColumnForm extends React.Component {
 			credentialsErrorTitle: '',
 			credentialsErrorMessage: '',
 			isMappingValid: true,
-			esMapping: feed.getEsVersion() === 2 ? es2 : es5
+			esMapping: feed.getEsVersion() === 2 ? es2 :
+					(feed.getEsVersion() === 5 ? es5 : es6)
 		};
 	}
 
@@ -252,6 +253,7 @@ class CreateColumnForm extends React.Component {
 	}
 
 	render() {
+		const MappingSelectComponent = feed.getEsVersion() === 6 ? Select : Creatable;
 		return (
 			<div className="create-column-form-container">
 				<ErrorModal
@@ -267,7 +269,7 @@ class CreateColumnForm extends React.Component {
 					<div className="flex-row">
 						<FormGroup bsClass="create-column-estype">
 							<ControlLabel>Elasticsearch Type</ControlLabel>
-							<Creatable
+							<MappingSelectComponent
 								value={this.state.selectedType}
 								placeholder="Select or Create Type"
 								promptTextCreator={label => `Create type "${label}"`}

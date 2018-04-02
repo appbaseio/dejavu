@@ -37,7 +37,7 @@ ErrorModal.propTypes = {
 };
 
 ErrorModal.defaultProps = {
-	errorTitle: 'Authentication Error',
+	errorTitle: 'Error',
 	errorMessage: "It looks like your app name, username, password combination doesn't match. Check your url and appname and then connect it again."	// eslint-disable-line
 };
 
