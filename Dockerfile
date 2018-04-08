@@ -1,17 +1,15 @@
-FROM node:9.8.0-alpine
+FROM node:9.10.1-alpine
 MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
+ADD package.json bower.json yarn.lock /dejavu/
 
-RUN apk add --no-cache git
+RUN apk --update add git && yarn global add bower && yarn global add http-server
 
-RUN yarn global add bower
-RUN yarn global add http-server
+RUN yarn && bower install --allow-root
 
 ADD . /dejavu
 
-RUN yarn
-RUN bower install --allow-root
 RUN yarn build
 
 EXPOSE 1358
