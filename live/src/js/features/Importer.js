@@ -2,7 +2,7 @@ var React = require('react');
 var Login = require('./Login.js');
 var GoBackToDejavu = require('./GoBackToDejavu.js');
 // const importerURL = "http://127.0.0.1:1357/";
-const importerURL = "https://appbaseio-confidential.github.io/importer/";
+const importerURL = "http://importer.appbase.io";
 
 class Importer extends React.Component {
 	state = {
