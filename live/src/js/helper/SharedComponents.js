@@ -87,7 +87,7 @@ export class InitialForm extends React.Component {
 							</a>
 							{
 								props.splash ? (
-									<a className="btn btn-default m-l10" href="../importer/index.html">
+									<a className="btn btn-default m-l10" href="http://importer.appbase.io">
 										Import JSON or CSV files
 									</a>
 								) : null
