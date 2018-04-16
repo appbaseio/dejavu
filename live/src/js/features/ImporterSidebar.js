@@ -6,9 +6,11 @@ class ImporterSidebar extends React.Component {
 	open = () => {
 		sessionStorage.setItem("dejavuUrl", window.location.href);
 		let importFrom='';
+		let header='';
 		const scheme = (window.document.referrer.includes("dashboard")) ? "https://" : "http://";
 		if (window.document.referrer.includes("dashboard")) {
-			importFrom = `?app=${JSON.stringify({"platform":"appbase"})}`;
+			header='header=false&';
+			importFrom = `?${header}app=${JSON.stringify({"platform":"appbase"})}`;
 		}
 		if(this.props.clone && this.props.appname) {
 			let importerApp = {
@@ -18,7 +20,7 @@ class ImporterSidebar extends React.Component {
 				},
 				"platform": "appbase"
 			};
-			importFrom = `?app=${JSON.stringify(importerApp)}`;
+			importFrom = `?${header}app=${JSON.stringify(importerApp)}`;
 			localStorage.setItem("importFrom", importFrom);
 		}
 		window.location.href = scheme + "importer.appbase.io" + importFrom
