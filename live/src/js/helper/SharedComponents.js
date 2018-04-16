@@ -20,7 +20,8 @@ export class InitialForm extends React.Component {
 	}
 
 	componentDidMount() {
-		if (window.location.hostname.includes("dashboard")) {
+		if (window.location.hostname.includes("dashboard") ||
+			window.document.referrer.includes("dashboard")) {
 			this.setState({
 				scheme: 'https://'
 			});
