@@ -5,6 +5,11 @@ var GoBackToDejavu = require('./GoBackToDejavu.js');
 class ImporterSidebar extends React.Component {
 	open = () => {
 		sessionStorage.setItem("dejavuUrl", window.location.href);
+		let importFrom='';
+		const scheme = (window.location.hostname.includes("dashboard")) ? "https://" : "http://";
+		if (window.location.hostname.includes("dashboard")) {
+			importFrom = `?app=${JSON.stringify({"platform":"appbase"})}`;
+		}
 		if(this.props.clone && this.props.appname) {
 			let importerApp = {
 				"importFrom": {
@@ -13,10 +18,10 @@ class ImporterSidebar extends React.Component {
 				},
 				"platform": "appbase"
 			};
-			const importFrom = `?app=${JSON.stringify(importerApp)}`;
+			importFrom = `?app=${JSON.stringify(importerApp)}`;
 			localStorage.setItem("importFrom", importFrom);
 		}
-		window.location.href = "../importer/index.html"
+		window.location.href = scheme + "importer.appbase.io" + importFrom
 	};
 
 	render() {

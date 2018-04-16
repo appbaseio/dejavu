@@ -14,8 +14,17 @@ export class InitialForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			show: false
+			show: false,
+			scheme: 'http://'
 		};
+	}
+
+	componentDidMount() {
+		if (window.location.hostname.includes("dashboard")) {
+			this.setState({
+				scheme: 'https://'
+			});
+		}
 	}
 
 	toggleShow = () => {
@@ -27,6 +36,7 @@ export class InitialForm extends React.Component {
 
 	render() {
 		const props = this.props;
+		const importerURL = this.state.scheme + "importer.appbase.io";
 		return (
 			<form className={props.EsForm} id="init-ES">
 			<div className="vertical0">
@@ -87,7 +97,7 @@ export class InitialForm extends React.Component {
 							</a>
 							{
 								props.splash ? (
-									<a className="btn btn-default m-l10" href="http://importer.appbase.io">
+									<a className="btn btn-default m-l10" href={importerURL}>
 										Import JSON or CSV files
 									</a>
 								) : null
