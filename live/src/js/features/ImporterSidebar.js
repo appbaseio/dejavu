@@ -7,6 +7,9 @@ class ImporterSidebar extends React.Component {
 		sessionStorage.setItem("dejavuUrl", window.location.href);
 		let importFrom='';
 		const scheme = (window.location.hostname.includes("dashboard")) ? "https://" : "http://";
+		if (window.location.hostname.includes("dashboard")) {
+			importFrom = `?app=${JSON.stringify({"platform":"appbase"})}`;
+		}
 		if(this.props.clone && this.props.appname) {
 			let importerApp = {
 				"importFrom": {
