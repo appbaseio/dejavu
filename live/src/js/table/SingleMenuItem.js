@@ -1,11 +1,14 @@
 var React = require('react');
+var DateTime = require('react-datetime');
+var dateFormat = require('dateformat');
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 //Radio button with appropriate search input field
 class SingleMenuItem extends React.Component {
 	state = {
 		filterField: '',
-		filterValue: ''
+		filterValue: '',
+		dateStore: ''
 	};
 
 	changeFilter = (e) => {
@@ -45,6 +48,65 @@ class SingleMenuItem extends React.Component {
 		}
 	};
 
+	setDate = (dateData) => { 
+		var date = new Date(dateData);
+		var formattedDate = null;
+		try {	
+			formattedDate = dateFormat(date,"yyyy-mm-dd");
+		}
+		catch(err) {
+			console.log("Date format error: " + err);
+		} 
+		this.setState({
+			filterValue: formattedDate
+		});
+		this.props.getFilterVal(formattedDate);	
+	}
+
+	setRangeStart = (dateData) => { 
+		var date = new Date(dateData);
+		var formattedDate = null;
+		try {	
+			formattedDate = dateFormat(date,"yyyy-mm-dd");
+		}
+		catch(err) {
+			console.log("Date format error: " + err);
+		} 
+		if(this.state.dateStore != '' && this.state.dateStore !=null) {
+			var filterValue = this.state.dateStore+'@'+ formattedDate;
+			this.setState({
+				dateStore: filterValue
+			});
+			this.props.getFilterVal(filterValue);
+		} else {
+			this.setState({
+				dateStore: formattedDate
+			});
+		}
+	}
+
+	setRangeEnd = (dateData) => { 
+		var date = new Date(dateData);
+		var formattedDate = null;
+		try {	
+			var formattedDate = dateFormat(date,"yyyy-mm-dd");
+		}
+		catch(err) {
+			console.log("Date format error: " + err);
+		} 
+		if(this.state.dateStore != '' && this.state.dateStore !=null) {
+			var filterValue = this.state.dateStore+'@'+ formattedDate;
+			this.setState({
+				dateStore: filterValue
+			});
+			this.props.getFilterVal(filterValue);
+		} else {
+			this.setState({
+				dateStore: formattedDate
+			});
+		}	
+	}
+
 	render() {
 		let tooltip = null;
 		const { val, datatype } = this.props;
@@ -66,22 +128,22 @@ class SingleMenuItem extends React.Component {
 		var key = filterKeyGen(this.props.columnField, this.props.val);
 		var keyInput = key + '-input';
 		var keyInputRange = key + '-inputRange';
-		var searchElement = (<div className="searchElement">
-								<input id={keyInput} className="form-control" type="text" placeholder={placeholder} onKeyUp={this.valChange} />
+		var searchElement = null;
+
+		if(datatype === 'date') {	
+			searchElement = (<div className="searchElement"  >
+								<DateTime dateFormat='YYYY-MM-DD' closeOnSelect= {true} onBlur={this.setDate}  timeFormat= {false} inputProps={{ placeholder: 'select date', id: keyInput, className: 'form-control', onKeyUp:this.valChange }} />
+							</div>);					
+		} else {
+			searchElement = (<div className="searchElement">
+								<input id={keyInput} className="form-control" type="text" placeholder="gottem" onKeyUp={this.valChange} />
 							</div>);
+		}
 
 		if(this.props.val == 'range') {
-			searchElement = (<div className="searchElement">
-								<input id={keyInput}
-									className="form-control"
-									type="text"
-									placeholder="starting date"
-									onKeyUp={this.rangeChange.bind(null, key)} />
-								<input id={keyInputRange}
-									className="form-control mt-5"
-									type="text"
-									placeholder="ending date"
-									onKeyUp={this.rangeChange.bind(null, key)} />
+			searchElement = (<div className="searchElement">					
+							 	<DateTime dateFormat='YYYY-MM-DD' closeOnSelect= {true} timeFormat= {false} onBlur={this.setRangeStart}  inputProps={{ placeholder: 'starting date', id: keyInput, className: 'form-control', onKeyUp:this.rangeChange.bind(null, key) }} />
+								<DateTime dateFormat='YYYY-MM-DD'  closeOnSelect= {true} timeFormat= {false} onBlur={this.setRangeEnd}  inputProps={{ placeholder: 'ending date', id: keyInputRange, className: 'form-control mt-5', onKeyUp:this.rangeChange.bind(null, key) }} />
 							</div>)
 		} else if(this.props.val == 'true' || this.props.val == 'false' ) {
 			searchElement = <span></span>;
