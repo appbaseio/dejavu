@@ -32,7 +32,7 @@ class FilterDropdown extends React.Component {
 
 	applyFilter = () => {
 		if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '') {
-			this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.props.analyzed);
+			this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.state.filterField === 'has' || this.state.filterField === 'has not' ? false : this.props.analyzed);
 			document.body.click();
 		}
 	};
