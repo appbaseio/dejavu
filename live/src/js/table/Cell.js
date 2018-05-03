@@ -254,7 +254,7 @@ class Cell extends React.Component {
 	setActive(nextState) {
 		if (this.props.editable && !this.props.isObject) {
 			if (!nextState && this.state.data !== this.state.prevData) {
-				if (this.props.datatype.type !== 'string' && this.props.datatype.type !== 'text') {
+				if (this.props.datatype.type !== 'string' && this.props.datatype.type !== 'text' && this.props.datatype.type !== 'keyword') {
 					if (this.state.data !== '-') {
 						this.indexCurrentData(Number(this.state.data));
 					}
