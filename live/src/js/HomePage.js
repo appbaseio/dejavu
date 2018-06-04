@@ -281,15 +281,17 @@ var HomePage = createReactClass({
 			appAuth = true;
 			self.init_map_stream();
 		},500);
-		const currentApp = document.getElementById('appname-aka-index').value;
-		const allHeaders = localStorage.getItem('customHeaders');
-		if (allHeaders) {
-			const parsedHeaders = JSON.parse(allHeaders);
-			console.log('ph', parsedHeaders)
-			if (parsedHeaders[currentApp]) {
-				customHeaders = parsedHeaders[currentApp];
-			} else {
-				customHeaders = null;
+		const appnameNode = document.getElementById('appname-aka-index');
+		if (appnameNode && appnameNode.value) {
+			const currentApp = appnameNode.value;
+			const allHeaders = localStorage.getItem('customHeaders');
+			if (allHeaders) {
+				const parsedHeaders = JSON.parse(allHeaders);
+				if (parsedHeaders[currentApp]) {
+					customHeaders = parsedHeaders[currentApp];
+				} else {
+					customHeaders = null;
+				}
 			}
 		}
 	},
