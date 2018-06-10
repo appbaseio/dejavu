@@ -14,8 +14,8 @@
     "build": "bower update --allow-root && npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
     "build_chrome_extension": "bower update --allow-root && gulp chromeBuild",
-		"build_gh_pages": "bower update --allow-root && gulp ghpagesBuild",
-		"deploy_gh_pages": "yarn && bower install --force && npm run build && npm run build_gh_pages && git push origin"
+    "build_gh_pages": "bower update --allow-root && gulp ghpagesBuild",
+    "deploy_gh_pages": "yarn && bower install --force && npm run build && npm run build_gh_pages && git push origin"
   },
   "repository": {
     "type": "git",
