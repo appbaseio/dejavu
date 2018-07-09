@@ -15,8 +15,7 @@
     "build_es_plugin": "npm run build",
     "build_chrome_extension": "gulp chromeBuild",
     "build_gh_pages": "gulp ghpagesBuild",
-    "deploy_gh_pages": "yarn && bower install --force && npm run build && npm run build_gh_pages && git push origin",
-    "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'live/bower_components', 'junction') } catch (e) { }\""
+    "deploy_gh_pages": "yarn && bower install --force && npm run build && npm run build_gh_pages && git push origin"
   },
   "repository": {
     "type": "git",
