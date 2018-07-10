@@ -797,7 +797,7 @@ var HomePage = createReactClass({
 	},
 	connectPlayPause: function() {
 		if (this.state.url.startsWith('http://') && window.location.protocol === 'https:') {
-			toastr.warning('You are trying to load http content over https');
+			toastr.warning('You are trying to load http content over https. You might have to enable mixed content for your browser https://kb.iu.edu/d/bdny#view');
 		}
 		if(!help.getReloadFlag()) {
 			alert('Url or appname should not be empty.');
