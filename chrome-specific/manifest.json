@@ -21,5 +21,6 @@
         "default_title": "Dejavu"
     },
     "description": "The missing Web UI for Elasticsearch.",
+    "incognito": "split",
     "author": "Farhan Chauhan, appbase.io"
 }
