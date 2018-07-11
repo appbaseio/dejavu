@@ -849,10 +849,13 @@ var HomePage = createReactClass({
 			})
 	},
 	reloadData: function(){
-		this.getStreamingData(subsetESTypes);
-		this.getStreamingTypes();
-		// reload mappings
-		this.setMap();
+		// when an external query is applied the data flow is different, ignore reload
+		if (!this.state.externalQueryApplied) {
+			this.getStreamingData(subsetESTypes);
+			this.getStreamingTypes();
+			// reload mappings
+			this.setMap();
+		}
 	},
 	reloadSettings: function() {
 		feed.getSettings()
