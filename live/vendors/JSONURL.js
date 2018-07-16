@@ -1,1 +1,1 @@
-const JSONURL = new LZMA("dist/vendor/lzma_worker.js");
+const JSONURL = new LZMA("live/dist/vendor/lzma_worker.js");
