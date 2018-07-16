@@ -1,1 +1,2 @@
-const JSONURL = new LZMA("live/dist/vendor/lzma_worker.js");
+const prefix = window.location.pathname.includes('live') ? '' : 'live/';
+const JSONURL = new LZMA(`${prefix}dist/vendor/lzma_worker.js`);
