@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -11,10 +11,10 @@
     "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
-    "build": "bower update --allow-root && npm run dejavubuild && gulp",
+    "build": "npm run dejavubuild && gulp",
     "build_es_plugin": "npm run build",
-    "build_chrome_extension": "bower update --allow-root && gulp chromeBuild",
-    "build_gh_pages": "bower update --allow-root && gulp ghpagesBuild",
+    "build_chrome_extension": "gulp chromeBuild",
+    "build_gh_pages": "gulp ghpagesBuild",
     "deploy_gh_pages": "yarn && bower install --force && npm run build && npm run build_gh_pages && git push origin"
   },
   "repository": {
@@ -26,6 +26,8 @@
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.4.1",
+    "babel-plugin-emotion": "^9.2.6",
+    "babel-plugin-import": "^1.8.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.2.2",
     "babel-preset-es2015": "^6.24.1",
@@ -56,9 +58,27 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
+    "@bower_components/auth0.js": "auth0/auth0.js#^7.4.0",
+    "@bower_components/bootstrap": "twbs/bootstrap#~3.3.6",
+    "@bower_components/codemirror": "components/codemirror#^5.17.0",
+    "@bower_components/crypto-js": "brix/crypto-js#^3.1.6",
+    "@bower_components/file-saver": "eligrey/FileSaver.js#1.3.3",
+    "@bower_components/font-awesome": "FortAwesome/Font-Awesome#~4.5.0",
+    "@bower_components/highlightjs": "components/highlightjs#^9.6.0",
+    "@bower_components/jquery": "jquery/jquery-dist#~2.1.4",
+    "@bower_components/lzma": "nmrugg/LZMA-JS#^2.3.0",
+    "@bower_components/moment": "moment/moment#^2.17.1",
+    "@bower_components/react": "facebook/react-bower#>=0.13",
+    "@bower_components/react-bootstrap": "react-bootstrap/react-bootstrap-bower#~0.25.1",
+    "@bower_components/select2": "ivaynberg/select2#~4.0.1",
+    "@bower_components/toastr": "johnpapa/toastr-bower#~2.1.2",
+    "@bower_components/underscore": "jashkenas/underscore#~1.8.3",
+    "@bower_components/urlsafe-base64": "farhan687/urlsafe-base64#*",
+    "antd": "^3.7.0",
     "appbase-js": "^2.2.11",
     "babel": "^6.23.0",
     "classnames": "^2.2.5",
+    "emotion": "^9.2.6",
     "fbemitter": "^2.1.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
@@ -66,11 +86,12 @@
     "moment": "^2.18.1",
     "papaparse": "^4.3.3",
     "prop-types": "^15.5.10",
-    "react": "^15.5.4",
+    "react": "16.3.2",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",
     "react-datetime": "^2.9.0",
-    "react-dom": "^15.5.4",
+    "react-dom": "16.3.2",
+    "react-emotion": "^9.2.6",
     "react-select": "^1.0.0-rc.5",
     "url-parser-lite": "^0.1.0"
   },
@@ -79,5 +100,8 @@
   "bugs": {
     "url": "https://github.com/appbaseio/dejavu/issues"
   },
-  "homepage": "https://github.com/appbaseio/dejavu#readme"
+  "homepage": "https://github.com/appbaseio/dejavu#readme",
+  "engines": {
+    "yarn": ">= 1.0.0"
+  }
 }

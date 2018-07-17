@@ -78,7 +78,7 @@ export const es5 = {
 	Text: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'not_analyzed'
 			},
@@ -95,7 +95,7 @@ export const es5 = {
 	SearchableText: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'not_analyzed'
 			},
@@ -142,7 +142,7 @@ export const es5 = {
 	Image: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'not_analyzed'
 			}
@@ -154,7 +154,7 @@ export const es6 = {
 	Text: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'true'
 			},
@@ -171,7 +171,7 @@ export const es6 = {
 	SearchableText: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'true'
 			},
@@ -218,7 +218,7 @@ export const es6 = {
 	Image: {
 		type: 'text',
 		fields: {
-			raw: {
+			keyword: {
 				type: 'keyword',
 				index: 'true'
 			}

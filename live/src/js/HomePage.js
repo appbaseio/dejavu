@@ -797,7 +797,7 @@ var HomePage = createReactClass({
 	},
 	connectPlayPause: function() {
 		if (this.state.url.startsWith('http://') && window.location.protocol === 'https:') {
-			toastr.warning('You are trying to load http content over https');
+			toastr.warning('You are trying to load http content over https. You might have to enable mixed content for your browser https://kb.iu.edu/d/bdny#view');
 		}
 		if(!help.getReloadFlag()) {
 			alert('Url or appname should not be empty.');
@@ -849,10 +849,13 @@ var HomePage = createReactClass({
 			})
 	},
 	reloadData: function(){
-		this.getStreamingData(subsetESTypes);
-		this.getStreamingTypes();
-		// reload mappings
-		this.setMap();
+		// when an external query is applied the data flow is different, ignore reload
+		if (!this.state.externalQueryApplied) {
+			this.getStreamingData(subsetESTypes);
+			this.getStreamingTypes();
+			// reload mappings
+			this.setMap();
+		}
 	},
 	reloadSettings: function() {
 		feed.getSettings()

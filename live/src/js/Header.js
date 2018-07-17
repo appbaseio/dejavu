@@ -11,7 +11,7 @@ class Header extends React.Component {
 			<header className="header text-center">
 				<div className="img-container">
 					<span className="header-img-container">
-						<img src="assets/img/Dejavu_Icon.svg" alt="Gem" className="img-responsive"/>
+						<img src="live/assets/img/Dejavu_Icon.svg" alt="Dejavu" className="img-responsive"/>
 						<span className="dejavu-title">
 							dejavu
 						</span>

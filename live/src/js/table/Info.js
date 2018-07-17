@@ -157,11 +157,14 @@ class Info extends React.Component {
 							<strong>{actionOnRecord.selectedRows.length}</strong> selected of total
 							<strong>&nbsp;{totalRecord}</strong>
 						</span>
-						<span className="pull-left">{UpdateDocument}
-							<FeatureComponent.DeleteDocument
-								actionOnRecord={actionOnRecord}/>
-							<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
-						</span>
+						{
+							this.state.editable &&
+							<span className="pull-left">{UpdateDocument}
+								<FeatureComponent.DeleteDocument
+									actionOnRecord={actionOnRecord}/>
+								<a href="javascript:void(0);" className="info_single" onClick={actionOnRecord.removeSelection}>Remove Selection</a>
+							</span>
+						}
 					</div>
 				</div>
 				{

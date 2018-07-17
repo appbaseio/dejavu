@@ -4,8 +4,8 @@
 
 
 1. Fork repo
-2. Create a branch for the issue you are working on from one of the branches listed below depending on what you are intending to contribute to. 
-3. Submit a Pull Request against whichever branch applies. 
+2. Create a branch for the issue you are working on from one of the branches listed below depending on what you are intending to contribute to.
+3. Submit a Pull Request against whichever branch applies.
 
 
 #### Branches
@@ -21,16 +21,15 @@
 
 1. `git clone` your fork of https://github.com/appbaseio/dejavu
 2. `git checkout dev`
-3. `npm install`
-4. `bower install`
-5. `npm start` (open dejavu in the browser on http://localhost:1358/live)
+3. `yarn`
+5. `yarn start` (open dejavu in the browser on http://localhost:1358/live)
 
 #### Generating an AppName and Url.
 
 1. Create an account here: https://dashboard.appbase.io
-2. Follow instructions to create an appname. 
+2. Follow instructions to create an appname.
 3. Click through to newly created app
-4. Click on the Credentials tab. 
+4. Click on the Credentials tab.
 5. Copy Read-only or Admin API Key
 6. Url is `https://${API_KEY}@scalr.api.appbase.io`
 
@@ -39,17 +38,17 @@
 #### `dev` branch: Webpage
 
 ```sh
-$ npm start
+$ yarn start
 ```
 
 #### `chrome-extension` branch: Chrome extension
 
 ```sh
-$ npm run build_chrome_extension
+$ yarn run build_chrome_extension
 ```
 
 #### `gh-pages` branch: Github hosted pages
 
 ```sh
-$ npm run build_gh_pages
+$ yarn run build_gh_pages
 ```

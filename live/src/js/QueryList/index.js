@@ -24,19 +24,19 @@ class QueryList extends React.Component {
 	};
 
 	includeQuery = (queryObj, queryIndex = null) => {
-		let querylist = this.filterDeleteQuery(queryObj);
-		if (queryIndex) {
+		let querylist = this.getHistoricList();
+		if (queryIndex !== null) {
 			querylist = [
 				...querylist.slice(0, queryIndex),
 				queryObj,
 				...querylist.slice(queryIndex + 1)
 			];
 		} else {
-			querylist.push(queryObj);
+			querylist = querylist.concat(queryObj);
 		}
 		this.setHistoricList(querylist);
 		this.setState({
-			querylist: querylist
+			querylist
 		}, this.applyQuery.call(this, queryObj));
 	};
 

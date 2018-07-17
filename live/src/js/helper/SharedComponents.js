@@ -44,7 +44,7 @@ export class InitialForm extends React.Component {
 				<div className="vertical1">
 					<div className="esContainer">
 						<div className="img-container">
-							<img src="assets/img/Dejavu_Icon.svg" />
+							<img src="live/assets/img/Dejavu_Icon.svg" />
 						</div>
 						<div>
 						  <h1>Déjà vu</h1>
