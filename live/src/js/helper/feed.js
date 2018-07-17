@@ -458,7 +458,6 @@ var feed = (function() {
 				});
 		},
 		indexData: function(recordObject, method, callback) {
-			console.log(recordObject);
 			var self = this;
 			if (method === 'index' || method === 'bulk') {
 				applyIndexOrBulk(method);
@@ -467,7 +466,6 @@ var feed = (function() {
 				recordObject.body = {
 					doc: doc
 				};
-				console.log(recordObject);
 				appbaseRef.update(recordObject).on('data', function(res) {
 					if (res.status >= 400) {
 						return callback(res);
@@ -483,8 +481,13 @@ var feed = (function() {
 			}
 
 			function applyIndexOrBulk(method) {
-				appbaseRef[method](recordObject).on('data', function(res) {
-					if (esTypes.indexOf(recordObject.type) === -1) {
+				let objectToIndex = recordObject;
+				if (method === 'bulk') {
+					const keysToIndex = Object.keys(recordObject).filter(key => key !== 'id');
+					objectToIndex = keysToIndex.reduce((acc, cur) => Object.assign(acc, { [cur]: recordObject[cur] }), {});
+				}
+				appbaseRef[method](objectToIndex).on('data', function(res) {
+					if (esTypes.indexOf(objectToIndex.type) === -1) {
 						self.getTypes(function(newTypes) {
 							if (callback) {
 								return callback(res, newTypes);

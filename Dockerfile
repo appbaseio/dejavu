@@ -2,11 +2,13 @@ FROM node:9.10.1-alpine
 MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
-ADD package.json bower.json yarn.lock /dejavu/
+ADD package.json yarn.lock /dejavu/
 
-RUN apk --update add git && yarn global add bower && yarn global add http-server
+RUN apk --no-cache update && apk --no-cache add make gcc g++ libc-dev libpng-dev automake autoconf libtool && rm -fr /var/cache/apk/*
 
-RUN yarn && bower install --allow-root
+RUN yarn global add http-server
+
+RUN yarn
 
 ADD . /dejavu
 
