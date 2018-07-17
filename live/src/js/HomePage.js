@@ -949,6 +949,7 @@ var HomePage = createReactClass({
 		function initialForm() {
 			var form = (
 				<SharedComponents.InitialForm
+					splash={this.state.splash}
 					EsForm={EsForm}
 					index_create_text={index_create_text}
 					shareBtn={shareBtn}
@@ -984,7 +985,7 @@ var HomePage = createReactClass({
 		var footer;
 		queryParams = getQueryParameters();
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('f')))) {
-			footer = (<SharedComponents.FooterCombine githubStar={githubStar} />);
+			footer = this.state.splash ? null : (<SharedComponents.FooterCombine githubStar={githubStar} />);
 		}
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('h')))) {
 			var dejavuForm = initialForm.call(this);

@@ -4,6 +4,8 @@ import CustomHeadersForm from '../features/CustomHeadersForm';
 var AppSelect = require('../AppSelect.js');
 var ShareLink = require('../features/ShareLink.js');
 
+import Landing from '../Landing';
+
 export const ComposeQuery = (props) => (
 	<a target="_blank" href="https://appbaseio.github.io/mirage/" className="mirage_link btn btn-default">
 		Query View <i className="fa fa-external-link-square"></i>
@@ -38,7 +40,8 @@ export class InitialForm extends React.Component {
 	render() {
 		const props = this.props;
 		const importerURL = this.state.scheme + "importer.appbase.io";
-		return (
+		return this.props.splash ? <Landing />
+		: (
 			<form className={props.EsForm} id="init-ES">
 			<div className="vertical0">
 				<div className="vertical1">
