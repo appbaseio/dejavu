@@ -305,6 +305,7 @@ var HomePage = createReactClass({
 		}
 	},
 	appnameCb: function(appname) {
+		console.log('ac', appname)
 		if(this.state.indices) {
 			this.setState(help.appnameCb(this.state.indices, this.state.url, this.state.es_host));
 		}

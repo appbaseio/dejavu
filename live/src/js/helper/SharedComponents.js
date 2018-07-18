@@ -40,8 +40,22 @@ export class InitialForm extends React.Component {
 	render() {
 		const props = this.props;
 		const importerURL = this.state.scheme + "importer.appbase.io";
-		return this.props.splash ? <Landing />
-		: (
+		return (
+			<div>
+			{
+				this.props.splash &&
+				<Landing
+					indexUrl={props.indexUrl}
+					fetchIndices={props.fetchIndices}
+					url={props.url}
+					apps={props.appSelect.apps}
+					onUrlChange={props.valChange}
+					showFetchIndex={props.showFetchIndex}
+					onAppNameChange={props.appSelect.appnameCb}
+					onAppSelect={props.appSelect.setConfig}
+					onConnect={props.connectPlayPause}
+				/>
+			}
 			<form className={props.EsForm} id="init-ES">
 			<div className="vertical0">
 				<div className="vertical1">
@@ -60,7 +74,7 @@ export class InitialForm extends React.Component {
 							<div className="col-xs-7 m-0 pd-0 pr-5 form-group">
 								<div className="url-container">
 									<div className="flex">
-									<input type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+									<input id="gg-url" type="text" className="form-control" name="url" placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 										value={props.url}
 										onBlur={() => props.fetchIndices(props.indexUrl)}
 										onChange={props.valChange}  {...props.opts} />
@@ -111,6 +125,7 @@ export class InitialForm extends React.Component {
 				</div>
 			</div>
 			</form>
+			</div>
 		);
 	}
 }
