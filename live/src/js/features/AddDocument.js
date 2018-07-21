@@ -15,7 +15,8 @@ class AddDocument extends React.Component {
 	};
 
 	componentDidUpdate() {
-		Utils.applySelect.call(this);
+		// react + jquery + dom manipulation at work 👏
+		setTimeout(() => Utils.applySelect.call(this), 100);
 	}
 
 	applySelect = (ele) => {
