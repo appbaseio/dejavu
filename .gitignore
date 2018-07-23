@@ -1,4 +1,8 @@
 node_modules/
+.idea/
+bower_components/
+dist/main.js
+dejavu-unpacked
 dist
 live/bower_components/
 live/dist/

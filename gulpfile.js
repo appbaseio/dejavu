@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var del = require('del');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var minifyCSS = require('gulp-minify-css');
@@ -130,16 +131,6 @@ gulp.task('watch', ['bundle'], function() {
 	gulp.watch(files.css.custom, ['cssChanges']);
 });
 
-gulp.task('chromeBuild', ['bundle'], function() {
-	var folders_length = Object.keys(files.folders).length;
-	for (folder in files.folders) {
-		gulp.src(files.folders[folder])
-			.pipe(gulp.dest('./dejavu-unpacked/' + folder));
-	}
-	gulp.src(files.moveFiles)
-		.pipe(gulp.dest('./dejavu-unpacked'));
-});
-
 gulp.task('ghpagesBuild', ['bundle'], function() {
 	var folders_length = Object.keys(files.folders).length;
 	for (folder in files.folders) {
@@ -148,6 +139,31 @@ gulp.task('ghpagesBuild', ['bundle'], function() {
 	}
 	gulp.src(files.moveFiles)
 		.pipe(gulp.dest('./live'));
+});
+
+gulp.task('chromeBuild', ['bundle', 'chrome-specific_dir', 'copy_site'], function() {
+    setTimeout(function() {
+        return del([
+            './dejavu-unpacked/site/bower_components',
+        ]);
+    }, 1000);
+});
+
+gulp.task('cleanUnpacked', function() {
+    return del([
+        './dejavu-unpacked/**/*',
+    ]);
+});
+
+gulp.task('copy_site', function() {
+    gulp.src(['live/**/*']).pipe(gulp.dest('./dejavu-unpacked/live'));
+    gulp.src(['bundle/**/*']).pipe(gulp.dest('./dejavu-unpacked/bundle'));
+    return gulp.src(['importer/**/*']).pipe(gulp.dest('./dejavu-unpacked/importer'));
+});
+
+// copy chrome-specific dir
+gulp.task('chrome-specific_dir', function() {
+    return gulp.src(['chrome-specific/**/*']).pipe(gulp.dest('./dejavu-unpacked/'));
 });
 
 gulp.task('default', ['bundle']);
