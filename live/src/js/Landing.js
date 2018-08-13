@@ -5,6 +5,8 @@ import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
 import { bool, arrayOf, object, string, func } from 'prop-types';
 
+import Footer from './Footer';
+
 const colors = {
 	textPrimary: '#383E43',
 	textSecondary: '#30373C'
@@ -253,6 +255,7 @@ class Landing extends Component {
 						<img src="/live/assets/img/docker.png" alt="Docker" width="70%" />
 					</GridLayout>
 				</Section>
+				<Footer />
 			</section>
 		);
 	}
