@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GithubButton, Navbar, H1, H2, H4, Hero, ImageCard, Title, Link, Flex, Grid, Button, Text, Section } from '@appbaseio/designkit';
+import { GithubButton, Navbar, H1, H2, H4, Hero, ImageCard, GridLayout, Flex, Grid, Button, Text, Section } from '@appbaseio/designkit';
 import { Input, Form, Icon, Select, Tag, Button as AntButton } from 'antd';
 import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
@@ -206,7 +206,7 @@ class Landing extends Component {
 						<H4>Build the search UI/Ux visually, set filters and result parameters. Export the code to get a functional React web app.</H4>
 					</div>
 				</Section>
-				<Section background="#FBFBFB" innerSectionProps={{ columns: '1fr', className: css({ flex: 1 }) }}>
+				<Section background="#FBFBFB" innerSectionProps={{ columns: '1fr', className: css({ flex: 1, fontFamily: '"Open Sans", sans-serif', h3: { fontWeight: 'bold', marginTop: 15 } }) }}>
 					<div>
 						<H2 center css={{ marginBottom: 15 }}>Browse Dejavu Datasets</H2>
 						<H4 center>Browse the following public Dejavu datasets, you can clone them or submit your own dataset.</H4>
@@ -218,73 +218,40 @@ class Landing extends Component {
 						gutter="15px"
 						smGutter="0px"
 					>
-						<ImageCard big src="/live/assets/img/airbed.png">
-							<div>
-								<Title>Airbeds data set</Title>
-								<p>
-									A dataset for building an Airbnb
-									style house aggregation search.
-								</p>
-							</div>
-							<div>
-								<Link
-									primary
-									href="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
-								>
-									Browse
-								</Link>
-							</div>
-						</ImageCard>
-						<ImageCard big src="/live/assets/img/technews.png">
-							<div>
-								<Title>Hacker News data set</Title>
-								<p>
-									A dataset for building an Airbnb
-									style house aggregation search.
-								</p>
-							</div>
-							<div>
-								<Link
-									primary
-									href="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
-								>
-									Browse
-								</Link>
-							</div>
-						</ImageCard>
-						<ImageCard big src="/live/assets/img/movie.png">
-							<div>
-								<Title>Movies data set</Title>
-								<p>
-									A dataset of 14,000 movies.
-								</p>
-							</div>
-							<div>
-								<Link
-									primary
-									href="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
-								>
-									Browse
-								</Link>
-							</div>
-						</ImageCard>
-						<ImageCard big src="/live/assets/img/dataset.png">
-							<div>
-								<Title>Your Data Set</Title>
-								<p>
-									Submit your own data set
-								</p>
-							</div>
-							<div>
-								<Link
-									primary
-									href="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
-								>
-									Browse
-								</Link>
-							</div>
-						</ImageCard>
+						<ImageCard
+							title="Airbeds data set"
+							description="A dataset for building an Airbnb style house aggregation search."
+							big
+							src="/live/assets/img/airbed.png"
+							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+						/>
+						<ImageCard
+							title="Hacker News data set"
+							description="Hacker news data set"
+							big
+							src="/live/assets/img/technews.png"
+							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+						/>
+						<ImageCard
+							title="Movies data set"
+							description="A dataset of 14,000 movies."
+							big
+							src="/live/assets/img/movie.png"
+							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+						/>
+						<ImageCard
+							title="Your data set"
+							description="Submit your own data set"
+							big
+							src="/live/assets/img/dataset.png"
+							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+						/>
 					</Grid>
+					<GridLayout css={{ maxWidth: 600, margin: '0 auto' }} gridTemplateColumns="repeat(3, auto)" gridGap={40} justifyContent="center" justifyItems="center" alignItems="center">
+						<img src="/live/assets/img/chromestore.png" alt="Chrome Store" width="70%" />
+						<Button css={button} shadow uppercase bold>Try Live</Button>
+						<img src="/live/assets/img/docker.png" alt="Docker" width="70%" />
+					</GridLayout>
 				</Section>
 			</section>
 		);
