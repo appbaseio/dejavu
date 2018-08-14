@@ -58,7 +58,7 @@
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
-    "@appbaseio/designkit": "^0.9.0",
+    "@appbaseio/designkit": "^0.9.1",
     "@bower_components/auth0.js": "auth0/auth0.js#^7.4.0",
     "@bower_components/bootstrap": "twbs/bootstrap#~3.3.6",
     "@bower_components/codemirror": "components/codemirror#^5.17.0",

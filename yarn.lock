@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@appbaseio/designkit@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@appbaseio/designkit/-/designkit-0.9.0.tgz#6b5758c448e24e3197dbb67675a63c8f03f09bb0"
+"@appbaseio/designkit@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/designkit/-/designkit-0.9.1.tgz#c0008a23b3b1099fb94eb31a2f9fe54e6406a881"
   dependencies:
     "@storybook/react" "^3.2.19"
     prop-types "^15.6.0"
