@@ -2,7 +2,7 @@ import React from 'react';
 import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import 'react-select/dist/react-select.css';
+// import 'react-select/dist/react-select.css';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import moment from 'moment';
@@ -24,7 +24,7 @@ const Pretty = FeatureComponent.Pretty;
 
 class Cell extends React.Component {
 	static defaultProps = {
-		appIdClass: "appId"
+		appIdClass: 'appId'
 	};
 
 	state = {
@@ -43,7 +43,11 @@ class Cell extends React.Component {
 	};
 
 	selectRecord = (ele) => {
-		var checkFlag, checkbox, _id, _type, row;
+		let checkFlag, 
+checkbox, 
+_id, 
+_type, 
+row;
 		if (this.state.checked) {
 			this.setState({
 				checked: false
@@ -124,7 +128,7 @@ class Cell extends React.Component {
 			this.setState({
 				data: [],
 				prevData: []
-			})
+			});
 		} else if (props.datatype.type === 'geo_point' && props.item === '' && !props.isObject) {
 			this.setState({
 				data: {
@@ -301,7 +305,7 @@ class Cell extends React.Component {
 		range.selectNodeContents(document.getElementById(this.props.unique));
 		selection.removeAllRanges();
 		selection.addRange(range);
-		$('#copyId').val(this.props._type + '/' + this.props._id).select();
+		$('#copyId').val(`${this.props._type  }/${  this.props._id}`).select();
 		document.execCommand('copy');
 	};
 
@@ -340,35 +344,35 @@ class Cell extends React.Component {
 	}
 
 	render() {
-		var self = this;
-		var actionOnRecord = this.props.actionOnRecord;
-		var row = JSON.stringify(this.props.row);
+		let self = this;
+		let actionOnRecord = this.props.actionOnRecord;
+		let row = JSON.stringify(this.props.row);
 		// exposing visibility property allows us to show / hide
 		// individual cells
-		var vb = this.props.visibility;
-		var style = {
+		let vb = this.props.visibility;
+		let style = {
 			display: vb
 		};
 		const data = this.state.data;
 		// The id of the html element is generated
 		// in keys.js.
-		var _id = this.props._id;
-		var _type = this.props._type;
-		var toDisplay = data;
-		var tdClass = 'column_width columnAdjust';
+		let _id = this.props._id;
+		let _type = this.props._type;
+		let toDisplay = data;
+		let tdClass = 'column_width columnAdjust';
 		if (this.props.datatype.type === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
-		var columnName = this.props.columnName;
-		var radioId = this.props.unique + 'radio';
-		var appIdClass = 'appId';
+		let columnName = this.props.columnName;
+		let radioId = `${this.props.unique  }radio`;
+		let appIdClass = 'appId';
 		const { isObject } = this.props;
 		if (this.state.checked) {
-			appIdClass += " showRow";
+			appIdClass += ' showRow';
 		}
 		if (columnName == 'json') {
-			var prettyData = <Pretty json={data} />
+			var prettyData = <Pretty json={data} />;
 			toDisplay = (
 				<div className={appIdClass}>
 					<div className="row-number" style={{ display: this.state.checked ? 'none' : '' }}>
@@ -384,12 +388,12 @@ class Cell extends React.Component {
 						<label htmlFor={radioId} />
 					</span>
 					<OverlayTrigger trigger="click" rootClose placement="right" overlay={<Popover id="ab1" className="nestedJson">{prettyData}</Popover>}>
-					<a href="javascript:void(0);" className="appId_icon bracketIcon"></a>
+						<a href="javascript:void(0);" className="appId_icon bracketIcon" />
 					</OverlayTrigger>
 					<span className="appId_name" onClick={this.copyId}>
-					<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
-					<span className="appId_id" title={_id}>{_id}</span>
-				</span>
+						<span className="appId_appname" title={_type}>{_type}&nbsp;/&nbsp;</span>
+						<span className="appId_id" title={_id}>{_id}</span>
+					</span>
 				</div>
 			);
 			tdClass = 'column_width';
@@ -402,17 +406,19 @@ class Cell extends React.Component {
 				objectActionOnRecord.row = JSON.stringify(this.props.row[columnName] || (this.props.isArrayObject ? [] : {}), null, 4);
 				toDisplay = (
 					<div className="object-cell-container">
-					{
+						{
 						data ?
 						Object.keys(data).length !== 0 &&
-						<OverlayTrigger trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
-						{prettyData}
-						</Popover>}>
-						<a href="javascript:void(0);"  className="bracketIcon" />
+						<OverlayTrigger
+trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
+							{prettyData}
+						</Popover>}
+						>
+							<a href="javascript:void(0);" className="bracketIcon" />
 						</OverlayTrigger> :
 						null
 					}
-					{
+						{
 						this.props.editable &&
 						<FeatureComponent.UpdateDocument actionOnRecord={objectActionOnRecord} currentCell columnName={columnName} />
 					}
@@ -420,7 +426,7 @@ class Cell extends React.Component {
 				);
 			}
 			if (typeof data === 'boolean' && !isObject) {
-				toDisplay = toDisplay + '';
+				toDisplay += '';
 			}
 			if ((typeof data === 'string' || typeof data === 'number') && !isObject) {
 				toDisplay = this.state.data;
@@ -495,15 +501,15 @@ class Cell extends React.Component {
 				);
 				toDisplay = this.state.data.length > separator ? (
 					<OverlayTrigger
-					trigger="click" rootClose placement="top" overlay={
+						trigger="click" rootClose placement="top" overlay={
 						!this.props.editable ?
-						<Popover id="arrayPrettyView" className="nestedJson">
-						{prettyView}
+							<Popover id="arrayPrettyView" className="nestedJson">
+							{prettyView}
 						</Popover> :
 						<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
 					}
 					>
-					{arrayEditView}
+						{arrayEditView}
 					</OverlayTrigger>
 				) :
 				arrayEditView;
@@ -609,7 +615,7 @@ class Cell extends React.Component {
 								/>
 							</div> :
 				this.state.active && this.props.datatype.type !== 'date' && !this.props.isImage && (typeof data === 'string' || typeof data === 'number') ?
-				<CellInput
+					<CellInput
 					name={columnName}
 					value={this.state.data}
 					handleChange={this.handleChange}
@@ -618,20 +624,20 @@ class Cell extends React.Component {
 					editable={this.props.editable}
 				/> :
 				toDisplay.length > 37 ?
-				<OverlayTrigger
-				trigger="click" rootClose placement="left" overlay={
+					<OverlayTrigger
+					trigger="click" rootClose placement="left" overlay={
 					!this.props.editable && typeof data === 'string' ?
-					<Popover id="textPrettyView">
-					{toDisplay}
+						<Popover id="textPrettyView">
+						{toDisplay}
 					</Popover> :
 					<Popover id="textPrettyView" bsClass="tooltip-hidden" />
 				}
 				>
-				<span className="string-cell-span">{toDisplay}</span>
+					<span className="string-cell-span">{toDisplay}</span>
 				</OverlayTrigger> :
 				toDisplay
 			}
-			</div>
+				</div>
 			</td>
 		);
 	}

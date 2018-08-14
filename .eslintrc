@@ -23,7 +23,6 @@
 		"indent": [2, "tab", { "SwitchCase": 1 }],
 		"quotes": ["error", "single"],
 		"import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-		"comma-dangle": ["error", "never"],
 		"object-curly-spacing": [2, "always"],
 		"react/require-default-props": 0,
 		"react/require-extension": 0,
