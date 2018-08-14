@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GithubButton, Navbar, H1, H2, H4, Hero, ImageCard, GridLayout, Flex, Grid, Button, Text, Section } from '@appbaseio/designkit';
+import { GithubButton, Navbar, H1, H2, H4, Hero, ImageCard, GridLayout, Flex, Grid, Button, Text, Section, media } from '@appbaseio/designkit';
 import { Input, Form, Icon, Select, Tag, Button as AntButton } from 'antd';
 import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
@@ -85,9 +85,9 @@ class Landing extends Component {
 						/>
 					</div>
 				</Navbar>
-				<Hero css={{ height: '100vh', background: '#FBFBFB' }}>
+				<Hero css={{ minHeight: '100vh', background: '#FBFBFB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 					<Flex flexDirection="column" alignItems="center" justifyContent="center" css={{ height: '100%' }}>
-						<H1 css={{ color: colors.textPrimary, fontSize: 52, marginBottom: 60 }}>The missing web UI for Elasticsearch</H1>
+						<H1 css={{ color: colors.textPrimary, fontSize: 52, marginBottom: 60, [media('md')]: { textAlign: 'center', marginTop: 70 } }}>The missing web UI for Elasticsearch</H1>
 						<div
 							css={{
 								display: 'grid',
@@ -187,7 +187,7 @@ class Landing extends Component {
 						</div>
 					</Flex>
 					<Flex justifyContent="center">
-						<img src="/live/assets/img/down.svg" alt="Scroll Down" />
+						<Icon type="down" css={{ marginTop: 25, fontSize: '2rem' }} />
 					</Flex>
 				</Hero>
 				<Section>
