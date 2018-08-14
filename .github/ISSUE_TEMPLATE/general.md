@@ -1,3 +1,9 @@
+---
+name: General Issue
+about: Bugs, enhancements and feature requests
+
+---
+
 #### Tell us where you are using Dejavu (Hosted web app, Chrome extension, Docker Image, Within appbase.io)
 
 
