@@ -2,7 +2,7 @@ import React from 'react';
 import { OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-// import 'react-select/dist/react-select.css';
+import 'react-select/dist/react-select.css';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import moment from 'moment';
@@ -24,7 +24,7 @@ const Pretty = FeatureComponent.Pretty;
 
 class Cell extends React.Component {
 	static defaultProps = {
-		appIdClass: 'appId'
+		appIdClass: 'appId',
 	};
 
 	state = {
@@ -32,30 +32,30 @@ class Cell extends React.Component {
 		active: false,
 		geoActive: {
 			lat: false,
-			lon: false
+			lon: false,
 		},
 		prevData: this.props.item,
 		data: this.props.item,
 		showError: false,
 		errorMessage: '',
 		showTooltip: false,
-		imageLoadError: false
+		imageLoadError: false,
 	};
 
 	selectRecord = (ele) => {
-		let checkFlag, 
-checkbox, 
-_id, 
-_type, 
-row;
+		let checkFlag,
+			checkbox,
+			_id,
+			_type,
+			row;
 		if (this.state.checked) {
 			this.setState({
-				checked: false
+				checked: false,
 			});
 			checkbox = false;
 		} else {
 			this.setState({
-				checked: true
+				checked: true,
 			});
 			checkbox = true;
 		}
@@ -73,7 +73,7 @@ row;
 		if (this.props.item !== nextProps.item) {
 			this.setState({
 				data: nextProps.item,
-				prevData: nextProps.item
+				prevData: nextProps.item,
 			});
 		} else if (this.props.arrayOptions !== nextProps.arrayOptions) {
 			this.populateCellData(nextProps);
@@ -91,7 +91,7 @@ row;
 		}
 		if (this.state.checked !== checkFlag) {
 			this.setState({
-				checked: checkFlag
+				checked: checkFlag,
 			});
 		}
 	}
@@ -127,24 +127,24 @@ row;
 		if (props.arrayOptions && props.item === '') {
 			this.setState({
 				data: [],
-				prevData: []
+				prevData: [],
 			});
 		} else if (props.datatype.type === 'geo_point' && props.item === '' && !props.isObject) {
 			this.setState({
 				data: {
 					lat: '',
-					lon: ''
+					lon: '',
 				},
 				prevData: {
 					lat: '',
-					lon: ''
-				}
+					lon: '',
+				},
 			});
 		} else if (props.isObject && props.item === '') {
 			this.setState({
 				data: {},
 				prevData: {},
-				active: true	// considering each object field active
+				active: true,	// considering each object field active
 			});
 		}
 	}
@@ -154,23 +154,23 @@ row;
 		if (this.props.datatype.type !== 'string' && this.props.datatype.type !== 'text') {
 			if (this.state.showTooltip) {
 				this.setState({
-					showTooltip: false
+					showTooltip: false,
 				});
 			}
 			nextState = e.target.value;
 			const isValid = nextState === '' || nextState === '-';
 			if (!isNaN(nextState) || isValid) {
 				this.setState({
-					data: nextState
+					data: nextState,
 				});
 			} else {
 				this.setState({
-					showTooltip: true
+					showTooltip: true,
 				});
 			}
 		} else {
 			this.setState({
-				data: nextState
+				data: nextState,
 			});
 		}
 	}
@@ -180,7 +180,7 @@ row;
 		const nextState = e.target.value;
 		if (this.state.showTooltip) {
 			this.setState({
-				showTooltip: false
+				showTooltip: false,
 			});
 		}
 		const min = name === 'lat' ? -90 : -180;
@@ -191,11 +191,11 @@ row;
 			const { data } = this.state;
 			data[name] = nextState;
 			this.setState({
-				data
+				data,
 			});
 		} else {
 			this.setState({
-				showTooltip: true
+				showTooltip: true,
 			});
 		}
 	}
@@ -205,7 +205,7 @@ row;
 		if (this.state.data !== nextState) {
 			this.setState({
 				data: nextState,
-				active: false
+				active: false,
 			});
 			this.indexCurrentData(nextState);
 		}
@@ -216,12 +216,12 @@ row;
 			const nextState = e.format(getMomentDate(this.props.datatype.format));
 			if (nextState !== this.state.prevData) {
 				this.setState({
-					prevData: nextState
+					prevData: nextState,
 				});
 				this.indexCurrentData(nextState);
 			}
 			this.setState({
-				data: e.format(getMomentDate(this.props.datatype.format))
+				data: e.format(getMomentDate(this.props.datatype.format)),
 			});
 		}
 	}
@@ -229,7 +229,7 @@ row;
 	handleArrayChange = (e) => {
 		const nextState = e.map(item => item.value);
 		this.setState({
-			data: nextState
+			data: nextState,
 		});
 	}
 
@@ -237,7 +237,7 @@ row;
 		if (e.status >= 400) {
 			this.setState({
 				showError: true,
-				errorMessage: e.message
+				errorMessage: e.message,
 			});
 		}
 	}
@@ -245,7 +245,7 @@ row;
 	hideErrorMessage= () => {
 		this.setState({
 			showError: false,
-			errorMessage: ''
+			errorMessage: '',
 		});
 	}
 
@@ -266,11 +266,11 @@ row;
 					this.indexCurrentData(this.state.data);
 				}
 				this.setState({
-					prevData: this.state.data
+					prevData: this.state.data,
 				});
 			}
 			this.setState({
-				active: nextState
+				active: nextState,
 			}, () => this.setSelectActive(nextState));
 		}
 	}
@@ -289,12 +289,12 @@ row;
 			}
 			// update previous state of data
 			this.setState({
-				prevData: { ...this.state.data }
+				prevData: { ...this.state.data },
 			});
 			const geoActive = { ...this.state.geoActive };
 			geoActive[geo] = nextState;
 			this.setState({
-				geoActive
+				geoActive,
 			});
 		}
 	}
@@ -305,7 +305,7 @@ row;
 		range.selectNodeContents(document.getElementById(this.props.unique));
 		selection.removeAllRanges();
 		selection.addRange(range);
-		$('#copyId').val(`${this.props._type  }/${  this.props._id}`).select();
+		$('#copyId').val(`${this.props._type }/${this.props._id}`).select();
 		document.execCommand('copy');
 	};
 
@@ -316,8 +316,8 @@ row;
 			type: _type,
 			id: _id,
 			body: {
-				[columnName]: nextData
-			}
+				[columnName]: nextData,
+			},
 		};
 
 		if (_mapping && _mapping._parent && _mapping._routing && _mapping._routing.path && _mapping._routing.required) {
@@ -330,7 +330,7 @@ row;
 	imageOnLoad = () => {
 		if (this.state.imageLoadError) {
 			this.setState({
-				imageLoadError: false
+				imageLoadError: false,
 			});
 		}
 	}
@@ -338,34 +338,34 @@ row;
 	imageOnLoadError = () => {
 		if (!this.state.imageLoadError) {
 			this.setState({
-				imageLoadError: true
+				imageLoadError: true,
 			});
 		}
 	}
 
 	render() {
-		let self = this;
-		let actionOnRecord = this.props.actionOnRecord;
-		let row = JSON.stringify(this.props.row);
+		const self = this;
+		const actionOnRecord = this.props.actionOnRecord;
+		const row = JSON.stringify(this.props.row);
 		// exposing visibility property allows us to show / hide
 		// individual cells
-		let vb = this.props.visibility;
-		let style = {
-			display: vb
+		const vb = this.props.visibility;
+		const style = {
+			display: vb,
 		};
 		const data = this.state.data;
 		// The id of the html element is generated
 		// in keys.js.
-		let _id = this.props._id;
-		let _type = this.props._type;
+		const _id = this.props._id;
+		const _type = this.props._type;
 		let toDisplay = data;
 		let tdClass = 'column_width columnAdjust';
 		if (this.props.datatype.type === 'boolean' || Array.isArray(data) || this.props.datatype.type === 'date') {
 			tdClass = 'column_width columnAdjust allowOverflow';
 		}
 
-		let columnName = this.props.columnName;
-		let radioId = `${this.props.unique  }radio`;
+		const columnName = this.props.columnName;
+		const radioId = `${this.props.unique}radio`;
 		let appIdClass = 'appId';
 		const { isObject } = this.props;
 		if (this.state.checked) {
@@ -410,9 +410,9 @@ row;
 						data ?
 						Object.keys(data).length !== 0 &&
 						<OverlayTrigger
-trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
-							{prettyData}
-						</Popover>}
+							trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className="nestedJson">
+	{prettyData}
+</Popover>}
 						>
 							<a href="javascript:void(0);" className="bracketIcon" />
 						</OverlayTrigger> :
@@ -504,9 +504,9 @@ trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className=
 						trigger="click" rootClose placement="top" overlay={
 						!this.props.editable ?
 							<Popover id="arrayPrettyView" className="nestedJson">
-							{prettyView}
-						</Popover> :
-						<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
+								{prettyView}
+							</Popover> :
+							<Popover id="arrayPrettyView" bsClass="tooltip-hidden" />
 					}
 					>
 						{arrayEditView}
@@ -530,7 +530,7 @@ trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className=
 							this.setState({ active: false });
 						}}
 						inputProps={{
-							ref: (node) => { this.select = node; }
+							ref: (node) => { this.select = node; },
 						}}
 					/>
 				);
@@ -616,25 +616,25 @@ trigger="click" rootClose placement="left" overlay={<Popover id="ab1" className=
 							</div> :
 				this.state.active && this.props.datatype.type !== 'date' && !this.props.isImage && (typeof data === 'string' || typeof data === 'number') ?
 					<CellInput
-					name={columnName}
-					value={this.state.data}
-					handleChange={this.handleChange}
-					handleBlur={() => this.setActive(false)}
-					showTooltip={this.state.showTooltip}
-					editable={this.props.editable}
-				/> :
+						name={columnName}
+						value={this.state.data}
+						handleChange={this.handleChange}
+						handleBlur={() => this.setActive(false)}
+						showTooltip={this.state.showTooltip}
+						editable={this.props.editable}
+					/> :
 				toDisplay.length > 37 ?
 					<OverlayTrigger
-					trigger="click" rootClose placement="left" overlay={
+						trigger="click" rootClose placement="left" overlay={
 					!this.props.editable && typeof data === 'string' ?
 						<Popover id="textPrettyView">
-						{toDisplay}
-					</Popover> :
-					<Popover id="textPrettyView" bsClass="tooltip-hidden" />
+							{toDisplay}
+						</Popover> :
+						<Popover id="textPrettyView" bsClass="tooltip-hidden" />
 				}
-				>
-					<span className="string-cell-span">{toDisplay}</span>
-				</OverlayTrigger> :
+					>
+						<span className="string-cell-span">{toDisplay}</span>
+					</OverlayTrigger> :
 				toDisplay
 			}
 				</div>
@@ -655,11 +655,11 @@ Cell.propTypes = {
 	actionOnRecord: PropTypes.object,	// eslint-disable-line
 	datatype: PropTypes.object,	// eslint-disable-line
 	isImage: PropTypes.bool,
-	loadImages: PropTypes.bool
+	loadImages: PropTypes.bool,
 };
 
 Cell.defaultProps = {
-	datatype: {}
+	datatype: {},
 };
 
 module.exports = Cell;
