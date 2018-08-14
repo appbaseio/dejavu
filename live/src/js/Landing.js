@@ -226,6 +226,7 @@ class Landing extends Component {
 							big
 							src="/live/assets/img/airbed.png"
 							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+							linkText="BROWSE"
 						/>
 						<ImageCard
 							title="Hacker News data set"
@@ -233,6 +234,7 @@ class Landing extends Component {
 							big
 							src="/live/assets/img/technews.png"
 							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+							linkText="BROWSE"
 						/>
 						<ImageCard
 							title="Movies data set"
@@ -240,13 +242,15 @@ class Landing extends Component {
 							big
 							src="/live/assets/img/movie.png"
 							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+							linkText="BROWSE"
 						/>
 						<ImageCard
 							title="Your data set"
 							description="Submit your own data set"
 							big
 							src="/live/assets/img/dataset.png"
-							link="https://opensource.appbase.io/reactivesearch/demos/airbeds/"
+							link="https://github.com/appbaseio/dejavu/issues/new?template=dataset.md"
+							linkText="SUBMIT"
 						/>
 					</Grid>
 					<GridLayout css={{ maxWidth: 600, margin: '0 auto' }} gridTemplateColumns="repeat(3, auto)" gridGap={40} justifyContent="center" justifyItems="center" alignItems="center">
