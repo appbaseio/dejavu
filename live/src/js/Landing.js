@@ -42,6 +42,19 @@ const input = css({
 	marginBottom: 30
 });
 
+const featImage = css({
+	[media('md')]: {
+		maxWidth: 400,
+		margin: '0 auto',
+	},
+});
+
+const featImageReverse = css(featImage, {
+	[media('md')]: {
+		order: 1,
+	},
+});
+
 // eslint-disable-next-line
 injectGlobal`
 	html {
@@ -90,7 +103,8 @@ class Landing extends Component {
 					background: "white",
 					position: "absolute",
 					zIndex: 10,
-					overflow: "auto"
+					overflow: "auto",
+					scrollBehavior: 'smooth',
 				}}
 			>
 				<Navbar height="80px">
@@ -117,7 +131,8 @@ class Landing extends Component {
 						background: "#FBFBFB",
 						display: "flex",
 						alignItems: "center",
-						justifyContent: "center"
+						justifyContent: "center",
+						position: 'relative',
 					}}
 				>
 					<Flex
@@ -289,11 +304,22 @@ class Landing extends Component {
 							</div>
 						</div>
 					</Flex>
-					<Flex justifyContent="center">
+					<a
+						css={{
+							position: 'absolute',
+							left: '50%',
+							bottom: 20,
+							cursor: 'pointer',
+							[media('md')]: {
+								display: 'none',
+							},
+						}}
+						href="#landing-sections"
+					>
 						<Icon type="down" css={{ marginTop: 25, fontSize: "2rem" }} />
-					</Flex>
+					</a>
 				</Hero>
-				<Section>
+				<Section id="landing-sections">
 					<div>
 						<H2 css={{ marginBottom: 15 }}>Data Importer</H2>
 						<H4>
@@ -305,7 +331,7 @@ class Landing extends Component {
 						src="/live/src/img/search-sandbox.png"
 						alt="Data Importer GIF"
 						width="100%"
-						className={css({ [media("md")]: { display: "none" } })}
+						css={featImage}
 					/>
 				</Section>
 				<Section background="#FBFBFB">
@@ -313,7 +339,7 @@ class Landing extends Component {
 						src="/live/src/img/search-sandbox.png"
 						alt="Data Importer GIF"
 						width="100%"
-						className={css({ [media("md")]: { display: "none" } })}
+						css={featImageReverse}
 					/>
 					<div>
 						<H2 css={{ marginBottom: 15 }}>Data Browser</H2>
@@ -337,7 +363,7 @@ class Landing extends Component {
 						src="/live/src/img/search-sandbox.png"
 						alt="Data Importer GIF"
 						width="100%"
-						className={css({ [media("md")]: { display: "none" } })}
+						css={featImage}
 					/>
 				</Section>
 				<Section
