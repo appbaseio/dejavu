@@ -18,7 +18,11 @@ module.exports = {
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				query: {
-					presets: ['es2015', 'stage-0', 'react']
+					presets: ['es2015', 'stage-0', 'react'],
+					plugins: ['emotion', [
+						"import",
+						{ "libraryName": "antd", "libraryDirectory": "es", "style": "css" }
+					]]
 				}
 			}, {
 				test: /node_modules\/JSONStream\/index\.js$/,
