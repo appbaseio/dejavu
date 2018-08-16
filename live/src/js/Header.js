@@ -23,7 +23,7 @@ class Header extends React.Component {
 		return (
 			<header className="header text-center">
 				<div className="img-container">
-					<span className="header-img-container">
+					<a href={`/${window.location.hash}`} className="header-img-container">
 						<img src="live/assets/img/Dejavu_Icon.svg" alt="Dejavu" className="img-responsive" />
 						<span className="dejavu-title">
 							dejavu
@@ -31,9 +31,17 @@ class Header extends React.Component {
 						<span className="dejavu-subtitle">
 							The missing web UI for Elasticsearch
 						</span>
-					</span>
+					</a>
 					<Router>
 						<span className="batteries-links">
+							<NavLink
+								isActive={(match, location) => location.pathname === '/importer'}
+								className="link"
+								activeClassName="active"
+								to="/import"
+							>
+								Import
+							</NavLink>
 							<NavLink
 								isActive={(match, location) => location.pathname === '/'}
 								className="link"
@@ -41,14 +49,6 @@ class Header extends React.Component {
 								to={`/${window.location.hash}`}
 							>
 								Browser
-							</NavLink>
-							<NavLink
-								isActive={(match, location) => location.pathname === '/importer'}
-								className="link"
-								activeClassName="active"
-								to="/importer"
-							>
-								Importer
 							</NavLink>
 							<NavLink
 								isActive={(match, location) => location.pathname === '/sandbox'}
@@ -68,7 +68,7 @@ class Header extends React.Component {
 							</NavLink>
 
 							<Route path="/" component={Browser} />
-							<Route path="/importer" component={Importer} />
+							<Route path="/import" component={Importer} />
 							<Route path="/sandbox" component={SandboxWrapper} />
 							<Route path="/mappings" component={MappingsWrapper} />
 						</span>
