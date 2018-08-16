@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import {
 	Footer,
 	Flex,
 	GridLayout as Grid,
 	Title,
 	media
-} from '@appbaseio/designkit';
-import { css } from 'react-emotion';
+} from "@appbaseio/designkit";
+import { css } from "react-emotion";
 
 const footer = css`
 	display: flex;
 	width: 100%;
 	justify-content: space-around;
-	${media('lg')} {
+	${media("lg")} {
 		flex-direction: column;
 	}
 `;
@@ -27,7 +27,7 @@ const listStyles = css`
 		color: #fff;
 		transition: all 0.3s ease-in-out;
 	}
-	${media('lg')} {
+	${media("lg")} {
 		width: 100%;
 	}
 `;
@@ -36,7 +36,7 @@ const brand = css`
 	display: grid;
 	grid-template-columns: 1fr auto;
 	align-items: center;
-	${media('lg')} {
+	${media("lg")} {
 		grid-template-columns: 1fr;
 		justify-items: center;
 	}
@@ -59,78 +59,122 @@ const link = css`
 `;
 
 const AppFooter = () => (
-	<Footer className={css({ background: '#013563' })}>
+	<Footer className={css({ background: "#013563" })}>
 		<Flex
 			flexDirection="column"
 			alignItems="center"
-			className={css({ width: '100%' })}
+			className={css({ width: "100%" })}
 		>
 			<div className={footer}>
 				<Footer.Links className={listStyles}>
 					<Footer.List>
-						<Title>Products</Title>
+						<Title>Get Dejavu as</Title>
 						<li>
-							<a href="https://appbase.io">Appbase.io</a>
+							<a href="https://appbase.io">Hosted Web App</a>
 						</li>
 						<li>
 							<a href="https://opensource.appbase.io/reactivemaps">
-								Reactive Maps
+								Docker Image
 							</a>
 						</li>
 						<li>
 							<a href="https://opensource.appbase.io/reactivesearch">
-								Reactive Search
+								Chrome Extension
 							</a>
 						</li>
 					</Footer.List>
 					<Footer.List>
-						<Title>Docs</Title>
+						<Title>Companion Tools</Title>
 						<li>
-							<a href="https://docs.appbase.io">JS Quick Start</a>
-						</li>
-						<li>
-							<a href="https://docs.appbase.io">
-								JS API Reference
+							<a
+								href="https://appbase.io"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Hosted Search
 							</a>
 						</li>
 						<li>
-							<a href="https://rest.appbase.io">
-								REST Quick Start
-							</a>
-						</li>
-					</Footer.List>
-					<Footer.List>
-						<Title>Use Cases</Title>
-						<li>
-							<a href="https://appbase.io/usecases/geo-apps">
-								Geolocation Queries
+							<a
+								href="https://opensource.appbase.io/mirage"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Query Builder
 							</a>
 						</li>
 						<li>
-							<a href="https://appbase.io/usecases/why-appbase">
-								Personalized Feeds
-							</a>
-						</li>
-						<li>
-							<a href="https://appbase.io/usecases/realtime-search">
-								Realtime Search
+							<a
+								href="https://opensource.appbase.io/reactivesearch"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								UI Components
 							</a>
 						</li>
 					</Footer.List>
 					<Footer.List>
-						<Title>Company</Title>
+						<Title>Community</Title>
 						<li>
-							<a href="https://status.appbase.io">Status Page</a>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://github.com/appbaseio/dejavu/"
+							>
+								GitHub
+							</a>
 						</li>
 						<li>
-							<a href="https://appbase.io/tos">Terms</a>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://gitter.im/appbaseio/dejavu/issues"
+							>
+								Issues
+							</a>
 						</li>
 						<li>
-							<a href="https://appbase.io/privacy">Privacy</a>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://twitter.com/appbaseio"
+							>
+								Twitter
+							</a>
+						</li>
+					</Footer.List>
+					<Footer.List>
+						<Title>More</Title>
+						<li>
+							<a
+								href="https://medium.appbase.io/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Medium Publication
+							</a>
+						</li>
+						<li>
+							<a
+								href="http://docs.appbase.io/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Appbase.io Docs
+							</a>
+						</li>
+						<li>
+							<a
+								href="mailto:support@appbase.io"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Get Support
+							</a>
 						</li>
 					</Footer.List>
 				</Footer.Links>
-				<Footer.Brand className={css({ width: 'auto' })}>
+				<Footer.Brand className={css({ width: "auto" })}>
 					<div className={brand}>
 						<img
 							width="100%"
@@ -148,30 +192,21 @@ const AppFooter = () => (
 									rel="noopener noreferrer"
 									href="https://github.com/appbaseio/"
 								>
-									<img
-										src="live/assets/img/github.svg"
-										alt="GitHub"
-									/>
+									<img src="live/assets/img/github.svg" alt="GitHub" />
 								</a>
 								<a
 									target="_blank"
 									rel="noopener noreferrer"
 									href="https://twitter.com/appbaseio/"
 								>
-									<img
-										src="live/assets/img/twitter.svg"
-										alt="Twitter"
-									/>
+									<img src="live/assets/img/twitter.svg" alt="Twitter" />
 								</a>
 								<a
 									target="_blank"
 									rel="noopener noreferrer"
 									href="https://medium.appbase.io"
 								>
-									<img
-										src="live/assets/img/medium.svg"
-										alt="Medium"
-									/>
+									<img src="live/assets/img/medium.svg" alt="Medium" />
 								</a>
 							</Grid>
 							<a
