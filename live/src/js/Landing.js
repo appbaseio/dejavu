@@ -328,7 +328,7 @@ class Landing extends Component {
 						</H4>
 					</div>
 					<img
-						src="/live/src/img/search-sandbox.png"
+						src="/live/src/img/data-importer.png"
 						alt="Data Importer GIF"
 						width="100%"
 						css={featImage}
@@ -336,7 +336,7 @@ class Landing extends Component {
 				</Section>
 				<Section background="#FBFBFB">
 					<img
-						src="/live/src/img/search-sandbox.png"
+						src="/live/src/img/data-browser.png"
 						alt="Data Importer GIF"
 						width="100%"
 						css={featImageReverse}
