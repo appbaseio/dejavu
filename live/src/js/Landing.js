@@ -308,7 +308,7 @@ class Landing extends Component {
 						css={{
 							position: 'absolute',
 							left: '50%',
-							bottom: 20,
+							bottom: 25,
 							cursor: 'pointer',
 							[media('md')]: {
 								display: 'none',
