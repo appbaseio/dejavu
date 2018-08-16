@@ -1,0 +1,3 @@
+[submodule "batteries"]
+	path = batteries
+	url = https://github.com/appbaseio-confidential/batteries.git

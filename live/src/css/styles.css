@@ -308,7 +308,7 @@ footer {
 	position: fixed;
 	width: 100%;
 	height: 100%;
-	z-index: 99999999;
+	z-index: 9;
 	background: #eee;
 	text-align: center;
 }
