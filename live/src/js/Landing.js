@@ -39,7 +39,7 @@ const button = css({
 
 const input = css({
 	fontSize: 14,
-	marginBottom: 30
+	marginBottom: '30px !important'
 });
 
 const featImage = css({
@@ -110,7 +110,7 @@ class Landing extends Component {
 				<Navbar height="80px">
 					<Navbar.Logo>
 						<img
-							src="/live/assets/img/dejavu.svg"
+							src="live/assets/img/dejavu.svg"
 							alt="Dejavu Logo"
 							height="45px"
 						/>
@@ -284,7 +284,7 @@ class Landing extends Component {
 												marginBottom: 25
 											})
 										)}
-										href="/live?default=true"
+										href="live?default=true"
 										target="_blank"
 									>
 										Try a live demo
@@ -328,7 +328,7 @@ class Landing extends Component {
 						</H4>
 					</div>
 					<img
-						src="/live/src/img/data-importer.png"
+						src="live/src/img/data-importer.png"
 						alt="Data Importer GIF"
 						width="100%"
 						css={featImage}
@@ -336,7 +336,7 @@ class Landing extends Component {
 				</Section>
 				<Section background="#FBFBFB">
 					<img
-						src="/live/src/img/data-browser.png"
+						src="live/src/img/data-browser.png"
 						alt="Data Importer GIF"
 						width="100%"
 						css={featImageReverse}
@@ -360,7 +360,7 @@ class Landing extends Component {
 						</H4>
 					</div>
 					<img
-						src="/live/src/img/search-sandbox.png"
+						src="live/src/img/search-sandbox.png"
 						alt="Data Importer GIF"
 						width="100%"
 						css={featImage}
@@ -392,7 +392,7 @@ class Landing extends Component {
 							title="Airbeds"
 							description="A ~3,000 listings dataset for building an airbeds search."
 							big
-							src="/live/assets/img/airbed.png"
+							src="live/assets/img/airbed.png"
 							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAAKLAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsW71dAzA7YYc-SS2NBdZOu2iiqUDTwzb8SRY-P60qxz_ZFKoJgMwEJushaRl-FxMxQqDCBLVG-xBlA5HfOZXDzUuGnntd_Zw9u4C0YdVJQ8HvMJrVO8AfQy73d9wq7TjySsVRv-NAKU5ZUw4jxU0ynrQflgPkDLN6AGDv4jeOi8Ir9BBSZ-bdv4J2oq7eCzLoC-gl9qTZsTRLHsXPhHvClG5we6nqctwdPgHqEWqj25nG0qo1RkmJYY_ZTF4XEJcMQyIw-2Rck0OE-ZTR7g8d3ste2uR2u9JbeJj9fjtjVNDltaQGN8jaAdUVVriYpB2CzgXN__Rv9tA"
 							linkText="BROWSE"
 						/>
@@ -400,7 +400,7 @@ class Landing extends Component {
 							title="Hacker News"
 							description="A Hacker News dataset of 6,000+ posts."
 							big
-							src="/live/assets/img/technews.png"
+							src="live/assets/img/technews.png"
 							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAAIBAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsxYD52xAToBILCBZUHd4IWhGYOPRqt6o0DlIP1kVVIAmFVFSWIdk3E2cJl2oC_wC7YnoAXPLuLBSIxnd9d0TQ0opmWGwNYOHF30gMi0kIvl7AoiPzO_739ZQI7DS67rzkqlOcfTfQSkE7zipX4Ao9sYHB5yBaKA06JreaIPeE9HzCM5mgYRZ3XpfTFCMJKtlmtqnDnwvuxQb41PqmEQyqWkhmbbkM3A6Xwi4HB1SmUET_lJZAA"
 							linkText="BROWSE"
 						/>
@@ -408,7 +408,7 @@ class Landing extends Component {
 							title="Movies"
 							description="A TMDB derived dataset of 13,000 popular movies."
 							big
-							src="/live/assets/img/movie.png"
+							src="live/assets/img/movie.png"
 							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAALHAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsl_X14MGM4ebXtwfc5RKh8oYUdlolmraYIijUHHIdsLNFR38QB36wFD9mxqQ3hw8UIuWk6anRkqRWWqJdQzL7fsaSb-KVmiJHfYd7IXvQwmbncmve1oOxVqeN5KsFHAvKApT4O8IzfYkBPNy7EkQSwChNYfGVnpSGneCa7C8pZFKIIs5ZN4AjAEnGcyF3fsKbh0s1SXrBiz9ZorBNHtj3Oue3UbKlLc5T07dvgh2dont93VHJExEarqodZLdySSzfl__Jb7qhfLatM1Iu9315nRu0sFK1YSCFWD4lYvqqcJc_NbJVfNB1cj2sMQUOaM6C8DubgTlaFaVIai7QiVvSWxMG8Mn5uvWDvLYJOZVG7Lu0gyOAouIsTpfyP_iQ_QA&editable=false"
 							linkText="BROWSE"
 						/>
@@ -416,7 +416,7 @@ class Landing extends Component {
 							title="Add your dataset"
 							description="Submit your own dataset to our public gallery."
 							big
-							src="/live/assets/img/dataset.png"
+							src="live/assets/img/dataset.png"
 							link="https://github.com/appbaseio/dejavu/issues/new?template=dataset.md"
 							linkText="SUBMIT"
 						/>
@@ -430,14 +430,14 @@ class Landing extends Component {
 						alignItems="center"
 					>
 						<img
-							src="/live/assets/img/chromestore.png"
+							src="live/assets/img/chromestore.png"
 							alt="Chrome Store"
 							width="70%"
 						/>
-						<Button css={button} shadow uppercase bold href="/live?default=true">
+						<Button css={button} shadow uppercase bold href="live?default=true">
 							Try Live
 						</Button>
-						<img src="/live/assets/img/docker.png" alt="Docker" width="70%" />
+						<img src="live/assets/img/docker.png" alt="Docker" width="70%" />
 					</GridLayout>
 				</Section>
 				<Footer />
