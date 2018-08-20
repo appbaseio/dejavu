@@ -116,6 +116,9 @@ class SubscribeModal extends React.Component {
 	};
 
 	render() {
+		if (window.location === 'https://opensource.appbase.io/dejavu/') {
+			return null;
+		}
 		return (<div className="add-record-container pd-r10">
 					<a href="javascript:void(0);" className="subscribe"  title="Subscribe" onClick={this.open} >
 					  {this.showIcon()}
