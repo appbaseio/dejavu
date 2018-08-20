@@ -55,11 +55,16 @@ var files = {
 		importer: 'live/importer/**/*'
 	},
 	moveFiles: [
-		'live/index.html',
+		'index.html',
 		'live/config.js',
 		'manifest.json',
 		'background.js'
-	]
+	],
+	moveFilesGh: [
+		'live/config.js',
+		'manifest.json',
+		'background.js'
+	],
 };
 
 gulp.task('vendorcss', function() {
@@ -146,7 +151,7 @@ gulp.task('ghpagesBuild', ['bundle'], function() {
 		gulp.src(files.folders[folder])
 			.pipe(gulp.dest('./live/' + folder));
 	}
-	gulp.src(files.moveFiles)
+	gulp.src(files.moveFilesGh)
 		.pipe(gulp.dest('./live'));
 });
 
