@@ -15,7 +15,7 @@ import {
 	Section,
 	media
 } from "@appbaseio/designkit";
-import { Input, Form, Icon, Select, Tag, Button as AntButton } from "antd";
+import { Input, Form, Icon, Modal, Select, Tag, Button as AntButton } from "antd";
 import { css, cx, injectGlobal } from "react-emotion";
 import UrlParser from "url-parser-lite";
 import { bool, arrayOf, object, string, func } from "prop-types";
@@ -66,7 +66,8 @@ injectGlobal`
 class Landing extends Component {
 	state = {
 		stars: "4,500",
-		newApp: ""
+		newApp: "",
+		showModal: false,
 	};
 
 	componentDidMount() {
@@ -82,8 +83,14 @@ class Landing extends Component {
 		this.selectRef = React.createRef();
 	}
 
+	toggleModal = () => {
+		this.setState(({ showModal }) => ({
+			showModal: !showModal,
+		}));
+	}
+
 	render() {
-		const { stars, newApp } = this.state;
+		const { stars, newApp, showModal } = this.state;
 		const {
 			apps,
 			url,
@@ -125,6 +132,11 @@ class Landing extends Component {
 						/>
 					</div>
 				</Navbar>
+				<Modal visible={showModal} onCancel={this.toggleModal} footer={null} width={610}>
+					<div css={{ marginTop: 20 }}>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullscreen />
+					</div>
+				</Modal>
 				<Hero
 					css={{
 						minHeight: "100vh",
@@ -289,17 +301,20 @@ class Landing extends Component {
 									>
 										Try a live demo
 									</Button>
-									<Text
-										css={{
-											fontSize: 14,
-											textTransform: "uppercase",
-											fontWeight: 600,
-											textAlign: "center"
-										}}
-									>
-										<Icon type="play-circle-o" css={{ marginRight: 7 }} />
-										Watch Video
-									</Text>
+									<div onClick={this.toggleModal}>
+										<Text
+											css={{
+												fontSize: 14,
+												textTransform: "uppercase",
+												fontWeight: 600,
+												textAlign: "center",
+												cursor: 'pointer',
+											}}
+											>
+											<Icon type="play-circle-o" css={{ marginRight: 7 }} />
+											Watch Video
+										</Text>
+									</div>
 								</div>
 							</div>
 						</div>
