@@ -32,7 +32,7 @@ class Header extends React.Component {
 							The missing web UI for Elasticsearch
 						</span>
 					</a>
-					<Router>
+					<Router basename="dejavu">
 						<span className="batteries-links">
 							<NavLink
 								isActive={(match, location) => location.pathname === '/importer'}
