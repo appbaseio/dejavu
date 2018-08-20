@@ -116,7 +116,7 @@ class SubscribeModal extends React.Component {
 	};
 
 	render() {
-		if (window.location === 'https://opensource.appbase.io/dejavu/') {
+		if (window.location.toString() === 'https://opensource.appbase.io/dejavu/') {
 			return null;
 		}
 		return (<div className="add-record-container pd-r10">
