@@ -65,6 +65,7 @@ injectGlobal`
 const imgLink = css({
 	display: 'flex',
 	justifyContent: 'center',
+	alignItems: 'center',
 });
 
 // a new page but connections are still legacy
