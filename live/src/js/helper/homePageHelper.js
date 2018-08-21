@@ -678,11 +678,13 @@ var help = {
 			if(v.value === '') {
 				reloadFlag = false;
 			}
+			// strip trailing slash
+			const cleanedValue = v.value.replace(/\/$/, "");
 			if(v.name == 'url'){
-				temp_config.url = v.value;
+				temp_config.url = cleanedValue;
 			}
 			else{
-				temp_config.appname = v.value;
+				temp_config.appname = cleanedValue;
 			}
 		});
 		storageService.setItem('esurl',temp_config.url);
