@@ -29,6 +29,7 @@ export default () => {
 			<SearchSandbox
 				appName={window.APPNAME}
 				credentials={credentials}
+				attribution={{ text: 'Built with Dejavu', link: 'https://opensource.appbase.io/dejavu' }}
 				url={window.HOST}
 			>
 				<Editor mappingsURL="https://opensource.appbase.io/dejavu/mappings" />
