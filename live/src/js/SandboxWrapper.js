@@ -17,14 +17,22 @@ const Wrapper = styled('div')`
 
 export { Wrapper };
 
-export default () => (
-	<Wrapper>
-		<SearchSandbox
-			appName={window.APPNAME}
-			credentials={`${window.USERNAME}:${window.PASSWORD}`}
-			url={window.HOST}
-		>
-			<Editor />
-		</SearchSandbox>
-	</Wrapper>
-);
+export default () => {
+	let credentials = null;
+
+	if (window.USERNAME !== 'test' && window.PASSWORD !== 'test') {
+		credentials = `${window.USERNAME}:${window.PASSWORD}`;
+	}
+
+	return (
+		<Wrapper>
+			<SearchSandbox
+				appName={window.APPNAME}
+				credentials={credentials}
+				url={window.HOST}
+			>
+				<Editor />
+			</SearchSandbox>
+		</Wrapper>
+	);
+};
