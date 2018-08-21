@@ -62,6 +62,11 @@ injectGlobal`
 	}
 `;
 
+const imgLink = css({
+	display: 'flex',
+	justifyContent: 'center',
+});
+
 // a new page but connections are still legacy
 class Landing extends Component {
 	state = {
@@ -444,15 +449,19 @@ class Landing extends Component {
 						justifyItems="center"
 						alignItems="center"
 					>
-						<img
-							src="live/assets/img/chromestore.png"
-							alt="Chrome Store"
-							width="70%"
-						/>
+						<a css={imgLink} href="https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh" target="_blank" rel="noopener noreferrer">
+							<img
+								src="live/assets/img/chromestore.png"
+								alt="Chrome Store"
+								width="70%"
+							/>
+						</a>
 						<Button css={button} shadow uppercase bold href="live?default=true">
 							Try Live
 						</Button>
-						<img src="live/assets/img/docker.png" alt="Docker" width="70%" />
+						<a css={imgLink} href="https://hub.docker.com/r/appbaseio/dejavu/" target="_blank" rel="noopener noreferrer">
+							<img src="live/assets/img/docker.png" alt="Docker" width="70%" />
+						</a>
 					</GridLayout>
 				</Section>
 				<Footer />
