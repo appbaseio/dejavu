@@ -8,7 +8,7 @@
   },
   "scripts": {
     "fix": "eslint --fix ./live/src/js/",
-    "webpack-server": "webpack-dev-server --hot --inline --progress --colors",
+    "webpack-server": "webpack-dev-server --history-api-fallback --hot --inline --progress --colors",
     "start": "concurrently \"npm run webpack-server\" \"gulp watch\"",
     "dejavubuild": "webpack -p --progress --colors --config ./webpack.production.config.js",
     "build": "npm run dejavubuild && gulp",
