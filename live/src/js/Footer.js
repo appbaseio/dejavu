@@ -70,15 +70,15 @@ const AppFooter = () => (
 					<Footer.List>
 						<Title>Get Dejavu as</Title>
 						<li>
-							<a href="https://appbase.io">Hosted Web App</a>
+							<a href="https://opensource.appbase.io/dejavu">Hosted Web App</a>
 						</li>
 						<li>
-							<a href="https://opensource.appbase.io/reactivemaps">
+							<a href="https://hub.docker.com/r/appbaseio/dejavu/">
 								Docker Image
 							</a>
 						</li>
 						<li>
-							<a href="https://opensource.appbase.io/reactivesearch">
+							<a href="https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh">
 								Chrome Extension
 							</a>
 						</li>
