@@ -132,7 +132,7 @@ class Landing extends Component {
 						/>
 					</div>
 				</Navbar>
-				<Modal visible={showModal} onCancel={this.toggleModal} footer={null} width={610}>
+				<Modal destroyOnClose visible={showModal} onCancel={this.toggleModal} footer={null} width={610}>
 					<div css={{ marginTop: 20 }}>
 						<iframe width="560" height="315" src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullscreen />
 					</div>
