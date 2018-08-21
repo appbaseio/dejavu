@@ -853,7 +853,7 @@ var feed = (function() {
 				var boolQuery = {
 					'minimum_should_match': 1
 				}
-				var boolType = method === 'has' ? 'must' : 'must_not';
+				var boolType = method === 'has' ? 'should' : 'must_not';
 				boolQuery[boolType] = queryMaker;
 				return {
 					'bool': boolQuery
