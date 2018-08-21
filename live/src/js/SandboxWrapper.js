@@ -31,7 +31,7 @@ export default () => {
 				credentials={credentials}
 				url={window.HOST}
 			>
-				<Editor />
+				<Editor mappingsURL="https://opensource.appbase.io/dejavu/mappings" />
 			</SearchSandbox>
 		</Wrapper>
 	);
