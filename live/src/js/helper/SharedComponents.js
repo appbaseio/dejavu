@@ -3,6 +3,7 @@ import { OverlayTrigger, Popover } from 'react-bootstrap';
 import CustomHeadersForm from '../features/CustomHeadersForm';
 var AppSelect = require('../AppSelect.js');
 var ShareLink = require('../features/ShareLink.js');
+import { Modal } from 'antd';
 
 import Landing from '../Landing';
 
@@ -130,14 +131,36 @@ export class InitialForm extends React.Component {
 	}
 }
 
-export const FooterCombine = (props) => (
-	<footer className="text-center">
-		<a href="http://appbaseio.github.io/dejavu">Watch Video</a>
-		<span className="text-right pull-right powered_by">
-			Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
-		</span>
-		<span className="pull-left github-star">
-			{props.githubStar}
-		</span>
-	</footer>
-);
+class FooterCombine extends React.Component {
+	state = {
+		showModal: false,
+	};
+
+	toggleModal = () => {
+		this.setState(({ showModal }) => ({
+			showModal: !showModal,
+		}));
+	}
+
+	render() {
+		const { showModal } = this.state;
+		return (
+			<footer className="text-center">
+				<Modal destroyOnClose visible={showModal} onCancel={this.toggleModal} footer={null} width={610}>
+					<div css={{ marginTop: 20 }}>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullscreen />
+					</div>
+				</Modal>
+				<a onClick={this.toggleModal}>Watch Video</a>
+				<span className="text-right pull-right powered_by">
+					Create your <strong>Elasticsearch</strong> in cloud with&nbsp;<a href="http://appbase.io">appbase.io</a>
+				</span>
+				<span className="pull-left github-star">
+					{this.props.githubStar}
+				</span>
+			</footer>
+		);
+	}
+}
+
+export { FooterCombine };
