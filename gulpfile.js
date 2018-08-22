@@ -8,40 +8,40 @@ var concat = require('gulp-concat');
 var files = {
 	css: {
 		vendor: [
-			'live/bower_components/font-awesome/css/font-awesome.min.css',
-			'live/bower_components/toastr/toastr.min.css',
+			'node_modules/@bower_components/font-awesome/css/font-awesome.min.css',
+			'node_modules/@bower_components/toastr/toastr.min.css',
 			'live/vendors/highlight/highlight.min.css',
-			'live/bower_components/select2/dist/css/select2.min.css',
+			'node_modules/@bower_components/select2/dist/css/select2.min.css',
 			'live/vendors/awesome-bootstrap-checkbox/checkbox.css',
-			'live/bower_components/codemirror/addon/dialog/dialog.css',
-			'live/bower_components/codemirror/lib/codemirror.css',
-			'live/bower_components/codemirror/addon/fold/foldgutter.css',
-			'live/bower_components/bootstrap/dist/css/bootstrap.min.css'
+			'node_modules/@bower_components/codemirror/addon/dialog/dialog.css',
+			'node_modules/@bower_components/codemirror/lib/codemirror.css',
+			'node_modules/@bower_components/codemirror/addon/fold/foldgutter.css',
+			'node_modules/@bower_components/bootstrap/dist/css/bootstrap.min.css'
 		],
 		custom: ['live/src/css/*.css']
 	},
 	js: {
 		vendor: [
-			'live/bower_components/underscore/underscore-min.js',
+			'node_modules/@bower_components/underscore/underscore-min.js',
 			'node_modules/appbase-js/dist/appbase.js',
-			'live/bower_components/jquery/dist/jquery.min.js',
-			'live/bower_components/bootstrap/dist/js/bootstrap.min.js',
-			'live/bower_components/toastr/toastr.min.js',
-			'live/bower_components/crypto-js/crypto-js.js',
-			'live/bower_components/codemirror/lib/codemirror.js',
-			'live/bower_components/codemirror/addon/edit/matchbrackets.js',
-			'live/bower_components/codemirror/addon/edit/closebrackets.js',
-			'live/bower_components/codemirror/addon/fold/foldcode.js',
-			'live/bower_components/codemirror/addon/fold/foldgutter.js',
-			'live/bower_components/codemirror/addon/fold/brace-fold.js',
-			'live/bower_components/codemirror/mode/javascript/javascript.js',
-			'live/bower_components/select2/dist/js/select2.full.min.js',
-			'live/bower_components/highlightjs/highlight.pack.min.js',
-			'live/bower_components/lzma/src/lzma.js',
-			'live/bower_components/urlsafe-base64/app.js',
-			'live/bower_components/auth0.js/build/auth0.min.js',
-			'live/bower_components/moment/min/moment.min.js',
-			'live/bower_components/file-saver/FileSaver.min.js'
+			'node_modules/@bower_components/jquery/dist/jquery.min.js',
+			'node_modules/@bower_components/bootstrap/dist/js/bootstrap.min.js',
+			'node_modules/@bower_components/toastr/toastr.min.js',
+			'node_modules/@bower_components/crypto-js/crypto-js.js',
+			'node_modules/@bower_components/codemirror/lib/codemirror.js',
+			'node_modules/@bower_components/codemirror/addon/edit/matchbrackets.js',
+			'node_modules/@bower_components/codemirror/addon/edit/closebrackets.js',
+			'node_modules/@bower_components/codemirror/addon/fold/foldcode.js',
+			'node_modules/@bower_components/codemirror/addon/fold/foldgutter.js',
+			'node_modules/@bower_components/codemirror/addon/fold/brace-fold.js',
+			'node_modules/@bower_components/codemirror/mode/javascript/javascript.js',
+			'node_modules/@bower_components/select2/dist/js/select2.full.min.js',
+			'node_modules/@bower_components/highlightjs/highlight.pack.min.js',
+			'node_modules/@bower_components/lzma/src/lzma.js',
+			'node_modules/@bower_components/urlsafe-base64/app.js',
+			'node_modules/@bower_components/auth0.js/build/auth0.min.js',
+			'node_modules/@bower_components/moment/min/moment.min.js',
+			'node_modules/@bower_components/file-saver/FileSaver.min.js'
 		],
 		custom: [
 
@@ -56,11 +56,16 @@ var files = {
 		importer: 'live/importer/**/*'
 	},
 	moveFiles: [
-		'live/index.html',
+		'index.html',
 		'live/config.js',
 		'manifest.json',
 		'background.js'
-	]
+	],
+	moveFilesGh: [
+		'live/config.js',
+		'manifest.json',
+		'background.js'
+	],
 };
 
 gulp.task('vendorcss', function() {
@@ -96,20 +101,20 @@ gulp.task('customjs', function() {
 });
 
 gulp.task('moveCss', function() {
-	return gulp.src(['live/bower_components/bootstrap/dist/css/bootstrap.min.css.map'])
+	return gulp.src(['node_modules/@bower_components/bootstrap/dist/css/bootstrap.min.css.map'])
 		.pipe(gulp.dest('live/dist/css'));
 });
 
 gulp.task('moveFonts', function() {
-	return gulp.src(['live/bower_components/bootstrap/dist/fonts/*',
-			'live/bower_components/font-awesome/fonts/*',
+	return gulp.src(['node_modules/@bower_components/bootstrap/dist/fonts/*',
+			'node_modules/@bower_components/font-awesome/fonts/*',
 			'live/assets/fonts/*'
 		])
 		.pipe(gulp.dest('live/dist/fonts'));
 });
 
 gulp.task('moveJs', function() {
-	return gulp.src(['live/bower_components/lzma/src/lzma_worker.js',
+	return gulp.src(['node_modules/@bower_components/lzma/src/lzma_worker.js',
 			'live/vendors/JSONURL.js',
 			'node_modules/papaparse/papaparse.min.js',
 		])
@@ -137,7 +142,7 @@ gulp.task('ghpagesBuild', ['bundle'], function() {
 		gulp.src(files.folders[folder])
 			.pipe(gulp.dest('./live/' + folder));
 	}
-	gulp.src(files.moveFiles)
+	gulp.src(files.moveFilesGh)
 		.pipe(gulp.dest('./live'));
 });
 

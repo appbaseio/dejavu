@@ -29,7 +29,7 @@ class Column extends React.Component {
 			case 'keyword':
 				return (
 					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
-						<img src="src/img/string.svg" width="15px" className="column-label-img" alt="String label" />
+						<img src="live/src/img/string.svg" width="15px" className="column-label-img" alt="String label" />
 					</ColumnMappingInfo>
 				);
 			case 'integer':
@@ -49,7 +49,7 @@ class Column extends React.Component {
 			case 'boolean':
 				return (
 					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
-						<img src="src/img/boolean.svg" width="15px" className="column-label-img" alt="Boolean label" />
+						<img src="live/src/img/boolean.svg" width="15px" className="column-label-img" alt="Boolean label" />
 					</ColumnMappingInfo>
 				);
 			case 'date':
@@ -62,7 +62,7 @@ class Column extends React.Component {
 			case 'double':
 				return (
 					<ColumnMappingInfo datatype={datatype} json={this.props.mappingObj[this.props._type].properties[this.props._item]}>
-						<img src="src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />
+						<img src="live/src/img/float.svg" width="15px" className="column-label-img" alt={`${datatype} label`} />
 					</ColumnMappingInfo>
 				);
 			case 'object':

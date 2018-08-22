@@ -308,7 +308,7 @@ footer {
 	position: fixed;
 	width: 100%;
 	height: 100%;
-	z-index: 99999999;
+	z-index: 9;
 	background: #eee;
 	text-align: center;
 }
@@ -1141,7 +1141,7 @@ iframe {
 	display: block;
 	text-align: right;
 	border-radius: 4px;
-	background: #ddd;
+	background: #edeeef;
 	border: 1px solid #eff0ef;
 }
 
@@ -1246,14 +1246,15 @@ iframe {
 }
 
 .app-label {
-	color: #fff;
 	border-radius: 3px;
 	padding: 2px 4px;
 	margin: 0 10px;
 }
 
 .app-label--primary {
-	background: #999;
+	color: #333;
+	background: #eee;
+	font-size: 10px;
 }
 
 .app-label--success {
@@ -1519,8 +1520,19 @@ tbody.exp-scrollable td.column_width:first-child {
 	background: #fff;
 }
 
+.single-menu-item-filter {
+	display: flex;
+	justify-content: space-between;
+	padding-right: 10px;
+}
+
+.single-menu-item-filter label {
+	flex: 1;
+}
+
 ul#setApp {
 	z-index: 20;
+	max-height: 200px;
 }
 
 .object-cell-container {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Radio } from 'react-bootstrap';
+import { Modal, Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 var Utils = require('../helper/utils.js');
 
@@ -88,21 +88,17 @@ class AddQuery extends React.Component {
 			name: document.getElementById('setName').value,
 			query: this.editorref.getValue(),
 			createdAt: new Date().getTime(),
-			type: document.getElementById('applyQueryOn').value,
+			type: document.getElementById('applyQueryOn').value || [],
 			operation: this.state.operation
 		};
 		validateClass.touch = true;
-		validateClass.name = queryValues.name == '' ? false : true;
+		validateClass.name = queryValues.name === '' ? false : true;
 		validateClass.body = this.IsJsonString(queryValues.query);
-		validateClass.type = queryValues.type == '' ? false : true;
 		this.setState({
 			validate: validateClass
 		});
-		if (validateClass.name && validateClass.body && validateClass.type) {
-			queryValues.type = $('#applyQueryOn').val();
+		if (validateClass.name && validateClass.body) {
 			this.validateQuery(queryValues);
-			// this.props.includeQuery(queryValues);
-			// this.close();
 		}
 	};
 
@@ -131,8 +127,9 @@ class AddQuery extends React.Component {
 			});
 		} else {
 			if (queryValues.operation === 'update') {
+				console.log("queryValues: ", queryValues)
 				const queryResult = feed.testUpdateQuery(
-					queryValues.type[0], JSON.parse(queryValues.query)
+					queryValues.type, JSON.parse(queryValues.query)
 				);
 				queryResult
 					.then((res) => {
@@ -149,7 +146,7 @@ class AddQuery extends React.Component {
 					});
 			} else if (queryValues.operation === 'delete') {
 				const queryResult = feed.testDeleteQuery(
-					queryValues.type[0], JSON.parse(queryValues.query)
+					queryValues.type, JSON.parse(queryValues.query)
 				);
 				queryResult
 					.then((res) => {
@@ -249,11 +246,11 @@ class AddQuery extends React.Component {
 					<Modal.Body>
 						<form className="form-horizontal" id="addObjectForm">
 							<div className={validateClass.name}>
-								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Name</label>
+								<label htmlFor="inputEmail3" className="col-sm-3 control-label">Query Name</label>
 								<div className="col-sm-9">
-									<input type="text" className="form-control" id="setName" placeholder="Query name" name="name" value={this.state.name} onChange={this.handleChange} />
+									<input type="text" className="form-control" id="setName" placeholder="A unique name to save this query by .." name="name" value={this.state.name} onChange={this.handleChange} />
 									<span className="help-block">
-										Query name is required.
+										Query Name is required.
 									</span>
 								</div>
 							</div>
@@ -262,13 +259,31 @@ class AddQuery extends React.Component {
 								<label htmlFor="operation" className="col-sm-3 control-label">Operation</label>
 								<div className="col-sm-9">
 									<Radio name="operation" onChange={() => this.handleOperation('view')} checked={this.state.operation === 'view'} inline>
-										View
+										View Data&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">View data that matches the below query clause.</Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>{' '}
 									<Radio name="operation" onChange={() => this.handleOperation('update')} checked={this.state.operation === 'update'} inline>
-										Update by Query
+										Update by Query&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">Update data that matches the below query clause. Updates are permanent, use with care. </Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>{' '}
 									<Radio name="operation" onChange={() => this.handleOperation('delete')} checked={this.state.operation === 'delete'} inline>
-										Delete by Query
+										Delete by Query&nbsp;
+										<OverlayTrigger
+											placement="top"
+											overlay={<Tooltip id="tooltip-explaination">Delete data that matches the below query clause. Deletes are permanent, use with care. </Tooltip>}
+										>
+											<i className="fa fa-info-circle" />
+										</OverlayTrigger>
 									</Radio>
 								</div>
 							</div>

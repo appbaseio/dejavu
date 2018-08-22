@@ -1,19 +1,19 @@
 import get from 'lodash/get';
 
-var React = require('react');
-var createReactClass = require('create-react-class');
-var DataTable = require('./table/DataTable.js');
-var FeatureComponent = require('./features/FeatureComponent.js');
-var Header = require('./Header.js');
-var Sidebar = require('./Sidebar.js');
-var QueryList = require('./QueryList/index.js');
-var PureRenderMixin = require('react-addons-pure-render-mixin');
-var SharedComponents = require('./helper/SharedComponents');
+let React = require('react');
+let createReactClass = require('create-react-class');
+let DataTable = require('./table/DataTable.js');
+let FeatureComponent = require('./features/FeatureComponent.js');
+let Header = require('./Header.js');
+let Sidebar = require('./Sidebar.js');
+let QueryList = require('./QueryList/index.js');
+let PureRenderMixin = require('react-addons-pure-render-mixin');
+let SharedComponents = require('./helper/SharedComponents');
 
-var HomePage = createReactClass({
+let HomePage = createReactClass({
 	displayName: 'HomePage',
 	mixins: [PureRenderMixin],
-	getInitialState: function() {
+	getInitialState() {
 		return {
 			documents: [],
 			types: [],
@@ -67,26 +67,27 @@ var HomePage = createReactClass({
 			splash: true,
 			hideUrl: false,
 			cleanTypes: false,
-			dejavuExportData: null
+			dejavuExportData: null,
+			showFetchIndex: false
 		};
 	},
-	flatten: function(data, callback) {
+	flatten(data, callback) {
 		var response = help.flatten(data);
 		return callback(response.data, response.fields);
 	},
-	injectLink: function(data, fields) {
+	injectLink(data, fields) {
 		return data;
 	},
-	deleteRow: function(index) {
+	deleteRow(index) {
 		delete sdata[index];
 	},
-	resetData: function(total, sdata_key) {
+	resetData(total, sdata_key) {
 		this.setState(help.resetData(total, sdata_key, this.state.sortInfo, this.state.infoObj, this.state.hiddenColumns, this.state.types, this.state.mappingObj));
 	},
 	// Logic to stream continuous data.
 	// We call the ``getData()`` function in feed.js
 	// which returns a single json document(record).
-	updateDataOnView: function(update, total) {
+	updateDataOnView(update, total) {
 		if (update && !Array.isArray(update)) {
 			update = this.flatten(update, this.injectLink);
 			var key = rowKeyGen(update);
@@ -155,7 +156,7 @@ var HomePage = createReactClass({
 			this.handleSort(decryptedData.sortInfo.column, decryptedData.sortInfo.type, null, decryptedData.sortInfo.reverse);
 		}
 	},
-	streamCallback: function(total, fromStream, method) {
+	streamCallback(total, fromStream, method) {
 		var reacordObj;
 		if(this.state.externalQueryApplied) {
 			reacordObj = {
@@ -169,10 +170,10 @@ var HomePage = createReactClass({
 		}
 		this.setState(reacordObj);
 	},
-	onEmptySelection: function() {
+	onEmptySelection() {
 		this.setState(help.onEmptySelection(this.state.infoObj));
 	},
-	getStreamingData: function(types) {
+	getStreamingData(types) {
 		if(!queryParams.query) {
 			startGet.call(this);
 		}
@@ -202,10 +203,10 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	getQueryBody: function() {
+	getQueryBody() {
 		return help.getQueryBody(this.state.filterInfo, this.state.externalQueryApplied);
 	},
-	getStreamingTypes: function() {
+	getStreamingTypes() {
 		if (typeof APPNAME == 'undefined' || APPNAME == null) {
 			setTimeout(this.getTotalRecord, 1000);
 		} else {
@@ -223,7 +224,7 @@ var HomePage = createReactClass({
 		}
 	},
 	// only for chrome branch
-	setChromeTypes: function(update) {
+	setChromeTypes(update) {
 		const typeInfo = help.setChromeTypes(update);
 		setTimeout(function(){
 			$('.full_page_loading').addClass('hide');
@@ -237,12 +238,12 @@ var HomePage = createReactClass({
 			});
 		}.bind(this),1000);
 	},
-	removeType: function(typeName) {
+	removeType(typeName) {
 		feed.deleteData(typeName, function(data) {
 			this.resetData();
 		}.bind(this));
 	},
-	componentWillMount: function() {
+	componentWillMount() {
 		if(window.location.href.indexOf('#?input_state') !== -1 || window.location.href.indexOf('?default=true') !== -1 || window.location.href.indexOf('app=') !== -1) {
 			this.setState({
 				splash: false
@@ -255,10 +256,10 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	componentDidMount: function() {
+	componentDidMount() {
 		this.setApps();
 	},
-	connectSync: function(config_in) {
+	connectSync(config_in) {
 		config = config_in;
 		var self = this;
 		this.afterConnect();
@@ -280,20 +281,22 @@ var HomePage = createReactClass({
 			appAuth = true;
 			self.init_map_stream();
 		},500);
-		const currentApp = document.getElementById('appname-aka-index').value;
-		const allHeaders = localStorage.getItem('customHeaders');
-		if (allHeaders) {
-			const parsedHeaders = JSON.parse(allHeaders);
-			console.log('ph', parsedHeaders)
-			if (parsedHeaders[currentApp]) {
-				customHeaders = parsedHeaders[currentApp];
-			} else {
-				customHeaders = null;
+		const appnameNode = document.getElementById('appname-aka-index');
+		if (appnameNode && appnameNode.value) {
+			const currentApp = appnameNode.value;
+			const allHeaders = localStorage.getItem('customHeaders');
+			if (allHeaders) {
+				const parsedHeaders = JSON.parse(allHeaders);
+				if (parsedHeaders[currentApp]) {
+					customHeaders = parsedHeaders[currentApp];
+				} else {
+					customHeaders = null;
+				}
 			}
 		}
 	},
 
-	init_map_stream: function() {
+	init_map_stream() {
 		// this.setMap();
 		if(appAuth) {
 			setTimeout(this.setMap, 2000)
@@ -301,12 +304,13 @@ var HomePage = createReactClass({
 			this.getTotalRecord();
 		}
 	},
-	appnameCb: function(appname) {
+	appnameCb(appname) {
+		console.log('ac', appname)
 		if(this.state.indices) {
 			this.setState(help.appnameCb(this.state.indices, this.state.url, this.state.es_host));
 		}
 	},
-	afterConnect: function() {
+	afterConnect() {
 		if(appAuth) {
 			help.afterConnect.bind(this)();
 			setTimeout(this.setMap, 2000)
@@ -320,14 +324,14 @@ var HomePage = createReactClass({
 			this.reloadSettings();
 		}
 	},
-	componentDidUpdate: function() {
+	componentDidUpdate() {
 		var hiddenColumns = this.state.hiddenColumns;
 		help.hideAttribute(hiddenColumns, 'hide');
 	},
-	removeHidden: function() {
+	removeHidden() {
 		this.setState(help.removeHidden(this.state.hiddenColumns, this.state.visibleColumns));
 	},
-	getTotalRecord: function() {
+	getTotalRecord() {
 		var $this = this;
 		if (!this.state.infoObj.getOnce) {
 			if (typeof APPNAME == 'undefined' || APPNAME == null) {
@@ -349,7 +353,7 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	watchStock: function(typeName) {
+	watchStock(typeName) {
 		if(this.state.externalQueryApplied) {
 			this.removeExternalQuery();
 			setTimeout(function() {
@@ -380,7 +384,7 @@ var HomePage = createReactClass({
 			createUrl(input_state);
 		}
 	},
-	unwatchStock: function(typeName) {
+	unwatchStock(typeName) {
 		//Remove sorting while unslecting type
 		this.setState({
 			sortInfo: {
@@ -399,7 +403,7 @@ var HomePage = createReactClass({
 		this.watchSelectedRecord();
 		this.applyGetStream();
 	},
-	removeTypes: function() {
+	removeTypes() {
 		subsetESTypes.forEach(function(typeName) {
 			this.removeType(typeName);
 		}.bind(this));
@@ -416,17 +420,17 @@ var HomePage = createReactClass({
 			cleanTypes: true
 		});
 	},
-	typeCounter: function() {
+	typeCounter() {
 		this.setState(help.typeCounter(this.state.typeInfo));
 		this.applyGetStream();
 	},
-	applyGetStream: function() {
+	applyGetStream() {
 		var typeInfo = this.state.typeInfo;
 		if (typeInfo.count >= this.state.types.length) {
 			this.getStreamingData(subsetESTypes);
 		}
 	},
-	setMap: function() {
+	setMap() {
 		var $this = this;
 		if (APPNAME && !$('.modal-backdrop').hasClass('in')) {
 			var getMappingObj = feed.getMapping();
@@ -458,7 +462,7 @@ var HomePage = createReactClass({
 			});
 		}
 	},
-	handleScroll: function(event) {
+	handleScroll(event) {
 		var scroller = document.getElementById('exp-scrollable');
 		var infoObj = this.state.infoObj;
 		const top = scroller.scrollTop;
@@ -504,7 +508,7 @@ var HomePage = createReactClass({
 			);
 		}
 	},
-	handleSort: function(item, type, eve, order) {
+	handleSort(item, type, eve, order) {
 		const dataMapping = get(this.state.mappingObj, [type, 'properties', item]);
 		if (!dataMapping && (order === undefined)) {
 			return;
@@ -564,13 +568,13 @@ var HomePage = createReactClass({
 			sortString
 		);
 	},
-	addRecord: function(editorref) {
+	addRecord(editorref) {
 		help.addRecord.call(this, editorref, this.indexCall);
 	},
-	updateRecord: function(editorref, currentColumn = null) {
+	updateRecord(editorref, currentColumn = null) {
 		help.updateRecord.call(this, editorref, this.indexCall, currentColumn);
 	},
-	indexCall: function(form, modalId, method) {
+	indexCall(form, modalId, method) {
 		var recordObject = {};
 		$.each(form, function(k2, v2) {
 			if (v2.value != '')
@@ -611,7 +615,7 @@ var HomePage = createReactClass({
 			this.getStreamingTypes();
 		}.bind(this), 2000);
 	},
-	getTypeDoc: function(editorref) {
+	getTypeDoc(editorref) {
 		var selectedTypes = $('#setType').val();
 		var selectedType;
 		if(selectedTypes && selectedTypes.length) {
@@ -637,18 +641,18 @@ var HomePage = createReactClass({
 		}
 	},
 	userTouchFlag: false,
-	showSample: function(obj, editorref) {
+	showSample(obj, editorref) {
 		help.showSample(obj, editorref, this.userTouchFlag);
 	},
-	filterSampleData: function(data) {
+	filterSampleData(data) {
 		help.filterSampleData.call(this, data, this.setSampleData);
 	},
-	setSampleData: function(update) {
+	setSampleData(update) {
 		if(typeof update != 'undefined') {
 			this.setState(help.setSampleData.call(this, update, this.state.typeDocSample));
 		}
 	},
-	applyFilter: function(typeName, columnName, method, value, analyzed) {
+	applyFilter(typeName, columnName, method, value, analyzed) {
 		const helpFilter = help.applyFilter.call(this, typeName, columnName, method, value, analyzed, this.state.filterInfo);
 		this.setState(helpFilter);
 		var filterInfo = helpFilter.filterInfo;
@@ -673,7 +677,7 @@ var HomePage = createReactClass({
 		}
 		this.removeSelection();
 	},
-	externalQuery: function(query) {
+	externalQuery(query) {
 		this.setState(help.externalQueryPre(query, this.removeTypes), this.removeFilter);
 		feed.externalQuery(query.query, query.type , (update, fromStream, total) => {
 			if (!fromStream) {
@@ -693,7 +697,7 @@ var HomePage = createReactClass({
 			this.streamCallback(total, fromStream, method);
 		});
 	},
-	removeExternalQuery: function(cb) {
+	removeExternalQuery(cb) {
 		if(this.state.externalQueryApplied) {
 			feed.removeExternalQuery();
 			this.setState({
@@ -706,15 +710,15 @@ var HomePage = createReactClass({
 			}.bind(this));
 		}
 	},
-	removeFilter: function(index) {
+	removeFilter(index) {
 		this.setState({ isLoadingData: true });
 		const callback = () => this.setState({ isLoadingData: false });
 		this.setState(help.removeFilter.call(this, index, this.state.externalQueryApplied, this.state.filterInfo, this.applyFilter, this.resetData, this.getStreamingData, this.removeSelection, this.applyFilter, callback));
 	},
-	removeSort: function() {
+	removeSort() {
 		this.setState(help.removeSort(this.state.sortInfo));
 	},
-	columnToggle: function() {
+	columnToggle() {
 		var obj = {
 			toggleIt: (elementId, checked) => {
 				this.setState(help.toggleIt.call(this, elementId, checked, this.state.visibleColumns, this.state.hiddenColumns));
@@ -723,14 +727,14 @@ var HomePage = createReactClass({
 		};
 		return obj;
 	},
-	selectRecord: function(id, type, row, currentCheck) {
+	selectRecord(id, type, row, currentCheck) {
 		var selection = help.selectRecord(this.state.actionOnRecord, id, type, row, currentCheck, this.state.documents);
 		this.setState({
 			actionOnRecord: selection.actionOnRecord
 		});
 		this.forceUpdate();
 	},
-	removeSelection: function() {
+	removeSelection() {
 		var selection = help.removeSelection(this.state.actionOnRecord, this.state.documents);
 		selection.actionOnRecord.selectToggle = false;
 		this.setState({
@@ -739,7 +743,7 @@ var HomePage = createReactClass({
 		this.forceUpdate();
 		$('[name="selectRecord"]').removeAttr('checked');
 	},
-	watchSelectedRecord: function() {
+	watchSelectedRecord() {
 		var actionOnRecord = help.watchSelectedRecord.call(this, this.state.actionOnRecord);
 		if(!actionOnRecord.selectedRows.length) {
 			this.removeSelection();
@@ -750,7 +754,7 @@ var HomePage = createReactClass({
 			this.forceUpdate();
 		}
 	},
-	selectToggleChange: function(checkbox) {
+	selectToggleChange(checkbox) {
 		var actionOnRecord = help.selectAll(checkbox, this.state.actionOnRecord, this.state.documents);
 		actionOnRecord.selectToggle = checkbox;
 		this.setState({
@@ -758,12 +762,12 @@ var HomePage = createReactClass({
 		});
 		this.forceUpdate();
 	},
-	getUpdateObj: function() {
+	getUpdateObj() {
 		this.setState({
 			actionOnRecord: help.getUpdateObj.call(this, this.state.actionOnRecord, this.state.documents)
 		});
 	},
-	deleteRecord: function() {
+	deleteRecord() {
 		$('.loadingBtn').addClass('loading');
 		feed.deleteRecord(
 			this.state.actionOnRecord.selectedRows,
@@ -786,15 +790,15 @@ var HomePage = createReactClass({
 			}
 		);
 	},
-	initEs:function(){
+	initEs(){
 		const temp_config = help.initEs();
 		createUrl(temp_config, function() {
 			this.connectSync(temp_config);
 		}.bind(this));
 	},
-	connectPlayPause: function() {
+	connectPlayPause() {
 		if (this.state.url.startsWith('http://') && window.location.protocol === 'https:') {
-			toastr.warning('You are trying to load http content over https');
+			toastr.warning('You are trying to load http content over https. You might have to enable mixed content for your browser https://kb.iu.edu/d/bdny#view');
 		}
 		if(!help.getReloadFlag()) {
 			alert('Url or appname should not be empty.');
@@ -807,7 +811,7 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	fetchIndices: function(indexUrl) {
+	fetchIndices(indexUrl) {
 		feed.getIndicesAliases(indexUrl)
 			.done((res) => {
 				const apps = JSON.parse(storageService.getItem('historicApps'));
@@ -834,30 +838,41 @@ var HomePage = createReactClass({
 				setTimeout(() => {
 					document.getElementById('appname-aka-index').focus();
 				}, 1000);
+				this.setState({
+					showFetchIndex: true
+				});
 			})
-			.fail(err => console.error(err))
+			.fail(err => {
+				console.error(err);
+				this.setState({
+					showFetchIndex: false
+				});
+			})
 	},
-	reloadData: function(){
-		this.getStreamingData(subsetESTypes);
-		this.getStreamingTypes();
-		// reload mappings
-		this.setMap();
+	reloadData(){
+		// when an external query is applied the data flow is different, ignore reload
+		if (!this.state.externalQueryApplied) {
+			this.getStreamingData(subsetESTypes);
+			this.getStreamingTypes();
+			// reload mappings
+			this.setMap();
+		}
 	},
-	reloadSettings: function() {
+	reloadSettings() {
 		feed.getSettings()
 			.done(data => this.setState({ settingsObj: data }))
 			.done(this.getStreamingTypes)
 			.fail(() => console.warn('Unable to fetch settings'))
 	},
-	userTouchAdd: function(flag){
+	userTouchAdd(flag){
 		this.userTouchFlag = flag;
 	},
-	closeErrorModal: function(){
+	closeErrorModal(){
 		this.setState({
 			errorShow: false
 		});
 	},
-	exportJsonData: function() {
+	exportJsonData() {
 		this.setState({
 			dejavuExportData: null
 		});
@@ -868,7 +883,7 @@ var HomePage = createReactClass({
 		}
 		this.scrollApi({"activeQuery": activeQuery});
 	},
-	scrollApi: function(info) {
+	scrollApi(info) {
 		feed.scrollapi(help.getSelectedTypes(this.state.filterInfo, this.state.externalQueryApplied), info.activeQuery, info.scroll, info.scroll_id)
 			.done(function(data) {
 				const dejavuExportData =  help.scrollapi.call(this, data, this.scrollApi);
@@ -879,11 +894,11 @@ var HomePage = createReactClass({
 				}
 			}.bind(this));
 	},
-	getApps: function(cb) {
+	getApps(cb) {
 		var apps = storageService.getItem('historicApps');
 		cb({historicApps: apps});
 	},
-	setApps: function(authFlag) {
+	setApps(authFlag) {
 		help.setApps.call(this, authFlag, this.getApps, (info) => {
 			this.setState(info);
 		});
@@ -895,19 +910,19 @@ var HomePage = createReactClass({
 			}
 		}
 	},
-	setConfig: function(url) {
+	setConfig(url) {
 		this.setState({
 			url: url,
 			connect: false
 		});
 	},
-	valChange: function(event) {
+	valChange(event) {
 		this.setState({ url: event.target.value});
 	},
-	hideUrlChange: function() {
+	hideUrlChange() {
 		this.setState(help.hideUrlChange(this.state.hideUrl));
 	},
-	render: function() {
+	render() {
 		var self = this;
 		var EsForm = !this.state.splash ? 'col-xs-12 init-ES': 'col-xs-12 EsBigForm';
 		var esText = !this.state.splash ? (this.state.connect ? 'Disconnect':'Connect'): 'Start Browsing';
@@ -935,6 +950,7 @@ var HomePage = createReactClass({
 		function initialForm() {
 			var form = (
 				<SharedComponents.InitialForm
+					splash={this.state.splash}
 					EsForm={EsForm}
 					index_create_text={index_create_text}
 					shareBtn={shareBtn}
@@ -962,6 +978,7 @@ var HomePage = createReactClass({
 					fetchIndices={self.fetchIndices}
 					indexUrl={self.state.url}
 					connect={self.state.connect}
+					showFetchIndex={self.state.showFetchIndex}
 				/>
 			);
 			return form;
@@ -969,7 +986,7 @@ var HomePage = createReactClass({
 		var footer;
 		queryParams = getQueryParameters();
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('f')))) {
-			footer = (<SharedComponents.FooterCombine githubStar={githubStar} />);
+			footer = this.state.splash ? null : (<SharedComponents.FooterCombine githubStar={githubStar} />);
 		}
 		if(!((queryParams && queryParams.hasOwnProperty('hf')) || (queryParams && queryParams.hasOwnProperty('h')))) {
 			var dejavuForm = initialForm.call(this);
@@ -1067,7 +1084,7 @@ var HomePage = createReactClass({
 				</div>
 			</div>
 		</div>);
-	},
+	}
 });
 
 module.exports = HomePage;

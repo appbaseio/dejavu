@@ -231,8 +231,10 @@ var feed = (function() {
 		}
 
 		if (isAppbaseUrl()) {
+			if (types.length == 0)
+				types = ['*']
 			counterStream = appbaseRef.searchStream({
-				type: types,
+				type: types || '*',
 				body: query
 			}).on('data', function(res2) {
 				//For update data
@@ -292,7 +294,7 @@ var feed = (function() {
 				}
 			};
 			queryBody = queryBody ? queryBody : defaultQueryBody;
-			var typesString = typeName.join(',');
+			var typesString = Array.isArray(typeName) ? typeName.join(',') : typeName;
 			const finalUrl = HOST + '/' + APPNAME + '/' + typesString + '/_search?preference=abcxyz&from=' + from + '&size=' + DATA_SIZE
 				+ (sortString || '');
 			applyAppbaseSearch(finalUrl, queryBody, function(res) {
@@ -353,6 +355,8 @@ var feed = (function() {
 
 			if (isAppbaseUrl()) {
 				// get new data updates
+				if (types.length == 0)
+					types = ['*']
 				streamRef = appbaseRef.searchStream({
 					type: types,
 					body: queryBody
@@ -454,7 +458,6 @@ var feed = (function() {
 				});
 		},
 		indexData: function(recordObject, method, callback) {
-			console.log(recordObject);
 			var self = this;
 			if (method === 'index' || method === 'bulk') {
 				applyIndexOrBulk(method);
@@ -463,7 +466,6 @@ var feed = (function() {
 				recordObject.body = {
 					doc: doc
 				};
-				console.log(recordObject);
 				appbaseRef.update(recordObject).on('data', function(res) {
 					if (res.status >= 400) {
 						return callback(res);
@@ -479,8 +481,13 @@ var feed = (function() {
 			}
 
 			function applyIndexOrBulk(method) {
-				appbaseRef[method](recordObject).on('data', function(res) {
-					if (esTypes.indexOf(recordObject.type) === -1) {
+				let objectToIndex = recordObject;
+				if (method === 'bulk') {
+					const keysToIndex = Object.keys(recordObject).filter(key => key !== 'id');
+					objectToIndex = keysToIndex.reduce((acc, cur) => Object.assign(acc, { [cur]: recordObject[cur] }), {});
+				}
+				appbaseRef[method](objectToIndex).on('data', function(res) {
+					if (esTypes.indexOf(objectToIndex.type) === -1) {
 						self.getTypes(function(newTypes) {
 							if (callback) {
 								return callback(res, newTypes);
@@ -846,7 +853,7 @@ var feed = (function() {
 				var boolQuery = {
 					'minimum_should_match': 1
 				}
-				var boolType = method === 'has' ? 'must' : 'must_not';
+				var boolType = method === 'has' ? 'should' : 'must_not';
 				boolQuery[boolType] = queryMaker;
 				return {
 					'bool': boolQuery
