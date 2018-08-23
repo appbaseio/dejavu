@@ -289,6 +289,7 @@ let HomePage = createReactClass({
 				const parsedHeaders = JSON.parse(allHeaders);
 				if (parsedHeaders[currentApp]) {
 					customHeaders = parsedHeaders[currentApp];
+					initWithHeaders();
 				} else {
 					customHeaders = null;
 				}
@@ -305,7 +306,6 @@ let HomePage = createReactClass({
 		}
 	},
 	appnameCb(appname) {
-		console.log('ac', appname)
 		if(this.state.indices) {
 			this.setState(help.appnameCb(this.state.indices, this.state.url, this.state.es_host));
 		}
@@ -812,42 +812,44 @@ let HomePage = createReactClass({
 		}
 	},
 	fetchIndices(indexUrl) {
-		feed.getIndicesAliases(indexUrl)
-			.done((res) => {
-				const apps = JSON.parse(storageService.getItem('historicApps'));
-				const newApps = [
-					...(Object.keys(res).map(key => ({
-						appname: key, url: indexUrl, fetched: true
-					}))),
-					...apps
-				];
-				const appsObject = {};
-				const uniqueApps = newApps.filter(app => {
-					if(appsObject[app.appname]) {
-						return false;
-					}
-					appsObject[app.appname] = true;
-					return true
-				});
-				// update in state todo
-				// focus on app dropdown
-				this.setState({
-					historicApps: uniqueApps
-				});
-				storageService.setItem('historicApps', JSON.stringify(uniqueApps));
-				setTimeout(() => {
-					document.getElementById('appname-aka-index').focus();
-				}, 1000);
-				this.setState({
-					showFetchIndex: true
-				});
-			})
-			.fail(err => {
-				console.error(err);
-				this.setState({
-					showFetchIndex: false
-				});
-			})
+		if (indexUrl.length) {
+			feed.getIndicesAliases(indexUrl)
+				.done((res) => {
+					const apps = JSON.parse(storageService.getItem('historicApps'));
+					const newApps = [
+						...(Object.keys(res).map(key => ({
+							appname: key, url: indexUrl, fetched: true
+						}))),
+						...apps
+					];
+					const appsObject = {};
+					const uniqueApps = newApps.filter(app => {
+						if(appsObject[app.appname]) {
+							return false;
+						}
+						appsObject[app.appname] = true;
+						return true
+					});
+					// update in state todo
+					// focus on app dropdown
+					this.setState({
+						historicApps: uniqueApps
+					});
+					storageService.setItem('historicApps', JSON.stringify(uniqueApps));
+					setTimeout(() => {
+						document.getElementById('appname-aka-index').focus();
+					}, 1000);
+					this.setState({
+						showFetchIndex: true
+					});
+				})
+				.fail(err => {
+					console.error(err);
+					this.setState({
+						showFetchIndex: false
+					});
+				})
+		}
 	},
 	reloadData(){
 		// when an external query is applied the data flow is different, ignore reload
