@@ -373,7 +373,7 @@ class Landing extends Component {
 				</Section>
 				<Section>
 					<div>
-						<H2 css={{ marginBottom: 15 }}>Search Sandbox</H2>
+						<H2 css={{ marginBottom: 15 }}>Search Preview</H2>
 						<H4>
 							Create search UI and test search relevancy of your dataset with
 							zero lines of code. Export the code to get a functional React web
