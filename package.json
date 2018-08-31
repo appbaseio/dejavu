@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -79,6 +79,7 @@
     "antd": "^3.8.1",
     "appbase-js": "^2.2.11",
     "babel": "^6.23.0",
+    "brace": "^0.11.1",
     "classnames": "^2.2.5",
     "codesandbox": "^1.2.16",
     "emotion": "^9.2.6",
@@ -91,6 +92,7 @@
     "prop-types": "^15.5.10",
     "rc-tooltip": "^3.7.2",
     "react": "16.3.2",
+    "react-ace": "^6.1.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-bootstrap": "^0.31.0",
     "react-datetime": "^2.9.0",
