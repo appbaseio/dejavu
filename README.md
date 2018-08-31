@@ -12,6 +12,7 @@ dejavu: The missing Web UI for Elasticsearch
   d. [Modern UI Elements](#modern-ui-elements)  
   e. [Realtime Data Updates](#realtime-data-updates)  
   f. [Import JSON or CSV Data](#import-json-or-csv-data)  
+  g. [Build search UIs](#build-search-uis)
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
@@ -25,11 +26,13 @@ dejavu: The missing Web UI for Elasticsearch
 
 **dejavu** is the missing web UI for Elasticsearch. Existing web UIs leave much to be desired or are built with server-side page rendering techniques that make it less responsive and bulkier to run (I am looking at you, Kibana).
 
-We started building dejavu with the goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates) for Elasticsearch with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://opensource.appbase.io/dejavu/live), [as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh) or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
+We started building dejavu with the goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates, search UI builder) for Elasticsearch with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://opensource.appbase.io/dejavu/live), [as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh) or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
 
 Starting `v1.0`, dejavu is the only Elasticsearch web UI that supports importing data via JSON and CSV files, as well as defining field mappings from the GUI.
 
-With the latest `v1.5`, we support the ability of creating custom headers so you can easily pass different authentication headers, provide enhanced filtering and bulk updating of data via Elasticsearch's Query DSL.
+Starting with `v1.5`, we support the ability of creating custom headers so you can easily pass different authentication headers, provide enhanced filtering and bulk updating of data via Elasticsearch's Query DSL.
+
+Starting with `v2.0`, we support the ability to build faceted search UIs to test relevancy. You can also export the generated code to a codesandbox. 
 
 ---
 
@@ -76,6 +79,12 @@ dejavu uses a websockets based API and subscribes for data changes for the curre
 
 Importer view allows importing CSV or JSON data directly into Elasticsearch through a guided data mappings configuration.
 
+#### Build Search UIs
+
+![Build search UIs](https://i.imgur.com/DbbIyhk.gif)
+
+With Search Preview, you can now build visual search UIs, test search relevancy and export code to a codesandbox.
+
 ---
 
 ### 3. Comparison with other data browsers
@@ -86,6 +95,7 @@ Importer view allows importing CSV or JSON data directly into Elasticsearch thro
 | Modern UI        | Built with React v15.6.0, uses a live-reload interface.                                                  | Built with jQuery v1.6.1, slightly stodgy | Built with Angular 1.x | Built with ExtJs, but a bit stodgy | Built with Node.JS, Hapi, Jade                                                                     |
 | Browser features | CRUD with support for data filters. | Read data with support for full-text search. | No data view |  Data view support for a single type | Read view with support for visualizations / charting |
 | Data Import/Export | Yes, in JSON and CSV formats. | - | - |  - | Only export is supported, no CSV support. |
+| Search Preview | Visually build and test search Ux. | - | - |  - | - |
 | Open Source      | MIT license                                                                          |  Apache v2.0               |       MIT license             |   Apache v2.0                    |   Apache v2.0                                                                    |
 
 
@@ -106,17 +116,20 @@ Importer view allows importing CSV or JSON data directly into Elasticsearch thro
 - [x] Support for a continuous query view
 - [x] Available as a docker image
 
-Roadmap for version `2.0.0` release:
+
+🍾 We just hit the 2.0.0 release.
 
 - [x] An intuitive data editing experience in tabular mode (v/s JSON edit mode)
 - [x] View data types from within the data browser view
 - [x] A more streamlined import process
-- [ ] Create a test coverage suite
-- [ ] Improve responsiveness and performance when browsing large datasets
-- [ ] Refactor codebase to improve hackability (Migrate to React 16+, ES6 syntax)
+- [x] Refactor codebase to improve hackability (Migrate to React 16+, ES6 syntax)
+- [x] Ability to build (and test) search visually
+
 
 Roadmap beyond v2:
 
+- [ ] Create a test coverage suite
+- [ ] Rewrite dejavu browser for high performance when browsing large datasets
 - [ ] Support addition of custom analyzers, and updating index settings
 - [ ] Make editing of data experience more intuitive (in addition to the raw JSON, show a relevant UI field with validations)
 - [ ] Connectors to dashboarding systems for a more flavored visualization experience.

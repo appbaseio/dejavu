@@ -32,7 +32,7 @@ class Header extends React.Component {
 							The missing web UI for Elasticsearch
 						</span>
 					</a>
-					<Router basename="dejavu">
+					<Router basename={window.location.host === "opensource.appbase.io" ? "dejavu" : ""}>
 						<span className="batteries-links">
 							<NavLink
 								isActive={(match, location) => location.pathname === '/importer'}
@@ -51,12 +51,12 @@ class Header extends React.Component {
 								Browser
 							</NavLink>
 							<NavLink
-								isActive={(match, location) => location.pathname === '/sandbox'}
+								isActive={(match, location) => location.pathname === '/preview'}
 								className="link"
 								activeClassName="active"
-								to={`/sandbox${window.location.hash}`}
+								to={`/preview${window.location.hash}`}
 							>
-								Search Sandbox
+								Search Preview
 							</NavLink>
 							<NavLink
 								isActive={(match, location) => location.pathname === '/mappings'}
@@ -69,7 +69,7 @@ class Header extends React.Component {
 
 							<Route path="/" component={Browser} />
 							<Route path="/import" component={Importer} />
-							<Route path="/sandbox" component={SandboxWrapper} />
+							<Route path="/preview" component={SandboxWrapper} />
 							<Route path="/mappings" component={MappingsWrapper} />
 						</span>
 					</Router>

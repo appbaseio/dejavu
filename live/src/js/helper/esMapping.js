@@ -80,7 +80,7 @@ export const es5 = {
 		fields: {
 			keyword: {
 				type: 'keyword',
-				index: 'not_analyzed'
+				ignore_above: 256
 			},
 			autosuggest: {
 				type: 'text',
@@ -97,7 +97,7 @@ export const es5 = {
 		fields: {
 			keyword: {
 				type: 'keyword',
-				index: 'not_analyzed'
+				ignore_above: 256
 			},
 			search: {
 				type: 'text',
@@ -156,7 +156,8 @@ export const es6 = {
 		fields: {
 			keyword: {
 				type: 'keyword',
-				index: 'true'
+				index: 'true',
+				ignore_above: 256
 			},
 			autosuggest: {
 				type: 'text',
@@ -173,7 +174,8 @@ export const es6 = {
 		fields: {
 			keyword: {
 				type: 'keyword',
-				index: 'true'
+				index: 'true',
+				ignore_above: 256
 			},
 			search: {
 				type: 'text',
