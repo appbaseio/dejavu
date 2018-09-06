@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
