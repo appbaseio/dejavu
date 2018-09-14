@@ -337,7 +337,7 @@ let HomePage = createReactClass({
 			if (typeof APPNAME == 'undefined' || APPNAME == null) {
 				setTimeout(this.getTotalRecord, 1000);
 			} else {
-				feed.getTotalRecord().on('data', function(data) {
+				feed.getTotalRecord().then(function(data) {
 					if(queryParams.query) {
 						setTimeout(function() {
 							$this.externalQuery(JSON.parse(queryParams.query));

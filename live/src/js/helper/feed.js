@@ -20,13 +20,13 @@ const appbaseApi = 'scalr.api.appbase.io';	// scalr.api.appbase.io
 // Instantiating appbase ref with the global configs defined above.
 function init() {
 	appbaseRef = PASSWORD === 'test' ?
-		new Appbase({
+		Appbase({
 			url: dejavuURL,
-			appname: APPNAME
+			app: APPNAME
 		}) :
-		new Appbase({
+		Appbase({
 			url: dejavuURL,
-			appname: APPNAME,
+			app: APPNAME,
 			username: USERNAME,
 			password: PASSWORD
 		});
@@ -219,7 +219,7 @@ var feed = (function() {
 		appbaseRef.search({
 			type: types,
 			body: query
-		}).on('data', function(res) {
+		}).then((res) => {
 			if (res && res.hits && res.hits.total) {
 				setTotal(res.hits.total);
 			}
@@ -236,7 +236,7 @@ var feed = (function() {
 			counterStream = appbaseRef.searchStream({
 				type: types || '*',
 				body: query
-			}).on('data', function(res2) {
+			}, (res2) => {
 				//For update data
 				if (res2._updated) {
 					console.log('Updated');
@@ -247,7 +247,7 @@ var feed = (function() {
 				else {
 					setTotal(0, true, 'index');
 				}
-			}).on('error', function(err) {
+			}, (err) => {
 				console.log('caught a stream error', err);
 			});
 		}
@@ -360,12 +360,12 @@ var feed = (function() {
 				streamRef = appbaseRef.searchStream({
 					type: types,
 					body: queryBody
-				}).on('data', function(res) {
+				}, (res) => {
 					if (res.hasOwnProperty('_updated')) {
 						delete res._updated;
 					}
 					callback(res, true);
-				}).on('error', function(err) {
+				}, (err) => {
 					console.log('caught a stream error', err);
 				});
 			}
@@ -402,7 +402,7 @@ var feed = (function() {
 		getTypes: function(callback) {
 			if (typeof APPNAME !== 'undefined') {
 				appbaseRef.getTypes()
-					.on('data', function(types) {
+					.then(function(types) {
 						if (types.length) {
 							types = types.filter(type => ![
 								'.percolator',
@@ -424,7 +424,7 @@ var feed = (function() {
 							}
 						}
 					})
-					.on('error', function (err) {
+					.catch(function (err) {
 						console.log(err);
 						clearInterval(streamingInterval);
 						console.log('error in retrieving types: ', err);
@@ -448,12 +448,12 @@ var feed = (function() {
 						}
 					}
 				})
-				.on('data', (res) => {
+				.then((res) => {
 					if (callback) {
 						callback(field, res.aggregations.field.buckets);
 					}
 				})
-				.on('error', (err) => {
+				.catch((err) => {
 					console.error(err);
 				});
 		},
@@ -466,7 +466,7 @@ var feed = (function() {
 				recordObject.body = {
 					doc: doc
 				};
-				appbaseRef.update(recordObject).on('data', function(res) {
+				appbaseRef.update(recordObject).then(function(res) {
 					if (res.status >= 400) {
 						return callback(res);
 					}
@@ -475,7 +475,7 @@ var feed = (function() {
 					} else if (callback) {
 						return callback();
 					}
-				}).on('error', function(err) {
+				}).catch(function(err) {
 					return callback(err);
 				});
 			}
@@ -486,7 +486,7 @@ var feed = (function() {
 					const keysToIndex = Object.keys(recordObject).filter(key => key !== 'id');
 					objectToIndex = keysToIndex.reduce((acc, cur) => Object.assign(acc, { [cur]: recordObject[cur] }), {});
 				}
-				appbaseRef[method](objectToIndex).on('data', function(res) {
+				appbaseRef[method](objectToIndex).then(function(res) {
 					if (esTypes.indexOf(objectToIndex.type) === -1) {
 						self.getTypes(function(newTypes) {
 							if (callback) {
@@ -496,7 +496,7 @@ var feed = (function() {
 					} else {
 						return callback(res);
 					}
-				}).on('error', function(err) {
+				}).catch(function(err) {
 					return callback(err);
 				});
 			}
@@ -517,13 +517,13 @@ var feed = (function() {
 					type: selectedRows[0]._type,
 					id: selectedRows[0]._id
 				})
-				.on('data', (res) => {
+				.then((res) => {
 					if (res.status && errorHandler && res.status >= 400) {
 						errorHandler(res);
 					}
 					callback(sdata);
 				})
-					.on('error', (err) => {
+					.catch((err) => {
 						if (errorHandler) {
 							errorHandler(err);
 						}
@@ -536,7 +536,7 @@ var feed = (function() {
 
 				appbaseRef.bulk({
 					body: deleteArray
-				}).on('data', function(data) {
+				}).then(function(data) {
 					for (var record in sdata) {
 						if (sdata.hasOwnProperty(record)) {
 							deleteData(sdata, record);
@@ -544,7 +544,7 @@ var feed = (function() {
 					}
 					callback(sdata);
 				})
-				.on('error', (err) => {
+				.catch((err) => {
 					if (errorHandler) {
 						errorHandler(err);
 					}
@@ -562,7 +562,7 @@ var feed = (function() {
 						match_all: {}
 					}
 				}
-			}).on('data', function(data) {
+			}).then(function(data) {
 				callback(data);
 			});
 		},
