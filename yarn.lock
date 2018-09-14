@@ -655,13 +655,14 @@ appbase-js@^3.2.0:
     url-parser-lite "^0.1.0"
     ws "^2.2.0"
 
-appbase-js@^4.0.0-beta:
-  version "4.0.0-beta"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.0.0-beta.tgz#e8c7d194ab1b52e87d09d70c4568c04d9ebdb0a6"
+appbase-js@^4.0.1-beta:
+  version "4.0.1-beta"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.0.1-beta.tgz#ed597ae1c37174d765bff75bd73028c71f8be6d8"
   dependencies:
     cross-fetch "^2.2.2"
     json-stable-stringify "^1.0.1"
     querystring "^0.2.0"
+    stream "^0.0.2"
     url-parser-lite "^0.1.0"
     ws "^2.2.0"
 

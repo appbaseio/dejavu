@@ -6,6 +6,8 @@
 // Get data size according to window height
 'use strict';
 
+const Appbase = window['appbase-js'];
+
 const DATA_SIZE = 20;
 var APPNAME, USERNAME, PASSWORD, dejavuURL, OperationFlag, APPURL, input_state, HOST, streamingInterval, fullColumns;
 var customHeaders = null;
