@@ -21,10 +21,11 @@
 
 1. `git clone` your fork of https://github.com/appbaseio/dejavu
 2. `git checkout dev`
-3. `yarn`
+3. `git submodule init && git submodule sync && git submodule update --recursive --remote`
+4. `yarn`
 5. `yarn start` (open dejavu in the browser on http://localhost:1358/live)
 
-#### Generating an AppName and Url.
+#### Generating an AppName and URL
 
 1. Create an account here: https://dashboard.appbase.io
 2. Follow instructions to create an appname.

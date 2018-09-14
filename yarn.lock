@@ -641,20 +641,6 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-appbase-js@^2.2.11:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-2.3.0.tgz#b647d98fb794c7a3c14c1d8a6adbf8b47d47a674"
-  dependencies:
-    babel-polyfill "^6.26.0"
-    cross-fetch "^1.1.1"
-    es6-promise "^4.1.1"
-    eventemitter2 "^4.1.2"
-    json-stable-stringify "^1.0.1"
-    querystring "^0.2.0"
-    stream "^0.0.2"
-    url-parser-lite "^0.1.0"
-    ws "^2.2.0"
-
 appbase-js@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-3.2.0.tgz#e59c7a104a1aa84262904a9be560019baf62171b"

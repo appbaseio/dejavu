@@ -1,6 +1,6 @@
 {
   "name": "dejavu",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "dejavu - The missing Web UI for Elasticsearch",
   "main": "config.js",
   "directories": {
@@ -77,7 +77,7 @@
     "@bower_components/underscore": "jashkenas/underscore#~1.8.3",
     "@bower_components/urlsafe-base64": "farhan687/urlsafe-base64#*",
     "antd": "^3.8.1",
-    "appbase-js": "^2.2.11",
+    "appbase-js": "^3.2.0",
     "babel": "^6.23.0",
     "brace": "^0.11.1",
     "classnames": "^2.2.5",
