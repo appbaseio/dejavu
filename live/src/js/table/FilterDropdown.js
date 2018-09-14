@@ -31,8 +31,23 @@ class FilterDropdown extends React.Component {
 	};
 
 	applyFilter = () => {
+		const { mappingObj, type, datatype } = this.props;
+		const mappingFields = mappingObj[type].properties;
 		if (this.state.filterField != null && this.state.filterValue != null && this.state.filterValue != '') {
-			this.props.filterInfo.applyFilter(this.props.type, this.props.columnField, this.state.filterField, this.state.filterValue, this.state.filterField === 'has' || this.state.filterField === 'has not' ? false : this.props.analyzed);
+			let colField = this.props.columnField;
+			if (datatype === 'string' || datatype === 'keyword' || datatype === 'text') {
+				const currentMapping = mappingFields[colField];
+				if (currentMapping.index !== 'not_analyzed') {
+					const currentFields = currentMapping.fields;
+					if (currentFields) {
+						const suffix = Object.keys(currentFields).find(key => currentFields[key].type === 'keyword' || currentFields[key].index === 'not_analyzed');
+						if (suffix) {
+							colField += `.${suffix}`;
+						}
+					}
+				}
+			}
+			this.props.filterInfo.applyFilter(this.props.type, colField, this.state.filterField, this.state.filterValue, this.state.filterField === 'has' || this.state.filterField === 'has not' ? false : this.props.analyzed);
 			document.body.click();
 		}
 	};

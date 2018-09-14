@@ -165,7 +165,7 @@ class Column extends React.Component {
 		</span>;
 		const filterRow = this.props.externalQueryApplied ? '' : (
 			<span className="filterIcon">
-				<FilterDropdown columnField={item} type={type} datatype={datatype} analyzed={analyzed} filterInfo={this.props.filterInfo} />
+				<FilterDropdown mappingObj={this.props.mappingObj} columnField={item} type={type} datatype={datatype} analyzed={analyzed} filterInfo={this.props.filterInfo} />
 			</span>
 		);
 		// const handleSort = this.sortingInit;
