@@ -23,7 +23,7 @@ var files = {
 	js: {
 		vendor: [
 			'node_modules/@bower_components/underscore/underscore-min.js',
-			'node_modules/appbase-js/dist/appbase.js',
+			'node_modules/appbase-js/dist/appbase-js.umd.min.js',
 			'node_modules/@bower_components/jquery/dist/jquery.min.js',
 			'node_modules/@bower_components/bootstrap/dist/js/bootstrap.min.js',
 			'node_modules/@bower_components/toastr/toastr.min.js',
