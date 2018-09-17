@@ -1,0 +1,38 @@
+{
+	"name": "@appbaseio/dejavu",
+	"description": "Dejavu - The missing Web UI for Elasticsearch",
+	"version": "3.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/appbaseio/dejavu.git",
+	"bugs": {
+		"url": "https://github.com/appbaseio/dejavu/issues"
+	},
+	"engines": {
+		"node": ">=10",
+		"yarn": ">=1.7.0"
+	},
+	"scripts": {
+		"start": "webpack-dev-server --mode development --content-base . --history-api-fallback --hot --progress --colors --port 1357"
+	},
+	"dependencies": {
+		"prop-types": "^15.6.2",
+		"react": "^16.5.1",
+		"react-dom": "^16.5.1"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.0.1",
+		"@babel/preset-env": "^7.0.0",
+		"@babel/preset-react": "^7.0.0",
+		"babel-loader": "^8.0.2",
+		"prettier": "^1.14.2",
+		"webpack": "^4.19.0",
+		"webpack-cli": "^3.1.0",
+		"webpack-dev-server": "^3.1.8"
+	},
+	"authors": [
+		"Divyanshu Maithani <div.blackcat@gmail.com> (https://github.com/divyanshu013)",
+		"Deepak Grover <deepakgrover333@gmail.com> (https://github.com/metagrover)",
+		"Appbase.io <info@appbase.io> (https://github.com/appbaseio)"
+	],
+	"license": "MIT"
+}
