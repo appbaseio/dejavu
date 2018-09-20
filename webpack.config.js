@@ -1,4 +1,8 @@
-var path = require('path');
+const path = require('path');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
+const { NODE_ENV } = process.env;
+const plugins = NODE_ENV === 'development' ? [new BundleAnalyzerPlugin()] : [];
 
 module.exports = {
 	entry: './src/index.js',
@@ -7,6 +11,7 @@ module.exports = {
 		publicPath: '/dist/',
 		filename: 'main.bundle.js',
 	},
+	plugins,
 	module: {
 		rules: [
 			{
@@ -15,6 +20,10 @@ module.exports = {
 				use: {
 					loader: 'babel-loader',
 				},
+			},
+			{
+				test: /\.css$/,
+				use: ['style-loader', 'css-loader'],
 			},
 		],
 	},

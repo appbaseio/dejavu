@@ -12,9 +12,20 @@
 		"yarn": ">=1.7.0"
 	},
 	"scripts": {
-		"start": "webpack-dev-server --mode development --content-base . --history-api-fallback --hot --progress --colors --port 1357"
+		"start": "NODE_ENV=development webpack-dev-server --open --mode development --content-base . --history-api-fallback --hot --progress --colors --port 1357"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.{js}": [
+			"eslint"
+		]
 	},
 	"dependencies": {
+		"antd": "^3.9.2",
 		"prop-types": "^15.6.2",
 		"react": "^16.5.1",
 		"react-dom": "^16.5.1"
@@ -24,8 +35,21 @@
 		"@babel/preset-env": "^7.0.0",
 		"@babel/preset-react": "^7.0.0",
 		"babel-loader": "^8.0.2",
+		"babel-plugin-import": "^1.9.1",
+		"css-loader": "^1.0.0",
+		"eslint": "^5.6.0",
+		"eslint-config-airbnb": "^17.1.0",
+		"eslint-config-prettier": "^3.0.1",
+		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-jsx-a11y": "^6.1.1",
+		"eslint-plugin-prettier": "^2.6.2",
+		"eslint-plugin-react": "^7.11.1",
+		"husky": "^1.0.0-rc.14",
+		"lint-staged": "^7.2.2",
 		"prettier": "^1.14.2",
+		"style-loader": "^0.23.0",
 		"webpack": "^4.19.0",
+		"webpack-bundle-analyzer": "^3.0.2",
 		"webpack-cli": "^3.1.0",
 		"webpack-dev-server": "^3.1.8"
 	},
