@@ -1,3 +1,6 @@
+const { NODE_ENV } = process.env;
+const isProduction = NODE_ENV === 'production';
+
 const presets = [
 	'@babel/preset-react',
 	[
@@ -15,6 +18,10 @@ const presets = [
 ];
 
 const plugins = [
+	[
+		'emotion',
+		isProduction ? { hoist: true } : { sourceMap: true, autoLabel: true },
+	],
 	['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
 ];
 
