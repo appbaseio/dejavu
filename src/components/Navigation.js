@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { Menu, Icon } from 'antd';
 import { withRouter } from 'react-router-dom';
@@ -5,7 +7,11 @@ import { object } from 'prop-types';
 
 const { Item } = Menu;
 
-const Navigation = ({ history }) => (
+type Props = {
+	history: object,
+};
+
+const Navigation = ({ history }: Props) => (
 	<Menu
 		defaultSelectedKeys={['browse']}
 		mode="inline"

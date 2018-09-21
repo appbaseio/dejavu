@@ -9,6 +9,7 @@
 		"jpoissonnier.vscode-styled-components",
 		"lXSPandora.vscode-styled-components-snippets",
 		"andys8.jest-snippets",
-		"burkeholland.simple-react-snippets"
+		"burkeholland.simple-react-snippets",
+		"flowtype.flow-for-vscode"
 	]
 }

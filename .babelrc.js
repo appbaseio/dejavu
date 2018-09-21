@@ -3,6 +3,7 @@ const isProduction = NODE_ENV === 'production';
 
 const presets = [
 	'@babel/preset-react',
+	'@babel/preset-flow',
 	[
 		'@babel/env',
 		{
