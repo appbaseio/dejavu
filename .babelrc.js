@@ -23,7 +23,21 @@ const plugins = [
 		'emotion',
 		isProduction ? { hoist: true } : { sourceMap: true, autoLabel: true },
 	],
+	'@babel/plugin-proposal-class-properties',
+	'@babel/plugin-transform-spread',
 	['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
+	// [
+	// 	'direct-import',
+	// 	[
+	// 		'@appbaseio/reactivesearch',
+	// 		{
+	// 			name: '@appbaseio/reactivesearch',
+	// 			indexFile: '@appbaseio/reactivesearch/lib/index.es.js',
+	// 		},
+	// 	],
+	// ],
 ];
+
+// tree shaking in reactivesearch with direct-import is broken with babel 7
 
 module.exports = { presets, plugins };
