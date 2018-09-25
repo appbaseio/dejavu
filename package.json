@@ -33,7 +33,10 @@
 		"react": "^16.5.1",
 		"react-dom": "^16.5.1",
 		"react-emotion": "^9.2.10",
-		"react-router-dom": "^4.3.1"
+		"react-redux": "^5.0.7",
+		"react-router-dom": "^4.3.1",
+		"redux": "^4.0.0",
+		"redux-saga": "^0.16.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.0.1",

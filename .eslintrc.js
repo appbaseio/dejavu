@@ -16,5 +16,6 @@ module.exports = {
 		'react/jsx-filename-extension': [1, { extensions: ['.js'] }],
 		'react/forbid-prop-types': 0,
 		'prettier/prettier': 'error',
+		'no-underscore-dangle': 0,
 	},
 };
