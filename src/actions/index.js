@@ -17,4 +17,8 @@ const connectAppFailure = error => ({
 	error,
 });
 
-export { connectApp, connectAppSuccess, connectAppFailure };
+const disconnectApp = () => ({
+	type: APP.DISCONNECT,
+});
+
+export { connectApp, disconnectApp, connectAppSuccess, connectAppFailure };

@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Alert } from 'antd';
 import { connect } from 'react-redux';
 import { string, func, bool } from 'prop-types';
 
@@ -12,7 +12,7 @@ import {
 	getIsConnected,
 	getError,
 } from '../reducers/app';
-import { connectApp } from '../actions';
+import { connectApp, disconnectApp } from '../actions';
 
 const { Item } = Form;
 
@@ -20,6 +20,7 @@ type Props = {
 	appname: string,
 	url: string,
 	connectApp: (string, string) => void,
+	disconnectApp: () => void,
 	isConnected: boolean,
 	isLoading: boolean,
 	error: string,
@@ -54,53 +55,69 @@ class ConnectApp extends Component<Props, State> {
 	handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { appname, url } = this.state;
-		if (appname && url) {
+		if (this.props.isConnected) {
+			this.props.disconnectApp();
+		} else if (appname && url) {
 			this.props.connectApp(appname, url);
 		}
 	};
 
 	render() {
 		const { appname, url } = this.state;
-		const { isLoading, isConnected } = this.props;
+		const { isLoading, isConnected, error } = this.props;
 		return (
-			<Form
-				layout="inline"
-				onSubmit={this.handleSubmit}
-				css={{
-					display: 'grid',
-					gridTemplateColumns: '1fr 1fr auto',
-					marginBottom: 25,
-				}}
-			>
-				<Item {...formItemProps}>
-					<Input
-						placeholder="URL"
-						value={url}
-						name="url"
-						onChange={this.handleChange}
-					/>
-				</Item>
-				<Item {...formItemProps}>
-					<Input
-						placeholder="App Name (aka Index)"
-						value={appname}
-						name="appname"
-						onChange={this.handleChange}
-					/>
-				</Item>
+			<>
+				{!isLoading &&
+					error && (
+						<Alert
+							showIcon
+							message={error}
+							type="error"
+							closable
+							css={{ marginBottom: 10 }}
+						/>
+					)}
+				<Form
+					layout="inline"
+					onSubmit={this.handleSubmit}
+					css={{
+						display: 'grid',
+						gridTemplateColumns: '1fr 1fr auto',
+						marginBottom: 25,
+					}}
+				>
+					<Item {...formItemProps}>
+						<Input
+							placeholder="URL"
+							value={url}
+							name="url"
+							onChange={this.handleChange}
+							disabled={isConnected}
+						/>
+					</Item>
+					<Item {...formItemProps}>
+						<Input
+							placeholder="App Name (aka Index)"
+							value={appname}
+							name="appname"
+							onChange={this.handleChange}
+							disabled={isConnected}
+						/>
+					</Item>
 
-				<Item>
-					<Button
-						type={isConnected ? 'danger' : 'primary'}
-						htmlType="submit"
-						icon={isConnected ? 'pause-circle' : 'play-circle'}
-						disabled={!(appname && url)}
-						loading={isLoading}
-					>
-						{isConnected ? 'Disconnect' : 'Connect'}
-					</Button>
-				</Item>
-			</Form>
+					<Item>
+						<Button
+							type={isConnected ? 'danger' : 'primary'}
+							htmlType="submit"
+							icon={isConnected ? 'pause-circle' : 'play-circle'}
+							disabled={!(appname && url)}
+							loading={isLoading}
+						>
+							{isConnected ? 'Disconnect' : 'Connect'}
+						</Button>
+					</Item>
+				</Form>
+			</>
 		);
 	}
 }
@@ -115,12 +132,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	connectApp,
+	disconnectApp,
 };
 
 ConnectApp.propTypes = {
 	appname: string,
 	url: string,
 	connectApp: func.isRequired,
+	disconnectApp: func.isRequired,
 	isConnected: bool.isRequired,
 	isLoading: bool.isRequired,
 	error: string,
