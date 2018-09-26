@@ -692,6 +692,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@divyanshu013/media@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@divyanshu013/media/-/media-1.0.0.tgz#213845963960333cc69013759c4496a0250591e8"
+
 "@emotion/babel-utils@^0.6.4":
   version "0.6.9"
   resolved "https://registry.yarnpkg.com/@emotion/babel-utils/-/babel-utils-0.6.9.tgz#bb074fadad65c443a575d3379488415fd194fc75"

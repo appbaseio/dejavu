@@ -6,10 +6,15 @@ const connectApp = (appname, url) => ({
 	url,
 });
 
-const setApp = (appname, url) => ({
+const connectAppSuccess = (appname, url) => ({
 	type: APP.CONNECT_SUCCESS,
 	appname,
 	url,
 });
 
-export { connectApp, setApp };
+const connectAppFailure = error => ({
+	type: APP.CONNECT_FAILURE,
+	error,
+});
+
+export { connectApp, connectAppSuccess, connectAppFailure };

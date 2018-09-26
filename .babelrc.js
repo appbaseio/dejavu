@@ -25,6 +25,7 @@ const plugins = [
 	],
 	'@babel/plugin-proposal-class-properties',
 	'@babel/plugin-transform-spread',
+	'@babel/plugin-proposal-object-rest-spread',
 	['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
 	// [
 	// 	'direct-import',
