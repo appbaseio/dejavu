@@ -1,14 +1,13 @@
-import parseUrl from 'url-parser-lite';
+import { parseUrl } from '../utils';
 
-const testConnection = async (appname, url) => {
+const testConnection = async (appname, rawUrl) => {
 	try {
-		const { auth } = parseUrl(url);
+		const { credentials, url } = parseUrl(rawUrl);
 		const headers = {};
-		if (auth) {
-			headers.Authorization = `Basic ${btoa(auth)}`;
+		if (credentials) {
+			headers.Authorization = `Basic ${btoa(credentials)}`;
 		}
-		const requestUrl = auth ? url.replace(`${auth}@`, '') : url;
-		const res = await fetch(`${requestUrl}/${appname}`, {
+		const res = await fetch(`${url}/${appname}`, {
 			'Content-Type': 'application/json',
 			headers,
 		}).then(response => response.json());

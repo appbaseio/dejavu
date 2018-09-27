@@ -1,8 +1,18 @@
 import React from 'react';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
+import { Skeleton } from 'antd';
+import { connect } from 'react-redux';
 
 import ConnectApp from './ConnectApp';
 import DataTable from './DataTable';
+
+import {
+	getAppname,
+	getUrl,
+	getIsLoading,
+	getIsConnected,
+	getError,
+} from '../reducers/app';
 
 const DataBrowser = () => (
 	<ReactiveBase
@@ -19,4 +29,12 @@ const DataBrowser = () => (
 	</ReactiveBase>
 );
 
-export default DataBrowser;
+const mapStateToProps = state => ({
+	appname: getAppname(state),
+	url: getUrl(state),
+	isConnected: getIsConnected(state),
+	isLoading: getIsLoading(state),
+	error: getError(state),
+});
+
+export default connect(mapStateToProps)(DataBrowser);
