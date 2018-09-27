@@ -8,8 +8,9 @@ module.exports = {
 		'prettier/react',
 		'prettier/standard',
 		'plugin:flowtype/recommended',
+		'plugin:jest/recommended',
 	],
-	plugins: ['flowtype', 'prettier'],
+	plugins: ['flowtype', 'prettier', 'jest'],
 	env: {
 		browser: true,
 	},
