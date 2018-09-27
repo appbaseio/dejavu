@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Alert } from 'antd';
 import { connect } from 'react-redux';
-import { string, func, bool } from 'prop-types';
+import { string, func, bool, object } from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import {
 	getAppname,
@@ -13,6 +14,7 @@ import {
 	getError,
 } from '../../reducers/app';
 import { connectApp, disconnectApp } from '../../actions';
+import { getUrlParams } from '../../utils';
 
 const { Item } = Form;
 
@@ -24,6 +26,7 @@ type Props = {
 	isConnected: boolean,
 	isLoading: boolean,
 	error: string,
+	history: object,
 };
 
 type State = {
@@ -45,6 +48,15 @@ class ConnectApp extends Component<Props, State> {
 		url: this.props.url || '',
 	};
 
+	componentDidMount() {
+		// sync state from url
+		const { appname = '', url = '' } = getUrlParams(window.location.search);
+		this.setState({ appname, url });
+		if (appname && url) {
+			this.props.connectApp(appname, url);
+		}
+	}
+
 	handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
 		const { value, name } = e.target;
 		this.setState({
@@ -59,6 +71,8 @@ class ConnectApp extends Component<Props, State> {
 			this.props.disconnectApp();
 		} else if (appname && url) {
 			this.props.connectApp(appname, url);
+			// update history with correct appname and url
+			this.props.history.push(`?appname=${appname}&url=${url}`);
 		}
 	};
 
@@ -143,9 +157,12 @@ ConnectApp.propTypes = {
 	isConnected: bool.isRequired,
 	isLoading: bool.isRequired,
 	error: string,
+	history: object,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ConnectApp);
+export default withRouter(
+	connect(
+		mapStateToProps,
+		mapDispatchToProps,
+	)(ConnectApp),
+);

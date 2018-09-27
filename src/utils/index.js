@@ -15,4 +15,20 @@ const parseUrl = url => {
 	};
 };
 
-export { parseUrl };
+// convert search params to object
+const getUrlParams = url => {
+	if (!url) {
+		// treat a falsy value as having no params
+		return {};
+	}
+	const searchParams = new URLSearchParams(url);
+	return Array.from(searchParams.entries()).reduce(
+		(allParams, [key, value]) => ({
+			...allParams,
+			[key]: value,
+		}),
+		{},
+	);
+};
+
+export { parseUrl, getUrlParams };
