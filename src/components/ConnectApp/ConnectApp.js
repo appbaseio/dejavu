@@ -11,8 +11,8 @@ import {
 	getIsLoading,
 	getIsConnected,
 	getError,
-} from '../reducers/app';
-import { connectApp, disconnectApp } from '../actions';
+} from '../../reducers/app';
+import { connectApp, disconnectApp } from '../../actions';
 
 const { Item } = Form;
 

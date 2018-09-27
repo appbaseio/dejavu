@@ -3,7 +3,7 @@ import { Layout } from 'antd';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import DataBrowser from './components/DataBrowser';
+import Dejavu from './components/Dejavu';
 import Importer from './components/Importer';
 import SearchPreview from './components/SearchPreview';
 import Mappings from './components/Mappings';
@@ -37,7 +37,7 @@ const App = () => (
 								background: '#fff',
 							}}
 						>
-							<Route exact path="/" component={DataBrowser} />
+							<Route exact path="/" component={Dejavu} />
 							<Route path="/import" component={Importer} />
 							<Route path="/preview" component={SearchPreview} />
 							<Route path="/mappings" component={Mappings} />
