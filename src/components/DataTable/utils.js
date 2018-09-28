@@ -3,7 +3,7 @@ const extractColumns = mappings =>
 		key: property,
 		dataIndex: property,
 		title: property,
-		width: 250,
+		width: 300,
 	}));
 
 export { extractColumns };
