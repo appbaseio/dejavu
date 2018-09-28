@@ -1,8 +1,9 @@
 import React from 'react';
-import { Table, Icon } from 'antd';
+import { Table } from 'antd';
 import { arrayOf, object } from 'prop-types';
 
 import MappingsDropdown from '../MappingsDropdown';
+import MappingsIcon from '../MappingsIcon';
 
 import { extractColumns } from './utils';
 
@@ -15,7 +16,7 @@ const DataTable = ({ data, mappings }) => {
 		filterDropdown: (
 			<MappingsDropdown mapping={mappings.properties[property]} />
 		),
-		filterIcon: <Icon type="tags" />,
+		filterIcon: <MappingsIcon mapping={mappings.properties[property]} />,
 	}));
 	return (
 		<Table

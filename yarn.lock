@@ -7538,6 +7538,10 @@ react-emotion@^9.0.0, react-emotion@^9.2.10:
     babel-plugin-emotion "^9.2.10"
     create-emotion-styled "^9.2.8"
 
+react-feather@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.1.3.tgz#f0c0ae701265393d81d883e1ce903cae34290475"
+
 react-lazy-load@^3.0.12:
   version "3.0.13"
   resolved "https://registry.yarnpkg.com/react-lazy-load/-/react-lazy-load-3.0.13.tgz#3b0a92d336d43d3f0d73cbe6f35b17050b08b824"
