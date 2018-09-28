@@ -23,9 +23,7 @@
 		}
 	},
 	"lint-staged": {
-		"*.{js}": [
-			"eslint"
-		]
+		"*.js": "eslint"
 	},
 	"dependencies": {
 		"@appbaseio/reactivesearch": "^2.8.2",

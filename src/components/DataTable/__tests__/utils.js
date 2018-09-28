@@ -8,18 +8,5 @@ test('should extract columns', () => {
 		},
 	};
 	const res = extractColumns(mappings);
-	expect(res).toEqual([
-		{
-			key: 'bryan',
-			dataIndex: 'bryan',
-			title: 'bryan',
-			width: 300,
-		},
-		{
-			key: 'rock',
-			dataIndex: 'rock',
-			title: 'rock',
-			width: 300,
-		},
-	]);
+	expect(res).toEqual(['bryan', 'rock']);
 });
