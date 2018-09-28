@@ -1,12 +1,12 @@
 import React from 'react';
 
 import ConnectApp from './ConnectApp';
-import DataBrowser from './DataBrowser';
+import DataBrowserContainer from './DataBrowserContainer';
 
 const Dejavu = () => (
 	<section>
 		<ConnectApp />
-		<DataBrowser />
+		<DataBrowserContainer />
 	</section>
 );
 

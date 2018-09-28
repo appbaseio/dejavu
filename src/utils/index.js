@@ -31,4 +31,16 @@ const getUrlParams = url => {
 	);
 };
 
-export { parseUrl, getUrlParams };
+const getHeaders = rawUrl => {
+	const headers = {
+		'Content-Type': 'application/json',
+	};
+	if (!rawUrl) {
+		return headers;
+	}
+	const { credentials } = parseUrl(rawUrl);
+	headers.Authorization = `Basic ${btoa(credentials)}`;
+	return headers;
+};
+
+export { parseUrl, getUrlParams, getHeaders };

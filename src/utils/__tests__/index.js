@@ -1,4 +1,4 @@
-import { parseUrl, getUrlParams } from '..';
+import { parseUrl, getUrlParams, getHeaders } from '..';
 
 test('should parse url', () => {
 	const rawUrl = 'https://abc:xyz@scalr.api.appbase.io';
@@ -15,4 +15,14 @@ test('should get url params', () => {
 		url: 'https://abc:xyz@scalr.api.appbase.io',
 	};
 	expect(getUrlParams(testQuery)).toEqual(expectedQueryObject);
+});
+
+test('should get headers', () => {
+	const rawUrl = 'https://abc:xyz@scalr.api.appbase.io';
+	const res = getHeaders(rawUrl);
+	const expectedHeaders = {
+		'Content-Type': 'application/json',
+		Authorization: `Basic ${btoa('abc:xyz')}`,
+	};
+	expect(res).toEqual(expectedHeaders);
 });
