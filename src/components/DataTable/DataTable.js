@@ -12,16 +12,32 @@ const DataTable = ({ data, mappings }) => {
 		key: property,
 		dataIndex: property,
 		title: property,
-		width: 300,
 		filterDropdown: (
 			<MappingsDropdown mapping={mappings.properties[property]} />
 		),
+		width: 250,
 		filterIcon: <MappingsIcon mapping={mappings.properties[property]} />,
+		render: text => (
+			<div css={{ width: 217, overflow: 'hidden' }}>{text}</div>
+		),
 	}));
+	const columnsWithId = [
+		{
+			key: '_id',
+			dataIndex: '_id',
+			title: '_id',
+			fixed: 'left',
+			width: 250,
+			render: text => (
+				<div css={{ width: 217, overflow: 'hidden' }}>{text}</div>
+			),
+		},
+		...columns,
+	];
 	return (
 		<Table
 			bordered
-			columns={columns}
+			columns={columnsWithId}
 			dataSource={data}
 			rowKey="_id"
 			pagination={false}
@@ -29,6 +45,10 @@ const DataTable = ({ data, mappings }) => {
 			scroll={{
 				x: true,
 				y: 600,
+			}}
+			size="medium"
+			css={{
+				'.ant-table td': { whiteSpace: 'nowrap' },
 			}}
 		/>
 	);
