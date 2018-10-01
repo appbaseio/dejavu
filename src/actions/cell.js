@@ -1,0 +1,35 @@
+import { CELL } from './constants';
+
+const setCellActive = (row, column) => ({
+	type: CELL.CELL_ACTIVE,
+	row,
+	column,
+});
+
+const setCellHighlight = (row, column) => ({
+	type: CELL.CELL_HIGHLIGHT,
+	row,
+	column,
+});
+
+const setCellValueRequest = (id, property, value) => ({
+	type: CELL.CELL_SETVALUE_REQUEST,
+	id,
+	property,
+	value,
+});
+
+const setCellValueSuccess = () => ({ type: CELL.CELL_SETVALUE_SUCCESS }); // update data
+
+const setCellValueFailure = error => ({
+	type: CELL.CELL_SETVALUE_FAILURE,
+	error,
+});
+
+export {
+	setCellActive,
+	setCellHighlight,
+	setCellValueRequest,
+	setCellValueSuccess,
+	setCellValueFailure,
+};

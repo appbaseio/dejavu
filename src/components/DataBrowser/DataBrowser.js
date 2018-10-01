@@ -49,6 +49,7 @@ class DataBrowser extends Component<Props> {
 										mappings={mappings[appname]}
 									/>
 								)}
+								showResultStats={false}
 							/>
 						</ReactiveBase>
 					)}
