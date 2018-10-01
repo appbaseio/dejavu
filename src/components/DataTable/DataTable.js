@@ -38,7 +38,6 @@ const DataTable = ({
 		}),
 		render: (text, record, row) => (
 			<Cell
-				record={record}
 				row={row}
 				column={property}
 				active={

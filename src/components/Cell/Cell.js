@@ -7,6 +7,7 @@ const { TextArea } = Input;
 const Cell = ({ active, children, onFocus, row, column }) => (
 	<div
 		onFocus={() => onFocus(row, column)}
+		onBlur={() => onFocus(null, null)}
 		tabIndex="0"
 		role="Gridcell"
 		css={{
