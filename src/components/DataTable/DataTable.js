@@ -1,14 +1,23 @@
 import React from 'react';
 import { Table } from 'antd';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { css } from 'react-emotion';
+import { connect } from 'react-redux';
 
 import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
+import Cell from '../Cell';
 
+import { getActiveCell } from '../../reducers/cell';
+import { setCellActive } from '../../actions';
 import { extractColumns } from './utils';
 
-const DataTable = ({ data, mappings }) => {
+const DataTable = ({
+	activeCell,
+	data,
+	mappings,
+	setCellActive: setCellActiveDispatch,
+}) => {
 	const columns = extractColumns(mappings).map(property => ({
 		key: property,
 		dataIndex: property,
@@ -20,23 +29,25 @@ const DataTable = ({ data, mappings }) => {
 		filterIcon: <MappingsIcon mapping={mappings.properties[property]} />,
 		onHeaderCell: () => ({
 			className: css({
+				padding: '10px !important',
 				span: {
 					display: 'flex',
 					alignItems: 'center',
 				},
 			}),
 		}),
-		render: text => (
-			<div
-				css={{
-					width: 217,
-					overflow: 'hidden',
-					textOverflow: 'ellipsis',
-					whiteSpace: 'nowrap',
-				}}
+		render: (text, record, row) => (
+			<Cell
+				record={record}
+				row={row}
+				column={property}
+				active={
+					activeCell.row === row && activeCell.column === property
+				}
+				onFocus={setCellActiveDispatch}
 			>
 				{text}
-			</div>
+			</Cell>
 		),
 	}));
 	const columnsWithId = [
@@ -49,10 +60,11 @@ const DataTable = ({ data, mappings }) => {
 			render: text => (
 				<div
 					css={{
-						width: 217,
+						width: 230,
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',
 						whiteSpace: 'nowrap',
+						padding: 10,
 					}}
 				>
 					{text}
@@ -75,6 +87,9 @@ const DataTable = ({ data, mappings }) => {
 			size="medium"
 			css={{
 				'.ant-table td': { whiteSpace: 'nowrap' },
+				'.ant-table-tbody > tr > td': {
+					padding: 0,
+				},
 			}}
 		/>
 	);
@@ -83,6 +98,19 @@ const DataTable = ({ data, mappings }) => {
 DataTable.propTypes = {
 	data: arrayOf(object).isRequired,
 	mappings: object.isRequired,
+	activeCell: shape({ row: number, column: string }),
+	setCellActive: func.isRequired,
 };
 
-export default DataTable;
+const mapStateToProps = state => ({
+	activeCell: getActiveCell(state),
+});
+
+const mapDispatchToProps = {
+	setCellActive,
+};
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(DataTable);
