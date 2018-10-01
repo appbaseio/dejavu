@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
 import { arrayOf, object } from 'prop-types';
+import { css } from 'react-emotion';
 
 import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
@@ -17,8 +18,25 @@ const DataTable = ({ data, mappings }) => {
 		),
 		width: 250,
 		filterIcon: <MappingsIcon mapping={mappings.properties[property]} />,
+		onHeaderCell: () => ({
+			className: css({
+				span: {
+					display: 'flex',
+					alignItems: 'center',
+				},
+			}),
+		}),
 		render: text => (
-			<div css={{ width: 217, overflow: 'hidden' }}>{text}</div>
+			<div
+				css={{
+					width: 217,
+					overflow: 'hidden',
+					textOverflow: 'ellipsis',
+					whiteSpace: 'nowrap',
+				}}
+			>
+				{text}
+			</div>
 		),
 	}));
 	const columnsWithId = [
@@ -29,7 +47,16 @@ const DataTable = ({ data, mappings }) => {
 			fixed: 'left',
 			width: 250,
 			render: text => (
-				<div css={{ width: 217, overflow: 'hidden' }}>{text}</div>
+				<div
+					css={{
+						width: 217,
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{text}
+				</div>
 			),
 		},
 		...columns,
@@ -44,7 +71,6 @@ const DataTable = ({ data, mappings }) => {
 			loading={!data.length}
 			scroll={{
 				x: true,
-				y: 600,
 			}}
 			size="medium"
 			css={{
