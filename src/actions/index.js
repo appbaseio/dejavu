@@ -9,7 +9,13 @@ import {
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
 } from './mappings';
-import { setCellActive, setCellHighlight } from './cell';
+import {
+	setCellActive,
+	setCellHighlight,
+	setCellValueRequest,
+	setCellValueSuccess,
+	setCellValueFailure,
+} from './cell';
 
 export {
 	// app
@@ -24,4 +30,7 @@ export {
 	// cell
 	setCellActive,
 	setCellHighlight,
+	setCellValueRequest,
+	setCellValueSuccess,
+	setCellValueFailure,
 };

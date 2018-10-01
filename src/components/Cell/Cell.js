@@ -1,13 +1,15 @@
 import React from 'react';
-import { node, func, number, string, bool } from 'prop-types';
+import { node, func, number, string, bool, object } from 'prop-types';
 import { Input } from 'antd';
 
 const { TextArea } = Input;
 
-const Cell = ({ active, children, onFocus, row, column }) => (
+const Cell = ({ active, children, onChange, onFocus, row, column, record }) => (
 	<div
 		onFocus={() => onFocus(row, column)}
-		onBlur={() => onFocus(null, null)}
+		onBlur={() => {
+			onFocus(null, null);
+		}}
 		tabIndex="0"
 		role="Gridcell"
 		css={{
@@ -20,7 +22,19 @@ const Cell = ({ active, children, onFocus, row, column }) => (
 			outline: 'none',
 		}}
 	>
-		{active ? <TextArea autoFocus autosize value={children} /> : children}
+		{active ? (
+			<TextArea
+				autoFocus
+				autosize
+				defaultValue={children}
+				onBlur={e => {
+					const { value } = e.target;
+					onChange(record._id, column, value);
+				}}
+			/>
+		) : (
+			children
+		)}
 	</div>
 );
 
@@ -30,6 +44,8 @@ Cell.propTypes = {
 	row: number.isRequired,
 	column: string.isRequired,
 	active: bool.isRequired,
+	onChange: func.isRequired,
+	record: object.isRequired,
 };
 
 export default Cell;

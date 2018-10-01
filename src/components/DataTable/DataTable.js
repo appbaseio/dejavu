@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Alert } from 'antd';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { css } from 'react-emotion';
 import { connect } from 'react-redux';
@@ -8,8 +8,8 @@ import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
 import Cell from '../Cell';
 
-import { getActiveCell } from '../../reducers/cell';
-import { setCellActive } from '../../actions';
+import { getActiveCell, getError } from '../../reducers/cell';
+import { setCellActive, setCellValueRequest } from '../../actions';
 import { extractColumns } from './utils';
 
 const DataTable = ({
@@ -17,6 +17,8 @@ const DataTable = ({
 	data,
 	mappings,
 	setCellActive: setCellActiveDispatch,
+	setCellValue,
+	error,
 }) => {
 	const columns = extractColumns(mappings).map(property => ({
 		key: property,
@@ -40,10 +42,12 @@ const DataTable = ({
 			<Cell
 				row={row}
 				column={property}
+				record={record}
 				active={
 					activeCell.row === row && activeCell.column === property
 				}
 				onFocus={setCellActiveDispatch}
+				onChange={setCellValue}
 			>
 				{text}
 			</Cell>
@@ -73,24 +77,27 @@ const DataTable = ({
 		...columns,
 	];
 	return (
-		<Table
-			bordered
-			columns={columnsWithId}
-			dataSource={data}
-			rowKey="_id"
-			pagination={false}
-			loading={!data.length}
-			scroll={{
-				x: true,
-			}}
-			size="medium"
-			css={{
-				'.ant-table td': { whiteSpace: 'nowrap' },
-				'.ant-table-tbody > tr > td': {
-					padding: 0,
-				},
-			}}
-		/>
+		<>
+			{error && <Alert type="error" message={error} banner />}
+			<Table
+				bordered
+				columns={columnsWithId}
+				dataSource={data}
+				rowKey="_id"
+				pagination={false}
+				loading={!data.length}
+				scroll={{
+					x: true,
+				}}
+				size="medium"
+				css={{
+					'.ant-table td': { whiteSpace: 'nowrap' },
+					'.ant-table-tbody > tr > td': {
+						padding: 0,
+					},
+				}}
+			/>
+		</>
 	);
 };
 
@@ -99,14 +106,18 @@ DataTable.propTypes = {
 	mappings: object.isRequired,
 	activeCell: shape({ row: number, column: string }),
 	setCellActive: func.isRequired,
+	setCellValue: func.isRequired,
+	error: string,
 };
 
 const mapStateToProps = state => ({
 	activeCell: getActiveCell(state),
+	error: getError(state),
 });
 
 const mapDispatchToProps = {
 	setCellActive,
+	setCellValue: setCellValueRequest,
 };
 
 export default connect(

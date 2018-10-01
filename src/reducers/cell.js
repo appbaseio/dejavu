@@ -9,10 +9,11 @@ const initialState = {
 		row: null,
 		column: null,
 	},
+	error: null,
 };
 
 const cell = (state = initialState, action) => {
-	const { type, row, column } = action;
+	const { type, row, column, error } = action;
 	switch (type) {
 		case CELL.CELL_ACTIVE:
 			return {
@@ -21,11 +22,17 @@ const cell = (state = initialState, action) => {
 					row,
 					column,
 				},
+				error: null,
 			};
 		case CELL.CELL_HIGHLIGHT:
 			return {
 				...state,
 				highlightCell: { row, column },
+			};
+		case CELL.CELL_SETVALUE_FAILURE:
+			return {
+				...state,
+				error,
 			};
 		default:
 			return state;
@@ -35,7 +42,8 @@ const cell = (state = initialState, action) => {
 // selectors
 const getActiveCell = state => state.cell.activeCell;
 const getHighlightCell = state => state.cell.highlightCell;
+const getError = state => state.cell.error;
 
-export { getActiveCell, getHighlightCell };
+export { getActiveCell, getHighlightCell, getError };
 
 export default cell;

@@ -12,4 +12,24 @@ const setCellHighlight = (row, column) => ({
 	column,
 });
 
-export { setCellActive, setCellHighlight };
+const setCellValueRequest = (id, property, value) => ({
+	type: CELL.CELL_SETVALUE_REQUEST,
+	id,
+	property,
+	value,
+});
+
+const setCellValueSuccess = () => ({ type: CELL.CELL_SETVALUE_SUCCESS }); // update data
+
+const setCellValueFailure = error => ({
+	type: CELL.CELL_SETVALUE_FAILURE,
+	error,
+});
+
+export {
+	setCellActive,
+	setCellHighlight,
+	setCellValueRequest,
+	setCellValueSuccess,
+	setCellValueFailure,
+};
