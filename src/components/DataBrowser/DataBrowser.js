@@ -36,6 +36,7 @@ class DataBrowser extends Component<Props> {
 					mappings && (
 						<ReactiveBase
 							app={appname}
+							type={appname} // to ignore bloat types need to rethink for multi indices
 							credentials={credentials}
 							url={url}
 						>
@@ -44,7 +45,10 @@ class DataBrowser extends Component<Props> {
 								dataField="_id"
 								pagination
 								onAllData={data => (
+									// onAllData is invoked only when data changes
 									<DataTable
+										// if key logic fails for an edge case will have to derive state in DataTable from props
+										key={data.length ? data[0]._id : '0'}
 										data={data}
 										mappings={mappings[appname]}
 									/>
