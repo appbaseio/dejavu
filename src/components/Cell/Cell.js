@@ -14,27 +14,38 @@ const Cell = ({ active, children, onChange, onFocus, row, column }) => (
 		role="Gridcell"
 		css={{
 			width: 250,
-			height: '100%',
-			overflow: 'hidden',
+			height: 42,
+			overflow: active ? 'none' : 'hidden',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',
 			padding: active ? 0 : 10,
 			outline: 'none',
+			position: 'relative',
 		}}
 	>
 		{active ? (
-			<TextArea
-				autoFocus
-				autosize
-				defaultValue={children}
-				onBlur={e => {
-					const { value } = e.target;
-					if (value !== children) {
-						// only change value if something was changed
-						onChange(row, column, value);
-					}
+			<div
+				css={{
+					position: 'absolute',
+					width: '100%',
 				}}
-			/>
+			>
+				<TextArea
+					autoFocus
+					autosize={{
+						minRows: 2,
+						maxRows: 2,
+					}}
+					defaultValue={children}
+					onBlur={e => {
+						const { value } = e.target;
+						if (value !== children) {
+							// only change value if something was changed
+							onChange(row, column, value);
+						}
+					}}
+				/>
+			</div>
 		) : (
 			children
 		)}
