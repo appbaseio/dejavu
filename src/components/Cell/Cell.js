@@ -1,12 +1,13 @@
 import React from 'react';
 import { func, number, string, bool, any } from 'prop-types';
 
+import BooleanCell from './BooleanCell';
 import TextCell from './TextCell';
 
 const Cell = ({ mapping, ...props }) => {
 	switch (mapping.type) {
 		case 'boolean':
-			return <div>{props.children}</div>;
+			return <BooleanCell {...props} />;
 		default:
 			return <TextCell {...props} />;
 	}
