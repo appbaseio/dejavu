@@ -74,6 +74,7 @@ class DataTable extends Component {
 					}
 					onFocus={setCellActiveDispatch}
 					onChange={this.handleChange}
+					mapping={mappings.properties[property]}
 				>
 					{text}
 				</Cell>
