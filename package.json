@@ -31,6 +31,7 @@
 		"antd": "^3.9.2",
 		"appbase-js": "^4.0.2-beta.2",
 		"emotion": "^9.2.10",
+		"moment": "^2.22.2",
 		"prop-types": "^15.6.2",
 		"react": "^16.5.1",
 		"react-dom": "^16.5.1",
