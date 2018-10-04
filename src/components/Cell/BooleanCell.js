@@ -13,7 +13,7 @@ const BooleanCell = ({ children, onChange, row, column }) => (
 	>
 		<Dropdown
 			trigger={['click']}
-			css={{ width: '100%', height: '100%' }}
+			css={{ width: '100%', height: '100%', borderColor: 'transparent' }}
 			overlay={
 				<Menu
 					onClick={({ key }) => onChange(row, column, key === 'true')}
