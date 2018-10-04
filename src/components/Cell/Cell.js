@@ -3,11 +3,15 @@ import { func, number, string, bool, any } from 'prop-types';
 
 import BooleanCell from './BooleanCell';
 import TextCell from './TextCell';
+import NumberCell from './NumberCell';
 
 const Cell = ({ mapping, ...props }) => {
 	switch (mapping.type) {
 		case 'boolean':
 			return <BooleanCell {...props} />;
+		case 'integer':
+		case 'long':
+			return <NumberCell {...props} />;
 		default:
 			return <TextCell {...props} />;
 	}
