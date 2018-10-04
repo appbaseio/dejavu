@@ -1,8 +1,16 @@
 const path = require('path');
+const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const { NODE_ENV } = process.env;
-const plugins = NODE_ENV === 'development' ? [new BundleAnalyzerPlugin()] : [];
+
+let plugins = [
+	// Ignore all locale files of moment.js
+	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+];
+if (NODE_ENV === 'development') {
+	plugins = plugins.concat(new BundleAnalyzerPlugin());
+}
 
 module.exports = {
 	entry: './src/index.js',
