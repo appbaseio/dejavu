@@ -4,6 +4,7 @@ import { func, number, string, bool, any } from 'prop-types';
 import BooleanCell from './BooleanCell';
 import TextCell from './TextCell';
 import NumberCell from './NumberCell';
+import ArrayCell from './ArrayCell';
 
 const Cell = ({ mapping, ...props }) => {
 	switch (mapping.type) {
@@ -13,6 +14,9 @@ const Cell = ({ mapping, ...props }) => {
 		case 'long':
 			return <NumberCell {...props} />;
 		default:
+			if (Array.isArray(props.children)) {
+				return <ArrayCell {...props} />;
+			}
 			return <TextCell {...props} />;
 	}
 };
