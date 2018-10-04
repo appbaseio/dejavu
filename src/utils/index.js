@@ -1,5 +1,7 @@
 import urlParser from 'url-parser-lite';
 
+import getDateFormat from './date';
+
 const parseUrl = url => {
 	if (!url) {
 		return {
@@ -43,4 +45,4 @@ const getHeaders = rawUrl => {
 	return headers;
 };
 
-export { parseUrl, getUrlParams, getHeaders };
+export { parseUrl, getUrlParams, getHeaders, getDateFormat };

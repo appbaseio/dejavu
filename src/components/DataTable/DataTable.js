@@ -119,7 +119,9 @@ class DataTable extends Component {
 					size="medium"
 					css={{
 						'.ant-table td': { whiteSpace: 'nowrap' },
-						'.ant-table-body': { overflowX: 'auto !important' },
+						'.ant-table-body': {
+							overflowX: 'auto !important',
+						},
 						'.ant-table-fixed': { minWidth: 'auto' },
 						'.ant-table-tbody > tr > td': {
 							padding: 0,
