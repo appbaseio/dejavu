@@ -2,21 +2,16 @@ import React from 'react';
 import { DatePicker } from 'antd';
 import { func, number, string, any } from 'prop-types';
 
+import CellStyled from './Cell.styles';
 import { getDateFormat } from '../../utils';
 
 const moment = require('moment');
 
 const DateCell = ({ children, onChange, onFocus, row, column, format }) => (
-	<div
+	<CellStyled
 		onFocus={() => onFocus(row, column)}
 		onBlur={() => {
 			onFocus(null, null);
-		}}
-		css={{
-			width: 250,
-			height: 42,
-			outline: 'none',
-			position: 'relative',
 		}}
 	>
 		<DatePicker
@@ -35,7 +30,7 @@ const DateCell = ({ children, onChange, onFocus, row, column, format }) => (
 				}
 			}}
 		/>
-	</div>
+	</CellStyled>
 );
 
 DateCell.propTypes = {

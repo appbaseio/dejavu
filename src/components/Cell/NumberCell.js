@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { InputNumber, Tooltip } from 'antd';
 import { func, number, string, any, bool } from 'prop-types';
 
+import CellStyled from './Cell.styles';
+
 // stateful for validation
 class NumberCell extends Component {
 	state = {
@@ -41,21 +43,13 @@ class NumberCell extends Component {
 		const { active, children, onFocus, row, column } = this.props;
 		const { value } = this.state;
 		return (
-			<div
+			<CellStyled
 				onFocus={() => onFocus(row, column)}
 				onBlur={this.saveChange}
 				tabIndex="0"
 				role="Gridcell"
-				css={{
-					width: 250,
-					height: 42,
-					overflow: active ? 'none' : 'hidden',
-					textOverflow: 'ellipsis',
-					whiteSpace: 'nowrap',
-					padding: active ? 0 : 10,
-					outline: 'none',
-					position: 'relative',
-				}}
+				overflow={active ? 'none' : 'hidden'}
+				padding={active ? 0 : 10}
 			>
 				{active ? (
 					<Tooltip
@@ -85,7 +79,7 @@ class NumberCell extends Component {
 				) : (
 					children
 				)}
-			</div>
+			</CellStyled>
 		);
 	}
 }
