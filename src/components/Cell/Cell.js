@@ -6,6 +6,7 @@ import TextCell from './TextCell';
 import NumberCell from './NumberCell';
 import ArrayCell from './ArrayCell';
 import DateCell from './DateCell';
+import ObjectCell from './ObjectCell';
 
 const Cell = ({ mapping, ...props }) => {
 	switch (mapping.type) {
@@ -22,6 +23,9 @@ const Cell = ({ mapping, ...props }) => {
 		default:
 			if (Array.isArray(props.children)) {
 				return <ArrayCell {...props} />;
+			}
+			if (mapping.properties) {
+				return <ObjectCell {...props} />;
 			}
 			return <TextCell {...props} />;
 	}
