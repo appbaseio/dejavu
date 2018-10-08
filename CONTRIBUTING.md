@@ -14,3 +14,11 @@
 > **Tip**
 >
 > Install the recommended extensions for your editor
+
+## Troubleshooting
+
+While installing dependencies with `yarn` you might run into an issue with `libpng`. On Fedora linux you would need the `libpng-devel` installed for the dependency to compile:
+
+```sh
+sudo dnf install libpng-devel pngquant gcc make libpng12 libpng12-devel
+```
