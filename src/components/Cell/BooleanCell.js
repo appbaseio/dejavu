@@ -2,15 +2,12 @@ import React from 'react';
 import { Dropdown, Icon, Menu, Button } from 'antd';
 import { func, number, string, any } from 'prop-types';
 
+import CellStyled from './Cell.styles';
+
 const { Item } = Menu;
 
 const BooleanCell = ({ children, onChange, row, column }) => (
-	<div
-		css={{
-			width: 250,
-			height: 42,
-		}}
-	>
+	<CellStyled>
 		<Dropdown
 			trigger={['click']}
 			css={{ width: '100%', height: '100%', borderColor: 'transparent' }}
@@ -41,7 +38,7 @@ const BooleanCell = ({ children, onChange, row, column }) => (
 				</div>
 			</Button>
 		</Dropdown>
-	</div>
+	</CellStyled>
 );
 
 BooleanCell.propTypes = {

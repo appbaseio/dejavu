@@ -131,6 +131,31 @@ class ConnectApp extends Component<Props, State> {
 						</Button>
 					</Item>
 				</Form>
+				{!isLoading &&
+					!isConnected && (
+						<Alert
+							type="info"
+							showIcon
+							message="Connecting to ElasticSearch"
+							description={
+								<div>
+									<p>
+										To make sure you enable CORS settings
+										for your ElasticSearch instance, add the
+										following lines in the ES configuration
+										file:
+									</p>
+									<pre>
+										{`http.port: 9200
+http.cors.allow-origin: http://localhost:1357
+http.cors.enabled: true
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+http.cors.allow-credentials: true`}
+									</pre>
+								</div>
+							}
+						/>
+					)}
 			</>
 		);
 	}

@@ -3,6 +3,8 @@
 import React from 'react';
 import { object } from 'prop-types';
 
+import JsonView from '../JsonView';
+
 type Props = {
 	mapping: object,
 };
@@ -16,7 +18,7 @@ const MappingsDropdown = ({ mapping }: Props) => (
 			boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
 		}}
 	>
-		<pre css={{ margin: 0 }}>{JSON.stringify(mapping, null, 2)}</pre>
+		<JsonView json={mapping} />
 	</div>
 );
 

@@ -2,26 +2,20 @@ import React from 'react';
 import { Input } from 'antd';
 import { func, number, string, any, bool } from 'prop-types';
 
+import CellStyled from './Cell.styles';
+
 const { TextArea } = Input;
 
 const TextCell = ({ active, children, onChange, onFocus, row, column }) => (
-	<div
+	<CellStyled
 		onFocus={() => onFocus(row, column)}
 		onBlur={() => {
 			onFocus(null, null);
 		}}
 		tabIndex="0"
 		role="Gridcell"
-		css={{
-			width: 250,
-			height: 42,
-			overflow: active ? 'none' : 'hidden',
-			textOverflow: 'ellipsis',
-			whiteSpace: 'nowrap',
-			padding: active ? 0 : 10,
-			outline: 'none',
-			position: 'relative',
-		}}
+		overflow={active ? 'none' : 'hidden'}
+		padding={active ? 0 : 10}
 	>
 		{active ? (
 			<div
@@ -49,7 +43,7 @@ const TextCell = ({ active, children, onChange, onFocus, row, column }) => (
 		) : (
 			children
 		)}
-	</div>
+	</CellStyled>
 );
 
 TextCell.propTypes = {
