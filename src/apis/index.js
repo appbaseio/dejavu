@@ -1,6 +1,6 @@
 import testConnection from './app';
-import fetchMappings from './mappings';
+import { fetchMappings, addMapping } from './mappings';
 import setCellValue from './cell';
 import addData from './data';
 
-export { testConnection, fetchMappings, setCellValue, addData };
+export { testConnection, fetchMappings, addMapping, setCellValue, addData };

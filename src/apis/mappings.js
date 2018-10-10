@@ -19,4 +19,30 @@ const fetchMappings = async (appname, rawUrl) => {
 	}
 };
 
-export default fetchMappings;
+const addMapping = async (appname, rawUrl, field, mapping) => {
+	const defaultError = 'Unable to add mapping';
+	try {
+		const { url } = parseUrl(rawUrl);
+		const headers = getHeaders(rawUrl);
+		// currently support single type
+		const res = await fetch(`${url}/${appname}/_mapping/${appname}`, {
+			headers,
+			method: 'POST',
+			body: JSON.stringify({
+				properties: {
+					[field]: mapping,
+				},
+			}),
+		}).then(response => response.json());
+		if (res.status >= 400) {
+			throw new Error(res.message || defaultError);
+		}
+		return res;
+	} catch (error) {
+		const errorMessage =
+			error.name === 'Error' ? error.message : defaultError;
+		throw new Error(errorMessage);
+	}
+};
+
+export { fetchMappings, addMapping };
