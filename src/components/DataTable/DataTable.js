@@ -1,21 +1,31 @@
 import React, { Component } from 'react';
-import { Table, Alert } from 'antd';
-import { arrayOf, object, shape, string, number, func } from 'prop-types';
+import { Table, Alert, Button, Modal } from 'antd';
+import { arrayOf, object, shape, string, number, func, bool } from 'prop-types';
 import { css } from 'react-emotion';
 import { connect } from 'react-redux';
+import JsonInput from 'react-json-editor-ajrm';
+import locale from 'react-json-editor-ajrm/locale/en';
 
 import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
 import Cell from '../Cell';
 
 import { getActiveCell, getError } from '../../reducers/cell';
-import { setCellActive, setCellValueRequest } from '../../actions';
+import * as dataSelectors from '../../reducers/data';
+import {
+	setCellActive,
+	setCellValueRequest,
+	addDataRequest,
+} from '../../actions';
 import { extractColumns } from './utils';
 
 // making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
 class DataTable extends Component {
 	state = {
 		data: this.props.data,
+		showModal: false,
+		addDataError: false,
+		addDataValue: null,
 	};
 
 	handleChange = (row, column, value) => {
@@ -37,6 +47,24 @@ class DataTable extends Component {
 		setCellValue(record._id, column, value);
 	};
 
+	toggleModal = () => {
+		this.setState(({ showModal }) => ({
+			showModal: !showModal,
+		}));
+	};
+
+	handleJsonInput = ({ error, jsObject }) => {
+		this.setState({ addDataError: Boolean(error), addDataValue: jsObject });
+	};
+
+	addValue = () => {
+		const { addDataError, addDataValue } = this.state;
+		if (!addDataError && addDataValue) {
+			this.toggleModal();
+			this.props.addDataRequest(addDataValue);
+		}
+	};
+
 	render() {
 		const {
 			activeCell,
@@ -44,7 +72,8 @@ class DataTable extends Component {
 			setCellActive: setCellActiveDispatch,
 			error,
 		} = this.props;
-		const { data } = this.state;
+		const { data, showModal, addDataError } = this.state;
+		const { addDataIsLoading, addDataRequestError } = this.props;
 		const columns = extractColumns(mappings).map(property => ({
 			key: property,
 			dataIndex: property,
@@ -106,6 +135,9 @@ class DataTable extends Component {
 		return (
 			<>
 				{error && <Alert type="error" message={error} banner />}
+				{addDataRequestError && (
+					<Alert type="error" message={addDataRequestError} banner />
+				)}
 				<Table
 					bordered
 					columns={columnsWithId}
@@ -128,6 +160,30 @@ class DataTable extends Component {
 						},
 					}}
 				/>
+				<Button
+					icon="plus"
+					type="primary"
+					css={{ marginTop: 10 }}
+					onClick={this.toggleModal}
+					loading={addDataIsLoading}
+				>
+					Add Row
+				</Button>
+				<Modal
+					visible={showModal}
+					onCancel={this.toggleModal}
+					onOk={this.addValue}
+					okButtonProps={{ disabled: addDataError }}
+				>
+					<JsonInput
+						id="add-row-modal"
+						locale={locale}
+						placeholder={{}}
+						theme="light_mitsuketa_tribute"
+						style={{ outerBox: { marginTop: 20 } }}
+						onChange={this.handleJsonInput}
+					/>
+				</Modal>
 			</>
 		);
 	}
@@ -139,17 +195,23 @@ DataTable.propTypes = {
 	activeCell: shape({ row: number, column: string }),
 	setCellActive: func.isRequired,
 	setCellValue: func.isRequired,
+	addDataRequest: func.isRequired,
 	error: string,
+	addDataRequestError: string,
+	addDataIsLoading: bool.isRequired,
 };
 
 const mapStateToProps = state => ({
 	activeCell: getActiveCell(state),
 	error: getError(state),
+	addDataRequestError: dataSelectors.getError(state),
+	addDataIsLoading: dataSelectors.getIsLoading(state),
 });
 
 const mapDispatchToProps = {
 	setCellActive,
 	setCellValue: setCellValueRequest,
+	addDataRequest,
 };
 
 export default connect(
