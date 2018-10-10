@@ -3,13 +3,14 @@
 import React, { Component } from 'react';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { string, func, bool, object } from 'prop-types';
+import { string, func, bool, object, number } from 'prop-types';
 import { Skeleton } from 'antd';
 
 import DataTable from '../DataTable';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
+import { getReactiveListKey } from '../../reducers/data';
 import { getIsLoading, getMappings } from '../../reducers/mappings';
 import { parseUrl } from '../../utils';
 
@@ -19,6 +20,7 @@ type Props = {
 	fetchMappings: () => void,
 	isLoading: boolean,
 	mappings: object,
+	reactiveListKey: number,
 };
 
 // after app is connected DataBrowser takes over
@@ -28,7 +30,13 @@ class DataBrowser extends Component<Props> {
 	}
 
 	render() {
-		const { appname, url: rawUrl, isLoading, mappings } = this.props;
+		const {
+			appname,
+			url: rawUrl,
+			isLoading,
+			mappings,
+			reactiveListKey,
+		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
 		return (
 			<Skeleton loading={isLoading} active>
@@ -41,6 +49,9 @@ class DataBrowser extends Component<Props> {
 							url={url}
 						>
 							<ReactiveList
+								// whenever a data change is expected, the key is updated to make the ReactiveList refetch data
+								// there should ideally be a hook in ReactiveSearch for this purpose but this will suffice for now
+								key={String(reactiveListKey)}
 								componentId="results"
 								dataField="_id"
 								pagination
@@ -67,6 +78,7 @@ const mapStateToProps = state => ({
 	url: getUrl(state),
 	isLoading: getIsLoading(state),
 	mappings: getMappings(state),
+	reactiveListKey: getReactiveListKey(state),
 });
 
 const mapDispatchToProps = {
@@ -79,6 +91,7 @@ DataBrowser.propTypes = {
 	fetchMappings: func.isRequired,
 	isLoading: bool.isRequired,
 	mappings: object,
+	reactiveListKey: number.isRequired,
 };
 
 export default connect(

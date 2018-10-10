@@ -16,6 +16,7 @@ import {
 	setCellValueSuccess,
 	setCellValueFailure,
 } from './cell';
+import { addDataRequest, addDataSuccess, addDataFailure } from './data';
 
 export {
 	// app
@@ -33,4 +34,8 @@ export {
 	setCellValueRequest,
 	setCellValueSuccess,
 	setCellValueFailure,
+	// data
+	addDataRequest,
+	addDataSuccess,
+	addDataFailure,
 };
