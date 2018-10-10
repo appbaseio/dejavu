@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Table, Alert, Button, Modal } from 'antd';
+import { Table, Alert, Button, Modal, List } from 'antd';
 import { arrayOf, object, shape, string, number, func, bool } from 'prop-types';
 import { css } from 'react-emotion';
 import { connect } from 'react-redux';
 import JsonInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
+import { mediaMax, mediaMin } from '@divyanshu013/media';
 
 import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
@@ -18,6 +19,8 @@ import {
 	addDataRequest,
 } from '../../actions';
 import { extractColumns } from './utils';
+
+const { Item } = List;
 
 // making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
 class DataTable extends Component {
@@ -157,6 +160,28 @@ class DataTable extends Component {
 						'.ant-table-fixed': { minWidth: 'auto' },
 						'.ant-table-tbody > tr > td': {
 							padding: 0,
+						},
+						// if the css implementation causes lags on mobiles, we would need a js implementation on mobile screens to remove rendering this altogether
+						[mediaMax.medium]: {
+							display: 'none',
+						},
+					}}
+				/>
+				<List
+					itemLayout="horizontal"
+					dataSource={data}
+					renderItem={item => (
+						<Item>
+							<Item.Meta
+								title={item._id}
+								description={<div>Oasis</div>} // just need to render the items here instead of Oasis (the greatest rock and roll band)
+							/>
+						</Item>
+					)}
+					css={{
+						// a css only implementation currently
+						[mediaMin.medium]: {
+							display: 'none',
 						},
 					}}
 				/>
