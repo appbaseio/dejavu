@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { Table, Alert, Button, Modal, List } from 'antd';
+import {
+	Table,
+	Alert,
+	Button,
+	Modal,
+	List,
+	Checkbox,
+	Dropdown,
+	Icon,
+} from 'antd';
 import { arrayOf, object, shape, string, number, func, bool } from 'prop-types';
 import { css } from 'react-emotion';
 import { connect } from 'react-redux';
@@ -21,6 +30,7 @@ import {
 import { extractColumns } from './utils';
 
 const { Item } = List;
+const { Group } = Checkbox;
 
 // making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
 class DataTable extends Component {
@@ -29,6 +39,7 @@ class DataTable extends Component {
 		showModal: false,
 		addDataError: false,
 		addDataValue: null,
+		visibleColumns: extractColumns(this.props.mappings),
 	};
 
 	handleChange = (row, column, value) => {
@@ -60,6 +71,22 @@ class DataTable extends Component {
 		this.setState({ addDataError: Boolean(error), addDataValue: jsObject });
 	};
 
+	handleSelectAll = e => {
+		const { mappings } = this.props;
+		const { checked } = e.target;
+		let visibleColumns;
+		if (checked) {
+			visibleColumns = extractColumns(mappings);
+		} else {
+			visibleColumns = [];
+		}
+		this.setState({ visibleColumns });
+	};
+
+	handleVisibleColumnsChange = visibleColumns => {
+		this.setState({ visibleColumns }); // this would need an order since ant doesn't maintain it
+	};
+
 	addValue = () => {
 		const { addDataError, addDataValue } = this.state;
 		if (!addDataError && addDataValue) {
@@ -75,9 +102,10 @@ class DataTable extends Component {
 			setCellActive: setCellActiveDispatch,
 			error,
 		} = this.props;
-		const { data, showModal, addDataError } = this.state;
+		const { data, showModal, addDataError, visibleColumns } = this.state;
 		const { addDataIsLoading, addDataRequestError } = this.props;
-		const columns = extractColumns(mappings).map(property => ({
+		// current visible mappings are in state
+		const columns = visibleColumns.map(property => ({
 			key: property,
 			dataIndex: property,
 			title: property,
@@ -137,6 +165,48 @@ class DataTable extends Component {
 		];
 		return (
 			<>
+				<Dropdown
+					// this should stay open when group is checked/unchecked by making controlled
+					overlay={
+						<div
+							css={{
+								background: '#fff',
+								borderRadius: 4,
+								padding: 10,
+								boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
+							}}
+						>
+							<Checkbox
+								checked={
+									visibleColumns.length ===
+									extractColumns(mappings).length
+								}
+								indeterminate={
+									visibleColumns.length <
+										extractColumns(mappings).length &&
+									visibleColumns.length
+								}
+								css={{
+									marginBottom: 5,
+									fontWeight: 'bold',
+								}}
+								onChange={this.handleSelectAll}
+							>
+								Select All
+							</Checkbox>
+							<Group
+								options={extractColumns(mappings)}
+								css={{ display: 'grid', gridGap: 5 }}
+								value={visibleColumns}
+								onChange={this.handleVisibleColumnsChange}
+							/>
+						</div>
+					}
+				>
+					<Button css={{ margin: '20px 0' }}>
+						Show/Hide Columns <Icon type="down" />
+					</Button>
+				</Dropdown>
 				{error && <Alert type="error" message={error} banner />}
 				{addDataRequestError && (
 					<Alert type="error" message={addDataRequestError} banner />
