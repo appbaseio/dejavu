@@ -34,7 +34,10 @@ const BooleanCell = ({ children, onChange, row, column }) => (
 						justifyContent: 'space-between',
 					}}
 				>
-					{String(children)} <Icon type="down" />
+					{children !== undefined
+						? String(children)
+						: 'Select a Value'}{' '}
+					<Icon type="down" />
 				</div>
 			</Button>
 		</Dropdown>

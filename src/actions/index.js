@@ -8,6 +8,9 @@ import {
 	fetchMappings,
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
+	addMappingRequest,
+	addMappingSuccess,
+	addMappingFailure,
 } from './mappings';
 import {
 	setCellActive,
@@ -28,6 +31,9 @@ export {
 	fetchMappings,
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
+	addMappingRequest,
+	addMappingSuccess,
+	addMappingFailure,
 	// cell
 	setCellActive,
 	setCellHighlight,
