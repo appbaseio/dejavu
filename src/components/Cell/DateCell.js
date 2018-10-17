@@ -38,7 +38,7 @@ DateCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
-	format: string.isRequired,
+	format: string,
 	onFocus: func.isRequired,
 };
 

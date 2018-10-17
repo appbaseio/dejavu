@@ -12,11 +12,13 @@ const setCellHighlight = (row, column) => ({
 	column,
 });
 
-const setCellValueRequest = (id, property, value) => ({
+const setCellValueRequest = (id, property, value, index, esType) => ({
 	type: CELL.CELL_SETVALUE_REQUEST,
 	id,
 	property,
 	value,
+	index,
+	esType,
 });
 
 const setCellValueSuccess = () => ({ type: CELL.CELL_SETVALUE_SUCCESS }); // update data

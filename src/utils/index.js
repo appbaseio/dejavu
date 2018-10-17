@@ -41,7 +41,10 @@ const getHeaders = rawUrl => {
 		return headers;
 	}
 	const { credentials } = parseUrl(rawUrl);
-	headers.Authorization = `Basic ${btoa(credentials)}`;
+
+	if (credentials) {
+		headers.Authorization = `Basic ${btoa(credentials)}`;
+	}
 	return headers;
 };
 

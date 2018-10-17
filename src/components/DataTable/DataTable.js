@@ -58,7 +58,7 @@ class DataTable extends Component {
 			data: nextData,
 		});
 		const record = data[row];
-		setCellValue(record._id, column, value);
+		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
 	toggleModal = () => {
@@ -142,15 +142,34 @@ class DataTable extends Component {
 		}));
 		const columnsWithId = [
 			{
+				key: '_index',
+				dataIndex: '_index',
+				title: '_index',
+				fixed: 'left',
+				render: text => (
+					<div
+						css={{
+							minWidth: '230px',
+							maxWidth: '250px',
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+							whiteSpace: 'nowrap',
+							padding: 10,
+						}}
+					>
+						{text}
+					</div>
+				),
+			},
+			{
 				key: '_id',
 				dataIndex: '_id',
 				title: '_id',
 				fixed: 'left',
-				width: 250,
 				render: text => (
 					<div
 						css={{
-							width: 230,
+							maxWidth: '250px',
 							overflow: 'hidden',
 							textOverflow: 'ellipsis',
 							whiteSpace: 'nowrap',
