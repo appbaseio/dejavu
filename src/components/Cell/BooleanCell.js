@@ -36,7 +36,7 @@ const BooleanCell = ({ children, onChange, row, column }) => (
 				>
 					{children !== undefined
 						? String(children)
-						: 'Select a Value'}{' '}
+						: 'Select a Value'}
 					<Icon type="down" />
 				</div>
 			</Button>

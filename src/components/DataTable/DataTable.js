@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
 	Table,
 	Alert,
@@ -32,14 +32,35 @@ import { extractColumns } from './utils';
 const { Item } = List;
 const { Group } = Checkbox;
 
+const META_FIELDS = ['_index', '_type', '_id'];
+
 // making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
 class DataTable extends Component {
+	metaFields = META_FIELDS.reduce((arr, field) => {
+		switch (field) {
+			case '_id':
+				arr.push(field);
+				break;
+			case '_index':
+				if (this.props.shouldRenderIndexColumn) {
+					arr.push(field);
+				}
+				break;
+			default:
+				break;
+		}
+		return arr;
+	}, []);
+
 	state = {
 		data: this.props.data,
 		showModal: false,
 		addDataError: false,
 		addDataValue: null,
-		visibleColumns: extractColumns(this.props.mappings),
+		visibleColumns: [
+			...this.metaFields,
+			...extractColumns(this.props.mappings),
+		],
 	};
 
 	handleChange = (row, column, value) => {
@@ -58,7 +79,7 @@ class DataTable extends Component {
 			data: nextData,
 		});
 		const record = data[row];
-		setCellValue(record._id, column, value);
+		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
 	toggleModal = () => {
@@ -76,7 +97,7 @@ class DataTable extends Component {
 		const { checked } = e.target;
 		let visibleColumns;
 		if (checked) {
-			visibleColumns = extractColumns(mappings);
+			visibleColumns = [...META_FIELDS, ...extractColumns(mappings)];
 		} else {
 			visibleColumns = [];
 		}
@@ -105,66 +126,66 @@ class DataTable extends Component {
 		const { data, showModal, addDataError, visibleColumns } = this.state;
 		const { addDataIsLoading, addDataRequestError } = this.props;
 		// current visible mappings are in state
-		const columns = visibleColumns.map(property => ({
-			key: property,
-			dataIndex: property,
-			title: property,
-			filterDropdown: (
-				<MappingsDropdown mapping={mappings.properties[property]} />
-			),
-			width: 250,
-			filterIcon: (
-				<MappingsIcon mapping={mappings.properties[property]} />
-			),
-			onHeaderCell: () => ({
-				className: css({
-					padding: '10px !important',
-					span: {
-						display: 'flex',
-						alignItems: 'center',
-					},
-				}),
-			}),
-			render: (text, record, row) => (
-				<Cell
-					row={row}
-					column={property}
-					active={
-						activeCell.row === row && activeCell.column === property
-					}
-					onFocus={setCellActiveDispatch}
-					onChange={this.handleChange}
-					mapping={mappings.properties[property]}
-				>
-					{text}
-				</Cell>
-			),
-		}));
-		const columnsWithId = [
-			{
-				key: '_id',
-				dataIndex: '_id',
-				title: '_id',
-				fixed: 'left',
-				width: 250,
-				render: text => (
-					<div
-						css={{
-							width: 230,
-							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-							whiteSpace: 'nowrap',
-							padding: 10,
-						}}
-					>
-						{text}
-					</div>
+		const columns = visibleColumns.map(property => {
+			const isMetaField = META_FIELDS.indexOf(property) > -1;
+			return {
+				key: property,
+				dataIndex: property,
+				title: property,
+				filterDropdown: !isMetaField && (
+					<MappingsDropdown mapping={mappings.properties[property]} />
 				),
-			},
-			...columns,
-		];
+				fixed: isMetaField,
+				filterIcon: !isMetaField && (
+					<MappingsIcon mapping={mappings.properties[property]} />
+				),
+				onHeaderCell: () => ({
+					className: css({
+						padding: '10px !important',
+						span: {
+							display: 'flex',
+							alignItems: 'center',
+						},
+					}),
+				}),
+				render: (text, record, row) => {
+					if (isMetaField) {
+						return (
+							<div
+								css={{
+									minWidth: '230px',
+									maxWidth: '250px',
+									overflow: 'hidden',
+									textOverflow: 'ellipsis',
+									whiteSpace: 'nowrap',
+									padding: 10,
+								}}
+							>
+								{text}
+							</div>
+						);
+					}
+					return (
+						<Cell
+							row={row}
+							column={property}
+							active={
+								activeCell.row === row &&
+								activeCell.column === property
+							}
+							onFocus={setCellActiveDispatch}
+							onChange={this.handleChange}
+							mapping={mappings.properties[property]}
+						>
+							{text}
+						</Cell>
+					);
+				},
+			};
+		});
+		const columnsWithId = [...columns];
 		return (
-			<>
+			<Fragment>
 				<Dropdown
 					// this should stay open when group is checked/unchecked by making controlled
 					overlay={
@@ -179,12 +200,17 @@ class DataTable extends Component {
 							<Checkbox
 								checked={
 									visibleColumns.length ===
-									extractColumns(mappings).length
+									[
+										...META_FIELDS,
+										...extractColumns(mappings),
+									].length
 								}
 								indeterminate={
 									visibleColumns.length <
-										extractColumns(mappings).length &&
-									visibleColumns.length
+										[
+											...META_FIELDS,
+											...extractColumns(mappings),
+										].length && visibleColumns.length
 								}
 								css={{
 									marginBottom: 5,
@@ -195,7 +221,10 @@ class DataTable extends Component {
 								Select All
 							</Checkbox>
 							<Group
-								options={extractColumns(mappings)}
+								options={[
+									...META_FIELDS,
+									...extractColumns(mappings),
+								]}
 								css={{ display: 'grid', gridGap: 5 }}
 								value={visibleColumns}
 								onChange={this.handleVisibleColumnsChange}
@@ -279,7 +308,7 @@ class DataTable extends Component {
 						onChange={this.handleJsonInput}
 					/>
 				</Modal>
-			</>
+			</Fragment>
 		);
 	}
 }
@@ -294,6 +323,7 @@ DataTable.propTypes = {
 	error: string,
 	addDataRequestError: string,
 	addDataIsLoading: bool.isRequired,
+	shouldRenderIndexColumn: bool.isRequired,
 };
 
 const mapStateToProps = state => ({

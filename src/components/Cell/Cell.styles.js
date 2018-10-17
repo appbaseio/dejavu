@@ -2,7 +2,8 @@ import styled from 'react-emotion';
 
 const Cell = styled('div')(
 	{
-		width: 250,
+		minWidth: 230,
+		maxWidth: 250,
 		height: 42,
 		textOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
