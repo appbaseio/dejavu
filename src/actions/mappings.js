@@ -4,9 +4,11 @@ const fetchMappings = () => ({
 	type: MAPPINGS.MAPPINGS_FETCH_REQUEST,
 });
 
-const fetchMappingsSuccess = data => ({
+const fetchMappingsSuccess = (data, indexes, types) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
+	indexes,
+	types,
 });
 
 const fetchMappingsFailure = error => ({

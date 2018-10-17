@@ -1,7 +1,7 @@
 import appbase from 'appbase-js';
 import { parseUrl } from '../utils';
 
-const setCellValue = async (app, rawUrl, id, property, value) => {
+const setCellValue = async (app, type, rawUrl, id, property, value) => {
 	try {
 		const { url, credentials } = parseUrl(rawUrl);
 		const api = appbase({
@@ -10,7 +10,7 @@ const setCellValue = async (app, rawUrl, id, property, value) => {
 			credentials,
 		});
 		const res = await api.update({
-			type: app, // this should include the correct type when fixed in ReactiveSearch
+			type,
 			id,
 			body: {
 				doc: {

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { string, func, bool, object, number } from 'prop-types';
+import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
 import { Skeleton, Button, Modal, Form, Input } from 'antd';
 import JsonInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
@@ -13,7 +13,12 @@ import DataTable from '../DataTable';
 import { fetchMappings, addMappingRequest } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
 import * as dataSelectors from '../../reducers/data';
-import { getIsLoading, getMappings } from '../../reducers/mappings';
+import {
+	getIsLoading,
+	getMappings,
+	getIndexes,
+	getTypes,
+} from '../../reducers/mappings';
 import { parseUrl } from '../../utils';
 
 type State = {
@@ -33,6 +38,8 @@ type Props = {
 	reactiveListKey: number,
 	addMappingRequest: (string, object) => void,
 	isDataLoading: boolean,
+	indexes: array,
+	types: array,
 };
 
 const { Item } = Form;
@@ -89,6 +96,8 @@ class DataBrowser extends Component<Props, State> {
 			mappings,
 			reactiveListKey,
 			isDataLoading,
+			indexes,
+			types,
 		} = this.props;
 		const {
 			showModal,
@@ -99,11 +108,12 @@ class DataBrowser extends Component<Props, State> {
 		const { credentials, url } = parseUrl(rawUrl);
 		return (
 			<Skeleton loading={isLoading} active>
+				{' '}
 				{!isLoading &&
 					mappings && (
 						<ReactiveBase
-							app={appname}
-							type={appname} // to ignore bloat types need to rethink for multi indices
+							app={indexes.join(',')}
+							type={types.join(',')} // to ignore bloat types need to rethink for multi indices
 							credentials={credentials}
 							url={url}
 						>
@@ -135,17 +145,21 @@ class DataBrowser extends Component<Props, State> {
 										onChange={this.handleInputChange}
 										placeholder="Enter Field Name"
 									/>
-								</Item>
-								<div>Mapping:</div>
+								</Item>{' '}
+								<div> Mapping: </div>{' '}
 								<JsonInput
 									id="add-row-modal"
 									locale={locale}
 									placeholder={{}}
 									theme="light_mitsuketa_tribute"
-									style={{ outerBox: { marginTop: 20 } }}
+									style={{
+										outerBox: {
+											marginTop: 20,
+										},
+									}}
 									onChange={this.handleJsonInput}
-								/>
-							</Modal>
+								/>{' '}
+							</Modal>{' '}
 							<div
 								css={{
 									display: 'flex',
@@ -159,9 +173,9 @@ class DataBrowser extends Component<Props, State> {
 									onClick={this.toggleModal}
 									loading={isDataLoading}
 								>
-									Add Column
-								</Button>
-							</div>
+									Add Column{' '}
+								</Button>{' '}
+							</div>{' '}
 							<ReactiveList
 								// whenever a data change is expected, the key is updated to make the ReactiveList refetch data
 								// there should ideally be a hook in ReactiveSearch for this purpose but this will suffice for now
@@ -179,9 +193,9 @@ class DataBrowser extends Component<Props, State> {
 									/>
 								)}
 								showResultStats={false}
-							/>
+							/>{' '}
 						</ReactiveBase>
-					)}
+					)}{' '}
 			</Skeleton>
 		);
 	}
@@ -194,6 +208,8 @@ const mapStateToProps = state => ({
 	mappings: getMappings(state),
 	reactiveListKey: dataSelectors.getReactiveListKey(state),
 	isDataLoading: dataSelectors.getIsLoading(state),
+	indexes: getIndexes(state),
+	types: getTypes(state),
 });
 
 const mapDispatchToProps = {
@@ -210,6 +226,8 @@ DataBrowser.propTypes = {
 	reactiveListKey: number.isRequired,
 	addMappingRequest: func.isRequired,
 	isDataLoading: bool.isRequired,
+	indexes: arrayOf(string),
+	types: arrayOf(string),
 };
 
 export default connect(

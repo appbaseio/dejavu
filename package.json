@@ -16,6 +16,7 @@
 		"test": "jest --coverage",
 		"test:watch": "jest --watch",
 		"lint": "eslint .",
+		"format": "prettier 'src/**/*.js' --write",
 		"build": "NODE_ENV=production webpack"
 	},
 	"husky": {
