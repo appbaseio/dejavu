@@ -61,6 +61,38 @@ class DataTable extends Component {
 			...this.metaFields,
 			...extractColumns(this.props.mappings),
 		],
+		showDropdown: false,
+	};
+
+	componentDidMount() {
+		document.addEventListener(
+			'mousedown',
+			this.handleDropdownOutsideClick,
+			false,
+		);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener(
+			'mousedown',
+			this.handleDropdownOutsideClick,
+			false,
+		);
+	}
+
+	setDropdownRef = node => {
+		this.showHideDropdownNode = node;
+	};
+
+	handleDropdownOutsideClick = e => {
+		if (
+			this.showHideDropdownNode &&
+			this.showHideDropdownNode.contains(e.target)
+		) {
+			return;
+		}
+
+		this.closeDropDown();
 	};
 
 	handleChange = (row, column, value) => {
@@ -116,6 +148,18 @@ class DataTable extends Component {
 		}
 	};
 
+	toggleDropDown = () => {
+		this.setState(prevState => ({
+			showDropdown: !prevState.showDropdown,
+		}));
+	};
+
+	closeDropDown = () => {
+		this.setState({
+			showDropdown: false,
+		});
+	};
+
 	render() {
 		const {
 			activeCell,
@@ -123,7 +167,13 @@ class DataTable extends Component {
 			setCellActive: setCellActiveDispatch,
 			error,
 		} = this.props;
-		const { data, showModal, addDataError, visibleColumns } = this.state;
+		const {
+			data,
+			showModal,
+			addDataError,
+			visibleColumns,
+			showDropdown,
+		} = this.state;
 		const { addDataIsLoading, addDataRequestError } = this.props;
 		// current visible mappings are in state
 		const columns = visibleColumns.map(property => {
@@ -196,6 +246,7 @@ class DataTable extends Component {
 								padding: 10,
 								boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
 							}}
+							ref={this.setDropdownRef}
 						>
 							<Checkbox
 								checked={
@@ -231,6 +282,9 @@ class DataTable extends Component {
 							/>
 						</div>
 					}
+					visible={showDropdown}
+					trigger={['click']}
+					onClick={this.toggleDropDown}
 				>
 					<Button css={{ margin: '20px 0' }}>
 						Show/Hide Columns <Icon type="down" />

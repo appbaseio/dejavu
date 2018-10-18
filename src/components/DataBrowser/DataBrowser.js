@@ -183,6 +183,7 @@ class DataBrowser extends Component<Props, State> {
 								componentId="results"
 								dataField="_id"
 								pagination
+								showResultStats
 								onAllData={data => (
 									// onAllData is invoked only when data changes
 									<DataTable
@@ -195,7 +196,6 @@ class DataBrowser extends Component<Props, State> {
 										}
 									/>
 								)}
-								showResultStats={false}
 							/>
 						</ReactiveBase>
 					)}
