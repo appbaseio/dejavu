@@ -106,7 +106,7 @@ class DataBrowser extends Component<Props, State> {
 			isColumnFieldValid,
 		} = this.state;
 		const { credentials, url } = parseUrl(rawUrl);
-		console.log('indexes length', indexes.length);
+
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading &&
