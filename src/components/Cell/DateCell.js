@@ -16,7 +16,7 @@ const DateCell = ({ children, onChange, onFocus, row, column, format }) => (
 	>
 		<DatePicker
 			showTime
-			defaultValue={moment(children, getDateFormat(format))}
+			defaultValue={children && moment(children, getDateFormat(format))}
 			format={getDateFormat(format)}
 			css={{
 				width: '100% !important',
@@ -26,7 +26,7 @@ const DateCell = ({ children, onChange, onFocus, row, column, format }) => (
 			onChange={(momentObject, dateString) => {
 				if (children !== dateString) {
 					// only update value if date string has changed
-					onChange(row, column, dateString);
+					onChange(row, column, dateString || null);
 				}
 			}}
 		/>
