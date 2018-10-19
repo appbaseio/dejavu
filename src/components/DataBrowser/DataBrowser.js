@@ -4,13 +4,12 @@ import React, { Component } from 'react';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
-import { Skeleton, Button, Modal, Form, Input } from 'antd';
-import JsonInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
+import { Skeleton, Button } from 'antd';
 
 import DataTable from '../DataTable';
+import AddFieldModal from '../AddFieldModal';
 
-import { fetchMappings, addMappingRequest } from '../../actions';
+import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
 import * as dataSelectors from '../../reducers/data';
 import {
@@ -23,10 +22,6 @@ import { parseUrl } from '../../utils';
 
 type State = {
 	showModal: boolean,
-	addColumnError: boolean,
-	addColumnField: string,
-	addColumnMapping: object,
-	isColumnFieldValid: boolean,
 };
 
 type Props = {
@@ -36,22 +31,15 @@ type Props = {
 	isLoading: boolean,
 	mappings: object,
 	reactiveListKey: number,
-	addMappingRequest: (string, object) => void,
 	isDataLoading: boolean,
 	indexes: array,
 	types: array,
 };
 
-const { Item } = Form;
-
 // after app is connected DataBrowser takes over
 class DataBrowser extends Component<Props, State> {
 	state = {
 		showModal: false,
-		addColumnError: false,
-		addColumnField: '',
-		isColumnFieldValid: true,
-		addColumnMapping: null,
 	};
 
 	componentDidMount() {
@@ -62,30 +50,6 @@ class DataBrowser extends Component<Props, State> {
 		this.setState(({ showModal }) => ({
 			showModal: !showModal,
 		}));
-	};
-
-	handleInputChange = e => {
-		const { value } = e.target;
-		const { appname, mappings } = this.props;
-		this.setState({
-			addColumnField: value,
-			isColumnFieldValid: !mappings[appname].properties[value],
-		});
-	};
-
-	handleJsonInput = ({ error, jsObject }) => {
-		this.setState({
-			addColumnError: Boolean(error),
-			addColumnMapping: jsObject,
-		});
-	};
-
-	addColumn = () => {
-		const { addColumnError, addColumnField, addColumnMapping } = this.state;
-		if (!addColumnError && addColumnField && addColumnMapping) {
-			this.toggleModal();
-			this.props.addMappingRequest(addColumnField, addColumnMapping);
-		}
 	};
 
 	render() {
@@ -99,12 +63,7 @@ class DataBrowser extends Component<Props, State> {
 			indexes,
 			types,
 		} = this.props;
-		const {
-			showModal,
-			addColumnError,
-			addColumnField,
-			isColumnFieldValid,
-		} = this.state;
+		const { showModal } = this.state;
 		const { credentials, url } = parseUrl(rawUrl);
 
 		return (
@@ -117,49 +76,10 @@ class DataBrowser extends Component<Props, State> {
 							credentials={credentials}
 							url={url}
 						>
-							<Modal
-								visible={showModal}
-								onCancel={this.toggleModal}
-								onOk={this.addColumn}
-								okButtonProps={{
-									disabled:
-										addColumnError ||
-										!addColumnField ||
-										!isColumnFieldValid,
-								}}
-							>
-								<Item
-									label="Field Name"
-									hasFeedback
-									validateStatus={
-										isColumnFieldValid ? '' : 'error'
-									}
-									help={
-										!isColumnFieldValid &&
-										'Duplicate field name'
-									}
-								>
-									<Input
-										name="addColumnField"
-										value={addColumnField}
-										onChange={this.handleInputChange}
-										placeholder="Enter Field Name"
-									/>
-								</Item>
-								<div> Mapping: </div>
-								<JsonInput
-									id="add-row-modal"
-									locale={locale}
-									placeholder={{}}
-									theme="light_mitsuketa_tribute"
-									style={{
-										outerBox: {
-											marginTop: 20,
-										},
-									}}
-									onChange={this.handleJsonInput}
-								/>
-							</Modal>
+							<AddFieldModal
+								showModal={showModal}
+								toggleModal={this.toggleModal}
+							/>
 							<div
 								css={{
 									display: 'flex',
@@ -217,7 +137,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	fetchMappings,
-	addMappingRequest,
 };
 
 DataBrowser.propTypes = {
@@ -227,7 +146,6 @@ DataBrowser.propTypes = {
 	isLoading: bool.isRequired,
 	mappings: object,
 	reactiveListKey: number.isRequired,
-	addMappingRequest: func.isRequired,
 	isDataLoading: bool.isRequired,
 	indexes: arrayOf(string),
 	types: arrayOf(string),

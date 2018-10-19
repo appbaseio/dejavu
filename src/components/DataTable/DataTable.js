@@ -234,6 +234,8 @@ class DataTable extends Component {
 			};
 		});
 		const columnsWithId = [...columns];
+		const allColumns = [...META_FIELDS, ...extractColumns(mappings)];
+
 		return (
 			<Fragment>
 				<Dropdown
@@ -250,18 +252,11 @@ class DataTable extends Component {
 						>
 							<Checkbox
 								checked={
-									visibleColumns.length ===
-									[
-										...META_FIELDS,
-										...extractColumns(mappings),
-									].length
+									visibleColumns.length === allColumns.length
 								}
 								indeterminate={
-									visibleColumns.length <
-										[
-											...META_FIELDS,
-											...extractColumns(mappings),
-										].length && visibleColumns.length
+									visibleColumns.length < allColumns.length &&
+									visibleColumns.length
 								}
 								css={{
 									marginBottom: 5,
