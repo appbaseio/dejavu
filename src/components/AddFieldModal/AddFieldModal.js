@@ -1,14 +1,17 @@
 import React, { Component, Fragment } from 'react';
-import { Modal, Input, Select, Radio } from 'antd';
+import { Modal, Input, Select, Radio, Row, Col } from 'antd';
 import { string, func, bool, object } from 'prop-types';
-import JsonInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
 import { connect } from 'react-redux';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/json';
+import 'brace/theme/github';
 
 import { getAppname } from '../../reducers/app';
 import { getMappings, getIndexTypeMap } from '../../reducers/mappings';
 import { addMappingRequest } from '../../actions';
 import esMappings from '../../utils/mappings';
+import { isVaildJSON } from '../../utils';
 
 import Item from './Item.styles';
 
@@ -28,7 +31,7 @@ class AddFieldModal extends Component {
 		addColumnError: false,
 		addColumnField: '',
 		isColumnFieldValid: true,
-		addColumnMapping: {},
+		addColumnMapping: `{\n}`,
 		selectedIndex: Object.keys(this.props.indexTypeMap)[0],
 		types: this.props.indexTypeMap[Object.keys(this.props.indexTypeMap)[0]],
 		selectedType: this.props.indexTypeMap[
@@ -48,10 +51,10 @@ class AddFieldModal extends Component {
 		});
 	};
 
-	handleJsonInput = ({ error, jsObject }) => {
+	handleJsonInput = value => {
 		this.setState({
-			addColumnError: Boolean(error),
-			addColumnMapping: jsObject,
+			addColumnError: !isVaildJSON(value),
+			addColumnMapping: value,
 		});
 	};
 
@@ -82,7 +85,7 @@ class AddFieldModal extends Component {
 					type: 'object',
 				};
 			} else if (selectedPrimitiveType === CUSTOM_MAPPING) {
-				mappingValue = addColumnMapping;
+				mappingValue = JSON.parse(addColumnMapping);
 			} else {
 				mappingValue = esMappings[selectedPrimitiveType];
 			}
@@ -157,35 +160,54 @@ class AddFieldModal extends Component {
 				destroyOnClose
 				maskClosable={false}
 			>
-				<Item label="Index">
-					<Select
-						defaultValue={selectedIndex}
-						onChange={this.handleIndexChange}
-						style={{
-							width: '100%',
-						}}
-					>
-						{Object.keys(indexTypeMap).map(index => (
-							<Option key={index} value={index}>
-								{index}
-							</Option>
-						))}
-					</Select>
-				</Item>
-				<Item label="Type">
-					<Select
-						value={selectedType}
-						onChange={this.handleTypeChange}
-						style={{
-							width: '100%',
-						}}
-					>
-						{types.map(type => (
-							<Option key={type} value={type}>
-								{type}
-							</Option>
-						))}
-					</Select>
+				<Row>
+					<Col span={12}>
+						<Item label="Index">
+							<Select
+								defaultValue={selectedIndex}
+								onChange={this.handleIndexChange}
+								style={{
+									width: '95%',
+								}}
+							>
+								{Object.keys(indexTypeMap).map(index => (
+									<Option key={index} value={index}>
+										{index}
+									</Option>
+								))}
+							</Select>
+						</Item>
+					</Col>
+					<Col span={12}>
+						<Item label="Type">
+							<Select
+								value={selectedType}
+								onChange={this.handleTypeChange}
+								style={{
+									width: '100%',
+								}}
+							>
+								{types.map(type => (
+									<Option key={type} value={type}>
+										{type}
+									</Option>
+								))}
+							</Select>
+						</Item>
+					</Col>
+				</Row>
+				<Item
+					label="Field Name"
+					hasFeedback
+					validateStatus={isColumnFieldValid ? '' : 'error'}
+					help={!isColumnFieldValid && 'Duplicate field name'}
+				>
+					<Input
+						name="addColumnField"
+						value={addColumnField}
+						onChange={this.handleInputChange}
+						placeholder="Enter Field Name"
+					/>
 				</Item>
 				<Item label="Select data shape">
 					<RadioGroup
@@ -216,34 +238,22 @@ class AddFieldModal extends Component {
 						</Select>
 					</Item>
 				)}
-				<Item
-					label="Field Name"
-					hasFeedback
-					validateStatus={isColumnFieldValid ? '' : 'error'}
-					help={!isColumnFieldValid && 'Duplicate field name'}
-				>
-					<Input
-						name="addColumnField"
-						value={addColumnField}
-						onChange={this.handleInputChange}
-						placeholder="Enter Field Name"
-					/>
-				</Item>
 				{selectedPrimitiveType === CUSTOM_MAPPING && (
 					<Fragment>
 						<Item label="Mapping" />
-						<JsonInput
-							id="add-row-modal"
-							locale={locale}
-							theme="light_mitsuketa_tribute"
-							height="150px"
-							placeholder={addColumnMapping}
-							style={{
-								outerBox: {
-									marginTop: 20,
-								},
-							}}
+						<AceEditor
+							tabSize={2}
+							mode="json"
+							theme="github"
 							onChange={this.handleJsonInput}
+							name="add-row-modal"
+							value={addColumnMapping}
+							height="auto"
+							width="100%"
+							style={{
+								minHeight: '100px',
+								maxHeight: '200px',
+							}}
 						/>
 					</Fragment>
 				)}

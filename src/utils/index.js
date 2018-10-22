@@ -48,4 +48,13 @@ const getHeaders = rawUrl => {
 	return headers;
 };
 
-export { parseUrl, getUrlParams, getHeaders, getDateFormat };
+const isVaildJSON = str => {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}
+	return true;
+};
+
+export { parseUrl, getUrlParams, getHeaders, getDateFormat, isVaildJSON };

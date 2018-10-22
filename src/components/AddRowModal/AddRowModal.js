@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { Modal, Input, Select } from 'antd';
+import { Modal, Input, Select, Row, Col } from 'antd';
 import { func, bool, object } from 'prop-types';
-import JsonInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
 import { connect } from 'react-redux';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/json';
+import 'brace/theme/github';
 
 import { getIndexTypeMap } from '../../reducers/mappings';
 import { addDataRequest } from '../../actions';
+import { isVaildJSON } from '../../utils';
 
 import Item from '../AddFieldModal/Item.styles';
 
@@ -15,7 +18,7 @@ const { Option } = Select;
 class AddRowModal extends Component {
 	state = {
 		addDataError: false,
-		addDataValue: {},
+		addDataValue: `{\n}`,
 		documentId: '',
 		selectedIndex: Object.keys(this.props.indexTypeMap)[0],
 		types: this.props.indexTypeMap[Object.keys(this.props.indexTypeMap)[0]],
@@ -30,8 +33,11 @@ class AddRowModal extends Component {
 		});
 	};
 
-	handleJsonInput = ({ error, jsObject }) => {
-		this.setState({ addDataError: Boolean(error), addDataValue: jsObject });
+	handleJsonInput = val => {
+		this.setState({
+			addDataError: !isVaildJSON(val),
+			addDataValue: val,
+		});
 	};
 
 	addValue = () => {
@@ -54,7 +60,7 @@ class AddRowModal extends Component {
 				selectedIndex,
 				selectedType,
 				documentId,
-				addDataValue,
+				JSON.parse(addDataValue),
 			);
 		}
 	};
@@ -95,36 +101,42 @@ class AddRowModal extends Component {
 				destroyOnClose
 				maskClosable={false}
 			>
-				<Item label="Index">
-					<Select
-						defaultValue={selectedIndex}
-						onChange={this.handleIndexChange}
-						style={{
-							width: '100%',
-						}}
-					>
-						{Object.keys(indexTypeMap).map(index => (
-							<Option key={index} value={index}>
-								{index}
-							</Option>
-						))}
-					</Select>
-				</Item>
-				<Item label="Type">
-					<Select
-						value={selectedType}
-						onChange={this.handleTypeChange}
-						style={{
-							width: '100%',
-						}}
-					>
-						{types.map(type => (
-							<Option key={type} value={type}>
-								{type}
-							</Option>
-						))}
-					</Select>
-				</Item>
+				<Row>
+					<Col span={12}>
+						<Item label="Index">
+							<Select
+								defaultValue={selectedIndex}
+								onChange={this.handleIndexChange}
+								style={{
+									width: '95%',
+								}}
+							>
+								{Object.keys(indexTypeMap).map(index => (
+									<Option key={index} value={index}>
+										{index}
+									</Option>
+								))}
+							</Select>
+						</Item>
+					</Col>
+					<Col span={12}>
+						<Item label="Type">
+							<Select
+								value={selectedType}
+								onChange={this.handleTypeChange}
+								style={{
+									width: '100%',
+								}}
+							>
+								{types.map(type => (
+									<Option key={type} value={type}>
+										{type}
+									</Option>
+								))}
+							</Select>
+						</Item>
+					</Col>
+				</Row>
 				<Item label="Document Id">
 					<Input
 						name="document_id"
@@ -134,14 +146,19 @@ class AddRowModal extends Component {
 					/>
 				</Item>
 				<Item label="JSON document" />
-				<JsonInput
-					id="add-row-modal"
-					locale={locale}
-					placeholder={addDataValue}
-					theme="light_mitsuketa_tribute"
-					height="200px"
-					style={{ outerBox: { marginTop: 20 } }}
+				<AceEditor
+					tabSize={2}
+					mode="json"
+					theme="github"
 					onChange={this.handleJsonInput}
+					name="add-row-modal"
+					value={addDataValue}
+					height="auto"
+					width="100%"
+					style={{
+						minHeight: '200px',
+						maxHeight: '300px',
+					}}
 				/>
 			</Modal>
 		);
