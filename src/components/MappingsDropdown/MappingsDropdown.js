@@ -1,15 +1,9 @@
-// @flow
-
 import React from 'react';
 import { object } from 'prop-types';
 
 import JsonView from '../JsonView';
 
-type Props = {
-	mapping: object,
-};
-
-const MappingsDropdown = ({ mapping }: Props) => (
+const MappingsDropdown = ({ mapping }) => (
 	<div
 		css={{
 			background: '#fff',

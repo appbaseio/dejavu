@@ -1,5 +1,3 @@
-// @flow
-
 import React, { Component } from 'react';
 import { Form, Input, Button, Alert } from 'antd';
 import { connect } from 'react-redux';
@@ -18,22 +16,6 @@ import { getUrlParams } from '../../utils';
 
 const { Item } = Form;
 
-type Props = {
-	appname: string,
-	url: string,
-	connectApp: (string, string) => void,
-	disconnectApp: () => void,
-	isConnected: boolean,
-	isLoading: boolean,
-	error: string,
-	history: object,
-};
-
-type State = {
-	appname: string,
-	url: string,
-};
-
 const formItemProps = {
 	wrapperCol: {
 		xs: {
@@ -42,7 +24,7 @@ const formItemProps = {
 	},
 };
 
-class ConnectApp extends Component<Props, State> {
+class ConnectApp extends Component {
 	state = {
 		appname: this.props.appname || '',
 		url: this.props.url || '',
@@ -57,14 +39,14 @@ class ConnectApp extends Component<Props, State> {
 		}
 	}
 
-	handleChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
+	handleChange = e => {
 		const { value, name } = e.target;
 		this.setState({
 			[name]: value,
 		});
 	};
 
-	handleSubmit = (e: SyntheticEvent<HTMLFormElement>) => {
+	handleSubmit = e => {
 		e.preventDefault();
 		const { appname, url } = this.state;
 		if (this.props.isConnected) {

@@ -19,15 +19,15 @@ const fetchMappings = async (appname, rawUrl) => {
 	}
 };
 
-const addMapping = async (appname, rawUrl, field, mapping) => {
+const addMapping = async (indexName, typeName, rawUrl, field, mapping) => {
 	const defaultError = 'Unable to add mapping';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		// currently support single type
-		const res = await fetch(`${url}/${appname}/_mapping/${appname}`, {
+		const res = await fetch(`${url}/${indexName}/_mapping/${typeName}`, {
 			headers,
-			method: 'POST',
+			method: 'PUT',
 			body: JSON.stringify({
 				properties: {
 					[field]: mapping,

@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { Skeleton } from 'antd';
 import { connect } from 'react-redux';
@@ -9,12 +7,7 @@ import DataBrowser from '../DataBrowser';
 
 import { getIsLoading, getIsConnected } from '../../reducers/app';
 
-type Props = {
-	isConnected: boolean,
-	isLoading: boolean,
-};
-
-const DataBrowserContainer = ({ isConnected, isLoading }: Props) => (
+const DataBrowserContainer = ({ isConnected, isLoading }) => (
 	<Skeleton loading={isLoading} active>
 		{isConnected && <DataBrowser />}
 	</Skeleton>

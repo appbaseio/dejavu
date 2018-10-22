@@ -1246,21 +1246,9 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-appbase-js@^4.0.2-beta.02:
+appbase-js@^4.0.2-beta.02, appbase-js@^4.0.2-beta.2:
   version "4.0.2-beta.2"
   resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.2.tgz#a01155ced48c9359be04e45df6c40a312483e5b8"
-  integrity sha512-tYr2Giu5IrhqFwEvWGPut6fSnnMZfcNOMC0UMG/U7Xg5nH0MY3pnHGcBJO195KnmAAWuF0w55B+B0zdUyIR3gg==
-  dependencies:
-    cross-fetch "^2.2.2"
-    json-stable-stringify "^1.0.1"
-    querystring "^0.2.0"
-    stream "^0.0.2"
-    url-parser-lite "^0.1.0"
-    ws "^2.2.0"
-
-appbase-js@^4.0.2-beta.2:
-  version "4.0.2-beta.2"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.0.2-beta.2.tgz#a01155ced48c9359be04e45df6c40a312483e5b8"
   integrity sha512-tYr2Giu5IrhqFwEvWGPut6fSnnMZfcNOMC0UMG/U7Xg5nH0MY3pnHGcBJO195KnmAAWuF0w55B+B0zdUyIR3gg==
   dependencies:
     cross-fetch "^2.2.2"
@@ -1693,7 +1681,7 @@ babel-plugin-syntax-jsx@^6.18.0:
 
 babel-plugin-syntax-object-rest-spread@^6.13.0:
   version "6.13.0"
-  resolved "http://registry.npmjs.org/babel-plugin-syntax-object-rest-spread/-/babel-plugin-syntax-object-rest-spread-6.13.0.tgz#fd6536f2bce13836ffa3a5458c4903a597bb3bf5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-object-rest-spread/-/babel-plugin-syntax-object-rest-spread-6.13.0.tgz#fd6536f2bce13836ffa3a5458c4903a597bb3bf5"
   integrity sha1-/WU28rzhODb/o6VFjEkDpZe7O/U=
 
 babel-preset-jest@^23.2.0:
@@ -8720,10 +8708,10 @@ react-feather@^1.1.3:
   resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.1.3.tgz#f0c0ae701265393d81d883e1ce903cae34290475"
   integrity sha512-5+KHu7zp5qvc+zq6N0XjeZDhufl3NVEaQyocg486lXZ+ZwW9z66GO+HXABoZ74OCLjsqhBl48j4BS17VRfyjTQ==
 
-react-json-editor-ajrm@^2.5.6:
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/react-json-editor-ajrm/-/react-json-editor-ajrm-2.5.6.tgz#8b65bd00aa563deac77e487117efce67e06482d0"
-  integrity sha512-4wRtg5smHd10Pi9iX4v3I8OFxaWspq2D9lTz+nmaOGUCLrwC5CDqPmq9w8JOvofv4wv0U3sv6jEF1uWQVk3MWg==
+react-json-editor-ajrm@^2.5.8:
+  version "2.5.8"
+  resolved "https://registry.yarnpkg.com/react-json-editor-ajrm/-/react-json-editor-ajrm-2.5.8.tgz#5fa5c32b74f34f9c4d3fc10b30b9c60934a16162"
+  integrity sha512-RNCqAB+rilHH19oa0neX0C+bmBqMTfRbTFbiAuUVwo5Yn78QRacycHirIbibnn1F/fy9QFPL0BFwbDGiIyUkIA==
   dependencies:
     "@babel/runtime" "^7.0.0-rc.0"
 

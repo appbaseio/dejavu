@@ -20,9 +20,12 @@ function* handleFetchMappings() {
 		const indexes = Object.keys(data);
 		let properties = {};
 		const types = [];
+		const indexTypeMap = {};
 
 		indexes.forEach(index => {
 			Object.keys(data[index].mappings).forEach(type => {
+				indexTypeMap[index] = [...(indexTypeMap[index] || []), type];
+
 				if (
 					data[index].mappings[type].properties &&
 					INGNORE_META_TYPES.indexOf(type) === -1
@@ -41,17 +44,16 @@ function* handleFetchMappings() {
 				properties,
 			},
 		};
-		yield put(fetchMappingsSuccess(mappings, indexes, types));
+		yield put(fetchMappingsSuccess(mappings, indexes, types, indexTypeMap));
 	} catch (error) {
 		yield put(fetchMappingsFailure(error.message));
 	}
 }
 
-function* handleAddMapping({ field, mapping }) {
+function* handleAddMapping({ indexName, typeName, field, mapping }) {
 	try {
-		const appname = yield select(getAppname);
 		const url = yield select(getUrl);
-		yield call(addMapping, appname, url, field, mapping);
+		yield call(addMapping, indexName, typeName, url, field, mapping);
 		yield put(addMappingSuccess());
 		yield call(handleFetchMappings); // sagas FTW
 	} catch (error) {

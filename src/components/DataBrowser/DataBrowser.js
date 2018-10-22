@@ -1,9 +1,7 @@
-// @flow
-
 import React, { Component } from 'react';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
+import { string, func, bool, object, number, arrayOf } from 'prop-types';
 import { Skeleton, Button } from 'antd';
 
 import DataTable from '../DataTable';
@@ -20,24 +18,8 @@ import {
 } from '../../reducers/mappings';
 import { parseUrl } from '../../utils';
 
-type State = {
-	showModal: boolean,
-};
-
-type Props = {
-	appname: string,
-	url: string,
-	fetchMappings: () => void,
-	isLoading: boolean,
-	mappings: object,
-	reactiveListKey: number,
-	isDataLoading: boolean,
-	indexes: array,
-	types: array,
-};
-
 // after app is connected DataBrowser takes over
-class DataBrowser extends Component<Props, State> {
+class DataBrowser extends Component {
 	state = {
 		showModal: false,
 	};
