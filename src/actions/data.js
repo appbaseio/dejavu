@@ -1,7 +1,10 @@
 import { DATA } from './constants';
 
-const addDataRequest = data => ({
+const addDataRequest = (indexName, typeName, docId, data) => ({
 	type: DATA.ADD_DATA_REQUEST,
+	indexName,
+	typeName,
+	docId,
 	data,
 });
 

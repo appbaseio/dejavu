@@ -3,13 +3,12 @@ import { put, call, takeEvery, select } from 'redux-saga/effects';
 import { DATA } from '../actions/constants';
 import { addData } from '../apis';
 import { addDataSuccess, addDataFailure } from '../actions';
-import { getAppname, getUrl } from '../reducers/app';
+import { getUrl } from '../reducers/app';
 
-function* handleAddData({ data }) {
+function* handleAddData({ indexName, typeName, docId, data }) {
 	try {
-		const appname = yield select(getAppname);
 		const url = yield select(getUrl);
-		yield call(addData, appname, url, data); // not handling response currently
+		yield call(addData, indexName, typeName, docId, url, data); // not handling response currently
 		yield put(addDataSuccess());
 	} catch (error) {
 		yield put(addDataFailure(error.message));

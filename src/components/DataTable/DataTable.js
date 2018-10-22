@@ -1,24 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import {
-	Table,
-	Alert,
-	Button,
-	Modal,
-	List,
-	Checkbox,
-	Dropdown,
-	Icon,
-} from 'antd';
+import { Table, Alert, Button, List, Checkbox, Dropdown, Icon } from 'antd';
 import { arrayOf, object, shape, string, number, func, bool } from 'prop-types';
 import { css } from 'react-emotion';
 import { connect } from 'react-redux';
-import JsonInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
 import { mediaMax, mediaMin } from '@divyanshu013/media';
 
 import MappingsDropdown from '../MappingsDropdown';
 import MappingsIcon from '../MappingsIcon';
 import Cell from '../Cell';
+import AddRowModal from '../AddRowModal';
 
 import { getActiveCell, getError } from '../../reducers/cell';
 import * as dataSelectors from '../../reducers/data';
@@ -55,8 +45,6 @@ class DataTable extends Component {
 	state = {
 		data: this.props.data,
 		showModal: false,
-		addDataError: false,
-		addDataValue: null,
 		visibleColumns: [
 			...this.metaFields,
 			...extractColumns(this.props.mappings),
@@ -120,10 +108,6 @@ class DataTable extends Component {
 		}));
 	};
 
-	handleJsonInput = ({ error, jsObject }) => {
-		this.setState({ addDataError: Boolean(error), addDataValue: jsObject });
-	};
-
 	handleSelectAll = e => {
 		const { mappings } = this.props;
 		const { checked } = e.target;
@@ -138,14 +122,6 @@ class DataTable extends Component {
 
 	handleVisibleColumnsChange = visibleColumns => {
 		this.setState({ visibleColumns }); // this would need an order since ant doesn't maintain it
-	};
-
-	addValue = () => {
-		const { addDataError, addDataValue } = this.state;
-		if (!addDataError && addDataValue) {
-			this.toggleModal();
-			this.props.addDataRequest(addDataValue);
-		}
 	};
 
 	toggleDropDown = () => {
@@ -167,13 +143,7 @@ class DataTable extends Component {
 			setCellActive: setCellActiveDispatch,
 			error,
 		} = this.props;
-		const {
-			data,
-			showModal,
-			addDataError,
-			visibleColumns,
-			showDropdown,
-		} = this.state;
+		const { data, showModal, visibleColumns, showDropdown } = this.state;
 		const { addDataIsLoading, addDataRequestError } = this.props;
 		// current visible mappings are in state
 		const columns = visibleColumns.map(property => {
@@ -342,21 +312,10 @@ class DataTable extends Component {
 				>
 					Add Row
 				</Button>
-				<Modal
-					visible={showModal}
-					onCancel={this.toggleModal}
-					onOk={this.addValue}
-					okButtonProps={{ disabled: addDataError }}
-				>
-					<JsonInput
-						id="add-row-modal"
-						locale={locale}
-						placeholder={{}}
-						theme="light_mitsuketa_tribute"
-						style={{ outerBox: { marginTop: 20 } }}
-						onChange={this.handleJsonInput}
-					/>
-				</Modal>
+				<AddRowModal
+					showModal={showModal}
+					toggleModal={this.toggleModal}
+				/>
 			</Fragment>
 		);
 	}
@@ -368,7 +327,6 @@ DataTable.propTypes = {
 	activeCell: shape({ row: number, column: string }),
 	setCellActive: func.isRequired,
 	setCellValue: func.isRequired,
-	addDataRequest: func.isRequired,
 	error: string,
 	addDataRequestError: string,
 	addDataIsLoading: bool.isRequired,

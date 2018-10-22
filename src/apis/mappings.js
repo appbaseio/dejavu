@@ -24,7 +24,7 @@ const addMapping = async (indexName, typeName, rawUrl, field, mapping) => {
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
-		// currently support single type
+
 		const res = await fetch(`${url}/${indexName}/_mapping/${typeName}`, {
 			headers,
 			method: 'PUT',
