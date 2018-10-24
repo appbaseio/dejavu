@@ -3,6 +3,7 @@ import {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
+	dismissAppError,
 } from './app';
 import {
 	fetchMappings,
@@ -27,6 +28,7 @@ export {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
+	dismissAppError,
 	// mappings
 	fetchMappings,
 	fetchMappingsSuccess,

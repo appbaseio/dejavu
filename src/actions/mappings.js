@@ -4,12 +4,23 @@ const fetchMappings = () => ({
 	type: MAPPINGS.MAPPINGS_FETCH_REQUEST,
 });
 
-const fetchMappingsSuccess = (data, indexes, types, indexTypeMap) => ({
+const fetchMappingsSuccess = (
+	data,
+	indexes,
+	types,
+	indexTypeMap,
+	columns,
+	visibleColumns,
+	searchableColumns,
+) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
 	indexes,
 	types,
 	indexTypeMap,
+	columns,
+	visibleColumns,
+	searchableColumns,
 });
 
 const fetchMappingsFailure = error => ({
@@ -34,6 +45,11 @@ const addMappingFailure = error => ({
 	error,
 });
 
+const setVisibleColumns = visibleColumns => ({
+	type: MAPPINGS.SET_VISIBLE_COLUMNS,
+	visibleColumns,
+});
+
 export {
 	fetchMappings,
 	fetchMappingsSuccess,
@@ -41,4 +57,5 @@ export {
 	addMappingRequest,
 	addMappingSuccess,
 	addMappingFailure,
+	setVisibleColumns,
 };

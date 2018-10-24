@@ -28,7 +28,7 @@
 		"*.js": "eslint"
 	},
 	"dependencies": {
-		"@appbaseio/reactivesearch": "^2.10.3",
+		"@appbaseio/reactivesearch": "^2.12.1",
 		"@divyanshu013/media": "^1.0.0",
 		"antd": "^3.9.2",
 		"appbase-js": "^4.0.2-beta.2",
@@ -44,6 +44,8 @@
 		"react-json-editor-ajrm": "^2.5.8",
 		"react-redux": "^5.0.7",
 		"react-router-dom": "^4.3.1",
+		"react-table": "^6.8.6",
+		"react-table-hoc-fixed-columns": "^1.0.3",
 		"redux": "^4.0.0",
 		"redux-saga": "^0.16.0",
 		"url-parser-lite": "^0.1.0"

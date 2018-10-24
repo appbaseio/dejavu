@@ -22,7 +22,7 @@ const MappingsIcon = ({ mapping, ...props }) => {
 			return <Icon type="calendar" {...props} />;
 		case 'float':
 		case 'double':
-			return <Icon type="ellipsis" {...props} />;
+			return <Icon type="pie-chart" {...props} />;
 		default:
 			return <Icon type="tags" {...props} />;
 	}

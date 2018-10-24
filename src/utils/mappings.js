@@ -1,4 +1,9 @@
-export default {
+const extractColumns = mappings =>
+	Object.keys((mappings || {}).properties || []);
+
+const META_FIELDS = ['_id', '_index', '_type'];
+
+const es6mappings = {
 	Text: {
 		type: 'text',
 		fields: {
@@ -75,3 +80,6 @@ export default {
 		},
 	},
 };
+
+// eslint-disable-next-line
+export { extractColumns, es6mappings, META_FIELDS };

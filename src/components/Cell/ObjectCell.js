@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
-import { func, number, string, any } from 'prop-types';
+import { func, number, string, any, bool } from 'prop-types';
 import { Popover, Button, Modal } from 'antd';
-import JsonInput from 'react-json-editor-ajrm';
-import locale from 'react-json-editor-ajrm/locale/en';
+import AceEditor from 'react-ace';
+
+import 'brace/mode/json';
+import 'brace/theme/github';
 
 import CellStyled from './Cell.styles';
 import JsonView from '../JsonView';
+import { isVaildJSON } from '../../utils';
 
 class ObjectCell extends Component {
 	state = {
 		showModal: false,
 		error: false,
-		value: this.props.children,
+		value: JSON.stringify(this.props.children, null, 2),
 	};
 
 	toggleModal = () => {
@@ -20,14 +23,17 @@ class ObjectCell extends Component {
 		}));
 	};
 
-	handleJsonInput = ({ error, jsObject }) => {
-		this.setState({ error: Boolean(error), value: jsObject });
+	handleJsonInput = value => {
+		this.setState({
+			error: !isVaildJSON(value),
+			value,
+		});
 	};
 
 	saveValue = () => {
 		const { error, value } = this.state;
 		const { onChange, row, column } = this.props;
-		const valueToSave = value || {};
+		const valueToSave = JSON.parse(value || {});
 		if (!error) {
 			onChange(row, column, valueToSave);
 			this.toggleModal();
@@ -35,8 +41,8 @@ class ObjectCell extends Component {
 	};
 
 	render() {
-		const { children, row, column } = this.props;
-		const { showModal, error } = this.state;
+		const { children, row, column, active } = this.props;
+		const { showModal, error, value } = this.state;
 		return (
 			<>
 				<CellStyled
@@ -50,18 +56,30 @@ class ObjectCell extends Component {
 				>
 					{children && (
 						<Popover
-							content={<JsonView json={children} />}
+							content={
+								<div
+									style={{
+										maxWidth: '400px',
+										maxHeight: '300px',
+										overflow: 'auto',
+									}}
+								>
+									<JsonView json={children} />
+								</div>
+							}
 							trigger="click"
 						>
 							<Button shape="circle" icon="ellipsis" />
 						</Popover>
 					)}
-					<Button
-						shape="circle"
-						icon="edit"
-						css={{ border: 'none' }}
-						onClick={this.toggleModal}
-					/>
+					{active && (
+						<Button
+							shape="circle"
+							icon="edit"
+							css={{ border: 'none' }}
+							onClick={this.toggleModal}
+						/>
+					)}
 				</CellStyled>
 				<Modal
 					visible={showModal}
@@ -69,13 +87,20 @@ class ObjectCell extends Component {
 					onOk={this.saveValue}
 					okButtonProps={{ disabled: error }}
 				>
-					<JsonInput
-						id={`${row}-${column}-json`}
-						locale={locale}
-						placeholder={children}
-						theme="light_mitsuketa_tribute"
-						style={{ outerBox: { marginTop: 20 } }}
+					<br />
+					<AceEditor
+						tabSize={2}
+						mode="json"
+						theme="github"
 						onChange={this.handleJsonInput}
+						name={`${row}-${column}-json`}
+						value={value}
+						height="auto"
+						width="100%"
+						style={{
+							minHeight: '300px',
+							maxHeight: '400px',
+						}}
 					/>
 				</Modal>
 			</>
@@ -88,6 +113,7 @@ ObjectCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
+	active: bool,
 };
 
 export default ObjectCell;

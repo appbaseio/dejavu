@@ -1,32 +1,39 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Select } from 'antd';
-import { func, number, string, any } from 'prop-types';
+import { func, number, string, any, bool } from 'prop-types';
 
 const { Option } = Select;
 
-const ArrayCell = ({ children, onChange, row, column }) => (
-	// options can be fetched by doing aggregations on the field
-	<Select
-		value={children}
-		css={{
-			width: '100%',
-			height: '100%',
-			'.ant-select-selection': {
-				borderColor: 'transparent',
-			},
-			'.ant-select-selection__choice': {
-				height: '32px !important',
-				paddingTop: 4,
-			},
-		}}
-		mode="tags"
-		maxTagCount={1}
-		onChange={value => onChange(row, column, value)}
-	>
-		{children.map(child => (
-			<Option key={child}>{child}</Option>
-		))}
-	</Select>
+const ArrayCell = ({ children, onChange, row, column, active }) => (
+	<Fragment>
+		{active ? (
+			<Select
+				value={children}
+				css={{
+					width: '230px',
+					height: '100%',
+					'.ant-select-selection': {
+						borderColor: 'transparent',
+					},
+					'.ant-select-selection__choice': {
+						height: '32px !important',
+						paddingTop: 4,
+					},
+				}}
+				mode="multiple"
+				showSearch={false}
+				maxTagCount={0}
+				onChange={value => onChange(row, column, value)}
+				notFoundContent=""
+			>
+				{children.map(child => (
+					<Option key={child}>{child}</Option>
+				))}
+			</Select>
+		) : (
+			children && `${children.length} Items`
+		)}
+	</Fragment>
 );
 
 ArrayCell.propTypes = {
@@ -34,6 +41,7 @@ ArrayCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
+	active: bool,
 };
 
 export default ArrayCell;

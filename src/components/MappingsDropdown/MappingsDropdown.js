@@ -1,19 +1,27 @@
 import React from 'react';
 import { object } from 'prop-types';
+import { Popover } from 'antd';
 
 import JsonView from '../JsonView';
+import MappingsIcon from '../MappingsIcon';
 
 const MappingsDropdown = ({ mapping }) => (
-	<div
-		css={{
-			background: '#fff',
-			borderRadius: 4,
-			padding: 10,
-			boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
-		}}
+	<Popover
+		content={
+			<div
+				style={{
+					maxHeight: '400px',
+					maxWidth: '300px',
+					overflow: 'auto',
+				}}
+			>
+				<JsonView json={mapping} />
+			</div>
+		}
+		trigger="click"
 	>
-		<JsonView json={mapping} />
-	</div>
+		<MappingsIcon mapping={mapping} />
+	</Popover>
 );
 
 MappingsDropdown.propTypes = {

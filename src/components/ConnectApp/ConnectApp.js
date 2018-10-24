@@ -11,8 +11,10 @@ import {
 	getIsConnected,
 	getError,
 } from '../../reducers/app';
-import { connectApp, disconnectApp } from '../../actions';
+import { connectApp, disconnectApp, dismissAppError } from '../../actions';
 import { getUrlParams } from '../../utils';
+
+import ErrorMessage from '../ErrorMessage';
 
 const { Item } = Form;
 
@@ -32,10 +34,29 @@ class ConnectApp extends Component {
 
 	componentDidMount() {
 		// sync state from url
-		const { appname = '', url = '' } = getUrlParams(window.location.search);
-		this.setState({ appname, url });
+		let appname = '';
+		let url = '';
+		const { appname: queryApp, url: queryUrl } = getUrlParams(
+			window.location.search,
+		);
+
+		if (queryApp && queryUrl) {
+			appname = queryApp;
+			url = queryUrl;
+		} else {
+			const { appname: propApp, url: propUrl } = this.props;
+			appname = propApp || '';
+			url = propUrl || '';
+		}
+
+		this.setState({
+			appname,
+			url,
+		});
+
 		if (appname && url) {
 			this.props.connectApp(appname, url);
+			this.props.history.push(`?appname=${appname}&url=${url}`);
 		}
 	}
 
@@ -60,17 +81,20 @@ class ConnectApp extends Component {
 
 	render() {
 		const { appname, url } = this.state;
-		const { isLoading, isConnected, error } = this.props;
+		const { isLoading, isConnected, error, onErrorClose } = this.props;
 		return (
 			<>
 				{!isLoading &&
 					error && (
 						<Alert
-							showIcon
-							message={error}
+							message={error.message}
 							type="error"
 							closable
 							css={{ marginBottom: 10 }}
+							onClose={onErrorClose}
+							description={
+								<ErrorMessage description={error.stack} />
+							}
 						/>
 					)}
 				<Form
@@ -79,7 +103,6 @@ class ConnectApp extends Component {
 					css={{
 						display: 'grid',
 						gridTemplateColumns: '1fr 1fr auto',
-						marginBottom: 25,
 					}}
 				>
 					<Item {...formItemProps}>
@@ -154,6 +177,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
 	connectApp,
 	disconnectApp,
+	onErrorClose: dismissAppError,
 };
 
 ConnectApp.propTypes = {
@@ -165,6 +189,7 @@ ConnectApp.propTypes = {
 	isLoading: bool.isRequired,
 	error: string,
 	history: object,
+	onErrorClose: func.isRequired,
 };
 
 export default withRouter(

@@ -9,6 +9,8 @@ import {
 	addMappingFailure,
 } from '../actions';
 import { getAppname, getUrl } from '../reducers/app';
+import { isEmptyObject } from '../utils';
+import { extractColumns, META_FIELDS } from '../utils/mappings';
 
 const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
@@ -17,34 +19,71 @@ function* handleFetchMappings() {
 		const appname = yield select(getAppname);
 		const url = yield select(getUrl);
 		const data = yield call(fetchMappings, appname, url);
-		const indexes = Object.keys(data);
-		let properties = {};
-		const types = [];
-		const indexTypeMap = {};
+		if (!isEmptyObject(data)) {
+			const indexes = Object.keys(data);
+			let properties = {};
+			const types = [];
+			const indexTypeMap = {};
 
-		indexes.forEach(index => {
-			Object.keys(data[index].mappings).forEach(type => {
-				indexTypeMap[index] = [...(indexTypeMap[index] || []), type];
-
-				if (
-					data[index].mappings[type].properties &&
-					INGNORE_META_TYPES.indexOf(type) === -1
-				) {
-					types.push(type);
-					properties = {
-						...properties,
-						...data[index].mappings[type].properties,
-					};
-				}
+			indexes.forEach(index => {
+				Object.keys(data[index].mappings).forEach(type => {
+					if (
+						data[index].mappings[type].properties &&
+						INGNORE_META_TYPES.indexOf(type) === -1
+					) {
+						indexTypeMap[index] = [
+							...(indexTypeMap[index] || []),
+							type,
+						];
+						types.push(type);
+						properties = {
+							...properties,
+							...data[index].mappings[type].properties,
+						};
+					}
+				});
 			});
-		});
 
-		const mappings = {
-			[appname]: {
-				properties,
-			},
-		};
-		yield put(fetchMappingsSuccess(mappings, indexes, types, indexTypeMap));
+			const mappings = {
+				[appname]: {
+					properties,
+				},
+			};
+
+			const allColumns = [
+				...META_FIELDS,
+				...extractColumns(mappings[appname]),
+			];
+
+			let visibleColumns = allColumns.filter(col => col !== '_type');
+			if (indexes.length <= 1) {
+				visibleColumns = visibleColumns.filter(col => col !== '_index');
+			}
+
+			const filteredTypes = types.filter(
+				type => !INGNORE_META_TYPES.includes(type),
+			);
+
+			const searchableColumns = Object.keys(properties).filter(
+				property =>
+					properties[property].type === 'string' ||
+					properties[property].type === 'text',
+			);
+
+			yield put(
+				fetchMappingsSuccess(
+					mappings,
+					indexes,
+					filteredTypes,
+					indexTypeMap,
+					allColumns,
+					visibleColumns,
+					searchableColumns,
+				),
+			);
+		} else {
+			throw new Error('Unable to fetch content');
+		}
 	} catch (error) {
 		yield put(fetchMappingsFailure(error.message));
 	}

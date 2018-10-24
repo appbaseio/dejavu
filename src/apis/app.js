@@ -1,4 +1,4 @@
-import { parseUrl, getHeaders } from '../utils';
+import { parseUrl, getHeaders, isEmptyObject } from '../utils';
 
 const testConnection = async (appname, rawUrl) => {
 	try {
@@ -11,10 +11,16 @@ const testConnection = async (appname, rawUrl) => {
 		if (res.status >= 400) {
 			throw new Error(res.message || 'Unable to connect');
 		}
+
+		if (isEmptyObject(res)) {
+			throw new Error(res.message || 'Index not found');
+		}
 		return res;
 	} catch (error) {
 		const errorMessage =
-			error.name === 'Error' ? error.message : 'Unable to connect';
+			error.name === 'Error'
+				? error.message
+				: 'Unable to connect because of Invalid url';
 		throw new Error(errorMessage);
 	}
 };

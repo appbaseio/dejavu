@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
+import {
+	ReactiveBase,
+	ReactiveList,
+	DataSearch,
+} from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf } from 'prop-types';
-import { Skeleton, Button } from 'antd';
+import { Skeleton, Spin } from 'antd';
 
 import DataTable from '../DataTable';
-import AddFieldModal from '../AddFieldModal';
+import Flex from '../Flex';
+import Actions from './Actions';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
@@ -15,23 +20,18 @@ import {
 	getMappings,
 	getIndexes,
 	getTypes,
+	getSearchableColumns,
 } from '../../reducers/mappings';
 import { parseUrl } from '../../utils';
+import colors from '../theme/colors';
 
-// after app is connected DataBrowser takes over
 class DataBrowser extends Component {
-	state = {
-		showModal: false,
-	};
-
 	componentDidMount() {
 		this.props.fetchMappings();
 	}
 
-	toggleModal = () => {
-		this.setState(({ showModal }) => ({
-			showModal: !showModal,
-		}));
+	handleReload = () => {
+		this.props.fetchMappings();
 	};
 
 	render() {
@@ -44,61 +44,84 @@ class DataBrowser extends Component {
 			isDataLoading,
 			indexes,
 			types,
+			searchableColumns,
 		} = this.props;
-		const { showModal } = this.state;
 		const { credentials, url } = parseUrl(rawUrl);
-
+		const searchColumns = [
+			...searchableColumns,
+			...searchableColumns.map(field => `${field}.raw`),
+			...searchableColumns.map(field => `${field}.search`),
+			...searchableColumns.map(field => `${field}.autosuggest`),
+		];
+		const weights = [
+			...Array(searchableColumns.length).fill(3),
+			...Array(searchableColumns.length).fill(1),
+			...Array(searchableColumns.length).fill(1),
+			...Array(searchableColumns.length).fill(1),
+		];
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading &&
+					!isDataLoading &&
 					mappings && (
 						<ReactiveBase
 							app={indexes.join(',')}
-							type={types.join(',')} // to ignore bloat types need to rethink for multi indices
+							type={types.join(',')}
 							credentials={credentials}
 							url={url}
 						>
-							<AddFieldModal
-								showModal={showModal}
-								toggleModal={this.toggleModal}
+							<Actions onReload={this.handleReload} />
+							<DataSearch
+								componentId="GlobalSearch"
+								autosuggest={false}
+								dataField={searchColumns}
+								fieldWeights={weights}
+								innerClass={{
+									input: 'ant-input',
+								}}
 							/>
 							<div
+								id="result-list"
 								css={{
-									display: 'flex',
-									flexDirection: 'row-reverse',
+									maxHeight: '450px',
+									overflow: 'auto',
+									border: `1px solid ${
+										colors.tableBorderColor
+									}`,
+									borderRadius: '4px',
 									margin: '20px 0',
 								}}
 							>
-								<Button
-									icon="plus"
-									type="primary"
-									onClick={this.toggleModal}
-									loading={isDataLoading}
-								>
-									Add Column
-								</Button>
+								<ReactiveList
+									key={String(reactiveListKey)}
+									componentId="results"
+									dataField="_id"
+									scrollTarget="result-list"
+									pagination={false}
+									showResultStats={false}
+									size={20}
+									react={{
+										and: ['GlobalSearch'],
+									}}
+									loader={
+										<Flex
+											style={{ marginTop: '20px' }}
+											justifyContent="center"
+										>
+											<Spin />
+										</Flex>
+									}
+									onAllData={data => (
+										<DataTable
+											key={
+												data.length ? data[0]._id : '0'
+											}
+											data={data}
+											mappings={mappings[appname]}
+										/>
+									)}
+								/>
 							</div>
-							<ReactiveList
-								// whenever a data change is expected, the key is updated to make the ReactiveList refetch data
-								// there should ideally be a hook in ReactiveSearch for this purpose but this will suffice for now
-								key={String(reactiveListKey)}
-								componentId="results"
-								dataField="_id"
-								pagination
-								showResultStats
-								onAllData={data => (
-									// onAllData is invoked only when data changes
-									<DataTable
-										// if key logic fails for an edge case will have to derive state in DataTable from props
-										key={data.length ? data[0]._id : '0'}
-										data={data}
-										mappings={mappings[appname]}
-										shouldRenderIndexColumn={
-											indexes.length > 1
-										}
-									/>
-								)}
-							/>
 						</ReactiveBase>
 					)}
 			</Skeleton>
@@ -115,6 +138,7 @@ const mapStateToProps = state => ({
 	isDataLoading: dataSelectors.getIsLoading(state),
 	indexes: getIndexes(state),
 	types: getTypes(state),
+	searchableColumns: getSearchableColumns(state),
 });
 
 const mapDispatchToProps = {
@@ -131,6 +155,7 @@ DataBrowser.propTypes = {
 	isDataLoading: bool.isRequired,
 	indexes: arrayOf(string),
 	types: arrayOf(string),
+	searchableColumns: arrayOf(string),
 };
 
 export default connect(

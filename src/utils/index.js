@@ -57,4 +57,22 @@ const isVaildJSON = str => {
 	return true;
 };
 
-export { parseUrl, getUrlParams, getHeaders, getDateFormat, isVaildJSON };
+const isEmptyObject = obj => {
+	if (obj === null) return true;
+	if (!Object.keys(obj).length) return true;
+	return false;
+};
+
+function isObject(obj) {
+	return obj !== undefined && obj !== null && obj.constructor === Object;
+}
+
+export {
+	parseUrl,
+	getUrlParams,
+	getHeaders,
+	getDateFormat,
+	isVaildJSON,
+	isEmptyObject,
+	isObject,
+};

@@ -27,6 +27,21 @@ class AddRowModal extends Component {
 		][0],
 	};
 
+	handleAfterClose = () => {
+		this.setState({
+			addDataError: false,
+			addDataValue: `{\n}`,
+			documentId: '',
+			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+			types: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			],
+			selectedType: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			][0],
+		});
+	};
+
 	handleDocumentIdChange = e => {
 		this.setState({
 			documentId: e.target.value,
@@ -93,6 +108,7 @@ class AddRowModal extends Component {
 			<Modal
 				visible={showModal}
 				onCancel={toggleModal}
+				afterClose={this.handleAfterClose}
 				onOk={this.addValue}
 				okButtonProps={{ disabled: addDataError }}
 				style={{

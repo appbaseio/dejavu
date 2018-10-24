@@ -9,7 +9,12 @@ function* handleConnectApp({ appname, url }) {
 		yield call(testConnection, appname, url);
 		yield put(connectAppSuccess(appname, url));
 	} catch (error) {
-		yield put(connectAppFailure(error.message));
+		yield put(
+			connectAppFailure({
+				message: error.message,
+				stack: error.stack,
+			}),
+		);
 	}
 }
 

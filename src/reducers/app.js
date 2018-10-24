@@ -33,6 +33,11 @@ const app = (state = initialState, action) => {
 			};
 		case APP.DISCONNECT:
 			return initialState;
+		case APP.DISMISS_APP_CONNECT_ERROR:
+			return {
+				...state,
+				error: null,
+			};
 		default:
 			return state;
 	}

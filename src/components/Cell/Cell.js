@@ -1,6 +1,9 @@
 import React from 'react';
 import { func, number, string, bool, any } from 'prop-types';
 
+import { isObject } from '../../utils';
+import { dateFormatMap } from '../../utils/date';
+
 import BooleanCell from './BooleanCell';
 import TextCell from './TextCell';
 import NumberCell from './NumberCell';
@@ -19,12 +22,21 @@ const Cell = ({ mapping, ...props }) => {
 			}
 			return <NumberCell {...props} />;
 		case 'date':
-			return <DateCell {...props} format={mapping.format} />;
+			return (
+				<DateCell
+					{...props}
+					format={mapping.format || dateFormatMap.date}
+				/>
+			);
+		case 'object':
+		case 'geo_point':
+		case 'geo_shape':
+			return <ObjectCell {...props} />;
 		default:
 			if (Array.isArray(props.children)) {
 				return <ArrayCell {...props} />;
 			}
-			if (mapping.properties) {
+			if (isObject(mapping.properties)) {
 				return <ObjectCell {...props} />;
 			}
 			return <TextCell {...props} />;

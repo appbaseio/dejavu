@@ -21,4 +21,14 @@ const disconnectApp = () => ({
 	type: APP.DISCONNECT,
 });
 
-export { connectApp, disconnectApp, connectAppSuccess, connectAppFailure };
+const dismissAppError = () => ({
+	type: APP.DISMISS_APP_CONNECT_ERROR,
+});
+
+export {
+	connectApp,
+	disconnectApp,
+	connectAppSuccess,
+	connectAppFailure,
+	dismissAppError,
+};

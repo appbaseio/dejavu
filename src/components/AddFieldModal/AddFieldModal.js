@@ -10,7 +10,7 @@ import 'brace/theme/github';
 import { getAppname } from '../../reducers/app';
 import { getMappings, getIndexTypeMap } from '../../reducers/mappings';
 import { addMappingRequest } from '../../actions';
-import esMappings from '../../utils/mappings';
+import { es6mappings } from '../../utils/mappings';
 import { isVaildJSON } from '../../utils';
 
 import Item from './Item.styles';
@@ -22,7 +22,7 @@ const DATA_SHAPE = ['Primitive', 'Array', 'Object'];
 const CUSTOM_MAPPING = 'Custom Mappings';
 
 const customMappings = {
-	...esMappings,
+	...es6mappings,
 	[CUSTOM_MAPPING]: {},
 };
 
@@ -39,6 +39,24 @@ class AddFieldModal extends Component {
 		][0],
 		selectedShape: DATA_SHAPE[0],
 		selectedPrimitiveType: Object.keys(customMappings)[0],
+	};
+
+	handleAfterClose = () => {
+		this.setState({
+			addColumnError: false,
+			addColumnField: '',
+			isColumnFieldValid: true,
+			addColumnMapping: `{\n}`,
+			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+			types: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			],
+			selectedType: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			][0],
+			selectedShape: DATA_SHAPE[0],
+			selectedPrimitiveType: Object.keys(customMappings)[0],
+		});
 	};
 
 	handleInputChange = e => {
@@ -87,7 +105,7 @@ class AddFieldModal extends Component {
 			} else if (selectedPrimitiveType === CUSTOM_MAPPING) {
 				mappingValue = JSON.parse(addColumnMapping);
 			} else {
-				mappingValue = esMappings[selectedPrimitiveType];
+				mappingValue = es6mappings[selectedPrimitiveType];
 			}
 
 			this.props.addMappingRequest(
@@ -157,6 +175,7 @@ class AddFieldModal extends Component {
 				style={{
 					top: '10px',
 				}}
+				afterClose={this.handleAfterClose}
 				destroyOnClose
 				maskClosable={false}
 			>
