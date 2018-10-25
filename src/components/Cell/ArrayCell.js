@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
-import { Select } from 'antd';
+import { Select, Popover, Button } from 'antd';
 import { func, number, string, any } from 'prop-types';
+
+import JsonView from '../JsonView';
 
 const { Option } = Select;
 
@@ -10,7 +12,7 @@ const ArrayCell = ({ children, onChange, row, column, mode }) => (
 			<Select
 				value={children}
 				css={{
-					width: '230px',
+					width: '200px',
 					height: '100%',
 					'.ant-select-selection': {
 						borderColor: 'transparent',
@@ -31,7 +33,24 @@ const ArrayCell = ({ children, onChange, row, column, mode }) => (
 				))}
 			</Select>
 		) : (
-			children && `${children.length} Items`
+			Boolean(children.length) && (
+				<Popover
+					content={
+						<div
+							css={{
+								maxWidth: '400px',
+								maxHeight: '300px',
+								overflow: 'auto',
+							}}
+						>
+							<JsonView json={children} />
+						</div>
+					}
+					trigger="click"
+				>
+					<Button shape="circle" icon="ellipsis" />
+				</Popover>
+			)
 		)}
 	</Fragment>
 );

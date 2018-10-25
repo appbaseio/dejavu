@@ -28,11 +28,7 @@ class ModeSwitch extends Component {
 		const { mode } = this.props;
 
 		return (
-			<Radio.Group
-				value={mode}
-				buttonStyle="solid"
-				onChange={this.handleModeChange}
-			>
+			<Radio.Group value={mode} onChange={this.handleModeChange}>
 				<Radio.Button value="view">
 					<Icon type="eye" /> &nbsp; View
 				</Radio.Button>

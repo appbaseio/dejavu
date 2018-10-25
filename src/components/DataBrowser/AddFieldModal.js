@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Modal, Input, Select, Radio, Row, Col } from 'antd';
-import { string, func, bool, object } from 'prop-types';
+import { Modal, Input, Select, Radio, Row, Col, Button } from 'antd';
+import { string, func, object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 
@@ -28,6 +28,7 @@ const customMappings = {
 
 class AddFieldModal extends Component {
 	state = {
+		isShowingModal: false,
 		addColumnError: false,
 		addColumnField: '',
 		isColumnFieldValid: true,
@@ -95,7 +96,6 @@ class AddFieldModal extends Component {
 			selectedShape &&
 			selectedPrimitiveType
 		) {
-			this.props.toggleModal();
 			let mappingValue = null;
 
 			if (selectedShape === 'Object') {
@@ -114,6 +114,7 @@ class AddFieldModal extends Component {
 				addColumnField,
 				mappingValue,
 			);
+			this.toggleModal();
 		}
 	};
 
@@ -143,8 +144,14 @@ class AddFieldModal extends Component {
 		});
 	};
 
+	toggleModal = () => {
+		this.setState(prevState => ({
+			isShowingModal: !prevState.isShowingModal,
+		}));
+	};
+
 	render() {
-		const { showModal, toggleModal, indexTypeMap } = this.props;
+		const { indexTypeMap } = this.props;
 		const {
 			addColumnError,
 			addColumnField,
@@ -155,135 +162,144 @@ class AddFieldModal extends Component {
 			selectedPrimitiveType,
 			addColumnMapping,
 			types,
+			isShowingModal,
 		} = this.state;
 
 		return (
-			<Modal
-				visible={showModal}
-				onCancel={toggleModal}
-				onOk={this.addColumn}
-				okButtonProps={{
-					disabled:
-						addColumnError ||
-						!addColumnField ||
-						!isColumnFieldValid ||
-						!selectedIndex ||
-						!selectedType ||
-						!selectedShape ||
-						!selectedPrimitiveType,
-				}}
-				style={{
-					top: '10px',
-				}}
-				afterClose={this.handleAfterClose}
-				destroyOnClose
-				maskClosable={false}
-			>
-				<Row>
-					<Col span={12}>
-						<Item label="Index">
+			<Fragment>
+				<Button
+					icon="plus"
+					type="primary"
+					onClick={this.toggleModal}
+					css={{ marginRight: '5px' }}
+				>
+					Add Column
+				</Button>
+				<Modal
+					visible={isShowingModal}
+					onCancel={this.toggleModal}
+					onOk={this.addColumn}
+					okButtonProps={{
+						disabled:
+							addColumnError ||
+							!addColumnField ||
+							!isColumnFieldValid ||
+							!selectedIndex ||
+							!selectedType ||
+							!selectedShape ||
+							!selectedPrimitiveType,
+					}}
+					css={{
+						top: '10px',
+					}}
+					afterClose={this.handleAfterClose}
+					destroyOnClose
+					maskClosable={false}
+				>
+					<Row>
+						<Col span={12}>
+							<Item label="Index">
+								<Select
+									defaultValue={selectedIndex}
+									onChange={this.handleIndexChange}
+									css={{
+										width: '95%',
+									}}
+								>
+									{Object.keys(indexTypeMap).map(index => (
+										<Option key={index} value={index}>
+											{index}
+										</Option>
+									))}
+								</Select>
+							</Item>
+						</Col>
+						<Col span={12}>
+							<Item label="Type">
+								<Select
+									value={selectedType}
+									onChange={this.handleTypeChange}
+									css={{
+										width: '100%',
+									}}
+								>
+									{types.map(type => (
+										<Option key={type} value={type}>
+											{type}
+										</Option>
+									))}
+								</Select>
+							</Item>
+						</Col>
+					</Row>
+					<Item
+						label="Field Name"
+						hasFeedback
+						validateStatus={isColumnFieldValid ? '' : 'error'}
+						help={!isColumnFieldValid && 'Duplicate field name'}
+					>
+						<Input
+							name="addColumnField"
+							value={addColumnField}
+							onChange={this.handleInputChange}
+							placeholder="Enter Field Name"
+						/>
+					</Item>
+					<Item label="Select data shape">
+						<RadioGroup
+							onChange={this.handleShapeChange}
+							value={selectedShape}
+						>
+							{DATA_SHAPE.map(shape => (
+								<Radio key={shape} value={shape}>
+									{shape}
+								</Radio>
+							))}
+						</RadioGroup>
+					</Item>
+					{selectedShape !== 'Object' && (
+						<Item label="Data type">
 							<Select
-								defaultValue={selectedIndex}
-								onChange={this.handleIndexChange}
-								style={{
-									width: '95%',
-								}}
-							>
-								{Object.keys(indexTypeMap).map(index => (
-									<Option key={index} value={index}>
-										{index}
-									</Option>
-								))}
-							</Select>
-						</Item>
-					</Col>
-					<Col span={12}>
-						<Item label="Type">
-							<Select
-								value={selectedType}
-								onChange={this.handleTypeChange}
-								style={{
+								defaultValue={selectedPrimitiveType}
+								onChange={this.handlePrimitiveTypeChange}
+								css={{
 									width: '100%',
 								}}
 							>
-								{types.map(type => (
-									<Option key={type} value={type}>
-										{type}
+								{Object.keys(customMappings).map(mapping => (
+									<Option key={mapping} value={mapping}>
+										{mapping}
 									</Option>
 								))}
 							</Select>
 						</Item>
-					</Col>
-				</Row>
-				<Item
-					label="Field Name"
-					hasFeedback
-					validateStatus={isColumnFieldValid ? '' : 'error'}
-					help={!isColumnFieldValid && 'Duplicate field name'}
-				>
-					<Input
-						name="addColumnField"
-						value={addColumnField}
-						onChange={this.handleInputChange}
-						placeholder="Enter Field Name"
-					/>
-				</Item>
-				<Item label="Select data shape">
-					<RadioGroup
-						onChange={this.handleShapeChange}
-						value={selectedShape}
-					>
-						{DATA_SHAPE.map(shape => (
-							<Radio key={shape} value={shape}>
-								{shape}
-							</Radio>
-						))}
-					</RadioGroup>
-				</Item>
-				{selectedShape !== 'Object' && (
-					<Item label="Data type">
-						<Select
-							defaultValue={selectedPrimitiveType}
-							onChange={this.handlePrimitiveTypeChange}
-							style={{
-								width: '100%',
-							}}
-						>
-							{Object.keys(customMappings).map(mapping => (
-								<Option key={mapping} value={mapping}>
-									{mapping}
-								</Option>
-							))}
-						</Select>
-					</Item>
-				)}
-				{selectedPrimitiveType === CUSTOM_MAPPING && (
-					<Fragment>
-						<Item label="Mapping" />
-						<AceEditor
-							tabSize={2}
-							mode="json"
-							theme="github"
-							onChange={this.handleJsonInput}
-							name="add-row-modal"
-							value={addColumnMapping}
-							height="auto"
-							width="100%"
-							style={{
-								minHeight: '100px',
-								maxHeight: '200px',
-							}}
-						/>
-					</Fragment>
-				)}
-			</Modal>
+					)}
+					{selectedPrimitiveType === CUSTOM_MAPPING && (
+						<Fragment>
+							<Item label="Mapping" />
+							<AceEditor
+								tabSize={2}
+								mode="json"
+								theme="github"
+								onChange={this.handleJsonInput}
+								name="add-row-modal"
+								value={addColumnMapping}
+								height="auto"
+								width="100%"
+								css={{
+									minHeight: '100px',
+									maxHeight: '200px',
+								}}
+							/>
+						</Fragment>
+					)}
+				</Modal>
+			</Fragment>
 		);
 	}
 }
 
 AddFieldModal.propTypes = {
-	showModal: bool.isRequired,
-	toggleModal: func.isRequired,
 	appname: string.isRequired,
 	mappings: object,
 	addMappingRequest: func.isRequired,

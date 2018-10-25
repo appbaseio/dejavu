@@ -9,7 +9,7 @@ const MappingsDropdown = ({ mapping }) => (
 	<Popover
 		content={
 			<div
-				style={{
+				css={{
 					maxHeight: '400px',
 					maxWidth: '300px',
 					overflow: 'auto',

@@ -58,7 +58,7 @@ class ObjectCell extends Component {
 						<Popover
 							content={
 								<div
-									style={{
+									css={{
 										maxWidth: '400px',
 										maxHeight: '300px',
 										overflow: 'auto',
@@ -97,7 +97,7 @@ class ObjectCell extends Component {
 						value={value}
 						height="auto"
 						width="100%"
-						style={{
+						css={{
 							minHeight: '300px',
 							maxHeight: '400px',
 						}}

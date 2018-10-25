@@ -214,7 +214,7 @@ ConnectApp.propTypes = {
 	disconnectApp: func.isRequired,
 	isConnected: bool.isRequired,
 	isLoading: bool.isRequired,
-	error: string,
+	error: object,
 	history: object,
 	onErrorClose: func.isRequired,
 	setMode: func.isRequired,

@@ -83,13 +83,15 @@ class DataBrowser extends Component {
 							<div
 								id="result-list"
 								css={{
-									maxHeight: '450px',
 									overflow: 'auto',
+									borderRadius: '4px',
+									margin: '20px 0',
+									maxHeight: '450px',
+									position: 'relative',
 									border: `1px solid ${
 										colors.tableBorderColor
 									}`,
-									borderRadius: '4px',
-									margin: '20px 0',
+									scrollBehavior: 'smooth',
 								}}
 							>
 								<ReactiveList
@@ -98,14 +100,14 @@ class DataBrowser extends Component {
 									dataField="_id"
 									scrollTarget="result-list"
 									pagination={false}
-									showResultStats={false}
 									size={20}
+									showResultStats={false}
 									react={{
 										and: ['GlobalSearch'],
 									}}
 									loader={
 										<Flex
-											style={{ marginTop: '20px' }}
+											css={{ marginTop: '20px' }}
 											justifyContent="center"
 										>
 											<Spin />
@@ -124,6 +126,11 @@ class DataBrowser extends Component {
 							</div>
 						</ReactiveBase>
 					)}
+				{(isLoading || isDataLoading) && (
+					<Flex css={{ marginTop: '20px' }} justifyContent="center">
+						<Spin />
+					</Flex>
+				)}
 			</Skeleton>
 		);
 	}

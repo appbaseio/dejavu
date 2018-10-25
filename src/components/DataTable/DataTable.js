@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { connect } from 'react-redux';
+import { css } from 'react-emotion';
 
 import MappingsDropdown from '../MappingsDropdown';
 import Cell from '../Cell';
 import StyledCell from './Cell.style';
-import StyledRow from './Row.style';
 import Flex from '../Flex';
 
 import { getActiveCell } from '../../reducers/cell';
@@ -17,6 +17,7 @@ import {
 import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
+import colors from '../theme/colors';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
@@ -70,11 +71,26 @@ class DataTable extends Component {
 
 		return (
 			<div>
-				<table style={{ overflow: 'auto' }}>
+				<table
+					css={{
+						overflow: 'auto',
+						borderRadius: '4px',
+					}}
+				>
 					<thead>
-						<StyledRow isHeader>
+						<tr>
 							{visibleColumns.map(col => (
-								<StyledCell key={col} isHeader>
+								<StyledCell
+									key={col}
+									isHeader
+									className={
+										col === '_id' &&
+										css({
+											zIndex: '101 !important',
+										})
+									}
+									isFixed={col === '_id'}
+								>
 									<Flex
 										justifyContent="space-between"
 										alignItems="center"
@@ -90,13 +106,23 @@ class DataTable extends Component {
 									</Flex>
 								</StyledCell>
 							))}
-						</StyledRow>
+						</tr>
 					</thead>
 					<tbody>
 						{data.map((dataItem, row) => (
-							<StyledRow key={dataItem._id}>
+							<tr key={dataItem._id}>
 								{visibleColumns.map(col => (
-									<StyledCell key={`${dataItem._id}-${col}`}>
+									<StyledCell
+										key={`${dataItem._id}-${col}`}
+										className={
+											col === '_id' &&
+											css({
+												zIndex: 3,
+												background: colors.white,
+											})
+										}
+										isFixed={col === '_id'}
+									>
 										{isMetaField(col) ? (
 											dataItem[col]
 										) : (
@@ -120,7 +146,7 @@ class DataTable extends Component {
 										)}
 									</StyledCell>
 								))}
-							</StyledRow>
+							</tr>
 						))}
 					</tbody>
 				</table>

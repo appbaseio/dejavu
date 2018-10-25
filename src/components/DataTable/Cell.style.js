@@ -8,8 +8,9 @@ const Cell = styled('td')`
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	border-right: 1px solid ${colors.tableBorderColor};
 	font-size: 15px;
+	border-right: 1px solid ${colors.tableBorderColor};
+	border-bottom: 1px solid ${colors.tableBorderColor};
 
 	:last-child {
 		border-right: 0;
@@ -18,10 +19,23 @@ const Cell = styled('td')`
 	${({ isHeader }) =>
 		isHeader &&
 		css`
+			position: sticky;
+			top: 0;
+			z-index: 100;
 			background: ${colors.tableHead};
 			font-weight: 500;
-			background-clip: padding-box;
-			box-shadow: 0 0 1px -1px ${colors.tableBorderColor};
+			top: 0px;
+			border-bottom: 0;
+			box-shadow: 0px 1px 1px 0px ${colors.tableBorderColor};
+		`};
+
+	${({ isFixed }) =>
+		isFixed &&
+		css`
+			position: sticky;
+			left: 0;
+			border-bottom: 1px solid ${colors.tableBorderColor};
+			box-shadow: 0px 1px 1px 0px ${colors.tableBorderColor};
 		`};
 `;
 
