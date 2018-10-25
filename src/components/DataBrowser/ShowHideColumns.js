@@ -117,7 +117,7 @@ class ShowHideColumns extends Component {
 				trigger={['click']}
 				onClick={this.toggleDropDown}
 			>
-				<Button css={{ marginRight: '5px' }}>Show/Hide Columns</Button>
+				<Button css={{ marginLeft: '5px' }}>Show/Hide Columns</Button>
 			</Dropdown>
 		);
 	}

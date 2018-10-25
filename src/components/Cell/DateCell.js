@@ -1,6 +1,6 @@
 import React from 'react';
 import { DatePicker } from 'antd';
-import { func, number, string, any, bool } from 'prop-types';
+import { func, number, string, any } from 'prop-types';
 import moment from 'moment';
 
 import CellStyled from './Cell.styles';
@@ -9,19 +9,19 @@ import { getDateFormat } from '../../utils';
 const DateCell = ({
 	children,
 	onChange,
-	onFocus,
+	onClick,
 	row,
 	column,
 	format,
-	active,
+	mode,
 }) => (
 	<CellStyled
-		onFocus={() => onFocus(row, column)}
+		onFocus={() => onClick(row, column)}
 		onBlur={() => {
-			onFocus(null, null);
+			onClick(null, null);
 		}}
 	>
-		{active ? (
+		{mode === 'edit' ? (
 			<DatePicker
 				showTime
 				defaultValue={
@@ -52,8 +52,8 @@ DateCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
 	format: string,
-	onFocus: func.isRequired,
-	active: bool,
+	onClick: func.isRequired,
+	mode: string,
 };
 
 export default DateCell;

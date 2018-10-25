@@ -63,9 +63,17 @@ const isEmptyObject = obj => {
 	return false;
 };
 
-function isObject(obj) {
-	return obj !== undefined && obj !== null && obj.constructor === Object;
-}
+const isObject = obj =>
+	obj !== undefined && obj !== null && obj.constructor === Object;
+
+const updateQueryStringParameter = (uri, key, value) => {
+	const re = new RegExp(`([?&])${key}=.*?(&|$)`, 'i');
+	const separator = uri.indexOf('?') !== -1 ? '&' : '?';
+	if (uri.match(re)) {
+		return uri.replace(re, `$1${key}=${value}$2`);
+	}
+	return `${uri}${separator}${key}=${value}`;
+};
 
 export {
 	parseUrl,
@@ -75,4 +83,5 @@ export {
 	isVaildJSON,
 	isEmptyObject,
 	isObject,
+	updateQueryStringParameter,
 };

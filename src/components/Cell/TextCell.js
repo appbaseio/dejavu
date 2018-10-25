@@ -6,11 +6,11 @@ import CellStyled from './Cell.styles';
 
 const { TextArea } = Input;
 
-const TextCell = ({ active, children, onChange, onFocus, row, column }) => (
+const TextCell = ({ active, children, onChange, onClick, row, column }) => (
 	<CellStyled
-		onFocus={() => onFocus(row, column)}
+		onFocus={() => onClick(row, column)}
 		onBlur={() => {
-			onFocus(null, null);
+			onClick(null, null);
 		}}
 		tabIndex="0"
 		role="Gridcell"
@@ -27,8 +27,8 @@ const TextCell = ({ active, children, onChange, onFocus, row, column }) => (
 				<TextArea
 					autoFocus
 					autosize={{
-						minRows: 2,
-						maxRows: 2,
+						minRows: 1,
+						maxRows: 1,
 					}}
 					defaultValue={children}
 					onBlur={e => {
@@ -52,7 +52,7 @@ TextCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
 	active: bool.isRequired,
-	onFocus: func.isRequired,
+	onClick: func.isRequired,
 };
 
 export default TextCell;

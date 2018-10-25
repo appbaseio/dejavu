@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { func, number, string, any, bool } from 'prop-types';
+import React, { Component, Fragment } from 'react';
+import { func, number, string, any } from 'prop-types';
 import { Popover, Button, Modal } from 'antd';
 import AceEditor from 'react-ace';
 
@@ -41,10 +41,10 @@ class ObjectCell extends Component {
 	};
 
 	render() {
-		const { children, row, column, active } = this.props;
+		const { children, row, column, mode } = this.props;
 		const { showModal, error, value } = this.state;
 		return (
-			<>
+			<Fragment>
 				<CellStyled
 					padding={10}
 					css={{
@@ -72,7 +72,7 @@ class ObjectCell extends Component {
 							<Button shape="circle" icon="ellipsis" />
 						</Popover>
 					)}
-					{active && (
+					{mode === 'edit' && (
 						<Button
 							shape="circle"
 							icon="edit"
@@ -103,7 +103,7 @@ class ObjectCell extends Component {
 						}}
 					/>
 				</Modal>
-			</>
+			</Fragment>
 		);
 	}
 }
@@ -113,7 +113,7 @@ ObjectCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
-	active: bool,
+	mode: string,
 };
 
 export default ObjectCell;

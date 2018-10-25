@@ -6,6 +6,7 @@ import Flex from '../Flex';
 import AddFieldModal from '../AddFieldModal';
 import AddRowModal from '../AddRowModal';
 import ShowHideColumn from './ShowHideColumns';
+import ModeSwitch from './ModeSwitch';
 
 class Actions extends Component {
 	state = {
@@ -74,6 +75,7 @@ class Actions extends Component {
 						</Button>
 					</div>
 					<div>
+						<ModeSwitch />
 						<ShowHideColumn />
 					</div>
 				</Flex>

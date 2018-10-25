@@ -45,7 +45,7 @@ const Cell = ({ mapping, ...props }) => {
 
 Cell.propTypes = {
 	children: any,
-	onFocus: func.isRequired,
+	onClick: func.isRequired,
 	row: number.isRequired,
 	column: string.isRequired,
 	active: bool.isRequired,

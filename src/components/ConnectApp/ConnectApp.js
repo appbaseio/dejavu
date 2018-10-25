@@ -11,10 +11,16 @@ import {
 	getIsConnected,
 	getError,
 } from '../../reducers/app';
-import { connectApp, disconnectApp, dismissAppError } from '../../actions';
+import {
+	connectApp,
+	disconnectApp,
+	dismissAppError,
+	setMode,
+} from '../../actions';
 import { getUrlParams } from '../../utils';
 
 import ErrorMessage from '../ErrorMessage';
+import { getMode } from '../../reducers/mode';
 
 const { Item } = Form;
 
@@ -36,9 +42,12 @@ class ConnectApp extends Component {
 		// sync state from url
 		let appname = '';
 		let url = '';
-		const { appname: queryApp, url: queryUrl } = getUrlParams(
-			window.location.search,
-		);
+		const { mode } = this.props;
+		const {
+			appname: queryApp,
+			url: queryUrl,
+			mode: queryMode,
+		} = getUrlParams(window.location.search);
 
 		if (queryApp && queryUrl) {
 			appname = queryApp;
@@ -56,7 +65,19 @@ class ConnectApp extends Component {
 
 		if (appname && url) {
 			this.props.connectApp(appname, url);
-			this.props.history.push(`?appname=${appname}&url=${url}`);
+		}
+
+		if (!queryApp && !queryUrl) {
+			let searchQuery = `?appname=${appname}&url=${url}`;
+			const currentMode = queryMode || mode;
+			searchQuery += `&mode=${currentMode}`;
+
+			this.props.setMode(currentMode);
+			this.props.history.push(searchQuery);
+		}
+
+		if (queryMode) {
+			this.props.setMode(queryMode);
 		}
 	}
 
@@ -72,10 +93,14 @@ class ConnectApp extends Component {
 		const { appname, url } = this.state;
 		if (this.props.isConnected) {
 			this.props.disconnectApp();
+			this.props.setMode('view');
+			this.props.history.push({ search: '' });
 		} else if (appname && url) {
 			this.props.connectApp(appname, url);
 			// update history with correct appname and url
-			this.props.history.push(`?appname=${appname}&url=${url}`);
+			this.props.history.push(
+				`?appname=${appname}&url=${url}&mode=${this.props.mode}`,
+			);
 		}
 	};
 
@@ -172,12 +197,14 @@ const mapStateToProps = state => ({
 	isConnected: getIsConnected(state),
 	isLoading: getIsLoading(state),
 	error: getError(state),
+	mode: getMode(state),
 });
 
 const mapDispatchToProps = {
 	connectApp,
 	disconnectApp,
 	onErrorClose: dismissAppError,
+	setMode,
 };
 
 ConnectApp.propTypes = {
@@ -190,6 +217,7 @@ ConnectApp.propTypes = {
 	error: string,
 	history: object,
 	onErrorClose: func.isRequired,
+	setMode: func.isRequired,
 };
 
 export default withRouter(

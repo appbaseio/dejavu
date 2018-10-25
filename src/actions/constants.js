@@ -30,4 +30,8 @@ const DATA = {
 	ADD_DATA_FAILURE: 'ADD_DATA_FAILURE',
 };
 
-export { APP, CELL, DATA, MAPPINGS };
+const MODE = {
+	SET_MODE: 'SET_MODE',
+};
+
+export { APP, CELL, DATA, MAPPINGS, MODE };

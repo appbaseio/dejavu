@@ -1,14 +1,14 @@
 import React from 'react';
 import { Dropdown, Icon, Menu, Button } from 'antd';
-import { func, number, string, any, bool } from 'prop-types';
+import { func, number, string, any } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
 const { Item } = Menu;
 
-const BooleanCell = ({ children, onChange, row, column, active }) => (
+const BooleanCell = ({ children, onChange, row, column, mode }) => (
 	<CellStyled>
-		{active ? (
+		{mode === 'edit' ? (
 			<Dropdown
 				trigger={['click']}
 				css={{
@@ -59,7 +59,7 @@ BooleanCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
-	active: bool,
+	mode: string,
 };
 
 export default BooleanCell;

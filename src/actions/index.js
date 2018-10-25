@@ -20,6 +20,7 @@ import {
 	setCellValueSuccess,
 	setCellValueFailure,
 } from './cell';
+import setMode from './mode';
 import { addDataRequest, addDataSuccess, addDataFailure } from './data';
 
 export {
@@ -46,4 +47,6 @@ export {
 	addDataRequest,
 	addDataSuccess,
 	addDataFailure,
+	// mode
+	setMode,
 };

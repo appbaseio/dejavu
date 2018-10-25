@@ -24,9 +24,9 @@ class NumberCell extends Component {
 	};
 
 	saveChange = () => {
-		const { onFocus, onChange, row, column, children } = this.props;
+		const { onClick, onChange, row, column, children } = this.props;
 		const { value } = this.state;
-		onFocus(null, null);
+		onClick(null, null);
 		if (value !== children) {
 			// only save value if it has changed
 			let nextValue = value;
@@ -40,11 +40,11 @@ class NumberCell extends Component {
 	};
 
 	render() {
-		const { active, children, onFocus, row, column } = this.props;
+		const { active, children, onClick, row, column } = this.props;
 		const { value } = this.state;
 		return (
 			<CellStyled
-				onFocus={() => onFocus(row, column)}
+				onFocus={() => onClick(row, column)}
 				onBlur={this.saveChange}
 				tabIndex="0"
 				role="Gridcell"
@@ -90,7 +90,7 @@ NumberCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
 	active: bool.isRequired,
-	onFocus: func.isRequired,
+	onClick: func.isRequired,
 };
 
 export default NumberCell;

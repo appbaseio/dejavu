@@ -16,6 +16,7 @@ import {
 } from '../../actions';
 import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS } from '../../utils/mappings';
+import { getMode } from '../../reducers/mode';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
@@ -62,6 +63,7 @@ class DataTable extends Component {
 			mappings,
 			setCellActive: setCellActiveDispatch,
 			visibleColumns,
+			mode,
 		} = this.props;
 
 		const { data } = this.state;
@@ -101,12 +103,13 @@ class DataTable extends Component {
 											<Cell
 												row={row}
 												column={col}
+												mode={mode}
 												active={
+													mode === 'edit' &&
 													activeCell.row === row &&
 													activeCell.column === col
 												}
-												// active={false}
-												onFocus={setCellActiveDispatch}
+												onClick={setCellActiveDispatch}
 												onChange={this.handleChange}
 												mapping={
 													mappings.properties[col]
@@ -133,11 +136,13 @@ DataTable.propTypes = {
 	setCellActive: func.isRequired,
 	setCellValue: func.isRequired,
 	visibleColumns: arrayOf(string).isRequired,
+	mode: string,
 };
 
 const mapStateToProps = state => ({
 	activeCell: getActiveCell(state),
 	visibleColumns: getVisibleColumns(state),
+	mode: getMode(state),
 });
 
 const mapDispatchToProps = {

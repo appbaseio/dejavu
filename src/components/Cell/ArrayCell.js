@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
 import { Select } from 'antd';
-import { func, number, string, any, bool } from 'prop-types';
+import { func, number, string, any } from 'prop-types';
 
 const { Option } = Select;
 
-const ArrayCell = ({ children, onChange, row, column, active }) => (
+const ArrayCell = ({ children, onChange, row, column, mode }) => (
 	<Fragment>
-		{active ? (
+		{mode === 'edit' ? (
 			<Select
 				value={children}
 				css={{
@@ -41,7 +41,7 @@ ArrayCell.propTypes = {
 	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
-	active: bool,
+	mode: string,
 };
 
 export default ArrayCell;
