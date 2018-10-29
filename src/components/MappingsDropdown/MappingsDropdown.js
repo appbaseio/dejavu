@@ -26,7 +26,7 @@ const MappingsDropdown = ({ mapping }: Props) => (
 		}
 		trigger="click"
 	>
-		<MappingsIcon mapping={mapping} />
+		<MappingsIcon mapping={mapping} css={{ cursor: 'pointer' }} />
 	</Popover>
 );
 

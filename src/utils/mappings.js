@@ -81,5 +81,19 @@ const es6mappings = {
 	},
 };
 
+const getSortableTypes = () => {
+	const sortableTypes = Object.keys(es6mappings).reduce((result, value) => {
+		if (
+			['Boolean', 'Geo Point', 'Geo Shape', 'Image'].indexOf(value) === -1
+		) {
+			result.push(es6mappings[value].type);
+		}
+
+		return result;
+	}, []);
+
+	return sortableTypes;
+};
+
 // eslint-disable-next-line
-export { extractColumns, es6mappings, META_FIELDS };
+export { extractColumns, es6mappings, META_FIELDS, getSortableTypes };

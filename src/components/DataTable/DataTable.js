@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
-import { Popover } from 'antd';
+import { Popover, Icon } from 'antd';
 
 import MappingsDropdown from '../MappingsDropdown';
 import Cell from '../Cell';
@@ -19,21 +19,23 @@ import {
 	addDataRequest,
 } from '../../actions';
 import { getVisibleColumns } from '../../reducers/mappings';
-import { META_FIELDS } from '../../utils/mappings';
+import { META_FIELDS, getSortableTypes } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
+const srotableTypes = getSortableTypes();
 
-// making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
 type Props = {
 	data: object[],
 	mappings: object,
 	activeCell: { row: number, column: string },
 	setCellActive: (number, string) => void,
 	setCellValue: (string, string, any, string, string) => void,
+	handleSortChange: string => void,
 	visibleColumns: string[],
 	mode: string,
+	sort: string,
 };
 
 type State = {
@@ -75,6 +77,21 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
+	handleSort = col => {
+		const { mappings, handleSortChange } = this.props;
+		let column = col;
+
+		if (
+			mappings.properties[col] &&
+			mappings.properties[col].type &&
+			mappings.properties[col].type === 'text'
+		) {
+			column = `${col}.keyword`;
+		}
+
+		handleSortChange(column);
+	};
+
 	render() {
 		const {
 			activeCell,
@@ -82,6 +99,7 @@ class DataTable extends Component<Props, State> {
 			setCellActive: setCellActiveDispatch,
 			visibleColumns,
 			mode,
+			sort,
 		} = this.props;
 
 		const { data } = this.state;
@@ -112,15 +130,46 @@ class DataTable extends Component<Props, State> {
 										<Flex
 											justifyContent="space-between"
 											alignItems="center"
+											css={{
+												width: '100%',
+											}}
 										>
-											{col}
-											{mappings.properties[col] && (
-												<MappingsDropdown
-													mapping={
-														mappings.properties[col]
-													}
-												/>
-											)}
+											<Flex alignItems="center">
+												{mappings.properties[col] && (
+													<MappingsDropdown
+														mapping={
+															mappings.properties[
+																col
+															]
+														}
+													/>
+												)}
+												<span
+													css={{ marginLeft: '5px' }}
+												>
+													{col}
+												</span>
+											</Flex>
+											{mappings.properties[col] &&
+												mappings.properties[col].type &&
+												srotableTypes.indexOf(
+													mappings.properties[col]
+														.type,
+												) > -1 && (
+													<Icon
+														type={`sort-${
+															sort === 'asc'
+																? 'ascending'
+																: 'descending'
+														}`}
+														onClick={() =>
+															this.handleSort(col)
+														}
+														css={{
+															cursor: 'pointer',
+														}}
+													/>
+												)}
 										</Flex>
 									</CellContent>
 								</StyledCell>
@@ -203,6 +252,8 @@ DataTable.propTypes = {
 	setCellActive: func.isRequired,
 	setCellValue: func.isRequired,
 	visibleColumns: arrayOf(string).isRequired,
+	handleSortChange: func.isRequired,
+	sort: string,
 	mode: string,
 };
 

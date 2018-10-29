@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import {
 	ReactiveBase,
@@ -6,10 +8,9 @@ import {
 } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf } from 'prop-types';
-import { Skeleton, Spin } from 'antd';
+import { Skeleton, Spin, Icon } from 'antd';
 import { css } from 'react-emotion';
 
-// @flow
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
@@ -41,13 +42,38 @@ type Props = {
 	searchableColumns: string[],
 };
 
-class DataBrowser extends Component<Props> {
+type State = {
+	sortField: string,
+	sort: string,
+};
+
+class DataBrowser extends Component<Props, State> {
+	state = {
+		sort: 'asc',
+		sortField: '_id',
+	};
+
 	componentDidMount() {
 		this.props.fetchMappings();
 	}
 
 	handleReload = () => {
 		this.props.fetchMappings();
+	};
+
+	handleSortChange = sortField => {
+		this.setState(prevState => {
+			if (prevState.sortField === sortField) {
+				return {
+					sort: prevState.sort === 'asc' ? 'desc' : 'asc',
+				};
+			}
+
+			return {
+				sort: 'asc',
+				sortField,
+			};
+		});
 	};
 
 	render() {
@@ -75,6 +101,8 @@ class DataBrowser extends Component<Props> {
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
+		const { sort, sortField } = this.state;
+
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading &&
@@ -88,15 +116,29 @@ class DataBrowser extends Component<Props> {
 								url={url}
 							>
 								<Actions onReload={this.handleReload} />
-								<DataSearch
-									componentId="GlobalSearch"
-									autosuggest={false}
-									dataField={searchColumns}
-									fieldWeights={weights}
-									innerClass={{
-										input: 'ant-input',
-									}}
-								/>
+								<div css={{ position: 'relative' }}>
+									<DataSearch
+										componentId="GlobalSearch"
+										autosuggest={false}
+										dataField={searchColumns}
+										fieldWeights={weights}
+										innerClass={{
+											input: `ant-input ${css`
+												padding-left: 35px;
+											`}`,
+										}}
+										showIcon={false}
+									/>
+									<Icon
+										type="search"
+										css={{
+											position: 'absolute',
+											top: '50%',
+											transform: 'translateY(-50%)',
+											left: '10px',
+										}}
+									/>
+								</div>
 								<div
 									id="result-list"
 									css={{
@@ -114,7 +156,8 @@ class DataBrowser extends Component<Props> {
 									<ReactiveList
 										key={String(reactiveListKey)}
 										componentId="results"
-										dataField="_id"
+										dataField={sortField}
+										sortBy={sort}
 										scrollTarget="result-list"
 										pagination={false}
 										size={20}
@@ -144,6 +187,10 @@ class DataBrowser extends Component<Props> {
 												}
 												data={data}
 												mappings={mappings[appname]}
+												handleSortChange={
+													this.handleSortChange
+												}
+												sort={sort}
 											/>
 										)}
 									/>

@@ -2,7 +2,6 @@ import styled, { css } from 'react-emotion';
 
 const Flex = styled.div`
 	display: flex;
-	width: 100%;
 	flex-direction: ${({ flexDirection }) => flexDirection || 'row'};
 	flex-wrap: ${({ wrap }) => wrap || 'wrap'};
 	${({ alignItems }) =>

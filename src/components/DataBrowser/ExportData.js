@@ -107,9 +107,6 @@ class ExportData extends Component<Props, State> {
 				<Modal
 					visible={isShowingModal}
 					afterClose={this.handleAfterClose}
-					css={{
-						top: '10px',
-					}}
 					onCancel={this.toggleModal}
 					destroyOnClose
 					maskClosable={false}
