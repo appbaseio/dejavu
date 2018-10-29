@@ -1,7 +1,12 @@
+// @flow
 import React from 'react';
 import { object, oneOfType, array } from 'prop-types';
 
-const JsonView = ({ json }) => (
+type Props = {
+	json?: object | array,
+};
+
+const JsonView = ({ json }: Props) => (
 	<pre css={{ margin: 0 }}>{JSON.stringify(json, null, 2)}</pre>
 );
 

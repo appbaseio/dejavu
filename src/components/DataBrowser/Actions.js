@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { func } from 'prop-types';
 import { Button } from 'antd';
@@ -9,7 +11,9 @@ import ShowHideColumn from './ShowHideColumns';
 import ModeSwitch from './ModeSwitch';
 import ExportData from './ExportData';
 
-const Actions = ({ onReload }) => (
+type Props = { onReload: () => void };
+
+const Actions = ({ onReload }: Props) => (
 	<div css={{ margin: '20px 0' }}>
 		<Flex alignItems="flex-end" justifyContent="space-between">
 			<div>

@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import { func, number, string, any } from 'prop-types';
 import { Popover, Button, Modal } from 'antd';
@@ -10,7 +12,20 @@ import CellStyled from './Cell.styles';
 import JsonView from '../JsonView';
 import { isVaildJSON } from '../../utils';
 
-class ObjectCell extends Component {
+type Props = {
+	children: any,
+	onChange: (number, string, any) => void,
+	row: number,
+	column: string,
+	mode: string,
+};
+
+type State = {
+	showModal: boolean,
+	error: boolean,
+	value: string,
+};
+class ObjectCell extends Component<Props, State> {
 	state = {
 		showModal: false,
 		error: false,
@@ -23,7 +38,7 @@ class ObjectCell extends Component {
 		}));
 	};
 
-	handleJsonInput = value => {
+	handleJsonInput = (value: string) => {
 		this.setState({
 			error: !isVaildJSON(value),
 			value,
@@ -33,7 +48,8 @@ class ObjectCell extends Component {
 	saveValue = () => {
 		const { error, value } = this.state;
 		const { onChange, row, column } = this.props;
-		const valueToSave = JSON.parse(value || {});
+		const valueToSave = isVaildJSON(value) ? JSON.parse(value) : {};
+
 		if (!error) {
 			onChange(row, column, valueToSave);
 			this.toggleModal();

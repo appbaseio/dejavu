@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { object } from 'prop-types';
 import { Popover } from 'antd';
@@ -5,7 +7,11 @@ import { Popover } from 'antd';
 import JsonView from '../JsonView';
 import MappingsIcon from '../MappingsIcon';
 
-const MappingsDropdown = ({ mapping }) => (
+type Props = {
+	mapping: object,
+};
+
+const MappingsDropdown = ({ mapping }: Props) => (
 	<Popover
 		content={
 			<div

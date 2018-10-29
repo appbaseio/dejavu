@@ -33,7 +33,7 @@ const Cell = styled('td')`
 		isFixed &&
 		css`
 			position: sticky;
-			left: 0;
+			left: 0px;
 			border-bottom: 1px solid ${colors.tableBorderColor};
 			box-shadow: 0px 1px 1px 0px ${colors.tableBorderColor};
 		`};

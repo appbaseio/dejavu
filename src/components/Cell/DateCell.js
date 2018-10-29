@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { DatePicker } from 'antd';
 import { func, number, string, any } from 'prop-types';
@@ -5,6 +7,16 @@ import moment from 'moment';
 
 import CellStyled from './Cell.styles';
 import { getDateFormat } from '../../utils';
+
+type Props = {
+	children: any,
+	onChange: (number, string, any) => void,
+	onClick: (any, any) => void,
+	format?: string,
+	row: number,
+	column: string,
+	mode: string,
+};
 
 const DateCell = ({
 	children,
@@ -14,7 +26,7 @@ const DateCell = ({
 	column,
 	format,
 	mode,
-}) => (
+}: Props) => (
 	<CellStyled
 		onFocus={() => onClick(row, column)}
 		onBlur={() => {

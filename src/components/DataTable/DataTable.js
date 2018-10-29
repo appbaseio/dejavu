@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { connect } from 'react-redux';
@@ -22,7 +24,20 @@ import colors from '../theme/colors';
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
 // making DataTable stateful to update data from cell since onAllData is invoked only when data changes due to query
-class DataTable extends Component {
+type Props = {
+	data: object[],
+	mappings: object,
+	activeCell: { row: number, column: string },
+	setCellActive: (number, string) => void,
+	setCellValue: (string, string, any, string, string) => void,
+	visibleColumns: string[],
+	mode: string,
+};
+
+type State = {
+	data: object[],
+};
+class DataTable extends Component<Props, State> {
 	state = {
 		data: this.props.data,
 	};

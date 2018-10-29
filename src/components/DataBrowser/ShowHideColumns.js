@@ -1,13 +1,24 @@
+// @flow
+
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
-import { string, arrayOf, func } from 'prop-types';
+import { string, arrayOf, func, object } from 'prop-types';
 import { Button, Checkbox, Dropdown } from 'antd';
 import { getColumns, getVisibleColumns } from '../../reducers/mappings';
 import { setVisibleColumns } from '../../actions/mappings';
 
 const { Group } = Checkbox;
 
-class ShowHideColumns extends Component {
+type Props = {
+	columns: string[],
+	visibleColumns: string[],
+	setVisibleColumns: (string[]) => void,
+};
+
+type State = {
+	showDropdown: boolean,
+};
+class ShowHideColumns extends Component<Props, State> {
 	showHideDropdownNode = createRef();
 
 	state = {
@@ -30,10 +41,11 @@ class ShowHideColumns extends Component {
 		);
 	}
 
-	handleDropdownOutsideClick = e => {
+	handleDropdownOutsideClick = (e: object) => {
 		if (
 			this.showHideDropdownNode &&
 			this.showHideDropdownNode.current &&
+			this.showHideDropdownNode.current.contains &&
 			this.showHideDropdownNode.current.contains(e.target)
 		) {
 			return;
@@ -75,7 +87,7 @@ class ShowHideColumns extends Component {
 
 		return (
 			<Dropdown
-				ref={this.showHideDropdownButtonNode}
+				ref={this.showHideDropdownNode}
 				overlay={
 					<div
 						css={{
@@ -83,6 +95,8 @@ class ShowHideColumns extends Component {
 							borderRadius: 4,
 							padding: 10,
 							boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
+							maxHeight: '80vh',
+							overflowY: 'auto',
 						}}
 						ref={this.showHideDropdownNode}
 					>

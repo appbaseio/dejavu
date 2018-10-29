@@ -7,7 +7,9 @@ import {
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf } from 'prop-types';
 import { Skeleton, Spin } from 'antd';
+import { css } from 'react-emotion';
 
+// @flow
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
@@ -25,7 +27,20 @@ import {
 import { parseUrl } from '../../utils';
 import colors from '../theme/colors';
 
-class DataBrowser extends Component {
+type Props = {
+	appname: string,
+	url: string,
+	fetchMappings: () => void,
+	isLoading: boolean,
+	mappings: object,
+	reactiveListKey: number,
+	isDataLoading: boolean,
+	indexes: string[],
+	types: string[],
+	searchableColumns: string[],
+};
+
+class DataBrowser extends Component<Props> {
 	componentDidMount() {
 		this.props.fetchMappings();
 	}
@@ -105,6 +120,11 @@ class DataBrowser extends Component {
 									react={{
 										and: ['GlobalSearch'],
 									}}
+									innerClass={{
+										poweredBy: css`
+											display: none;
+										`,
+									}}
 									loader={
 										<Flex
 											css={{ marginTop: '20px' }}
@@ -160,8 +180,8 @@ DataBrowser.propTypes = {
 	mappings: object,
 	reactiveListKey: number.isRequired,
 	isDataLoading: bool.isRequired,
-	indexes: arrayOf(string),
-	types: arrayOf(string),
+	indexes: arrayOf(string).isRequired,
+	types: arrayOf(string).isRequired,
 	searchableColumns: arrayOf(string),
 };
 

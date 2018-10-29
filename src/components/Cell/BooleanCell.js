@@ -1,3 +1,5 @@
+// @flow
+
 import React from 'react';
 import { Dropdown, Icon, Menu, Button } from 'antd';
 import { func, number, string, any } from 'prop-types';
@@ -6,7 +8,15 @@ import CellStyled from './Cell.styles';
 
 const { Item } = Menu;
 
-const BooleanCell = ({ children, onChange, row, column, mode }) => (
+type Props = {
+	children: boolean,
+	onChange: (number, string, any) => void,
+	row: number,
+	column: string,
+	mode: string,
+};
+
+const BooleanCell = ({ children, onChange, row, column, mode }: Props) => (
 	<CellStyled>
 		{mode === 'edit' ? (
 			<Dropdown
@@ -19,7 +29,7 @@ const BooleanCell = ({ children, onChange, row, column, mode }) => (
 				overlay={
 					<Menu
 						onClick={({ key }) =>
-							onChange(row, column, key === 'true')
+							onChange(row, column, Boolean(key === 'true'))
 						}
 					>
 						<Item key="true">

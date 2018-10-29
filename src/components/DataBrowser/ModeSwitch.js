@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { func, string, object } from 'prop-types';
 import { Radio, Icon } from 'antd';
@@ -8,7 +10,13 @@ import { getMode } from '../../reducers/mode';
 import setMode from '../../actions/mode';
 import { updateQueryStringParameter } from '../../utils';
 
-class ModeSwitch extends Component {
+type Props = {
+	mode: string,
+	setMode: string => void,
+	history: object,
+	location: object,
+};
+class ModeSwitch extends Component<Props> {
 	handleModeChange = e => {
 		const {
 			target: { value },

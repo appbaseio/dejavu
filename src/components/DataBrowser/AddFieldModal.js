@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Select, Radio, Row, Col, Button } from 'antd';
 import { string, func, object } from 'prop-types';
@@ -26,7 +28,27 @@ const customMappings = {
 	[CUSTOM_MAPPING]: {},
 };
 
-class AddFieldModal extends Component {
+type Props = {
+	appname: string,
+	mappings: object,
+	addMappingRequest: (string, string, string, object) => void,
+	indexTypeMap: object,
+};
+
+type State = {
+	isShowingModal: boolean,
+	addColumnError: boolean,
+	addColumnField: string,
+	isColumnFieldValid: boolean,
+	addColumnMapping: string,
+	selectedIndex: string,
+	types: string[],
+	selectedType: string,
+	selectedShape: string,
+	selectedPrimitiveType: string,
+};
+
+class AddFieldModal extends Component<Props, State> {
 	state = {
 		isShowingModal: false,
 		addColumnError: false,

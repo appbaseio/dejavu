@@ -1,12 +1,30 @@
+// @flow
+
 import React from 'react';
 import { Input } from 'antd';
 import { func, number, string, any, bool } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
+type Props = {
+	children: [],
+	onChange: (number, string, any) => void,
+	onClick: (any, any) => void,
+	row: number,
+	column: string,
+	active: boolean,
+};
+
 const { TextArea } = Input;
 
-const TextCell = ({ active, children, onChange, onClick, row, column }) => (
+const TextCell = ({
+	active,
+	children,
+	onChange,
+	onClick,
+	row,
+	column,
+}: Props) => (
 	<CellStyled
 		onFocus={() => onClick(row, column)}
 		onBlur={() => {

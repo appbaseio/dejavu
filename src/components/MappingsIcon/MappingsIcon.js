@@ -1,9 +1,16 @@
+// @flow
+
 import React from 'react';
+import { object } from 'prop-types';
 import { Icon } from 'antd';
 import Hash from 'react-feather/dist/icons/hash';
 import Toggle from 'react-feather/dist/icons/toggle-right';
 
-const MappingsIcon = ({ mapping, ...props }) => {
+type Props = {
+	mapping: object,
+};
+
+const MappingsIcon = ({ mapping, ...props }: Props) => {
 	const { type } = mapping;
 	switch (type) {
 		case 'text':

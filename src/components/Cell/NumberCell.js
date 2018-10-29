@@ -1,16 +1,29 @@
+// @flow
+
 import React, { Component } from 'react';
 import { InputNumber, Tooltip } from 'antd';
 import { func, number, string, any, bool } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
-// stateful for validation
-class NumberCell extends Component {
+type Props = {
+	children: any,
+	onChange: (number, string, any) => void,
+	onClick: (any, any) => void,
+	row: number,
+	column: string,
+	active: boolean,
+};
+
+type State = {
+	value: any,
+};
+class NumberCell extends Component<Props, State> {
 	state = {
 		value: this.props.children,
 	};
 
-	handleChange = nextValue => {
+	handleChange = (nextValue: any) => {
 		this.setState(({ value }) => {
 			if (
 				typeof nextValue === 'number' ||

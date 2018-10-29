@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Select, Row, Col, Button } from 'antd';
 import { func, object } from 'prop-types';
@@ -15,7 +17,22 @@ import Item from './Item.styles';
 
 const { Option } = Select;
 
-class AddRowModal extends Component {
+type Props = {
+	addDataRequest: (string, string, string, object) => void,
+	indexTypeMap: object,
+};
+
+type State = {
+	isShowingModal: boolean,
+	addDataError: boolean,
+	addDataValue: string,
+	documentId: string,
+	selectedIndex: string,
+	types: string[],
+	selectedType: string,
+};
+
+class AddRowModal extends Component<Props, State> {
 	state = {
 		isShowingModal: false,
 		addDataError: false,

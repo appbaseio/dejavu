@@ -1,6 +1,7 @@
+// @flow
 import React, { Component, Fragment } from 'react';
 import { Modal, Button, Spin } from 'antd';
-import { arrayOf, string } from 'prop-types';
+import { arrayOf, string, object, array } from 'prop-types';
 import { connect } from 'react-redux';
 import { unparse } from 'papaparse';
 import { saveAs } from 'file-saver';
@@ -12,7 +13,20 @@ import exportData from '../../utils/exportData';
 
 import Flex from '../Flex';
 
-class ExportData extends Component {
+type Props = {
+	indexes: string[],
+	types: string[],
+	url: string,
+};
+
+type State = {
+	isShowingModal: boolean,
+	isDownloading: boolean,
+	error?: object,
+	data: array,
+};
+
+class ExportData extends Component<Props, State> {
 	state = {
 		isShowingModal: false,
 		isDownloading: false,

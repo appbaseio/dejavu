@@ -1,5 +1,7 @@
+// @flow
+
 import React from 'react';
-import { func, number, string, bool, any } from 'prop-types';
+import { func, number, string, bool, any, object } from 'prop-types';
 
 import { isObject } from '../../utils';
 import { dateFormatMap } from '../../utils/date';
@@ -11,7 +13,18 @@ import ArrayCell from './ArrayCell';
 import DateCell from './DateCell';
 import ObjectCell from './ObjectCell';
 
-const Cell = ({ mapping, ...props }) => {
+type Props = {
+	mapping: object,
+	children: any,
+	onClick: func,
+	row: number,
+	column: string,
+	active: boolean,
+	onChange: func,
+	mode: string,
+};
+
+const Cell = ({ mapping, ...props }: Props) => {
 	switch (mapping.type) {
 		case 'boolean':
 			return <BooleanCell {...props} />;

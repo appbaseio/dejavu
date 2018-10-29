@@ -1,8 +1,18 @@
+// @flow
+
 import React, { Component, Fragment } from 'react';
 import { string } from 'prop-types';
 import { Button } from 'antd';
 
-class ErrorMessage extends Component {
+type State = {
+	isShowingDetails: boolean,
+};
+
+type Props = {
+	description: string,
+};
+
+class ErrorMessage extends Component<Props, State> {
 	state = {
 		isShowingDetails: false,
 	};

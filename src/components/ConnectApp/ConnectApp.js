@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { Form, Input, Button, Alert } from 'antd';
 import { connect } from 'react-redux';
@@ -22,6 +24,25 @@ import { getUrlParams } from '../../utils';
 import ErrorMessage from '../ErrorMessage';
 import { getMode } from '../../reducers/mode';
 
+type Props = {
+	appname?: string,
+	url?: string,
+	connectApp: (string, string) => void,
+	disconnectApp: () => void,
+	isConnected: boolean,
+	isLoading: boolean,
+	error?: object,
+	history: object,
+	mode: string,
+	setMode: string => void,
+	onErrorClose: () => void,
+};
+
+type State = {
+	appname: string,
+	url: string,
+};
+
 const { Item } = Form;
 
 const formItemProps = {
@@ -32,7 +53,7 @@ const formItemProps = {
 	},
 };
 
-class ConnectApp extends Component {
+class ConnectApp extends Component<Props, State> {
 	state = {
 		appname: this.props.appname || '',
 		url: this.props.url || '',
@@ -218,6 +239,7 @@ ConnectApp.propTypes = {
 	history: object,
 	onErrorClose: func.isRequired,
 	setMode: func.isRequired,
+	mode: string,
 };
 
 export default withRouter(

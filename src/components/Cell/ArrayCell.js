@@ -1,12 +1,22 @@
+// @flow
+
 import React, { Fragment } from 'react';
 import { Select, Popover, Button } from 'antd';
 import { func, number, string, any } from 'prop-types';
 
 import JsonView from '../JsonView';
 
+type Props = {
+	children: [],
+	onChange: (number, string, any) => void,
+	row: number,
+	column: string,
+	mode: string,
+};
+
 const { Option } = Select;
 
-const ArrayCell = ({ children, onChange, row, column, mode }) => (
+const ArrayCell = ({ children, onChange, row, column, mode }: Props) => (
 	<Fragment>
 		{mode === 'edit' ? (
 			<Select
