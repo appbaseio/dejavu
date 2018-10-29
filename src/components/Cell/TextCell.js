@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Input } from 'antd';
+import { Input, Popover } from 'antd';
 import { func, number, string, any, bool } from 'prop-types';
 
 import CellStyled from './Cell.styles';
@@ -32,8 +32,6 @@ const TextCell = ({
 		}}
 		tabIndex="0"
 		role="Gridcell"
-		overflow={active ? 'none' : 'hidden'}
-		padding={active ? 0 : 10}
 	>
 		{active ? (
 			<div
@@ -59,7 +57,22 @@ const TextCell = ({
 				/>
 			</div>
 		) : (
-			children
+			<Popover
+				placement="topLeft"
+				content={
+					<div
+						css={{
+							maxWidth: '230px',
+							maxHeight: '300px',
+							overflow: 'auto',
+						}}
+					>
+						<div>{children}</div>
+					</div>
+				}
+			>
+				{children}
+			</Popover>
 		)}
 	</CellStyled>
 );

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
 	ReactiveBase,
 	ReactiveList,
@@ -13,6 +13,7 @@ import { css } from 'react-emotion';
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
+import AddRowModal from './AddRowModal';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
@@ -79,72 +80,77 @@ class DataBrowser extends Component<Props> {
 				{!isLoading &&
 					!isDataLoading &&
 					mappings && (
-						<ReactiveBase
-							app={indexes.join(',')}
-							type={types.join(',')}
-							credentials={credentials}
-							url={url}
-						>
-							<Actions onReload={this.handleReload} />
-							<DataSearch
-								componentId="GlobalSearch"
-								autosuggest={false}
-								dataField={searchColumns}
-								fieldWeights={weights}
-								innerClass={{
-									input: 'ant-input',
-								}}
-							/>
-							<div
-								id="result-list"
-								css={{
-									overflow: 'auto',
-									borderRadius: '4px',
-									margin: '20px 0',
-									maxHeight: '450px',
-									position: 'relative',
-									border: `1px solid ${
-										colors.tableBorderColor
-									}`,
-									scrollBehavior: 'smooth',
-								}}
+						<Fragment>
+							<ReactiveBase
+								app={indexes.join(',')}
+								type={types.join(',')}
+								credentials={credentials}
+								url={url}
 							>
-								<ReactiveList
-									key={String(reactiveListKey)}
-									componentId="results"
-									dataField="_id"
-									scrollTarget="result-list"
-									pagination={false}
-									size={20}
-									showResultStats={false}
-									react={{
-										and: ['GlobalSearch'],
-									}}
+								<Actions onReload={this.handleReload} />
+								<DataSearch
+									componentId="GlobalSearch"
+									autosuggest={false}
+									dataField={searchColumns}
+									fieldWeights={weights}
 									innerClass={{
-										poweredBy: css`
-											display: none;
-										`,
+										input: 'ant-input',
 									}}
-									loader={
-										<Flex
-											css={{ marginTop: '20px' }}
-											justifyContent="center"
-										>
-											<Spin />
-										</Flex>
-									}
-									onAllData={data => (
-										<DataTable
-											key={
-												data.length ? data[0]._id : '0'
-											}
-											data={data}
-											mappings={mappings[appname]}
-										/>
-									)}
 								/>
-							</div>
-						</ReactiveBase>
+								<div
+									id="result-list"
+									css={{
+										overflow: 'auto',
+										borderRadius: '4px',
+										margin: '20px 0',
+										maxHeight: '450px',
+										position: 'relative',
+										border: `1px solid ${
+											colors.tableBorderColor
+										}`,
+										scrollBehavior: 'smooth',
+									}}
+								>
+									<ReactiveList
+										key={String(reactiveListKey)}
+										componentId="results"
+										dataField="_id"
+										scrollTarget="result-list"
+										pagination={false}
+										size={20}
+										showResultStats={false}
+										react={{
+											and: ['GlobalSearch'],
+										}}
+										innerClass={{
+											poweredBy: css`
+												display: none;
+											`,
+										}}
+										loader={
+											<Flex
+												css={{ marginTop: '20px' }}
+												justifyContent="center"
+											>
+												<Spin />
+											</Flex>
+										}
+										onAllData={data => (
+											<DataTable
+												key={
+													data.length
+														? data[0]._id
+														: '0'
+												}
+												data={data}
+												mappings={mappings[appname]}
+											/>
+										)}
+									/>
+								</div>
+							</ReactiveBase>
+							<AddRowModal />
+						</Fragment>
 					)}
 				{(isLoading || isDataLoading) && (
 					<Flex css={{ marginTop: '20px' }} justifyContent="center">

@@ -2,11 +2,13 @@ import styled from 'react-emotion';
 
 const Cell = styled('div')(
 	{
-		height: 42,
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
+		height: 'auto',
+		width: '100%',
 		outline: 'none',
 		position: 'relative',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
 	},
 	({ overflow, padding }) =>
 		Object.assign({}, overflow && { overflow }, padding && { padding }),

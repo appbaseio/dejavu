@@ -45,14 +45,17 @@ const Cell = ({ mapping, ...props }: Props) => {
 		case 'geo_point':
 		case 'geo_shape':
 			return <ObjectCell {...props} />;
-		default:
-			if (Array.isArray(props.children)) {
+		case 'string':
+		case 'text':
+			if (Array.isArray(props.children) && props) {
 				return <ArrayCell {...props} />;
 			}
 			if (isObject(mapping.properties)) {
 				return <ObjectCell {...props} />;
 			}
 			return <TextCell {...props} />;
+		default:
+			return <ObjectCell {...props} />;
 	}
 };
 

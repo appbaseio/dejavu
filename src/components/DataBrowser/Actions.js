@@ -6,7 +6,6 @@ import { Button } from 'antd';
 
 import Flex from '../Flex';
 import AddFieldModal from './AddFieldModal';
-import AddRowModal from './AddRowModal';
 import ShowHideColumn from './ShowHideColumns';
 import ModeSwitch from './ModeSwitch';
 import ExportData from './ExportData';
@@ -27,7 +26,6 @@ const Actions = ({ onReload }: Props) => (
 					Reload
 				</Button>
 				<AddFieldModal />
-				<AddRowModal />
 			</div>
 			<div>
 				<ModeSwitch />

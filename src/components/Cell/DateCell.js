@@ -43,7 +43,7 @@ const DateCell = ({
 				css={{
 					width: '100% !important',
 					height: '100%',
-					input: { height: 42, borderColor: 'transparent' },
+					input: { borderColor: 'transparent' },
 				}}
 				onChange={(momentObject, dateString) => {
 					if (children !== dateString) {

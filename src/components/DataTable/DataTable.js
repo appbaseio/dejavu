@@ -4,10 +4,12 @@ import React, { Component } from 'react';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
+import { Popover } from 'antd';
 
 import MappingsDropdown from '../MappingsDropdown';
 import Cell from '../Cell';
 import StyledCell from './Cell.style';
+import CellContent from './CellContent.style';
 import Flex from '../Flex';
 
 import { getActiveCell } from '../../reducers/cell';
@@ -106,19 +108,21 @@ class DataTable extends Component<Props, State> {
 									}
 									isFixed={col === '_id'}
 								>
-									<Flex
-										justifyContent="space-between"
-										alignItems="center"
-									>
-										{col}
-										{mappings.properties[col] && (
-											<MappingsDropdown
-												mapping={
-													mappings.properties[col]
-												}
-											/>
-										)}
-									</Flex>
+									<CellContent>
+										<Flex
+											justifyContent="space-between"
+											alignItems="center"
+										>
+											{col}
+											{mappings.properties[col] && (
+												<MappingsDropdown
+													mapping={
+														mappings.properties[col]
+													}
+												/>
+											)}
+										</Flex>
+									</CellContent>
 								</StyledCell>
 							))}
 						</tr>
@@ -138,27 +142,49 @@ class DataTable extends Component<Props, State> {
 										}
 										isFixed={col === '_id'}
 									>
-										{isMetaField(col) ? (
-											dataItem[col]
-										) : (
-											<Cell
-												row={row}
-												column={col}
-												mode={mode}
-												active={
-													mode === 'edit' &&
-													activeCell.row === row &&
-													activeCell.column === col
-												}
-												onClick={setCellActiveDispatch}
-												onChange={this.handleChange}
-												mapping={
-													mappings.properties[col]
-												}
-											>
-												{dataItem[col]}
-											</Cell>
-										)}
+										<CellContent>
+											{isMetaField(col) ? (
+												<Popover
+													placement="topLeft"
+													content={dataItem[col]}
+												>
+													<div
+														style={{
+															width: '100%',
+															overflow: 'hidden',
+															textOverflow:
+																'ellipsis',
+															whiteSpace:
+																'nowrap',
+														}}
+													>
+														{dataItem[col]}
+													</div>
+												</Popover>
+											) : (
+												<Cell
+													row={row}
+													column={col}
+													mode={mode}
+													active={
+														mode === 'edit' &&
+														activeCell.row ===
+															row &&
+														activeCell.column ===
+															col
+													}
+													onClick={
+														setCellActiveDispatch
+													}
+													onChange={this.handleChange}
+													mapping={
+														mappings.properties[col]
+													}
+												>
+													{dataItem[col]}
+												</Cell>
+											)}
+										</CellContent>
 									</StyledCell>
 								))}
 							</tr>
