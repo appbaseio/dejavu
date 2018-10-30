@@ -130,7 +130,11 @@ class DataTable extends Component<Props, State> {
 									}
 									isFixed={col === '_id'}
 								>
-									<CellContent>
+									<CellContent
+										css={{
+											padding: '10px',
+										}}
+									>
 										<Flex
 											justifyContent="space-between"
 											alignItems="center"
@@ -194,23 +198,6 @@ class DataTable extends Component<Props, State> {
 											})
 										}
 										isFixed={col === '_id'}
-										tabIndex="0"
-										role="Gridcell"
-										onFocus={e => {
-											e.stopPropagation();
-											if (mode === 'edit') {
-												setCellActiveDispatch(row, col);
-											}
-										}}
-										onBlur={e => {
-											e.stopPropagation();
-											if (mode === 'edit') {
-												setCellActiveDispatch(
-													null,
-													null,
-												);
-											}
-										}}
 									>
 										<CellContent>
 											{isMetaField(col) ? (
@@ -253,6 +240,25 @@ class DataTable extends Component<Props, State> {
 													mapping={
 														mappings.properties[col]
 													}
+													handleFocus={e => {
+														e.stopPropagation();
+														if (mode === 'edit') {
+															setCellActiveDispatch(
+																row,
+																col,
+															);
+														}
+													}}
+													handleBlur={e => {
+														e.stopPropagation();
+														if (mode === 'edit') {
+															setCellActiveDispatch(
+																null,
+																null,
+															);
+														}
+													}}
+													shouldAutoFocus
 												>
 													{dataItem[col]}
 												</Cell>

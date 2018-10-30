@@ -261,7 +261,16 @@ class AddRowModal extends Component<Props, State> {
 											padding: '10px',
 										}}
 									>
-										<div>{item}</div>
+										<div>
+											<b>{item}</b>
+											{properties[item].type && (
+												<span
+													css={{ marginLeft: '10px' }}
+												>
+													({properties[item].type})
+												</span>
+											)}
+										</div>
 										<Cell
 											mapping={properties[item]}
 											onChange={val =>

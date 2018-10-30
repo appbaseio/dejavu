@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { InputNumber } from 'antd';
-import { func, any, bool } from 'prop-types';
+import { func, any, bool, object } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
@@ -10,6 +10,9 @@ type Props = {
 	children: any,
 	onChange: func,
 	active: boolean,
+	handleFocus?: any => void,
+	handleBlur?: any => void,
+	shouldAutoFocus?: boolean,
 };
 
 type State = {
@@ -33,8 +36,8 @@ class NumberCell extends Component<Props, State> {
 		});
 	};
 
-	saveChange = () => {
-		const { onChange, children } = this.props;
+	saveChange = (e: object) => {
+		const { onChange, children, handleBlur } = this.props;
 		const { value } = this.state;
 		if (value !== children) {
 			// only save value if it has changed
@@ -46,13 +49,17 @@ class NumberCell extends Component<Props, State> {
 
 			onChange(nextValue);
 		}
+
+		if (handleBlur) {
+			handleBlur(e);
+		}
 	};
 
 	render() {
-		const { children, active } = this.props;
+		const { children, active, handleFocus, shouldAutoFocus } = this.props;
 		const { value } = this.state;
 		return (
-			<CellStyled tabIndex="0" role="Gridcell">
+			<CellStyled tabIndex="0" role="Gridcell" onFocus={handleFocus}>
 				{active ? (
 					<div
 						css={{
@@ -61,13 +68,14 @@ class NumberCell extends Component<Props, State> {
 						}}
 					>
 						<InputNumber
-							autoFocus
+							autoFocus={shouldAutoFocus}
 							value={value}
 							onChange={this.handleChange}
 							css={{
 								width: '100%',
 								height: '100%',
 							}}
+							onBlur={this.saveChange}
 						/>
 					</div>
 				) : (
@@ -82,6 +90,9 @@ NumberCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
 	active: bool,
+	handleFocus: func,
+	handleBlur: func,
+	shouldAutoFocus: bool,
 };
 
 export default NumberCell;

@@ -26,6 +26,7 @@ const Cell = ({ mapping, ...props }: Props) => {
 		case 'boolean':
 			return <BooleanCell {...props} />;
 		case 'integer':
+		case 'float':
 		case 'long':
 			if (Array.isArray(props.children)) {
 				return <ArrayCell {...props} />;
