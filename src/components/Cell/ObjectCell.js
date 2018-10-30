@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import { func, number, string, any } from 'prop-types';
+import { func, any, string } from 'prop-types';
 import { Popover, Button, Modal } from 'antd';
 import AceEditor from 'react-ace';
 
@@ -14,9 +14,7 @@ import { isVaildJSON } from '../../utils';
 
 type Props = {
 	children: any,
-	onChange: (number, string, any) => void,
-	row: number,
-	column: string,
+	onChange: any => void,
 	mode: string,
 };
 
@@ -47,17 +45,17 @@ class ObjectCell extends Component<Props, State> {
 
 	saveValue = () => {
 		const { error, value } = this.state;
-		const { onChange, row, column } = this.props;
+		const { onChange } = this.props;
 		const valueToSave = isVaildJSON(value) ? JSON.parse(value) : {};
 
 		if (!error) {
-			onChange(row, column, valueToSave);
+			onChange(valueToSave);
 			this.toggleModal();
 		}
 	};
 
 	render() {
-		const { children, row, column, mode } = this.props;
+		const { children, mode } = this.props;
 		const { showModal, error, value } = this.state;
 		return (
 			<Fragment>
@@ -109,7 +107,7 @@ class ObjectCell extends Component<Props, State> {
 						mode="json"
 						theme="github"
 						onChange={this.handleJsonInput}
-						name={`${row}-${column}-json`}
+						name="object-editor"
 						value={value}
 						height="auto"
 						width="100%"
@@ -125,8 +123,6 @@ class ObjectCell extends Component<Props, State> {
 }
 
 ObjectCell.propTypes = {
-	row: number.isRequired,
-	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
 	mode: string,

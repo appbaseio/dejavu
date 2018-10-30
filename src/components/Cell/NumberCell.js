@@ -1,17 +1,14 @@
 // @flow
 
 import React, { Component } from 'react';
-import { InputNumber, Tooltip } from 'antd';
-import { func, number, string, any, bool } from 'prop-types';
+import { InputNumber } from 'antd';
+import { func, any, bool } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
 type Props = {
 	children: any,
-	onChange: (number, string, any) => void,
-	onClick: (any, any) => void,
-	row: number,
-	column: string,
+	onChange: func,
 	active: boolean,
 };
 
@@ -37,9 +34,8 @@ class NumberCell extends Component<Props, State> {
 	};
 
 	saveChange = () => {
-		const { onClick, onChange, row, column, children } = this.props;
+		const { onChange, children } = this.props;
 		const { value } = this.state;
-		onClick(null, null);
 		if (value !== children) {
 			// only save value if it has changed
 			let nextValue = value;
@@ -48,47 +44,32 @@ class NumberCell extends Component<Props, State> {
 				this.setState({ value: nextValue });
 			}
 
-			onChange(row, column, nextValue);
+			onChange(nextValue);
 		}
 	};
 
 	render() {
-		const { active, children, onClick, row, column } = this.props;
+		const { children, active } = this.props;
 		const { value } = this.state;
 		return (
-			<CellStyled
-				onFocus={() => onClick(row, column)}
-				onBlur={this.saveChange}
-				tabIndex="0"
-				role="Gridcell"
-				overflow={active ? 'none' : 'hidden'}
-				padding={active ? 0 : 10}
-			>
+			<CellStyled tabIndex="0" role="Gridcell">
 				{active ? (
-					<Tooltip
-						// tooltip can also be made conditionally visible with visible prop
-						title="Input Number"
-						placement="topLeft"
-						trigger={['focus']}
+					<div
+						css={{
+							width: '100%',
+							height: '100%',
+						}}
 					>
-						<div
+						<InputNumber
+							autoFocus
+							value={value}
+							onChange={this.handleChange}
 							css={{
-								position: 'absolute',
 								width: '100%',
 								height: '100%',
 							}}
-						>
-							<InputNumber
-								autoFocus
-								value={value}
-								onChange={this.handleChange}
-								css={{
-									width: '100%',
-									height: '100%',
-								}}
-							/>
-						</div>
-					</Tooltip>
+						/>
+					</div>
 				) : (
 					children
 				)}
@@ -98,12 +79,9 @@ class NumberCell extends Component<Props, State> {
 }
 
 NumberCell.propTypes = {
-	row: number.isRequired,
-	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
-	active: bool.isRequired,
-	onClick: func.isRequired,
+	active: bool,
 };
 
 export default NumberCell;

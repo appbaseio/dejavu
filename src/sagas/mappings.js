@@ -24,6 +24,7 @@ function* handleFetchMappings() {
 			let properties = {};
 			const types = [];
 			const indexTypeMap = {};
+			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
 				Object.keys(data[index].mappings).forEach(type => {
@@ -36,10 +37,15 @@ function* handleFetchMappings() {
 							type,
 						];
 						types.push(type);
+
 						properties = {
 							...properties,
 							...data[index].mappings[type].properties,
 						};
+
+						typePropertyMapping[index] = {};
+						typePropertyMapping[index][type] =
+							data[index].mappings[type].properties;
 					}
 				});
 			});
@@ -79,6 +85,7 @@ function* handleFetchMappings() {
 					allColumns,
 					visibleColumns,
 					searchableColumns,
+					typePropertyMapping,
 				),
 			);
 		} else {

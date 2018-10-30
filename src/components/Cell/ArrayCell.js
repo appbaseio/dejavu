@@ -2,21 +2,19 @@
 
 import React, { Fragment } from 'react';
 import { Select, Popover, Button } from 'antd';
-import { func, number, string, any } from 'prop-types';
+import { func, string, any } from 'prop-types';
 
 import JsonView from '../JsonView';
 
 type Props = {
 	children: [],
-	onChange: (number, string, any) => void,
-	row: number,
-	column: string,
+	onChange: func,
 	mode: string,
 };
 
 const { Option } = Select;
 
-const ArrayCell = ({ children, onChange, row, column, mode }: Props) => (
+const ArrayCell = ({ children, onChange, mode }: Props) => (
 	<Fragment>
 		{mode === 'edit' ? (
 			<Select
@@ -33,9 +31,11 @@ const ArrayCell = ({ children, onChange, row, column, mode }: Props) => (
 					},
 				}}
 				mode="multiple"
-				showSearch={false}
+				showSearch
+				allowClear
+				autoClearSearchValue
 				maxTagCount={0}
-				onChange={value => onChange(row, column, value)}
+				onChange={value => onChange(value)}
 				notFoundContent=""
 			>
 				{children.map(child => (
@@ -66,8 +66,6 @@ const ArrayCell = ({ children, onChange, row, column, mode }: Props) => (
 );
 
 ArrayCell.propTypes = {
-	row: number.isRequired,
-	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
 	mode: string,

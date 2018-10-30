@@ -10,6 +10,7 @@ const initialState = {
 	columns: [],
 	visibleColumns: [],
 	searchableColumns: [],
+	typePropertyMapping: {},
 };
 
 const mappings = (state = initialState, action) => {
@@ -23,6 +24,7 @@ const mappings = (state = initialState, action) => {
 		columns,
 		visibleColumns,
 		searchableColumns,
+		typePropertyMapping,
 	} = action;
 	switch (type) {
 		case MAPPINGS.MAPPINGS_FETCH_REQUEST:
@@ -42,6 +44,7 @@ const mappings = (state = initialState, action) => {
 				columns,
 				visibleColumns,
 				searchableColumns,
+				typePropertyMapping,
 			};
 		case MAPPINGS.MAPPINGS_FETCH_FAILURE:
 			return {
@@ -69,6 +72,7 @@ const getIndexTypeMap = state => state.mappings.indexTypeMap;
 const getColumns = state => state.mappings.columns;
 const getVisibleColumns = state => state.mappings.visibleColumns;
 const getSearchableColumns = state => state.mappings.searchableColumns;
+const getTypePropertyMapping = state => state.mappings.typePropertyMapping;
 
 export {
 	getMappings,
@@ -80,6 +84,7 @@ export {
 	getColumns,
 	getVisibleColumns,
 	getSearchableColumns,
+	getTypePropertyMapping,
 };
 
 export default mappings;

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { func, number, string, bool, any, object } from 'prop-types';
+import { func, bool, any, object } from 'prop-types';
 
 import { isObject } from '../../utils';
 import { dateFormatMap } from '../../utils/date';
@@ -16,9 +16,6 @@ import ObjectCell from './ObjectCell';
 type Props = {
 	mapping: object,
 	children: any,
-	onClick: func,
-	row: number,
-	column: string,
 	active: boolean,
 	onChange: func,
 	mode: string,
@@ -61,9 +58,6 @@ const Cell = ({ mapping, ...props }: Props) => {
 
 Cell.propTypes = {
 	children: any,
-	onClick: func.isRequired,
-	row: number.isRequired,
-	column: string.isRequired,
 	active: bool.isRequired,
 	onChange: func.isRequired,
 };

@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import { Modal, Input, Select, Row, Col, Button } from 'antd';
+import { Modal, Input, Select, Row, Col, Button, Tabs } from 'antd';
 import { func, object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
@@ -9,17 +9,25 @@ import AceEditor from 'react-ace';
 import 'brace/mode/json';
 import 'brace/theme/github';
 
-import { getIndexTypeMap } from '../../reducers/mappings';
+import {
+	getIndexTypeMap,
+	getTypePropertyMapping,
+} from '../../reducers/mappings';
 import { addDataRequest } from '../../actions';
 import { isVaildJSON } from '../../utils';
 
 import Item from './Item.styles';
+import Cell from '../Cell';
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 type Props = {
 	addDataRequest: (string, string, string, object) => void,
 	indexTypeMap: object,
+	typePropertyMapping?: {
+		[key: string]: object,
+	},
 };
 
 type State = {
@@ -30,6 +38,8 @@ type State = {
 	selectedIndex: string,
 	types: string[],
 	selectedType: string,
+	tab: string,
+	tabData: object,
 };
 
 class AddRowModal extends Component<Props, State> {
@@ -43,6 +53,8 @@ class AddRowModal extends Component<Props, State> {
 		selectedType: this.props.indexTypeMap[
 			Object.keys(this.props.indexTypeMap)[0]
 		][0],
+		tab: 'gui',
+		tabData: {},
 	};
 
 	handleAfterClose = () => {
@@ -57,6 +69,8 @@ class AddRowModal extends Component<Props, State> {
 			selectedType: this.props.indexTypeMap[
 				Object.keys(this.props.indexTypeMap)[0]
 			][0],
+			tab: 'gui',
+			tabData: {},
 		});
 	};
 
@@ -80,19 +94,23 @@ class AddRowModal extends Component<Props, State> {
 			selectedIndex,
 			selectedType,
 			documentId,
+			tab,
+			tabData,
 		} = this.state;
-		if (
-			!addDataError &&
-			addDataValue &&
-			selectedIndex &&
-			selectedType &&
-			documentId
-		) {
+		if (!addDataError && selectedIndex && selectedType && documentId) {
+			let data = {};
+
+			if (tab === 'gui') {
+				data = tabData;
+			} else {
+				data = addDataValue;
+			}
+
 			this.props.addDataRequest(
 				selectedIndex,
 				selectedType,
 				documentId,
-				JSON.parse(addDataValue),
+				data,
 			);
 			this.toggleModal();
 		}
@@ -118,8 +136,20 @@ class AddRowModal extends Component<Props, State> {
 		}));
 	};
 
+	handleTabChange = tab => {
+		this.setState({
+			tab,
+		});
+	};
+
+	handleTabDataChange = (col, value) => {
+		this.setState(prevState => ({
+			tabData: { ...prevState.tabData, [col]: value },
+		}));
+	};
+
 	render() {
-		const { indexTypeMap } = this.props;
+		const { indexTypeMap, typePropertyMapping } = this.props;
 		const {
 			addDataError,
 			documentId,
@@ -128,7 +158,12 @@ class AddRowModal extends Component<Props, State> {
 			types,
 			addDataValue,
 			isShowingModal,
+			tab,
+			tabData,
 		} = this.state;
+		// $FlowFixMe
+		const properties = typePropertyMapping[selectedIndex][selectedType];
+
 		return (
 			<Fragment>
 				<Button icon="plus" type="primary" onClick={this.toggleModal}>
@@ -191,21 +226,60 @@ class AddRowModal extends Component<Props, State> {
 							placeholder="Enter document id"
 						/>
 					</Item>
-					<Item label="JSON document" />
-					<AceEditor
-						tabSize={2}
-						mode="json"
-						theme="github"
-						onChange={this.handleJsonInput}
-						name="add-row-modal"
-						value={addDataValue}
-						height="auto"
-						width="100%"
-						css={{
-							minHeight: '200px',
-							maxHeight: '300px',
-						}}
-					/>
+					<Tabs activeKey={tab} onChange={this.handleTabChange}>
+						<TabPane tab="JSON Input" key="json">
+							<Item label="JSON document" />
+							<AceEditor
+								tabSize={2}
+								mode="json"
+								theme="github"
+								onChange={this.handleJsonInput}
+								name="add-row-modal"
+								value={addDataValue}
+								height="auto"
+								width="100%"
+								css={{
+									minHeight: '200px',
+									maxHeight: '300px',
+								}}
+							/>
+						</TabPane>
+						<TabPane tab="Editable View" key="gui">
+							<div
+								css={{
+									maxHeight: '350px',
+									overflow: 'auto',
+								}}
+							>
+								{Object.keys(properties).map(item => (
+									<div
+										key={item}
+										css={{
+											marginTop: '20px',
+											border: '1px solid #dfdfdf',
+											borderRadius: '4px',
+											padding: '10px',
+										}}
+									>
+										<div>{item}</div>
+										<Cell
+											mapping={properties[item]}
+											onChange={val =>
+												this.handleTabDataChange(
+													item,
+													val,
+												)
+											}
+											active
+											mode="edit"
+										>
+											{tabData[item] || ''}
+										</Cell>
+									</div>
+								))}
+							</div>
+						</TabPane>
+					</Tabs>
 				</Modal>
 			</Fragment>
 		);
@@ -215,10 +289,12 @@ class AddRowModal extends Component<Props, State> {
 AddRowModal.propTypes = {
 	addDataRequest: func.isRequired,
 	indexTypeMap: object.isRequired,
+	typePropertyMapping: object,
 };
 
 const mapStateToProps = state => ({
 	indexTypeMap: getIndexTypeMap(state),
+	typePropertyMapping: getTypePropertyMapping(state),
 });
 
 const mapDispatchToProps = {

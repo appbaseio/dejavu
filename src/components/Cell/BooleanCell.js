@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Dropdown, Icon, Menu, Button } from 'antd';
-import { func, number, string, any } from 'prop-types';
+import { func, string, any } from 'prop-types';
 
 import CellStyled from './Cell.styles';
 
@@ -10,13 +10,11 @@ const { Item } = Menu;
 
 type Props = {
 	children: boolean,
-	onChange: (number, string, any) => void,
-	row: number,
-	column: string,
+	onChange: func,
 	mode: string,
 };
 
-const BooleanCell = ({ children, onChange, row, column, mode }: Props) => (
+const BooleanCell = ({ children, onChange, mode }: Props) => (
 	<CellStyled>
 		{mode === 'edit' ? (
 			<Dropdown
@@ -28,9 +26,7 @@ const BooleanCell = ({ children, onChange, row, column, mode }: Props) => (
 				}}
 				overlay={
 					<Menu
-						onClick={({ key }) =>
-							onChange(row, column, Boolean(key === 'true'))
-						}
+						onClick={({ key }) => onChange(Boolean(key === 'true'))}
 					>
 						<Item key="true">
 							<Icon type="check-circle" />
@@ -65,8 +61,6 @@ const BooleanCell = ({ children, onChange, row, column, mode }: Props) => (
 );
 
 BooleanCell.propTypes = {
-	row: number.isRequired,
-	column: string.isRequired,
 	onChange: func.isRequired,
 	children: any,
 	mode: string,

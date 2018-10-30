@@ -30,7 +30,7 @@ type Props = {
 	data: object[],
 	mappings: object,
 	activeCell: { row: number, column: string },
-	setCellActive: (number, string) => void,
+	setCellActive: func,
 	setCellValue: (string, string, any, string, string) => void,
 	handleSortChange: string => void,
 	visibleColumns: string[],
@@ -194,6 +194,23 @@ class DataTable extends Component<Props, State> {
 											})
 										}
 										isFixed={col === '_id'}
+										tabIndex="0"
+										role="Gridcell"
+										onFocus={e => {
+											e.stopPropagation();
+											if (mode === 'edit') {
+												setCellActiveDispatch(row, col);
+											}
+										}}
+										onBlur={e => {
+											e.stopPropagation();
+											if (mode === 'edit') {
+												setCellActiveDispatch(
+													null,
+													null,
+												);
+											}
+										}}
 									>
 										<CellContent>
 											{isMetaField(col) ? (
@@ -226,10 +243,13 @@ class DataTable extends Component<Props, State> {
 														activeCell.column ===
 															col
 													}
-													onClick={
-														setCellActiveDispatch
+													onChange={value =>
+														this.handleChange(
+															row,
+															col,
+															value,
+														)
 													}
-													onChange={this.handleChange}
 													mapping={
 														mappings.properties[col]
 													}

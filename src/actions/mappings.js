@@ -12,6 +12,7 @@ const fetchMappingsSuccess = (
 	columns,
 	visibleColumns,
 	searchableColumns,
+	typePropertyMapping,
 ) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
@@ -21,6 +22,7 @@ const fetchMappingsSuccess = (
 	columns,
 	visibleColumns,
 	searchableColumns,
+	typePropertyMapping,
 });
 
 const fetchMappingsFailure = error => ({
