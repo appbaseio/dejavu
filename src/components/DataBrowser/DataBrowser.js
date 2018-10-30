@@ -128,6 +128,7 @@ class DataBrowser extends Component<Props, State> {
 											`}`,
 										}}
 										showIcon={false}
+										highlight
 									/>
 									<Icon
 										type="search"

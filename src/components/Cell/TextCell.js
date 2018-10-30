@@ -83,9 +83,8 @@ const TextCell = ({
 							whiteSpace: 'nowrap',
 							width: '100%',
 						}}
-					>
-						{children}
-					</div>
+						dangerouslySetInnerHTML={{ __html: children }}
+					/>
 				</Flex>
 			</Popover>
 		)}
