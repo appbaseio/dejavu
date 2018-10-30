@@ -84,9 +84,13 @@ class DataTable extends Component<Props, State> {
 		if (
 			mappings.properties[col] &&
 			mappings.properties[col].type &&
-			mappings.properties[col].type === 'text'
+			(mappings.properties[col].type === 'text' ||
+				mappings.properties[col].type === 'string')
 		) {
-			column = `${col}.keyword`;
+			column =
+				mappings.properties[col].type === 'text'
+					? `${col}.keyword`
+					: `${col}.raw`;
 		}
 
 		handleSortChange(column);

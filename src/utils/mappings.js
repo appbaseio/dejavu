@@ -92,7 +92,7 @@ const getSortableTypes = () => {
 		return result;
 	}, []);
 
-	return sortableTypes;
+	return [...sortableTypes, 'string'];
 };
 
 // eslint-disable-next-line
