@@ -146,12 +146,12 @@ class DataBrowser extends Component<Props, State> {
 										overflow: 'auto',
 										borderRadius: '4px',
 										margin: '20px 0',
+										minHeight: '100px',
 										maxHeight: '450px',
 										position: 'relative',
 										border: `1px solid ${
 											colors.tableBorderColor
 										}`,
-										scrollBehavior: 'smooth',
 									}}
 								>
 									<ReactiveList
@@ -172,14 +172,19 @@ class DataBrowser extends Component<Props, State> {
 											`,
 										}}
 										loader={
-											<Flex
+											<div
 												css={{
-													marginTop: '20px',
+													margin: 'auto',
+													position: 'absolute',
+													top: '50%',
+													transform:
+														'translateY(-50%)',
+													left: '10px',
+													display: 'block',
 												}}
-												justifyContent="center"
 											>
 												<Spin />
-											</Flex>
+											</div>
 										}
 										onAllData={data => (
 											<DataTable
@@ -196,6 +201,13 @@ class DataBrowser extends Component<Props, State> {
 												sort={sort}
 											/>
 										)}
+										onQueryChange={(
+											prevQuery,
+											nextQuery,
+										) => {
+											console.log('prevQuery', prevQuery);
+											console.log('nextQuery', nextQuery);
+										}}
 									/>
 								</div>
 							</ReactiveBase>

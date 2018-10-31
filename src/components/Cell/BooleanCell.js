@@ -19,20 +19,15 @@ const BooleanCell = ({ children, onChange, mode }: Props) => (
 		{mode === 'edit' ? (
 			<Select
 				defaultValue={
-					children !== undefined ||
-					children !== null ||
-					children !== ''
-						? String(children)
-						: ''
+					typeof children === 'undefined' ? 'false' : String(children)
 				}
 				style={{ width: '100%' }}
 				onChange={value => {
 					onChange(Boolean(value));
 				}}
 			>
-				<Option value="">Select Option</Option>
-				<Option value="true">True</Option>
-				<Option value="false">False</Option>
+				<Option value="true">true</Option>
+				<Option value="false">false</Option>
 			</Select>
 		) : (
 			children

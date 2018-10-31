@@ -29,9 +29,9 @@ const MappingsIcon = ({ mapping, ...props }: Props) => {
 			return <Icon type="calendar" {...props} />;
 		case 'float':
 		case 'double':
-			return <Icon type="pie-chart" {...props} />;
+			return <span>π</span>;
 		default:
-			return <Icon type="tags" {...props} />;
+			return <span>{`{...}`}</span>;
 	}
 };
 

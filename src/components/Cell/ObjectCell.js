@@ -83,7 +83,7 @@ class ObjectCell extends Component<Props, State> {
 							}
 							trigger="click"
 						>
-							<Button shape="circle" icon="ellipsis" />
+							<Button shape="circle">{` {...} `}</Button>
 						</Popover>
 					)}
 					{mode === 'edit' && (
