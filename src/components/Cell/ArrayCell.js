@@ -58,7 +58,9 @@ const ArrayCell = ({ children, onChange, mode }: Props) => (
 					}
 					trigger="click"
 				>
-					<Button shape="circle" icon="ellipsis" />
+					<Button shape="circle" css={{ marginLeft: '5px' }}>
+						[...]
+					</Button>
 				</Popover>
 			)
 		)}

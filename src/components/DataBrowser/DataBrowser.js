@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import {
 	ReactiveBase,
 	ReactiveList,
@@ -108,39 +108,42 @@ class DataBrowser extends Component<Props, State> {
 				{!isLoading &&
 					!isDataLoading &&
 					mappings && (
-						<Fragment>
+						<div css={{ position: 'relative' }}>
 							<ReactiveBase
 								app={indexes.join(',')}
 								type={types.join(',')}
 								credentials={credentials}
 								url={url}
 							>
-								<Actions onReload={this.handleReload} />
-								<div css={{ position: 'relative' }}>
-									<DataSearch
-										componentId="GlobalSearch"
-										autosuggest={false}
-										dataField={searchColumns}
-										fieldWeights={weights}
-										innerClass={{
-											input: `ant-input ${css`
-												padding-left: 35px !important;
-											`}`,
-										}}
-										showIcon={false}
-										highlight
-									/>
-									<Icon
-										type="search"
-										css={{
-											position: 'absolute',
-											top: '50%',
-											transform: 'translateY(-50%)',
-											left: '10px',
-										}}
-									/>
+								<div css={{ marginRight: '37px' }}>
+									<Actions onReload={this.handleReload} />
+									<div css={{ position: 'relative' }}>
+										<DataSearch
+											componentId="GlobalSearch"
+											autosuggest={false}
+											dataField={searchColumns}
+											fieldWeights={weights}
+											innerClass={{
+												input: `ant-input ${css`
+													padding-left: 35px !important;
+													height: 32px !important;
+												`}`,
+											}}
+											showIcon={false}
+											highlight
+										/>
+										<Icon
+											type="search"
+											css={{
+												position: 'absolute',
+												top: '50%',
+												transform: 'translateY(-50%)',
+												left: '10px',
+											}}
+										/>
+									</div>
 								</div>
-								<div
+								<Flex
 									id="result-list"
 									css={{
 										overflow: 'auto',
@@ -148,10 +151,10 @@ class DataBrowser extends Component<Props, State> {
 										margin: '20px 0',
 										minHeight: '100px',
 										maxHeight: '450px',
-										position: 'relative',
 										border: `1px solid ${
 											colors.tableBorderColor
 										}`,
+										marginRight: '37px',
 									}}
 								>
 									<ReactiveList
@@ -172,19 +175,17 @@ class DataBrowser extends Component<Props, State> {
 											`,
 										}}
 										loader={
-											<div
+											<Flex
+												justifyContent="center"
 												css={{
-													margin: 'auto',
 													position: 'absolute',
-													top: '50%',
-													transform:
-														'translateY(-50%)',
-													left: '10px',
-													display: 'block',
+													bottom: 0,
+													left: '50%',
+													zIndex: 100,
 												}}
 											>
 												<Spin />
-											</div>
+											</Flex>
 										}
 										onAllData={data => (
 											<DataTable
@@ -209,10 +210,10 @@ class DataBrowser extends Component<Props, State> {
 											console.log('nextQuery', nextQuery);
 										}}
 									/>
-								</div>
+								</Flex>
 							</ReactiveBase>
 							<AddRowModal />
-						</Fragment>
+						</div>
 					)}
 				{(isLoading || isDataLoading) && (
 					<Flex css={{ marginTop: '20px' }} justifyContent="center">

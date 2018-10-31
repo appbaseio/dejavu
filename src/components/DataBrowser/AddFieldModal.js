@@ -193,10 +193,14 @@ class AddFieldModal extends Component<Props, State> {
 					icon="plus"
 					type="primary"
 					onClick={this.toggleModal}
-					css={{ marginRight: '5px' }}
-				>
-					Add Column
-				</Button>
+					css={{
+						marginRight: '5px',
+						position: 'absolute',
+						top: '104',
+						right: 0,
+						zIndex: 1000,
+					}}
+				/>
 				<Modal
 					visible={isShowingModal}
 					onCancel={this.toggleModal}

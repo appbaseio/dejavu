@@ -25,10 +25,10 @@ const Actions = ({ onReload }: Props) => (
 				>
 					Reload
 				</Button>
+				<ModeSwitch />
 				<AddFieldModal />
 			</div>
 			<div>
-				<ModeSwitch />
 				<ShowHideColumn />
 			</div>
 		</Flex>

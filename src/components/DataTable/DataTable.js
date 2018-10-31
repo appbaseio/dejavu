@@ -109,7 +109,7 @@ class DataTable extends Component<Props, State> {
 		const { data } = this.state;
 
 		return (
-			<div>
+			<div css={{ position: 'relative' }}>
 				<table
 					css={{
 						overflow: 'auto',
