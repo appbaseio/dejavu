@@ -19,7 +19,7 @@ const store = configureStore();
 const App = () => (
 	<Provider store={store}>
 		<BrowserRouter>
-			<Layout css={{ minHeight: '100vh' }}>
+			<Layout css={{ minHeight: '100vh !important' }}>
 				<Sider theme="light">
 					<img
 						src={logo}
