@@ -68,24 +68,26 @@ const TextCell = ({
 					</div>
 				}
 			>
-				<Flex
-					justifyContent="left"
-					alignItems="center"
-					css={{
-						width: '100%',
-						height: '100%',
-					}}
-				>
-					<div
+				{children && (
+					<Flex
+						justifyContent="left"
+						alignItems="center"
 						css={{
-							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-							whiteSpace: 'nowrap',
 							width: '100%',
+							height: '100%',
 						}}
-						dangerouslySetInnerHTML={{ __html: children }}
-					/>
-				</Flex>
+					>
+						<div
+							css={{
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+								width: '100%',
+							}}
+							dangerouslySetInnerHTML={{ __html: children }}
+						/>
+					</Flex>
+				)}
 			</Popover>
 		)}
 	</CellStyled>

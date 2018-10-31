@@ -53,7 +53,7 @@ class AddRowModal extends Component<Props, State> {
 		selectedType: this.props.indexTypeMap[
 			Object.keys(this.props.indexTypeMap)[0]
 		][0],
-		tab: 'gui',
+		tab: 'json',
 		tabData: {},
 	};
 
@@ -69,7 +69,7 @@ class AddRowModal extends Component<Props, State> {
 			selectedType: this.props.indexTypeMap[
 				Object.keys(this.props.indexTypeMap)[0]
 			][0],
-			tab: 'gui',
+			tab: 'json',
 			tabData: {},
 		});
 	};
@@ -162,7 +162,10 @@ class AddRowModal extends Component<Props, State> {
 			tabData,
 		} = this.state;
 		// $FlowFixMe
-		const properties = typePropertyMapping[selectedIndex][selectedType];
+		const properties = typePropertyMapping[selectedIndex][selectedType]
+			? // $FlowFixMe
+			  typePropertyMapping[selectedIndex][selectedType]
+			: {};
 
 		return (
 			<Fragment>

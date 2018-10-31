@@ -50,7 +50,7 @@ type State = {
 class DataBrowser extends Component<Props, State> {
 	state = {
 		sort: 'asc',
-		sortField: '_id',
+		sortField: '_score',
 	};
 
 	componentDidMount() {
@@ -173,7 +173,9 @@ class DataBrowser extends Component<Props, State> {
 										}}
 										loader={
 											<Flex
-												css={{ marginTop: '20px' }}
+												css={{
+													marginTop: '20px',
+												}}
 												justifyContent="center"
 											>
 												<Spin />
