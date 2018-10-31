@@ -165,7 +165,7 @@ class DataBrowser extends Component<Props, State> {
 										scrollTarget="result-list"
 										pagination={false}
 										size={20}
-										showResultStats={false}
+										showResultStats
 										react={{
 											and: ['GlobalSearch'],
 										}}
@@ -199,7 +199,6 @@ class DataBrowser extends Component<Props, State> {
 												handleSortChange={
 													this.handleSortChange
 												}
-												sort={sort}
 											/>
 										)}
 										onQueryChange={(
@@ -209,6 +208,25 @@ class DataBrowser extends Component<Props, State> {
 											console.log('prevQuery', prevQuery);
 											console.log('nextQuery', nextQuery);
 										}}
+										onResultStats={total => (
+											<Flex
+												justifyContent="center"
+												alignItems="center"
+												css={{
+													position: 'absolute',
+													top: '0',
+													left: '330px',
+													height: '32px',
+													fontSize: '14px',
+													padding: '0 15px',
+													lineHeight: '1.5',
+													textAlign: 'center',
+												}}
+											>
+												Found &nbsp; <b>{total}</b>
+												&nbsp;results
+											</Flex>
+										)}
 									/>
 								</Flex>
 							</ReactiveBase>

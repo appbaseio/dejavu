@@ -7,4 +7,7 @@ export default {
 
 	// solid-colors
 	white: '#fff',
+
+	// theme-colors
+	primary: '#1890ff',
 };

@@ -21,6 +21,8 @@ const Cell = styled('td')`
 	${({ isFixed }) =>
 		isFixed &&
 		css`
+			min-width: 260px;
+			max-width: 260px;
 			position: sticky;
 			left: 0px;
 		`};

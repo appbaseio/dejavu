@@ -4,13 +4,14 @@ import React, { Component } from 'react';
 import { arrayOf, object, shape, string, number, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
-import { Popover, Icon } from 'antd';
+import { Popover } from 'antd';
 
 import MappingsDropdown from '../MappingsDropdown';
 import Cell from '../Cell';
 import StyledCell from './Cell.style';
 import CellContent from './CellContent.style';
 import Flex from '../Flex';
+import SortIcon from '../../images/icons/sort.svg';
 
 import { getActiveCell } from '../../reducers/cell';
 import {
@@ -35,7 +36,6 @@ type Props = {
 	handleSortChange: string => void,
 	visibleColumns: string[],
 	mode: string,
-	sort: string,
 };
 
 type State = {
@@ -103,7 +103,6 @@ class DataTable extends Component<Props, State> {
 			setCellActive: setCellActiveDispatch,
 			visibleColumns,
 			mode,
-			sort,
 		} = this.props;
 
 		const { data } = this.state;
@@ -164,19 +163,34 @@ class DataTable extends Component<Props, State> {
 													mappings.properties[col]
 														.type,
 												) > -1 && (
-													<Icon
-														type={`sort-${
-															sort === 'asc'
-																? 'ascending'
-																: 'descending'
-														}`}
-														onClick={() =>
-															this.handleSort(col)
-														}
-														css={{
-															cursor: 'pointer',
+													<button
+														type="button"
+														onClick={() => {
+															this.handleSort(
+																col,
+															);
 														}}
-													/>
+														css={{
+															outline: 0,
+															height: '15px',
+															width: '15px',
+															border: 0,
+															cursor: 'pointer',
+															background: 'none',
+														}}
+													>
+														<img
+															src={SortIcon}
+															alt="sort-icon"
+															css={{
+																height: '15px',
+																marginTop:
+																	'-10px',
+																marginLeft:
+																	'-5px',
+															}}
+														/>
+													</button>
 												)}
 										</Flex>
 									</CellContent>
@@ -213,9 +227,32 @@ class DataTable extends Component<Props, State> {
 																'ellipsis',
 															whiteSpace:
 																'nowrap',
+															padding: '10ox',
 														}}
 													>
-														{dataItem[col]}
+														{col === '_id' ? (
+															<Flex>
+																<span
+																	css={{
+																		margin:
+																			'0 20px',
+																		color:
+																			colors.primary,
+																	}}
+																>
+																	{row + 1}
+																</span>
+																<span>
+																	{
+																		dataItem[
+																			col
+																		]
+																	}
+																</span>
+															</Flex>
+														) : (
+															dataItem[col]
+														)}
 													</div>
 												</Popover>
 											) : (
@@ -283,7 +320,6 @@ DataTable.propTypes = {
 	setCellValue: func.isRequired,
 	visibleColumns: arrayOf(string).isRequired,
 	handleSortChange: func.isRequired,
-	sort: string,
 	mode: string,
 };
 

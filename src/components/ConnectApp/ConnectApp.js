@@ -129,7 +129,7 @@ class ConnectApp extends Component<Props, State> {
 		const { appname, url } = this.state;
 		const { isLoading, isConnected, error, onErrorClose } = this.props;
 		return (
-			<>
+			<div css={{ marginRight: '30px' }}>
 				{!isLoading &&
 					error && (
 						<Alert
@@ -207,7 +207,7 @@ http.cors.allow-credentials: true`}
 							}
 						/>
 					)}
-			</>
+			</div>
 		);
 	}
 }
