@@ -119,7 +119,7 @@ class ShowHideColumns extends Component<Props, State> {
 						<Group
 							options={allColumns}
 							css={{
-								display: 'grid',
+								display: 'grid !important',
 								gridGap: 5,
 							}}
 							value={visibleColumns}
