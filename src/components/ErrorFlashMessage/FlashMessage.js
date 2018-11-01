@@ -4,7 +4,7 @@ import React, { Fragment } from 'react';
 import { Alert } from 'antd';
 import { connect } from 'react-redux';
 
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from './ErrorMessage';
 
 import { getError } from '../../reducers/error';
 import { clearError } from '../../actions';

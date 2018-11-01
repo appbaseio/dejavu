@@ -2,11 +2,11 @@ import React from 'react';
 
 import ConnectApp from './ConnectApp';
 import DataBrowserContainer from './DataBrowserContainer';
-import FlashMessage from './FlashMessage';
+import ErrorFlashMessage from './ErrorFlashMessage';
 
 const Dejavu = () => (
 	<section css={{ marginRight: '25px' }}>
-		<FlashMessage />
+		<ErrorFlashMessage />
 		<ConnectApp />
 		<DataBrowserContainer />
 	</section>
