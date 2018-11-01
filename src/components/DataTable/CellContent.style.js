@@ -10,6 +10,7 @@ const CellContent = styled('div')`
 	display: flex;
 	justify-content: left;
 	align-items: center;
+	padding: 10px;
 `;
 
 export default CellContent;

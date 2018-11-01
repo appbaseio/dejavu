@@ -13,9 +13,7 @@ const fetchMappings = async (appname, rawUrl) => {
 		}
 		return res;
 	} catch (error) {
-		const errorMessage =
-			error.name === 'Error' ? error.message : defaultError;
-		throw new Error(errorMessage);
+		throw new Error(error);
 	}
 };
 
@@ -34,14 +32,13 @@ const addMapping = async (indexName, typeName, rawUrl, field, mapping) => {
 				},
 			}),
 		}).then(response => response.json());
+
 		if (res.status >= 400) {
 			throw new Error(res.message || defaultError);
 		}
 		return res;
 	} catch (error) {
-		const errorMessage =
-			error.name === 'Error' ? error.message : defaultError;
-		throw new Error(errorMessage);
+		throw new Error(error);
 	}
 };
 

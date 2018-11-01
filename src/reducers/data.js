@@ -35,6 +35,11 @@ const data = (state = initialState, action) => {
 				...state,
 				reactiveListKey: reactiveListKey + 1,
 			};
+		case DATA.UPDATE_REACTIVE_LIST:
+			return {
+				...state,
+				reactiveListKey: reactiveListKey + 1,
+			};
 		default:
 			return state;
 	}

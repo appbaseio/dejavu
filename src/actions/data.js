@@ -16,4 +16,8 @@ const addDataFailure = () => ({
 	type: DATA.ADD_DATA_FAILURE,
 });
 
-export { addDataRequest, addDataSuccess, addDataFailure };
+const updateReactiveList = () => ({
+	type: DATA.UPDATE_REACTIVE_LIST,
+});
+
+export { addDataRequest, addDataSuccess, addDataFailure, updateReactiveList };

@@ -21,7 +21,12 @@ import {
 } from './cell';
 import setMode from './mode';
 import { setError, clearError } from './error';
-import { addDataRequest, addDataSuccess, addDataFailure } from './data';
+import {
+	addDataRequest,
+	addDataSuccess,
+	addDataFailure,
+	updateReactiveList,
+} from './data';
 
 export {
 	// app
@@ -46,6 +51,7 @@ export {
 	addDataRequest,
 	addDataSuccess,
 	addDataFailure,
+	updateReactiveList,
 	// mode
 	setMode,
 	// error

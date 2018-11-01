@@ -1,6 +1,6 @@
 import { parseUrl, getHeaders } from '../utils';
 
-const addData = async (indexName, typeName, docId, rawUrl, data) => {
+export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 	const defaultError = 'Unable to add mapping';
 	try {
 		const { url } = parseUrl(rawUrl);
@@ -11,15 +11,32 @@ const addData = async (indexName, typeName, docId, rawUrl, data) => {
 			method: 'PUT',
 			body: JSON.stringify(data),
 		}).then(response => response.json());
+
 		if (res.status >= 400) {
 			throw new Error(res.message || defaultError);
 		}
 		return res;
 	} catch (error) {
-		const errorMessage =
-			error.name === 'Error' ? error.message : defaultError;
-		throw new Error(errorMessage);
+		throw new Error(error);
 	}
 };
 
-export default addData;
+export const deleteData = async (indexName, typeName, docId, rawUrl) => {
+	const defaultError = 'Unable to delete mapping';
+	try {
+		const { url } = parseUrl(rawUrl);
+		const headers = getHeaders(rawUrl);
+
+		const res = await fetch(`${url}/${indexName}/${typeName}/${docId}`, {
+			headers,
+			method: 'DELETE',
+		}).then(response => response.json());
+
+		if (res.status >= 400) {
+			throw new Error(res.message || defaultError);
+		}
+		return res;
+	} catch (error) {
+		throw new Error(error);
+	}
+};
