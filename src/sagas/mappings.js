@@ -5,8 +5,10 @@ import { fetchMappings, addMapping } from '../apis';
 import {
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
+	setError,
 	addMappingSuccess,
 	addMappingFailure,
+	clearError,
 } from '../actions';
 import { getAppname, getUrl } from '../reducers/app';
 import { isEmptyObject } from '../utils';
@@ -16,6 +18,7 @@ const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
 function* handleFetchMappings() {
 	try {
+		yield put(clearError());
 		const appname = yield select(getAppname);
 		const url = yield select(getUrl);
 		const data = yield call(fetchMappings, appname, url);
@@ -92,18 +95,21 @@ function* handleFetchMappings() {
 			throw new Error('Unable to fetch content');
 		}
 	} catch (error) {
-		yield put(fetchMappingsFailure(error.message));
+		yield put(fetchMappingsFailure());
+		yield put(setError(error));
 	}
 }
 
 function* handleAddMapping({ indexName, typeName, field, mapping }) {
 	try {
+		yield put(clearError());
 		const url = yield select(getUrl);
 		yield call(addMapping, indexName, typeName, url, field, mapping);
 		yield put(addMappingSuccess());
 		yield call(handleFetchMappings); // sagas FTW
 	} catch (error) {
-		yield put(addMappingFailure(error.message));
+		yield put(addMappingFailure());
+		yield put(setError(error));
 	}
 }
 

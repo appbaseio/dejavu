@@ -29,8 +29,8 @@ class ErrorMessage extends Component<Props, State> {
 		return (
 			<Fragment>
 				<Button size="small" onClick={this.toggleDetails}>
-					{isShowingDetails ? 'Hide ' : 'Show '}
-					information
+					{isShowingDetails ? 'Hide' : 'Show'}
+					&nbsp; information
 				</Button>
 				{isShowingDetails && <pre>{description}</pre>}
 			</Fragment>

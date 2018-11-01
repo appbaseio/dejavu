@@ -17,11 +17,7 @@ const testConnection = async (appname, rawUrl) => {
 		}
 		return res;
 	} catch (error) {
-		const errorMessage =
-			error.name === 'Error'
-				? error.message
-				: 'Unable to connect because of Invalid url';
-		throw new Error(errorMessage);
+		throw new Error(error);
 	}
 };
 

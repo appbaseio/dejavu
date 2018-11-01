@@ -3,7 +3,6 @@ import {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
-	dismissAppError,
 } from './app';
 import {
 	fetchMappings,
@@ -21,6 +20,7 @@ import {
 	setCellValueFailure,
 } from './cell';
 import setMode from './mode';
+import { setError, clearError } from './error';
 import { addDataRequest, addDataSuccess, addDataFailure } from './data';
 
 export {
@@ -29,7 +29,6 @@ export {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
-	dismissAppError,
 	// mappings
 	fetchMappings,
 	fetchMappingsSuccess,
@@ -49,4 +48,7 @@ export {
 	addDataFailure,
 	// mode
 	setMode,
+	// error
+	setError,
+	clearError,
 };

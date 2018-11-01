@@ -197,7 +197,7 @@ class AddFieldModal extends Component<Props, State> {
 						marginRight: '5px',
 						position: 'absolute',
 						top: '104',
-						right: 0,
+						right: '-35px',
 						zIndex: 1000,
 					}}
 				/>

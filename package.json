@@ -28,7 +28,7 @@
 		"*.js": "eslint"
 	},
 	"dependencies": {
-		"@appbaseio/reactivesearch": "^2.12.1",
+		"@appbaseio/reactivesearch": "^2.13.0",
 		"@divyanshu013/media": "^1.0.0",
 		"antd": "^3.9.2",
 		"appbase-js": "^4.0.2-beta.2",

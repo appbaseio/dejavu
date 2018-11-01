@@ -12,9 +12,8 @@ const addDataSuccess = () => ({
 	type: DATA.ADD_DATA_SUCCESS,
 });
 
-const addDataFailure = error => ({
+const addDataFailure = () => ({
 	type: DATA.ADD_DATA_FAILURE,
-	error,
 });
 
 export { addDataRequest, addDataSuccess, addDataFailure };

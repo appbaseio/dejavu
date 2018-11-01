@@ -5,17 +5,15 @@ const initialState = {
 	url: null,
 	isConnected: false,
 	isLoading: false,
-	error: null,
 };
 
 const app = (state = initialState, action) => {
-	const { appname, url, type, error } = action;
+	const { appname, url, type } = action;
 	switch (type) {
 		case APP.CONNECT_REQUEST:
 			return {
 				...state,
 				isLoading: true,
-				error: null,
 			};
 		case APP.CONNECT_SUCCESS:
 			return {
@@ -28,16 +26,10 @@ const app = (state = initialState, action) => {
 		case APP.CONNECT_FAILURE:
 			return {
 				...state,
-				error,
 				isLoading: false,
 			};
 		case APP.DISCONNECT:
 			return initialState;
-		case APP.DISMISS_APP_CONNECT_ERROR:
-			return {
-				...state,
-				error: null,
-			};
 		default:
 			return state;
 	}
@@ -48,8 +40,7 @@ const getAppname = state => state.app.appname;
 const getUrl = state => state.app.url;
 const getIsConnected = state => state.app.isConnected;
 const getIsLoading = state => state.app.isLoading;
-const getError = state => state.app.error;
 
-export { getAppname, getUrl, getIsLoading, getIsConnected, getError };
+export { getAppname, getUrl, getIsLoading, getIsConnected };
 
 export default app;

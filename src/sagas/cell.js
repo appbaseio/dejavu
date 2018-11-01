@@ -2,11 +2,17 @@ import { put, call, takeEvery, select } from 'redux-saga/effects';
 
 import { CELL } from '../actions/constants';
 import { setCellValue } from '../apis';
-import { setCellValueSuccess, setCellValueFailure } from '../actions';
+import {
+	setCellValueSuccess,
+	setCellValueFailure,
+	setError,
+	clearError,
+} from '../actions';
 import { getUrl } from '../reducers/app';
 
 function* handleSetValue({ id, property, value, index, esType }) {
 	try {
+		yield put(clearError());
 		const url = yield select(getUrl);
 		const data = yield call(
 			setCellValue,
@@ -19,7 +25,8 @@ function* handleSetValue({ id, property, value, index, esType }) {
 		);
 		yield put(setCellValueSuccess(data));
 	} catch (error) {
-		yield put(setCellValueFailure(error.message));
+		yield put(setCellValueFailure());
+		yield put(setError(error.message));
 	}
 }
 

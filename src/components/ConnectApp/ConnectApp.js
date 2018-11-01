@@ -11,17 +11,10 @@ import {
 	getUrl,
 	getIsLoading,
 	getIsConnected,
-	getError,
 } from '../../reducers/app';
-import {
-	connectApp,
-	disconnectApp,
-	dismissAppError,
-	setMode,
-} from '../../actions';
+import { connectApp, disconnectApp, setMode } from '../../actions';
 import { getUrlParams } from '../../utils';
 
-import ErrorMessage from '../ErrorMessage';
 import { getMode } from '../../reducers/mode';
 
 type Props = {
@@ -127,22 +120,9 @@ class ConnectApp extends Component<Props, State> {
 
 	render() {
 		const { appname, url } = this.state;
-		const { isLoading, isConnected, error, onErrorClose } = this.props;
+		const { isLoading, isConnected } = this.props;
 		return (
-			<div css={{ marginRight: '30px' }}>
-				{!isLoading &&
-					error && (
-						<Alert
-							message={error.message}
-							type="error"
-							closable
-							css={{ marginBottom: 10 }}
-							onClose={onErrorClose}
-							description={
-								<ErrorMessage description={error.stack} />
-							}
-						/>
-					)}
+			<div>
 				<Form
 					layout="inline"
 					onSubmit={this.handleSubmit}
@@ -217,14 +197,12 @@ const mapStateToProps = state => ({
 	url: getUrl(state),
 	isConnected: getIsConnected(state),
 	isLoading: getIsLoading(state),
-	error: getError(state),
 	mode: getMode(state),
 });
 
 const mapDispatchToProps = {
 	connectApp,
 	disconnectApp,
-	onErrorClose: dismissAppError,
 	setMode,
 };
 
@@ -235,9 +213,7 @@ ConnectApp.propTypes = {
 	disconnectApp: func.isRequired,
 	isConnected: bool.isRequired,
 	isLoading: bool.isRequired,
-	error: object,
 	history: object,
-	onErrorClose: func.isRequired,
 	setMode: func.isRequired,
 	mode: string,
 };

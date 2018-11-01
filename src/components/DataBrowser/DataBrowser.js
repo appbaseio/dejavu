@@ -115,7 +115,7 @@ class DataBrowser extends Component<Props, State> {
 								credentials={credentials}
 								url={url}
 							>
-								<div css={{ marginRight: '37px' }}>
+								<div>
 									<Actions onReload={this.handleReload} />
 									<div css={{ position: 'relative' }}>
 										<DataSearch
@@ -154,7 +154,6 @@ class DataBrowser extends Component<Props, State> {
 										border: `1px solid ${
 											colors.tableBorderColor
 										}`,
-										marginRight: '37px',
 									}}
 								>
 									<ReactiveList
@@ -201,13 +200,6 @@ class DataBrowser extends Component<Props, State> {
 												}
 											/>
 										)}
-										onQueryChange={(
-											prevQuery,
-											nextQuery,
-										) => {
-											console.log('prevQuery', prevQuery);
-											console.log('nextQuery', nextQuery);
-										}}
 										onResultStats={total => (
 											<Flex
 												justifyContent="center"

@@ -12,23 +12,12 @@ const connectAppSuccess = (appname, url) => ({
 	url,
 });
 
-const connectAppFailure = error => ({
+const connectAppFailure = () => ({
 	type: APP.CONNECT_FAILURE,
-	error,
 });
 
 const disconnectApp = () => ({
 	type: APP.DISCONNECT,
 });
 
-const dismissAppError = () => ({
-	type: APP.DISMISS_APP_CONNECT_ERROR,
-});
-
-export {
-	connectApp,
-	disconnectApp,
-	connectAppSuccess,
-	connectAppFailure,
-	dismissAppError,
-};
+export { connectApp, disconnectApp, connectAppSuccess, connectAppFailure };

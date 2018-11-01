@@ -23,9 +23,8 @@ const setCellValueRequest = (id, property, value, index, esType) => ({
 
 const setCellValueSuccess = () => ({ type: CELL.CELL_SETVALUE_SUCCESS }); // update data
 
-const setCellValueFailure = error => ({
+const setCellValueFailure = () => ({
 	type: CELL.CELL_SETVALUE_FAILURE,
-	error,
 });
 
 export {
