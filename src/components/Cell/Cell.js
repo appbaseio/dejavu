@@ -16,7 +16,7 @@ import ObjectCell from './ObjectCell';
 type Props = {
 	mapping: object,
 	children: any,
-	active: boolean,
+	active?: boolean,
 	onChange: func,
 	mode: string,
 };
@@ -59,7 +59,7 @@ const Cell = ({ mapping, ...props }: Props) => {
 
 Cell.propTypes = {
 	children: any,
-	active: bool.isRequired,
+	active: bool,
 	onChange: func.isRequired,
 };
 

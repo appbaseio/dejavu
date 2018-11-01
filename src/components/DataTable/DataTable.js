@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { arrayOf, object, shape, string, number, func } from 'prop-types';
+import { arrayOf, object, string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
 import { Popover } from 'antd';
@@ -13,16 +13,12 @@ import CellContent from './CellContent.style';
 import Flex from '../Flex';
 import SortIcon from '../../images/icons/sort.svg';
 
-import { getActiveCell } from '../../reducers/cell';
-import {
-	setCellActive,
-	setCellValueRequest,
-	addDataRequest,
-} from '../../actions';
+import { setCellValueRequest, addDataRequest } from '../../actions';
 import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS, getSortableTypes } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
+import overflowText from './overflow.style';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 const srotableTypes = getSortableTypes();
@@ -30,8 +26,6 @@ const srotableTypes = getSortableTypes();
 type Props = {
 	data: object[],
 	mappings: object,
-	activeCell: { row: number, column: string },
-	setCellActive: func,
 	setCellValue: (string, string, any, string, string) => void,
 	handleSortChange: string => void,
 	visibleColumns: string[],
@@ -97,13 +91,7 @@ class DataTable extends Component<Props, State> {
 	};
 
 	render() {
-		const {
-			activeCell,
-			mappings,
-			setCellActive: setCellActiveDispatch,
-			visibleColumns,
-			mode,
-		} = this.props;
+		const { mappings, visibleColumns, mode } = this.props;
 
 		const { data } = this.state;
 
@@ -219,54 +207,47 @@ class DataTable extends Component<Props, State> {
 													placement="topLeft"
 													content={dataItem[col]}
 												>
-													<div
-														style={{
-															width: '100%',
-															overflow: 'hidden',
-															textOverflow:
-																'ellipsis',
-															whiteSpace:
-																'nowrap',
-															padding: '10ox',
-														}}
-													>
-														{col === '_id' ? (
-															<Flex>
-																<span
-																	css={{
-																		margin:
-																			'0 20px',
-																		color:
-																			colors.primary,
-																	}}
-																>
-																	{row + 1}
-																</span>
-																<span>
-																	{
-																		dataItem[
-																			col
-																		]
-																	}
-																</span>
-															</Flex>
-														) : (
-															dataItem[col]
-														)}
-													</div>
+													{col === '_id' ? (
+														<Flex
+															wrap="nowrap"
+															css={{
+																overflow:
+																	'hidden',
+															}}
+														>
+															<span
+																css={{
+																	margin:
+																		'0 20px',
+																	color:
+																		colors.primary,
+																}}
+															>
+																{row + 1}
+															</span>
+															<div
+																css={
+																	overflowText
+																}
+															>
+																{dataItem[col]}
+															</div>
+														</Flex>
+													) : (
+														<div
+															css={{
+																overflowText,
+															}}
+														>
+															{dataItem[col]}
+														</div>
+													)}
 												</Popover>
 											) : (
 												<Cell
 													row={row}
 													column={col}
 													mode={mode}
-													active={
-														mode === 'edit' &&
-														activeCell.row ===
-															row &&
-														activeCell.column ===
-															col
-													}
 													onChange={value =>
 														this.handleChange(
 															row,
@@ -277,24 +258,6 @@ class DataTable extends Component<Props, State> {
 													mapping={
 														mappings.properties[col]
 													}
-													handleFocus={e => {
-														e.stopPropagation();
-														if (mode === 'edit') {
-															setCellActiveDispatch(
-																row,
-																col,
-															);
-														}
-													}}
-													handleBlur={e => {
-														e.stopPropagation();
-														if (mode === 'edit') {
-															setCellActiveDispatch(
-																null,
-																null,
-															);
-														}
-													}}
 													shouldAutoFocus
 												>
 													{dataItem[col]}
@@ -315,8 +278,6 @@ class DataTable extends Component<Props, State> {
 DataTable.propTypes = {
 	data: arrayOf(object).isRequired,
 	mappings: object.isRequired,
-	activeCell: shape({ row: number, column: string }),
-	setCellActive: func.isRequired,
 	setCellValue: func.isRequired,
 	visibleColumns: arrayOf(string).isRequired,
 	handleSortChange: func.isRequired,
@@ -324,13 +285,11 @@ DataTable.propTypes = {
 };
 
 const mapStateToProps = state => ({
-	activeCell: getActiveCell(state),
 	visibleColumns: getVisibleColumns(state),
 	mode: getMode(state),
 });
 
 const mapDispatchToProps = {
-	setCellActive,
 	setCellValue: setCellValueRequest,
 	addDataRequest,
 };

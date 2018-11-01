@@ -21,7 +21,7 @@ const BooleanCell = ({ children, onChange, mode }: Props) => (
 				defaultValue={
 					typeof children === 'undefined' ? 'false' : String(children)
 				}
-				style={{ width: '100%' }}
+				css={{ width: '100% !important' }}
 				onChange={value => {
 					onChange(Boolean(value));
 				}}

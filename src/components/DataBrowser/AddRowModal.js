@@ -284,6 +284,7 @@ class AddRowModal extends Component<Props, State> {
 											}
 											active
 											mode="edit"
+											editable
 										>
 											{tabData[item] || ''}
 										</Cell>

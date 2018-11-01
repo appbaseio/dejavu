@@ -21,7 +21,7 @@ const DateCell = ({ children, onChange, format, mode }: Props) => (
 			<DatePicker
 				showTime
 				defaultValue={
-					children && moment(children, getDateFormat(format))
+					children ? moment(children, getDateFormat(format)) : null
 				}
 				format={getDateFormat(format)}
 				css={{

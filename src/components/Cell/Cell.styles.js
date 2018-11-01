@@ -5,9 +5,6 @@ const Cell = styled('div')(
 		height: '100%',
 		width: '100%',
 		position: 'relative',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
 		padding: '10px',
 	},
 	({ overflow, padding }) =>

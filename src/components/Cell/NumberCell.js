@@ -2,17 +2,24 @@
 
 import React, { Component } from 'react';
 import { InputNumber } from 'antd';
-import { func, any, bool, object } from 'prop-types';
+import { func, any, bool } from 'prop-types';
+import { connect } from 'react-redux';
 
 import CellStyled from './Cell.styles';
+
+import { setCellActive } from '../../actions';
+import { getActiveCell } from '../../reducers/cell';
 
 type Props = {
 	children: any,
 	onChange: func,
-	active: boolean,
-	handleFocus?: any => void,
-	handleBlur?: any => void,
 	shouldAutoFocus?: boolean,
+	activeCell?: { row: any, column: any },
+	setCellActive: (row: any, column: any) => void,
+	row: any,
+	column: any,
+	mode?: string,
+	editable?: boolean,
 };
 
 type State = {
@@ -36,8 +43,14 @@ class NumberCell extends Component<Props, State> {
 		});
 	};
 
-	saveChange = (e: object) => {
-		const { onChange, children, handleBlur } = this.props;
+	saveChange = () => {
+		const {
+			onChange,
+			children,
+			setCellActive: setCellActiveDispatch,
+			row,
+			column,
+		} = this.props;
 		const { value } = this.state;
 		if (value !== children) {
 			// only save value if it has changed
@@ -50,17 +63,38 @@ class NumberCell extends Component<Props, State> {
 			onChange(nextValue);
 		}
 
-		if (handleBlur) {
-			handleBlur(e);
+		if (typeof row === 'number' && column) {
+			setCellActiveDispatch(null, null);
 		}
 	};
 
 	render() {
-		const { children, active, handleFocus, shouldAutoFocus } = this.props;
+		const {
+			children,
+			setCellActive: setCellActiveDispatch,
+			activeCell,
+			row,
+			column,
+			mode,
+			shouldAutoFocus,
+			editable,
+		} = this.props;
 		const { value } = this.state;
 		return (
-			<CellStyled tabIndex="0" role="Gridcell" onFocus={handleFocus}>
-				{active ? (
+			<CellStyled
+				tabIndex="0"
+				role="Gridcell"
+				onFocus={() => {
+					if (typeof row === 'number' && column) {
+						setCellActiveDispatch(row, column);
+					}
+				}}
+			>
+				{editable ||
+				(mode === 'edit' &&
+					activeCell &&
+					activeCell.row === row &&
+					activeCell.column === column) ? (
 					<div
 						css={{
 							width: '100%',
@@ -86,13 +120,21 @@ class NumberCell extends Component<Props, State> {
 	}
 }
 
+const mapStateToProps = state => ({
+	activeCell: getActiveCell(state),
+});
+
+const mapDispatchToProps = {
+	setCellActive,
+};
+
 NumberCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
-	active: bool,
-	handleFocus: func,
-	handleBlur: func,
 	shouldAutoFocus: bool,
 };
 
-export default NumberCell;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(NumberCell);

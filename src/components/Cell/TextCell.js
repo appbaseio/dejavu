@@ -2,32 +2,55 @@
 
 import React from 'react';
 import { Input, Popover } from 'antd';
-import { func, any, bool } from 'prop-types';
+import { func, any, bool, shape, number, string } from 'prop-types';
+import { connect } from 'react-redux';
 
 import CellStyled from './Cell.styles';
 import Flex from '../Flex';
 
+import overflowText from '../DataTable/overflow.style';
+import { setCellActive } from '../../actions';
+import { getActiveCell } from '../../reducers/cell';
+
 type Props = {
 	children: [],
 	onChange: any => void,
-	active: boolean,
-	handleFocus?: any => void,
-	handleBlur?: any => void,
 	shouldAutoFocus?: boolean,
+	activeCell?: { row: any, column: any },
+	setCellActive: (row: any, column: any) => void,
+	row: any,
+	column: any,
+	mode?: string,
+	editable?: boolean,
 };
 
 const { TextArea } = Input;
 
 const TextCell = ({
-	active,
 	children,
 	onChange,
-	handleFocus,
-	handleBlur,
+	setCellActive: setCellActiveDispatch,
+	activeCell,
+	row,
+	column,
+	mode,
 	shouldAutoFocus,
+	editable,
 }: Props) => (
-	<CellStyled tabIndex="0" role="Gridcell" onFocus={handleFocus}>
-		{active ? (
+	<CellStyled
+		tabIndex="0"
+		role="Gridcell"
+		onFocus={() => {
+			if (typeof row === 'number' && column) {
+				setCellActiveDispatch(row, column);
+			}
+		}}
+	>
+		{editable ||
+		(mode === 'edit' &&
+			activeCell &&
+			activeCell.row === row &&
+			activeCell.column === column) ? (
 			<div
 				css={{
 					width: '100%',
@@ -47,8 +70,8 @@ const TextCell = ({
 							onChange(value);
 						}
 
-						if (handleBlur) {
-							handleBlur(e);
+						if (typeof row === 'number' && column) {
+							setCellActiveDispatch(null, null);
 						}
 					}}
 				/>
@@ -78,12 +101,7 @@ const TextCell = ({
 						}}
 					>
 						<div
-							css={{
-								overflow: 'hidden',
-								textOverflow: 'ellipsis',
-								whiteSpace: 'nowrap',
-								width: '100%',
-							}}
+							css={overflowText}
 							dangerouslySetInnerHTML={{ __html: children }}
 						/>
 					</Flex>
@@ -93,13 +111,25 @@ const TextCell = ({
 	</CellStyled>
 );
 
+const mapStateToProps = state => ({
+	activeCell: getActiveCell(state),
+});
+
+const mapDispatchToProps = {
+	setCellActive,
+};
+
 TextCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
-	active: bool.isRequired,
-	handleFocus: func,
-	handleBlur: func,
 	shouldAutoFocus: bool,
+	activeCell: shape({ row: number, column: string }),
+	setCellActive: func.isRequired,
+	mode: string,
+	editable: bool,
 };
 
-export default TextCell;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(TextCell);
