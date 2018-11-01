@@ -61,6 +61,7 @@ class ConnectApp extends Component<Props, State> {
 			appname: queryApp,
 			url: queryUrl,
 			mode: queryMode,
+			showDataBrowserOnly,
 		} = getUrlParams(window.location.search);
 
 		if (queryApp && queryUrl) {
@@ -86,8 +87,12 @@ class ConnectApp extends Component<Props, State> {
 			const currentMode = queryMode || mode;
 			searchQuery += `&mode=${currentMode}`;
 
+			if (showDataBrowserOnly) {
+				searchQuery += `&showDataBrowserOnly=${showDataBrowserOnly}`;
+			}
+
 			this.props.setMode(currentMode);
-			this.props.history.push(searchQuery);
+			this.props.history.push({ search: searchQuery });
 		}
 
 		if (queryMode) {
@@ -105,16 +110,27 @@ class ConnectApp extends Component<Props, State> {
 	handleSubmit = e => {
 		e.preventDefault();
 		const { appname, url } = this.state;
+		const { showDataBrowserOnly } = getUrlParams(window.location.search);
+
+		let searchQuery = '?';
+
+		if (showDataBrowserOnly) {
+			searchQuery += `&showDataBrowserOnly=${showDataBrowserOnly}`;
+		}
+
 		if (this.props.isConnected) {
 			this.props.disconnectApp();
 			this.props.setMode('view');
-			this.props.history.push({ search: '' });
+
+			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {
 			this.props.connectApp(appname, url);
 			// update history with correct appname and url
-			this.props.history.push(
-				`?appname=${appname}&url=${url}&mode=${this.props.mode}`,
-			);
+			searchQuery += `&appname=${appname}&url=${url}&mode=${
+				this.props.mode
+			}`;
+
+			this.props.history.push({ search: searchQuery });
 		}
 	};
 
