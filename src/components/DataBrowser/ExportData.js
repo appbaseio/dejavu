@@ -97,7 +97,6 @@ class ExportData extends Component<Props, State> {
 			<Fragment>
 				<Button
 					icon="download"
-					type="primary"
 					css={{ marginRight: '5px' }}
 					onClick={this.toggleModal}
 				>
@@ -110,7 +109,7 @@ class ExportData extends Component<Props, State> {
 					onCancel={this.toggleModal}
 					destroyOnClose
 					maskClosable={false}
-					title="Export data"
+					title="Export Data"
 					footer={[
 						<Button
 							key="csv"

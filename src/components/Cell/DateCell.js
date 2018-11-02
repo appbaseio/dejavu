@@ -26,7 +26,6 @@ const DateCell = ({ children, onChange, format, mode }: Props) => (
 				format={getDateFormat(format)}
 				css={{
 					width: '100% !important',
-					height: '100%',
 				}}
 				onChange={(momentObject, dateString) => {
 					if (children !== dateString) {

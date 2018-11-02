@@ -194,10 +194,9 @@ class AddFieldModal extends Component<Props, State> {
 					type="primary"
 					onClick={this.toggleModal}
 					css={{
-						marginRight: '5px',
-						position: 'absolute',
+						position: 'absolute !important',
 						top: '104',
-						right: '-35px',
+						right: '-32px',
 						zIndex: 1000,
 					}}
 				/>
@@ -241,7 +240,7 @@ class AddFieldModal extends Component<Props, State> {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="Type">
+							<Item label="Document Type">
 								<Select
 									value={selectedType}
 									onChange={this.handleTypeChange}

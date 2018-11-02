@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { getMode } from '../../reducers/mode';
 import setMode from '../../actions/mode';
 import { updateQueryStringParameter } from '../../utils';
+import colors from '../theme/colors';
 
 const { Option } = Select;
 
@@ -36,7 +37,21 @@ class ModeSwitch extends Component<Props> {
 		const { mode } = this.props;
 
 		return (
-			<Select value={mode} onChange={this.handleModeChange}>
+			<Select
+				value={mode}
+				onChange={this.handleModeChange}
+				css={{
+					'.ant-select-selection': {
+						backgroundColor: `${
+							mode === 'view' ? colors.viewing : colors.editing
+						} !important`,
+						color: `${colors.white} !important`,
+					},
+					'.ant-select-arrow': {
+						color: `${colors.white} !important`,
+					},
+				}}
+			>
 				<Option value="view">
 					<Icon type="eye" /> &nbsp; Viewing
 				</Option>

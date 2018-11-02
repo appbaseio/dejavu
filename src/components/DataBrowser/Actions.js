@@ -19,7 +19,6 @@ const Actions = ({ onReload }: Props) => (
 				<ExportData />
 				<Button
 					icon="reload"
-					type="primary"
 					onClick={onReload}
 					css={{ marginRight: '5px' }}
 				>

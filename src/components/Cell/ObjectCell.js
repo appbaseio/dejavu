@@ -2,7 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { func, any, string } from 'prop-types';
-import { Popover, Button, Modal } from 'antd';
+import { Popover, Icon, Modal } from 'antd';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/json';
@@ -60,7 +60,6 @@ class ObjectCell extends Component<Props, State> {
 		return (
 			<Fragment>
 				<CellStyled
-					padding={10}
 					css={{
 						display: 'flex',
 						alignItems: 'center',
@@ -83,15 +82,14 @@ class ObjectCell extends Component<Props, State> {
 							}
 							trigger="click"
 						>
-							<Button shape="circle">{` {...} `}</Button>
+							<span css={{ cursor: 'pointer' }}>{` {...} `}</span>
 						</Popover>
 					)}
 					{mode === 'edit' && (
-						<Button
-							shape="circle"
-							icon="edit"
-							css={{ border: 'none' }}
+						<Icon
+							type="edit"
 							onClick={this.toggleModal}
+							css={{ cursor: 'pointer' }}
 						/>
 					)}
 				</CellStyled>

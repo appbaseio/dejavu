@@ -1,7 +1,7 @@
 const extractColumns = mappings =>
 	Object.keys((mappings || {}).properties || []);
 
-const META_FIELDS = ['_id', '_index', '_type'];
+const META_FIELDS = ['_index', '_type'];
 
 const es6mappings = {
 	Text: {

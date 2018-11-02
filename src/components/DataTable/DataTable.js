@@ -4,7 +4,7 @@ import React, { Component, Fragment } from 'react';
 import { arrayOf, object, string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
-import { Popover, Button, Popconfirm } from 'antd';
+import { Popover } from 'antd';
 
 import MappingsDropdown from '../MappingsDropdown';
 import Cell from '../Cell';
@@ -12,7 +12,6 @@ import StyledCell from './Cell.style';
 import CellContent from './CellContent.style';
 import Flex from '../Flex';
 import SortIcon from '../../images/icons/sort.svg';
-import UpdateRow from './UpdateRow';
 
 import {
 	setCellValueRequest,
@@ -29,18 +28,19 @@ import colors from '../theme/colors';
 import overflowText from './overflow.style';
 import { addData, deleteData } from '../../apis';
 
-const isMetaField = field => META_FIELDS.indexOf(field) > -1;
+const ID = '_id';
+const isMetaField = field => META_FIELDS.indexOf(field) > -1 || field === ID;
 const srotableTypes = getSortableTypes();
 
-const getUpdateProps = dataItem => {
-	const { _index, _type, _id, ...data } = dataItem;
-	return {
-		index: _index,
-		type: _type,
-		documentId: _id,
-		data,
-	};
-};
+// const getUpdateProps = dataItem => {
+// 	const { _index, _type, _id, ...data } = dataItem;
+// 	return {
+// 		index: _index,
+// 		type: _type,
+// 		documentId: _id,
+// 		data,
+// 	};
+// };
 
 type Props = {
 	data: object[],
@@ -148,12 +148,21 @@ class DataTable extends Component<Props, State> {
 	};
 
 	render() {
-		const { mappings, visibleColumns, mode } = this.props;
-
+		const { mappings, visibleColumns: displayedColumns, mode } = this.props;
 		const { data } = this.state;
-
+		const visibleColumns = [ID, ...displayedColumns];
 		return (
-			<div css={{ position: 'relative' }}>
+			<div
+				css={{
+					overflow: 'auto',
+					borderRadius: '4px',
+					margin: '20px 0',
+					minHeight: '100px',
+					maxHeight: '450px',
+					border: `1px solid ${colors.tableBorderColor}`,
+					position: 'relative',
+				}}
+			>
 				<table
 					css={{
 						overflow: 'auto',
@@ -167,18 +176,15 @@ class DataTable extends Component<Props, State> {
 									key={col}
 									isHeader
 									className={
-										col === '_id' &&
+										col === ID &&
 										css({
 											zIndex: '101 !important',
 										})
 									}
-									isFixed={col === '_id'}
+									isFixed={col === ID}
+									isEditing={mode === 'edit'}
 								>
-									<CellContent
-										css={{
-											padding: '10px',
-										}}
-									>
+									<CellContent>
 										<Flex
 											justifyContent="space-between"
 											alignItems="center"
@@ -197,7 +203,12 @@ class DataTable extends Component<Props, State> {
 													/>
 												)}
 												<span
-													css={{ marginLeft: '5px' }}
+													css={{
+														marginLeft:
+															col === '_id'
+																? '35px'
+																: '5px',
+													}}
 												>
 													{col}
 												</span>
@@ -250,18 +261,19 @@ class DataTable extends Component<Props, State> {
 									<StyledCell
 										key={`${dataItem._id}-${col}`}
 										className={
-											col === '_id' &&
+											col === ID &&
 											css({
 												zIndex: 3,
 												background: colors.white,
 											})
 										}
-										isFixed={col === '_id'}
+										isFixed={col === ID}
+										isEditing={mode === 'edit'}
 									>
 										<CellContent>
 											{isMetaField(col) ? (
 												<Fragment>
-													{col === '_id' ? (
+													{col === ID ? (
 														<Flex
 															wrap="nowrap"
 															alignItems="center"
@@ -280,40 +292,6 @@ class DataTable extends Component<Props, State> {
 															>
 																{row + 1}
 															</span>
-															{mode ===
-																'edit' && (
-																<Fragment>
-																	<UpdateRow
-																		{...getUpdateProps(
-																			dataItem,
-																		)}
-																		handleUpdateData={
-																			this
-																				.handleUpdateData
-																		}
-																	/>
-																	<Popconfirm
-																		title="Are you sure delete this record?"
-																		placement="right"
-																		onConfirm={() =>
-																			this.handleDelete(
-																				dataItem,
-																			)
-																		}
-																		okText="Yes"
-																		cancelText="No"
-																	>
-																		<Button
-																			type="danger"
-																			icon="delete"
-																			css={{
-																				margin:
-																					'0 3px',
-																			}}
-																		/>
-																	</Popconfirm>
-																</Fragment>
-															)}
 															<div
 																css={
 																	overflowText

@@ -1,25 +1,17 @@
 // @flow
 
-import React, { Component } from 'react';
-import { InputNumber } from 'antd';
+import React, { Component, Fragment } from 'react';
+import { Input } from 'antd';
 import { func, any, bool } from 'prop-types';
-import { connect } from 'react-redux';
 
 import CellStyled from './Cell.styles';
-
-import { setCellActive } from '../../actions';
-import { getActiveCell } from '../../reducers/cell';
 
 type Props = {
 	children: any,
 	onChange: func,
-	shouldAutoFocus?: boolean,
-	activeCell?: { row: any, column: any },
-	setCellActive: (row: any, column: any) => void,
-	row: any,
-	column: any,
 	mode?: string,
 	editable?: boolean,
+	shouldAutoFocus?: boolean,
 };
 
 type State = {
@@ -30,13 +22,14 @@ class NumberCell extends Component<Props, State> {
 		value: this.props.children,
 	};
 
-	handleChange = (nextValue: any) => {
+	// $FlowFixMe
+	handleChange = e => {
+		const {
+			target: { value: nextValue },
+		} = e;
 		this.setState(({ value }) => {
-			if (
-				typeof nextValue === 'number' ||
-				nextValue === '' ||
-				nextValue === '-'
-			) {
+			// eslint-disable-next-line
+			if (!isNaN(nextValue)) {
 				return { value: nextValue };
 			}
 			return { value };
@@ -44,13 +37,7 @@ class NumberCell extends Component<Props, State> {
 	};
 
 	saveChange = () => {
-		const {
-			onChange,
-			children,
-			setCellActive: setCellActiveDispatch,
-			row,
-			column,
-		} = this.props;
+		const { onChange, children } = this.props;
 		const { value } = this.state;
 		if (value !== children) {
 			// only save value if it has changed
@@ -60,73 +47,37 @@ class NumberCell extends Component<Props, State> {
 				this.setState({ value: nextValue });
 			}
 
-			onChange(nextValue);
-		}
-
-		if (typeof row === 'number' && column) {
-			setCellActiveDispatch(null, null);
+			onChange(Number(nextValue));
 		}
 	};
 
 	render() {
-		const {
-			children,
-			setCellActive: setCellActiveDispatch,
-			activeCell,
-			row,
-			column,
-			mode,
-			shouldAutoFocus,
-			editable,
-		} = this.props;
+		const { children, mode, editable, shouldAutoFocus } = this.props;
 		const { value } = this.state;
 		return (
-			<CellStyled
-				tabIndex="0"
-				role="Gridcell"
-				onFocus={() => {
-					if (typeof row === 'number' && column) {
-						setCellActiveDispatch(row, column);
-					}
-				}}
-			>
-				{editable ||
-				(mode === 'edit' &&
-					activeCell &&
-					activeCell.row === row &&
-					activeCell.column === column) ? (
-					<div
+			<Fragment>
+				{editable || mode === 'edit' ? (
+					<Input
+						tabIndex="0"
+						role="Gridcell"
+						value={value}
+						onChange={this.handleChange}
 						css={{
-							width: '100%',
-							height: '100%',
+							height: '100% important',
+							width: '100% !important',
+							border: `${
+								shouldAutoFocus ? 'none' : 'auto'
+							} !important`,
 						}}
-					>
-						<InputNumber
-							autoFocus={shouldAutoFocus}
-							value={value}
-							onChange={this.handleChange}
-							css={{
-								width: '100%',
-								height: '100%',
-							}}
-							onBlur={this.saveChange}
-						/>
-					</div>
+						onBlur={this.saveChange}
+					/>
 				) : (
-					children
+					<CellStyled>{children}</CellStyled>
 				)}
-			</CellStyled>
+			</Fragment>
 		);
 	}
 }
-
-const mapStateToProps = state => ({
-	activeCell: getActiveCell(state),
-});
-
-const mapDispatchToProps = {
-	setCellActive,
-};
 
 NumberCell.propTypes = {
 	onChange: func.isRequired,
@@ -134,7 +85,4 @@ NumberCell.propTypes = {
 	shouldAutoFocus: bool,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(NumberCell);
+export default NumberCell;

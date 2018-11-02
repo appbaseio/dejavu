@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { Select, Popover, Button } from 'antd';
+import { Select, Popover } from 'antd';
 import { func, string, any } from 'prop-types';
 
 import JsonView from '../JsonView';
@@ -20,19 +20,22 @@ const ArrayCell = ({ children, onChange, mode }: Props) => (
 			<Select
 				value={children}
 				css={{
-					width: '200px',
-					height: '100%',
+					width: '100% !important',
+					height: '100% !important',
+					display: 'flex',
+					justifyContent: 'left',
+					alignItems: 'center',
 					'.ant-select-selection': {
 						borderColor: 'transparent',
+						height: '100% !important',
+						width: '100% !important',
 					},
 					'.ant-select-selection__choice': {
-						height: '32px !important',
-						paddingTop: 4,
+						height: '100% !important',
 					},
 				}}
 				mode="multiple"
 				showSearch
-				allowClear
 				autoClearSearchValue
 				maxTagCount={0}
 				onChange={value => onChange(value)}
@@ -58,9 +61,7 @@ const ArrayCell = ({ children, onChange, mode }: Props) => (
 					}
 					trigger="click"
 				>
-					<Button shape="circle" css={{ marginLeft: '5px' }}>
-						[...]
-					</Button>
+					<span css={{ cursor: 'pointer' }}> [...] </span>
 				</Popover>
 			)
 		)}

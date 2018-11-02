@@ -29,9 +29,15 @@ const MappingsIcon = ({ mapping, ...props }: Props) => {
 			return <Icon type="calendar" {...props} />;
 		case 'float':
 		case 'double':
-			return <span>π</span>;
+			return (
+				<span css={{ cursor: 'pointer' }} {...props}>
+					π
+				</span>
+			);
 		default:
-			return <span>{`{...}`}</span>;
+			return (
+				<span css={{ cursor: 'pointer' }} {...props}>{`{...}`}</span>
+			);
 	}
 };
 

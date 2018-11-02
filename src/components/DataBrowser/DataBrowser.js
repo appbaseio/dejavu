@@ -27,7 +27,6 @@ import {
 	getSearchableColumns,
 } from '../../reducers/mappings';
 import { parseUrl } from '../../utils';
-import colors from '../theme/colors';
 
 type Props = {
 	appname: string,
@@ -143,26 +142,13 @@ class DataBrowser extends Component<Props, State> {
 										/>
 									</div>
 								</div>
-								<Flex
-									id="result-list"
-									css={{
-										overflow: 'auto',
-										borderRadius: '4px',
-										margin: '20px 0',
-										minHeight: '100px',
-										maxHeight: '450px',
-										border: `1px solid ${
-											colors.tableBorderColor
-										}`,
-									}}
-								>
+								<div id="result-list">
 									<ReactiveList
 										key={String(reactiveListKey)}
 										componentId="results"
 										dataField={sortField}
 										sortBy={sort}
-										scrollTarget="result-list"
-										pagination={false}
+										pagination
 										size={20}
 										showResultStats
 										react={{
@@ -220,7 +206,7 @@ class DataBrowser extends Component<Props, State> {
 											</Flex>
 										)}
 									/>
-								</Flex>
+								</div>
 							</ReactiveBase>
 							<AddRowModal />
 						</div>

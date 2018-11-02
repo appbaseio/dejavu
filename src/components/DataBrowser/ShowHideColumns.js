@@ -51,7 +51,7 @@ class ShowHideColumns extends Component<Props, State> {
 			return;
 		}
 
-		if (e.target.textContent === 'Show/Hide Columns') {
+		if (e.target.id === 'show-hide-button') {
 			return;
 		}
 
@@ -131,7 +131,11 @@ class ShowHideColumns extends Component<Props, State> {
 				trigger={['click']}
 				onClick={this.toggleDropDown}
 			>
-				<Button css={{ marginLeft: '5px' }}>Show/Hide Columns</Button>
+				<Button
+					css={{ marginLeft: '5px' }}
+					id="show-hide-button"
+					icon="setting"
+				/>
 			</Dropdown>
 		);
 	}

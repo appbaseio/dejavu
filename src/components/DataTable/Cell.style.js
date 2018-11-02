@@ -4,7 +4,7 @@ import colors from '../theme/colors';
 const Cell = styled('td')`
 	min-width: 230px;
 	max-width: 230px;
-	height: 60px;
+	height: 30px;
 	outline: 0;
 	border: 0;
 
@@ -25,6 +25,11 @@ const Cell = styled('td')`
 			max-width: 260px;
 			position: sticky;
 			left: 0px;
+		`};
+	${({ isEditing }) =>
+		isEditing &&
+		css`
+			height: 35px !important;
 		`};
 `;
 
