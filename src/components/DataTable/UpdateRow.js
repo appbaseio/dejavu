@@ -87,7 +87,6 @@ class UpdateRowModal extends Component<Props, State> {
 					css={{
 						top: '10px',
 					}}
-					destroyOnClose
 					maskClosable={false}
 				>
 					<Row>

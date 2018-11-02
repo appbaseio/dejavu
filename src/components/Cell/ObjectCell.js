@@ -95,6 +95,7 @@ class ObjectCell extends Component<Props, State> {
 					onCancel={this.toggleModal}
 					onOk={this.saveValue}
 					okButtonProps={{ disabled: error }}
+					destroyOnHide
 				>
 					<br />
 					<AceEditor

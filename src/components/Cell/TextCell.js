@@ -44,8 +44,8 @@ const TextCell = ({
 				}}
 				css={{
 					height: '100% important',
-					width: '100% !important',
-					border: `${shouldAutoFocus ? 'none' : 'auto'} !important`,
+					width: '100%',
+					border: `${shouldAutoFocus ? 'none' : 'auto'}`,
 				}}
 			/>
 		) : (

@@ -178,7 +178,7 @@ class DataTable extends Component<Props, State> {
 									className={
 										col === ID &&
 										css({
-											zIndex: '101 !important',
+											zIndex: '101',
 										})
 									}
 									isFixed={col === ID}

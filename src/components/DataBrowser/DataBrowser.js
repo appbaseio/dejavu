@@ -124,8 +124,8 @@ class DataBrowser extends Component<Props, State> {
 											fieldWeights={weights}
 											innerClass={{
 												input: `ant-input ${css`
-													padding-left: 35px !important;
-													height: 32px !important;
+													padding-left: 35px;
+													height: 32px;
 												`}`,
 											}}
 											showIcon={false}

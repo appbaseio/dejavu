@@ -168,7 +168,7 @@ class ConnectApp extends Component<Props, State> {
 
 					<Item
 						css={{
-							marginRight: '0 !important',
+							marginRight: '0px !important',
 						}}
 					>
 						<Button

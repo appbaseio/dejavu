@@ -18,6 +18,8 @@ import { isVaildJSON } from '../../utils';
 
 import Item from './Item.styles';
 import Cell from '../Cell';
+import Flex from '../Flex';
+import MappingsDropdown from '../MappingsDropdown';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -55,23 +57,6 @@ class AddRowModal extends Component<Props, State> {
 		][0],
 		tab: 'json',
 		tabData: {},
-	};
-
-	handleAfterClose = () => {
-		this.setState({
-			addDataError: false,
-			addDataValue: `{\n}`,
-			documentId: '',
-			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
-			types: this.props.indexTypeMap[
-				Object.keys(this.props.indexTypeMap)[0]
-			],
-			selectedType: this.props.indexTypeMap[
-				Object.keys(this.props.indexTypeMap)[0]
-			][0],
-			tab: 'json',
-			tabData: {},
-		});
 	};
 
 	handleDocumentIdChange = e => {
@@ -181,13 +166,12 @@ class AddRowModal extends Component<Props, State> {
 				<Modal
 					visible={isShowingModal}
 					onCancel={this.toggleModal}
-					afterClose={this.handleAfterClose}
 					onOk={this.addValue}
 					okButtonProps={{ disabled: addDataError }}
 					css={{
 						top: '10px',
 					}}
-					destroyOnClose
+					destroyOnHide
 					maskClosable={false}
 				>
 					<Row>
@@ -209,7 +193,7 @@ class AddRowModal extends Component<Props, State> {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="Type">
+							<Item label="Document Type">
 								<Select
 									value={selectedType}
 									onChange={this.handleTypeChange}
@@ -269,16 +253,14 @@ class AddRowModal extends Component<Props, State> {
 											padding: '10px',
 										}}
 									>
-										<div>
+										<Flex justifyContent="space-between">
 											<b>{item}</b>
-											{properties[item].type && (
-												<span
-													css={{ marginLeft: '10px' }}
-												>
-													({properties[item].type})
-												</span>
+											{properties[item] && (
+												<MappingsDropdown
+													mapping={properties[item]}
+												/>
 											)}
-										</div>
+										</Flex>
 										<Cell
 											mapping={properties[item]}
 											onChange={val =>

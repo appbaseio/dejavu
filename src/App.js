@@ -38,11 +38,10 @@ class App extends Component {
 
 	render() {
 		const { isShowingSideBar } = this.state;
-		console.log('re-rendering');
 		return (
 			<Provider store={store}>
 				<BrowserRouter>
-					<Layout css={{ minHeight: '100vh !important' }}>
+					<Layout css={{ minHeight: '100vh' }}>
 						{isShowingSideBar && (
 							<Sider theme="light">
 								<img

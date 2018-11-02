@@ -4,8 +4,10 @@ import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { string, arrayOf, func, object } from 'prop-types';
 import { Button, Checkbox, Dropdown } from 'antd';
+
 import { getColumns, getVisibleColumns } from '../../reducers/mappings';
 import { setVisibleColumns } from '../../actions/mappings';
+import colors from '../theme/colors';
 
 const { Group } = Checkbox;
 
@@ -91,11 +93,11 @@ class ShowHideColumns extends Component<Props, State> {
 				overlay={
 					<div
 						css={{
-							background: '#fff',
+							background: colors.white,
 							borderRadius: 4,
 							padding: 10,
 							boxShadow: '0 1px 6px rgba(0, 0, 0, .2)',
-							maxHeight: '80vh',
+							maxHeight: '75vh',
 							overflowY: 'auto',
 						}}
 						ref={this.showHideDropdownNode}
@@ -119,7 +121,7 @@ class ShowHideColumns extends Component<Props, State> {
 						<Group
 							options={allColumns}
 							css={{
-								display: 'grid !important',
+								display: 'grid',
 								gridGap: 5,
 							}}
 							value={visibleColumns}

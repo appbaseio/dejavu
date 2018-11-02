@@ -37,21 +37,21 @@ class ArrayCell extends Component<Props, State> {
 					<Select
 						value={data}
 						css={{
-							width: '100% !important',
-							height: '100% !important',
+							width: '100%',
+							height: '100%',
 							display: 'flex',
 							justifyContent: 'left',
 							alignItems: 'center',
 							'.ant-select-selection': {
-								borderColor: 'transparent !important',
-								height: '100% !important',
-								width: '100% !important',
+								borderColor: 'transparent',
+								height: '100%',
+								width: '100%',
 							},
 							'.ant-select-selection__choice': {
-								height: '100% !important',
+								height: '100%',
 							},
 							'.ant-select': {
-								width: '100% !important',
+								width: '100%',
 							},
 						}}
 						mode="tags"

@@ -44,11 +44,11 @@ class ModeSwitch extends Component<Props> {
 					'.ant-select-selection': {
 						backgroundColor: `${
 							mode === 'view' ? colors.viewing : colors.editing
-						} !important`,
-						color: `${colors.white} !important`,
+						}`,
+						color: `${colors.white}`,
 					},
 					'.ant-select-arrow': {
-						color: `${colors.white} !important`,
+						color: `${colors.white}`,
 					},
 				}}
 			>

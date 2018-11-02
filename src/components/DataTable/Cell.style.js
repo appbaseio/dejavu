@@ -29,7 +29,7 @@ const Cell = styled('td')`
 	${({ isEditing }) =>
 		isEditing &&
 		css`
-			height: 50px !important;
+			height: 50px;
 		`};
 `;
 
