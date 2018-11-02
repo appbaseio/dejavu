@@ -10,7 +10,12 @@ import Mappings from './components/Mappings';
 import Navigation from './components/Navigation';
 
 import configureStore from './store';
-import { getUrlParams } from './utils';
+import {
+	getUrlParams,
+	getLocalStorageItem,
+	setLocalStorageData,
+} from './utils';
+import constants from './constants';
 
 import logo from './images/dejavu-logo.svg';
 
@@ -27,6 +32,20 @@ class App extends Component {
 
 		if (showDataBrowserOnly && showDataBrowserOnly === 'true') {
 			this.setSideBarVisibility(false);
+		}
+
+		const localConnections = getLocalStorageItem(
+			constants.LOCAL_CONNECTIONS,
+		);
+
+		if (!localConnections) {
+			setLocalStorageData(
+				constants.LOCAL_CONNECTIONS,
+				JSON.stringify({
+					appNames: [],
+					urls: [],
+				}),
+			);
 		}
 	}
 

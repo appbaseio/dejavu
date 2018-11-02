@@ -75,6 +75,13 @@ const updateQueryStringParameter = (uri, key, value) => {
 	return `${uri}${separator}${key}=${value}`;
 };
 
+// get localStorage data
+const getLocalStorageItem = item => window.localStorage.getItem(item) || null;
+
+// set localStorage data
+const setLocalStorageData = (item, data) =>
+	window.localStorage.setItem(item, data);
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -84,4 +91,6 @@ export {
 	isEmptyObject,
 	isObject,
 	updateQueryStringParameter,
+	getLocalStorageItem,
+	setLocalStorageData,
 };

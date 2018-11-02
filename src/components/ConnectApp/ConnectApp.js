@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Input, Button, Alert } from 'antd';
+import { Form, Button, Alert, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
 import { string, func, bool, object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -13,9 +13,14 @@ import {
 	getIsConnected,
 } from '../../reducers/app';
 import { connectApp, disconnectApp, setMode } from '../../actions';
-import { getUrlParams } from '../../utils';
+import {
+	getUrlParams,
+	getLocalStorageItem,
+	setLocalStorageData,
+} from '../../utils';
 
 import { getMode } from '../../reducers/mode';
+import constants from '../../constants';
 
 type Props = {
 	appname?: string,
@@ -34,6 +39,8 @@ type Props = {
 type State = {
 	appname: string,
 	url: string,
+	pastUrls: string[],
+	pastApps: string[],
 };
 
 const { Item } = Form;
@@ -50,6 +57,8 @@ class ConnectApp extends Component<Props, State> {
 	state = {
 		appname: this.props.appname || '',
 		url: this.props.url || '',
+		pastApps: [],
+		pastUrls: [],
 	};
 
 	componentDidMount() {
@@ -98,12 +107,40 @@ class ConnectApp extends Component<Props, State> {
 		if (queryMode) {
 			this.props.setMode(queryMode);
 		}
+
+		this.setPastConnections();
 	}
+
+	setPastConnections = () => {
+		setTimeout(() => {
+			const pastConnections = JSON.parse(
+				// $FlowFixMe
+				getLocalStorageItem(constants.LOCAL_CONNECTIONS) || {},
+			);
+
+			this.setState({
+				pastApps: pastConnections.appNames || [],
+				pastUrls: pastConnections.urls || [],
+			});
+		}, 100);
+	};
 
 	handleChange = e => {
 		const { value, name } = e.target;
 		this.setState({
 			[name]: value,
+		});
+	};
+
+	handleUrlChange = url => {
+		this.setState({
+			url,
+		});
+	};
+
+	handleAppNameChange = appname => {
+		this.setState({
+			appname,
 		});
 	};
 
@@ -130,12 +167,33 @@ class ConnectApp extends Component<Props, State> {
 				this.props.mode
 			}`;
 
+			const { pastApps, pastUrls } = this.state;
+
+			const newApps =
+				pastApps.indexOf(appname) > -1
+					? [...pastApps]
+					: [...pastApps, appname];
+			const newUrls =
+				pastUrls.indexOf(url) > -1 ? [...pastUrls] : [...pastUrls, url];
+
+			this.setState({
+				pastApps: newApps,
+				pastUrls: newUrls,
+			});
+
+			setLocalStorageData(
+				constants.LOCAL_CONNECTIONS,
+				JSON.stringify({
+					appNames: newApps,
+					urls: newUrls,
+				}),
+			);
 			this.props.history.push({ search: searchQuery });
 		}
 	};
 
 	render() {
-		const { appname, url } = this.state;
+		const { appname, url, pastApps, pastUrls } = this.state;
 		const { isLoading, isConnected } = this.props;
 		return (
 			<div>
@@ -148,20 +206,30 @@ class ConnectApp extends Component<Props, State> {
 					}}
 				>
 					<Item {...formItemProps}>
-						<Input
-							placeholder="URL"
+						<AutoComplete
+							dataSource={pastUrls}
 							value={url}
-							name="url"
-							onChange={this.handleChange}
+							placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+							filterOption={(inputValue, option) =>
+								option.props.children
+									.toUpperCase()
+									.indexOf(inputValue.toUpperCase()) !== -1
+							}
+							onChange={this.handleUrlChange}
 							disabled={isConnected}
 						/>
 					</Item>
 					<Item {...formItemProps}>
-						<Input
-							placeholder="App Name (aka Index)"
+						<AutoComplete
+							dataSource={pastApps}
 							value={appname}
-							name="appname"
-							onChange={this.handleChange}
+							placeholder="Appname (aka index) goes here"
+							filterOption={(inputValue, option) =>
+								option.props.children
+									.toUpperCase()
+									.indexOf(inputValue.toUpperCase()) !== -1
+							}
+							onChange={this.handleAppNameChange}
 							disabled={isConnected}
 						/>
 					</Item>
