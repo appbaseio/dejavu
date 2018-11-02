@@ -5,7 +5,6 @@ import { Input, Popover } from 'antd';
 import { func, any, bool, string } from 'prop-types';
 
 import CellStyled from './Cell.styles';
-import Flex from '../Flex';
 
 import overflowText from '../DataTable/overflow.style';
 
@@ -52,6 +51,7 @@ const TextCell = ({
 			<CellStyled>
 				<Popover
 					placement="topLeft"
+					trigger="click"
 					content={
 						<div
 							css={{
@@ -65,19 +65,10 @@ const TextCell = ({
 					}
 				>
 					{children && (
-						<Flex
-							justifyContent="left"
-							alignItems="center"
-							css={{
-								width: '100%',
-								height: '100%',
-							}}
-						>
-							<div
-								css={overflowText}
-								dangerouslySetInnerHTML={{ __html: children }}
-							/>
-						</Flex>
+						<div
+							css={overflowText}
+							dangerouslySetInnerHTML={{ __html: children }}
+						/>
 					)}
 				</Popover>
 			</CellStyled>
