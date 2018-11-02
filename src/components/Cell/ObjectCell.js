@@ -64,27 +64,24 @@ class ObjectCell extends Component<Props, State> {
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'space-between',
-						flexDirection: children ? 'row' : 'row-reverse',
 					}}
 				>
-					{children && (
-						<Popover
-							content={
-								<div
-									css={{
-										maxWidth: '400px',
-										maxHeight: '300px',
-										overflow: 'auto',
-									}}
-								>
-									<JsonView json={children} />
-								</div>
-							}
-							trigger="click"
-						>
-							<span css={{ cursor: 'pointer' }}>{` {...} `}</span>
-						</Popover>
-					)}
+					<Popover
+						content={
+							<div
+								css={{
+									maxWidth: '400px',
+									maxHeight: '300px',
+									overflow: 'auto',
+								}}
+							>
+								<JsonView json={children || {}} />
+							</div>
+						}
+						trigger="click"
+					>
+						<span css={{ cursor: 'pointer' }}>{` {...} `}</span>
+					</Popover>
 					{mode === 'edit' && (
 						<Icon
 							type="edit"

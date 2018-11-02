@@ -50,6 +50,9 @@ class ArrayCell extends Component<Props, State> {
 							'.ant-select-selection__choice': {
 								height: '100% !important',
 							},
+							'.ant-select': {
+								width: '100% !important',
+							},
 						}}
 						mode="tags"
 						maxTagCount={0}
