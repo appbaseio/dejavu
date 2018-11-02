@@ -37,8 +37,8 @@ class ArrayCell extends Component<Props, State> {
 					<Select
 						value={data}
 						css={{
-							width: '100% !important !important',
-							height: '100% !important !important',
+							width: '100% !important',
+							height: '100% !important',
 							display: 'flex',
 							justifyContent: 'left',
 							alignItems: 'center',

@@ -21,7 +21,7 @@ const { Option } = Select;
 const { Group: RadioGroup } = Radio;
 
 const DATA_SHAPE = ['Primitive', 'Array', 'Object'];
-const CUSTOM_MAPPING = 'Custom Mappings';
+const CUSTOM_MAPPING = "I've my own mappings";
 
 const customMappings = {
 	...es6mappings,
@@ -270,7 +270,7 @@ class AddFieldModal extends Component<Props, State> {
 							placeholder="Enter Field Name"
 						/>
 					</Item>
-					<Item label="Select data shape">
+					<Item label="Select Data Shape">
 						<RadioGroup
 							onChange={this.handleShapeChange}
 							value={selectedShape}
@@ -301,7 +301,7 @@ class AddFieldModal extends Component<Props, State> {
 					)}
 					{selectedPrimitiveType === CUSTOM_MAPPING && (
 						<Fragment>
-							<Item label="Mapping" />
+							<Item label="Custom Mapping Object" />
 							<AceEditor
 								tabSize={2}
 								mode="json"
