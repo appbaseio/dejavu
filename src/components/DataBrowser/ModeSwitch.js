@@ -10,6 +10,7 @@ import { getMode } from '../../reducers/mode';
 import setMode from '../../actions/mode';
 import { updateQueryStringParameter } from '../../utils';
 import colors from '../theme/colors';
+import { MODES } from '../../constants';
 
 const { Option } = Select;
 
@@ -43,7 +44,9 @@ class ModeSwitch extends Component<Props> {
 				css={{
 					'.ant-select-selection': {
 						backgroundColor: `${
-							mode === 'view' ? colors.viewing : colors.editing
+							mode === MODES.VIEW
+								? colors.viewing
+								: colors.editing
 						}`,
 						color: `${colors.white}`,
 					},

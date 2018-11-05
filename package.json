@@ -48,6 +48,7 @@
 		"react-router-dom": "^4.3.1",
 		"react-table": "^6.8.6",
 		"react-table-hoc-fixed-columns": "^1.0.3",
+		"react-window": "^1.2.4",
 		"redux": "^4.0.0",
 		"redux-saga": "^0.16.0",
 		"url-parser-lite": "^0.1.0"

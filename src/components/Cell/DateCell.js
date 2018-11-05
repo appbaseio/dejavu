@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import CellStyled from './Cell.styles';
 import { getDateFormat } from '../../utils';
+import { MODES } from '../../constants';
 
 type Props = {
 	children: any,
@@ -17,7 +18,7 @@ type Props = {
 
 const DateCell = ({ children, onChange, format, mode }: Props) => (
 	<CellStyled>
-		{mode === 'edit' ? (
+		{mode === MODES.EDIT ? (
 			<DatePicker
 				showTime
 				defaultValue={

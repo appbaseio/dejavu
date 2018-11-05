@@ -20,7 +20,7 @@ import {
 } from '../../utils';
 
 import { getMode } from '../../reducers/mode';
-import constants from '../../constants';
+import { LOCAL_CONNECTIONS, MODES } from '../../constants';
 
 type Props = {
 	appname?: string,
@@ -41,6 +41,7 @@ type State = {
 	url: string,
 	pastUrls: string[],
 	pastApps: string[],
+	isShowingAppSwitcher: boolean,
 };
 
 const { Item } = Form;
@@ -59,6 +60,7 @@ class ConnectApp extends Component<Props, State> {
 		url: this.props.url || '',
 		pastApps: [],
 		pastUrls: [],
+		isShowingAppSwitcher: true,
 	};
 
 	componentDidMount() {
@@ -70,7 +72,8 @@ class ConnectApp extends Component<Props, State> {
 			appname: queryApp,
 			url: queryUrl,
 			mode: queryMode,
-			showDataBrowserOnly,
+			sidebar,
+			appswitcher,
 		} = getUrlParams(window.location.search);
 
 		if (queryApp && queryUrl) {
@@ -96,8 +99,12 @@ class ConnectApp extends Component<Props, State> {
 			const currentMode = queryMode || mode;
 			searchQuery += `&mode=${currentMode}`;
 
-			if (showDataBrowserOnly) {
-				searchQuery += `&showDataBrowserOnly=${showDataBrowserOnly}`;
+			if (sidebar) {
+				searchQuery += `&sidebar=${sidebar}`;
+			}
+
+			if (appswitcher) {
+				searchQuery += `&appswitcher=${appswitcher}`;
 			}
 
 			this.props.setMode(currentMode);
@@ -108,14 +115,24 @@ class ConnectApp extends Component<Props, State> {
 			this.props.setMode(queryMode);
 		}
 
+		if (appswitcher && appswitcher === 'false') {
+			this.setAppSwitcher(false);
+		}
+
 		this.setPastConnections();
 	}
+
+	setAppSwitcher = isShowingAppSwitcher => {
+		this.setState({
+			isShowingAppSwitcher,
+		});
+	};
 
 	setPastConnections = () => {
 		setTimeout(() => {
 			const pastConnections = JSON.parse(
 				// $FlowFixMe
-				getLocalStorageItem(constants.LOCAL_CONNECTIONS) || {},
+				getLocalStorageItem(LOCAL_CONNECTIONS) || {},
 			);
 
 			this.setState({
@@ -147,17 +164,21 @@ class ConnectApp extends Component<Props, State> {
 	handleSubmit = e => {
 		e.preventDefault();
 		const { appname, url } = this.state;
-		const { showDataBrowserOnly } = getUrlParams(window.location.search);
+		const { sidebar, appswitcher } = getUrlParams(window.location.search);
 
 		let searchQuery = '?';
 
-		if (showDataBrowserOnly) {
-			searchQuery += `&showDataBrowserOnly=${showDataBrowserOnly}`;
+		if (sidebar) {
+			searchQuery += `&sidebar=${sidebar}`;
+		}
+
+		if (appswitcher) {
+			searchQuery += `&appswitcher=${appswitcher}`;
 		}
 
 		if (this.props.isConnected) {
 			this.props.disconnectApp();
-			this.props.setMode('view');
+			this.props.setMode(MODES.VIEW);
 
 			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {
@@ -182,7 +203,7 @@ class ConnectApp extends Component<Props, State> {
 			});
 
 			setLocalStorageData(
-				constants.LOCAL_CONNECTIONS,
+				LOCAL_CONNECTIONS,
 				JSON.stringify({
 					appNames: newApps,
 					urls: newUrls,
@@ -193,63 +214,75 @@ class ConnectApp extends Component<Props, State> {
 	};
 
 	render() {
-		const { appname, url, pastApps, pastUrls } = this.state;
+		const {
+			appname,
+			url,
+			pastApps,
+			pastUrls,
+			isShowingAppSwitcher,
+		} = this.state;
 		const { isLoading, isConnected } = this.props;
 		return (
 			<div>
-				<Form
-					layout="inline"
-					onSubmit={this.handleSubmit}
-					css={{
-						display: 'grid',
-						gridTemplateColumns: '1fr 1fr auto',
-					}}
-				>
-					<Item {...formItemProps}>
-						<AutoComplete
-							dataSource={pastUrls}
-							value={url}
-							placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-							filterOption={(inputValue, option) =>
-								option.props.children
-									.toUpperCase()
-									.indexOf(inputValue.toUpperCase()) !== -1
-							}
-							onChange={this.handleUrlChange}
-							disabled={isConnected}
-						/>
-					</Item>
-					<Item {...formItemProps}>
-						<AutoComplete
-							dataSource={pastApps}
-							value={appname}
-							placeholder="Appname (aka index) goes here"
-							filterOption={(inputValue, option) =>
-								option.props.children
-									.toUpperCase()
-									.indexOf(inputValue.toUpperCase()) !== -1
-							}
-							onChange={this.handleAppNameChange}
-							disabled={isConnected}
-						/>
-					</Item>
-
-					<Item
+				{isShowingAppSwitcher && (
+					<Form
+						layout="inline"
+						onSubmit={this.handleSubmit}
 						css={{
-							marginRight: '0px !important',
+							display: 'grid',
+							gridTemplateColumns: '1fr 1fr auto',
 						}}
 					>
-						<Button
-							type={isConnected ? 'danger' : 'primary'}
-							htmlType="submit"
-							icon={isConnected ? 'pause-circle' : 'play-circle'}
-							disabled={!(appname && url)}
-							loading={isLoading}
+						<Item {...formItemProps}>
+							<AutoComplete
+								dataSource={pastUrls}
+								value={url}
+								placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+								filterOption={(inputValue, option) =>
+									option.props.children
+										.toUpperCase()
+										.indexOf(inputValue.toUpperCase()) !==
+									-1
+								}
+								onChange={this.handleUrlChange}
+								disabled={isConnected}
+							/>
+						</Item>
+						<Item {...formItemProps}>
+							<AutoComplete
+								dataSource={pastApps}
+								value={appname}
+								placeholder="Appname (aka index) goes here"
+								filterOption={(inputValue, option) =>
+									option.props.children
+										.toUpperCase()
+										.indexOf(inputValue.toUpperCase()) !==
+									-1
+								}
+								onChange={this.handleAppNameChange}
+								disabled={isConnected}
+							/>
+						</Item>
+
+						<Item
+							css={{
+								marginRight: '0px !important',
+							}}
 						>
-							{isConnected ? 'Disconnect' : 'Connect'}
-						</Button>
-					</Item>
-				</Form>
+							<Button
+								type={isConnected ? 'danger' : 'primary'}
+								htmlType="submit"
+								icon={
+									isConnected ? 'pause-circle' : 'play-circle'
+								}
+								disabled={!(appname && url)}
+								loading={isLoading}
+							>
+								{isConnected ? 'Disconnect' : 'Connect'}
+							</Button>
+						</Item>
+					</Form>
+				)}
 				{!isLoading &&
 					!isConnected && (
 						<Alert

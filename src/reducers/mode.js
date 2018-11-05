@@ -1,6 +1,7 @@
 import { MODE } from '../actions/constants';
+import { MODES } from '../constants';
 
-const mode = (state = 'view', action) => {
+const mode = (state = MODES.VIEW, action) => {
 	switch (action.type) {
 		case MODE.SET_MODE:
 			return action.mode;

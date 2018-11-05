@@ -5,6 +5,7 @@ import { Input } from 'antd';
 import { func, any, bool } from 'prop-types';
 
 import CellStyled from './Cell.styles';
+import { MODES } from '../../constants';
 
 type Props = {
 	children: any,
@@ -56,7 +57,7 @@ class NumberCell extends Component<Props, State> {
 		const { value } = this.state;
 		return (
 			<Fragment>
-				{editable || mode === 'edit' ? (
+				{editable || mode === MODES.EDIT ? (
 					<Input
 						tabIndex="0"
 						role="Gridcell"

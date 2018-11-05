@@ -11,6 +11,7 @@ import 'brace/theme/github';
 import CellStyled from './Cell.styles';
 import JsonView from '../JsonView';
 import { isVaildJSON } from '../../utils';
+import { MODES } from '../../constants';
 
 type Props = {
 	children: any,
@@ -82,7 +83,7 @@ class ObjectCell extends Component<Props, State> {
 					>
 						<span css={{ cursor: 'pointer' }}>{` {...} `}</span>
 					</Popover>
-					{mode === 'edit' && (
+					{mode === MODES.EDIT && (
 						<Icon
 							type="edit"
 							onClick={this.toggleModal}

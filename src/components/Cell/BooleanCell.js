@@ -5,6 +5,7 @@ import { Select } from 'antd';
 import { func, string, any } from 'prop-types';
 
 import CellStyled from './Cell.styles';
+import { MODES } from '../../constants';
 
 const { Option } = Select;
 
@@ -16,7 +17,7 @@ type Props = {
 
 const BooleanCell = ({ children, onChange, mode }: Props) => (
 	<CellStyled>
-		{mode === 'edit' ? (
+		{mode === MODES.EDIT ? (
 			<Select
 				defaultValue={
 					typeof children === 'undefined' ? 'false' : String(children)

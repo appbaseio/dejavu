@@ -27,6 +27,7 @@ import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
 import overflowText from './overflow.style';
 import { addData, deleteData } from '../../apis';
+import { MODES } from '../../constants';
 
 const ID = '_id';
 const isMetaField = field => META_FIELDS.indexOf(field) > -1 || field === ID;
@@ -182,7 +183,7 @@ class DataTable extends Component<Props, State> {
 										})
 									}
 									isFixed={col === ID}
-									isEditing={mode === 'edit'}
+									isEditing={mode === MODES.EDIT}
 								>
 									<CellContent>
 										<Flex
@@ -268,7 +269,7 @@ class DataTable extends Component<Props, State> {
 											})
 										}
 										isFixed={col === ID}
-										isEditing={mode === 'edit'}
+										isEditing={mode === MODES.EDIT}
 									>
 										<CellContent>
 											{isMetaField(col) ? (

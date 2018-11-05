@@ -4,6 +4,7 @@ import React, { Component, Fragment } from 'react';
 import { Select, Popover } from 'antd';
 import { func, string, any } from 'prop-types';
 
+import { MODES } from '../../constants';
 import JsonView from '../JsonView';
 
 type Props = {
@@ -33,7 +34,7 @@ class ArrayCell extends Component<Props, State> {
 		const { mode } = this.props;
 		return (
 			<Fragment>
-				{mode === 'edit' ? (
+				{mode === MODES.EDIT ? (
 					<Select
 						value={data}
 						css={{

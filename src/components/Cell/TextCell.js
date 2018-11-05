@@ -5,8 +5,8 @@ import { Input, Popover } from 'antd';
 import { func, any, bool, string } from 'prop-types';
 
 import CellStyled from './Cell.styles';
-
 import overflowText from '../DataTable/overflow.style';
+import { MODES } from '../../constants';
 
 type Props = {
 	children: [],
@@ -24,7 +24,7 @@ const TextCell = ({
 	editable,
 }: Props) => (
 	<Fragment>
-		{editable || mode === 'edit' ? (
+		{editable || mode === MODES.EDIT ? (
 			<Input
 				autosize={{
 					minRows: 1,

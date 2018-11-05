@@ -1,3 +1,6 @@
-export default {
-	LOCAL_CONNECTIONS: 'localConnections',
+export const MODES = {
+	VIEW: 'view',
+	EDIT: 'edit',
 };
+
+export const LOCAL_CONNECTIONS = 'localConnections';

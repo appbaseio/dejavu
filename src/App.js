@@ -15,7 +15,7 @@ import {
 	getLocalStorageItem,
 	setLocalStorageData,
 } from './utils';
-import constants from './constants';
+import { LOCAL_CONNECTIONS } from './constants';
 
 import logo from './images/dejavu-logo.svg';
 
@@ -28,19 +28,17 @@ class App extends Component {
 	};
 
 	componentDidMount() {
-		const { showDataBrowserOnly } = getUrlParams(window.location.search);
+		const { sidebar } = getUrlParams(window.location.search);
 
-		if (showDataBrowserOnly && showDataBrowserOnly === 'true') {
+		if (sidebar && sidebar === 'false') {
 			this.setSideBarVisibility(false);
 		}
 
-		const localConnections = getLocalStorageItem(
-			constants.LOCAL_CONNECTIONS,
-		);
+		const localConnections = getLocalStorageItem(LOCAL_CONNECTIONS);
 
 		if (!localConnections) {
 			setLocalStorageData(
-				constants.LOCAL_CONNECTIONS,
+				LOCAL_CONNECTIONS,
 				JSON.stringify({
 					appNames: [],
 					urls: [],
@@ -60,7 +58,9 @@ class App extends Component {
 		return (
 			<Provider store={store}>
 				<BrowserRouter>
-					<Layout css={{ minHeight: '100vh' }}>
+					<Layout
+						css={{ minHeight: isShowingSideBar ? '100vh' : 'auto' }}
+					>
 						{isShowingSideBar && (
 							<Sider theme="light">
 								<img
@@ -73,7 +73,9 @@ class App extends Component {
 							</Sider>
 						)}
 						<Layout>
-							<Content css={{ margin: 25 }}>
+							<Content
+								css={{ margin: isShowingSideBar ? 25 : 0 }}
+							>
 								<div
 									css={{
 										padding: 25,
