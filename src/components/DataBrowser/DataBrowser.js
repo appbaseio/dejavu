@@ -44,12 +44,14 @@ type Props = {
 type State = {
 	sortField: string,
 	sort: string,
+	pageSize: number,
 };
 
 class DataBrowser extends Component<Props, State> {
 	state = {
 		sort: 'asc',
 		sortField: '_score',
+		pageSize: 20,
 	};
 
 	componentDidMount() {
@@ -58,6 +60,12 @@ class DataBrowser extends Component<Props, State> {
 
 	handleReload = () => {
 		this.props.fetchMappings();
+	};
+
+	handlePageSizeChange = pageSize => {
+		this.setState({
+			pageSize,
+		});
 	};
 
 	handleSortChange = sortField => {
@@ -100,7 +108,7 @@ class DataBrowser extends Component<Props, State> {
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
-		const { sort, sortField } = this.state;
+		const { sort, sortField, pageSize } = this.state;
 
 		return (
 			<Skeleton loading={isLoading} active>
@@ -115,7 +123,13 @@ class DataBrowser extends Component<Props, State> {
 								url={url}
 							>
 								<div>
-									<Actions onReload={this.handleReload} />
+									<Actions
+										onReload={this.handleReload}
+										onPageSizeChange={
+											this.handlePageSizeChange
+										}
+										defaultPageSize={pageSize}
+									/>
 									<div css={{ position: 'relative' }}>
 										<DataSearch
 											componentId="GlobalSearch"
@@ -149,7 +163,7 @@ class DataBrowser extends Component<Props, State> {
 										dataField={sortField}
 										sortBy={sort}
 										pagination
-										size={20}
+										size={pageSize}
 										showResultStats
 										react={{
 											and: ['GlobalSearch'],
