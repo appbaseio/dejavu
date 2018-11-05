@@ -74,7 +74,22 @@ class ShowHideColumns extends Component<Props, State> {
 	};
 
 	handleVisibleColumnsChange = visibleColumns => {
-		this.props.setVisibleColumns(visibleColumns);
+		const metaIndex = visibleColumns.indexOf('_index');
+		const metaType = visibleColumns.indexOf('_type');
+		let currentVissibleColums = visibleColumns;
+
+		// to append meta fields at the beginning of array
+		if (metaType > -1) {
+			currentVissibleColums.splice(metaType, 1);
+			currentVissibleColums = ['_type', ...currentVissibleColums];
+		}
+
+		if (metaIndex > -1) {
+			currentVissibleColums.splice(metaIndex, 1);
+			currentVissibleColums = ['_index', ...currentVissibleColums];
+		}
+
+		this.props.setVisibleColumns(currentVissibleColums);
 	};
 
 	toggleDropDown = () => {
