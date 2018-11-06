@@ -14,7 +14,7 @@ import { css } from 'react-emotion';
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
-import AddRowModal from './AddRowModal';
+// import AddRowModal from './AddRowModal';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
@@ -156,13 +156,14 @@ class DataBrowser extends Component<Props, State> {
 										/>
 									</div>
 								</div>
-								<div id="result-list">
+								<div>
 									<ReactiveList
 										key={String(reactiveListKey)}
 										componentId="results"
 										dataField={sortField}
 										sortBy={sort}
-										pagination
+										pagination={false}
+										scrollTarget="result-list"
 										size={pageSize}
 										showResultStats
 										react={{
@@ -222,7 +223,7 @@ class DataBrowser extends Component<Props, State> {
 									/>
 								</div>
 							</ReactiveBase>
-							<AddRowModal />
+							{/* <AddRowModal /> */}
 						</div>
 					)}
 				{(isLoading || isDataLoading) && (

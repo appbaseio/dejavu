@@ -154,6 +154,7 @@ class DataTable extends Component<Props, State> {
 		const visibleColumns = [ID, ...displayedColumns];
 		return (
 			<div
+				id="result-list"
 				css={{
 					overflow: 'auto',
 					borderRadius: '4px',

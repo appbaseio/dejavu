@@ -149,7 +149,12 @@ class ShowHideColumns extends Component<Props, State> {
 				onClick={this.toggleDropDown}
 			>
 				<Button
-					css={{ marginLeft: '5px' }}
+					css={{
+						marginLeft: '5px',
+						'.anticon': {
+							fontSize: '18px !important',
+						},
+					}}
 					id="show-hide-button"
 					icon="setting"
 				/>

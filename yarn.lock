@@ -3522,7 +3522,7 @@ emotion-theming@^9.0.0:
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
-emotion@^9.0.0, emotion@^9.2.3:
+emotion@^9.0.0:
   version "9.2.12"
   resolved "https://registry.npmjs.org/emotion/-/emotion-9.2.12.tgz#53925aaa005614e65c6e43db8243c843574d1ea9"
   integrity sha512-hcx7jppaI8VoXxIWEhxpDW7I+B4kq9RNzQLmsrF6LY8BGKqe2N+gFAQr0EfuFucFlPs2A9HM4+xNj4NeqEWIOQ==
@@ -8817,22 +8817,6 @@ react-slick@~0.23.2:
     prettier "^1.14.3"
     resize-observer-polyfill "^1.5.0"
 
-react-table-hoc-fixed-columns@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-table-hoc-fixed-columns/-/react-table-hoc-fixed-columns-1.0.3.tgz#78adbe88be3dd7a634a1bc06dbbda620bdcf9ebe"
-  integrity sha512-LDL5YDbxR+bJUYiKmOig3Ak1DjmPUbKVZFCFBHYdCGsmHYfNWx/1OPGXGmWXF6A8RmgeJEl/WtXXEp6fqPy5xQ==
-  dependencies:
-    classnames "^2.2.6"
-    emotion "^9.2.3"
-    uniqid "^5.0.3"
-
-react-table@^6.8.6:
-  version "6.8.6"
-  resolved "https://registry.yarnpkg.com/react-table/-/react-table-6.8.6.tgz#a0ad8b4839319052d5befc012603fb161e52ede3"
-  integrity sha1-oK2LSDkxkFLVvvwBJgP7Fh5S7eM=
-  dependencies:
-    classnames "^2.2.5"
-
 react-window@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.2.4.tgz#21ff1a52205451e59523bb636225e6db682f660d"
@@ -10472,11 +10456,6 @@ union-value@^1.0.0:
     get-value "^2.0.6"
     is-extendable "^0.1.1"
     set-value "^0.4.3"
-
-uniqid@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/uniqid/-/uniqid-5.0.3.tgz#917968310edc868d50df6c44f783f32c7d80fac1"
-  integrity sha512-R2qx3X/LYWSdGRaluio4dYrPXAJACTqyUjuyXHoJLBUOIfmMcnYOyY2d6Y4clZcIz5lK6ZaI0Zzmm0cPfsIqzQ==
 
 unique-filename@^1.1.0:
   version "1.1.0"
