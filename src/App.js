@@ -80,6 +80,7 @@ class App extends Component {
 									css={{
 										padding: 25,
 										background: '#fff',
+										paddingBottom: 60,
 									}}
 								>
 									<Route exact path="/" component={Dejavu} />

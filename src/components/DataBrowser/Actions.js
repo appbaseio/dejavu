@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { func } from 'prop-types';
-import { Button, Select } from 'antd';
+import { Button, Select, Tag, Icon } from 'antd';
 
 import Flex from '../Flex';
 import AddFieldModal from './AddFieldModal';
@@ -16,9 +16,19 @@ type Props = {
 	onReload: () => void,
 	onPageSizeChange: any => void,
 	defaultPageSize: number,
+	sort?: string,
+	sortField?: string,
+	onResetSort: () => void,
 };
 
-const Actions = ({ onReload, onPageSizeChange, defaultPageSize }: Props) => (
+const Actions = ({
+	onReload,
+	onPageSizeChange,
+	defaultPageSize,
+	sort,
+	sortField,
+	onResetSort,
+}: Props) => (
 	<div css={{ margin: '20px 0' }}>
 		<Flex alignItems="flex-end" justifyContent="space-between">
 			<div>
@@ -34,6 +44,18 @@ const Actions = ({ onReload, onPageSizeChange, defaultPageSize }: Props) => (
 				<AddFieldModal />
 			</div>
 			<div>
+				{sortField !== '_score' && (
+					<Tag closable onClose={onResetSort}>
+						<Icon
+							type={
+								sort === 'asc'
+									? 'sort-ascending'
+									: 'sort-descending'
+							}
+						/>
+						&nbsp; {(sortField || '').split('.')[0]}
+					</Tag>
+				)}
 				<Select
 					defaultValue={defaultPageSize}
 					onChange={onPageSizeChange}

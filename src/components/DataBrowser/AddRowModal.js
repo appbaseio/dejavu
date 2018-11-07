@@ -158,7 +158,7 @@ class AddRowModal extends Component<Props, State> {
 					icon="plus"
 					type="primary"
 					onClick={this.toggleModal}
-					css={{ position: 'absolute !important', bottom: 0 }}
+					css={{ position: 'absolute !important', bottom: -40 }}
 				>
 					Add New Row
 				</Button>

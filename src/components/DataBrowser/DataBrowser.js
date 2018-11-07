@@ -14,7 +14,7 @@ import { css } from 'react-emotion';
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
-// import AddRowModal from './AddRowModal';
+import AddRowModal from './AddRowModal';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
@@ -45,6 +45,7 @@ type State = {
 	sortField: string,
 	sort: string,
 	pageSize: number,
+	scrollToColumn: number,
 };
 
 class DataBrowser extends Component<Props, State> {
@@ -52,6 +53,7 @@ class DataBrowser extends Component<Props, State> {
 		sort: 'asc',
 		sortField: '_score',
 		pageSize: 20,
+		scrollToColumn: 0,
 	};
 
 	componentDidMount() {
@@ -68,18 +70,28 @@ class DataBrowser extends Component<Props, State> {
 		});
 	};
 
-	handleSortChange = sortField => {
+	handleSortChange = (sortField, scrollToColumn) => {
 		this.setState(prevState => {
 			if (prevState.sortField === sortField) {
 				return {
 					sort: prevState.sort === 'asc' ? 'desc' : 'asc',
+					scrollToColumn,
 				};
 			}
 
 			return {
 				sort: 'asc',
 				sortField,
+				scrollToColumn,
 			};
+		});
+	};
+
+	resetSort = () => {
+		this.setState({
+			sort: 'asc',
+			sortField: '_score',
+			scrollToColumn: 0,
 		});
 	};
 
@@ -108,7 +120,7 @@ class DataBrowser extends Component<Props, State> {
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
-		const { sort, sortField, pageSize } = this.state;
+		const { sort, sortField, pageSize, scrollToColumn } = this.state;
 
 		return (
 			<Skeleton loading={isLoading} active>
@@ -129,6 +141,9 @@ class DataBrowser extends Component<Props, State> {
 											this.handlePageSizeChange
 										}
 										defaultPageSize={pageSize}
+										sort={sort}
+										sortField={sortField}
+										onResetSort={this.resetSort}
 									/>
 									<div css={{ position: 'relative' }}>
 										<DataSearch
@@ -144,6 +159,11 @@ class DataBrowser extends Component<Props, State> {
 											}}
 											showIcon={false}
 											highlight
+											onValueChange={() => {
+												this.setState({
+													scrollToColumn: 0,
+												});
+											}}
 										/>
 										<Icon
 											type="search"
@@ -156,7 +176,10 @@ class DataBrowser extends Component<Props, State> {
 										/>
 									</div>
 								</div>
-								<div>
+								<div
+									id="result-list"
+									css={{ marginTop: '20px' }}
+								>
 									<ReactiveList
 										key={String(reactiveListKey)}
 										componentId="results"
@@ -179,7 +202,7 @@ class DataBrowser extends Component<Props, State> {
 												justifyContent="center"
 												css={{
 													position: 'absolute',
-													bottom: 0,
+													bottom: '-30px',
 													left: '50%',
 													zIndex: 100,
 												}}
@@ -187,7 +210,11 @@ class DataBrowser extends Component<Props, State> {
 												<Spin />
 											</Flex>
 										}
-										onAllData={data => (
+										onAllData={(
+											data,
+											streamed,
+											onLoadMore,
+										) => (
 											<DataTable
 												key={
 													data.length
@@ -199,6 +226,10 @@ class DataBrowser extends Component<Props, State> {
 												handleSortChange={
 													this.handleSortChange
 												}
+												onLoadMore={onLoadMore}
+												scrollToColumn={scrollToColumn}
+												sort={sort}
+												sortField={sortField}
 											/>
 										)}
 										onResultStats={total => (
@@ -223,7 +254,7 @@ class DataBrowser extends Component<Props, State> {
 									/>
 								</div>
 							</ReactiveBase>
-							{/* <AddRowModal /> */}
+							<AddRowModal />
 						</div>
 					)}
 				{(isLoading || isDataLoading) && (

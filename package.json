@@ -46,7 +46,7 @@
 		"react-json-editor-ajrm": "^2.5.8",
 		"react-redux": "^5.0.7",
 		"react-router-dom": "^4.3.1",
-		"react-window": "^1.2.4",
+		"react-virtualized": "^9.21.0",
 		"redux": "^4.0.0",
 		"redux-saga": "^0.16.0",
 		"url-parser-lite": "^0.1.0"

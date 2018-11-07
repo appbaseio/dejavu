@@ -1,17 +1,11 @@
-// @flow
-
-import React, { Component, Fragment } from 'react';
-import { arrayOf, object, string, func } from 'prop-types';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { css } from 'react-emotion';
-import { Popover } from 'antd';
+import { arrayOf, object, string, func, number } from 'prop-types';
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
+import { Icon } from 'antd';
 
-import MappingsDropdown from '../MappingsDropdown';
-import Cell from '../Cell';
-import StyledCell from './Cell.style';
-import CellContent from './CellContent.style';
-import Flex from '../Flex';
-import SortIcon from '../../images/icons/sort.svg';
+import 'react-virtualized/styles.css';
 
 import {
 	setCellValueRequest,
@@ -25,41 +19,20 @@ import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS, getSortableTypes } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
-import overflowText from './overflow.style';
-import { addData, deleteData } from '../../apis';
 import { MODES } from '../../constants';
 
-const ID = '_id';
-const isMetaField = field => META_FIELDS.indexOf(field) > -1 || field === ID;
+import Cell from '../Cell';
+import Flex from '../Flex';
+import MappingsDropdown from '../MappingsDropdown';
+import SortIcon from '../../images/icons/sort.svg';
+// import overflowText from './overflow.style';
+// import { addData, deleteData } from '../../apis';
+
+const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 const srotableTypes = getSortableTypes();
+class DataTable extends Component {
+	gridRef = null;
 
-// const getUpdateProps = dataItem => {
-// 	const { _index, _type, _id, ...data } = dataItem;
-// 	return {
-// 		index: _index,
-// 		type: _type,
-// 		documentId: _id,
-// 		data,
-// 	};
-// };
-
-type Props = {
-	data: object[],
-	mappings: object,
-	setCellValue: (string, string, any, string, string) => void,
-	handleSortChange: string => void,
-	visibleColumns: string[],
-	mode: string,
-	appUrl: string,
-	setError: any => void,
-	clearError: () => void,
-	updateReactiveList: () => void,
-};
-
-type State = {
-	data: object[],
-};
-class DataTable extends Component<Props, State> {
 	state = {
 		data: this.props.data,
 	};
@@ -67,6 +40,10 @@ class DataTable extends Component<Props, State> {
 	componentDidUpdate(prevProps) {
 		if (prevProps.data.length !== this.props.data.length) {
 			this.updateData(this.props.data);
+		}
+
+		if (prevProps.mode !== this.props.mode) {
+			this.gridRef.recomputeGridSize();
 		}
 	}
 
@@ -95,7 +72,7 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
-	handleSort = col => {
+	handleSort = (col, colIndex) => {
 		const { mappings, handleSortChange } = this.props;
 		let column = col;
 
@@ -111,252 +88,250 @@ class DataTable extends Component<Props, State> {
 					: `${col}.raw`;
 		}
 
-		handleSortChange(column);
+		handleSortChange(column, colIndex);
 	};
 
-	handleDelete = async item => {
-		const {
-			appUrl,
-			setError: onSetError,
-			clearError: onClearError,
-			updateReactiveList: onUpdateReactiveList,
-		} = this.props;
+	setRef = node => {
+		this.gridRef = node;
+	};
 
-		try {
-			onClearError();
-			await deleteData(item._index, item._type, item._id, appUrl);
-			onUpdateReactiveList();
-		} catch (error) {
-			onSetError(error);
+	handleScroll = ({ scrollTop, clientHeight, scrollHeight }) => {
+		if (
+			clientHeight &&
+			scrollHeight &&
+			scrollHeight - scrollTop === clientHeight
+		) {
+			this.props.onLoadMore();
 		}
 	};
 
-	handleUpdateData = async (index, type, id, updatedData) => {
-		const {
-			appUrl,
-			setError: onSetError,
-			clearError: onClearError,
-			updateReactiveList: onUpdateReactiveList,
-		} = this.props;
+	cellRender = ({ columnIndex, key, rowIndex, style }) => {
+		const { visibleColumns, mappings, mode, sortField, sort } = this.props;
+		const { data } = this.state;
 
-		try {
-			onClearError();
-			await addData(index, type, id, appUrl, updatedData);
-			onUpdateReactiveList();
-		} catch (error) {
-			onSetError(error);
+		if (columnIndex === 0 && rowIndex === 0) {
+			return (
+				<div
+					style={style}
+					css={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						borderBottom: '1px solid #eee',
+						borderRight: '1px solid #eee',
+					}}
+				>
+					_id
+				</div>
+			);
 		}
+
+		if (rowIndex === 0 && columnIndex > 0) {
+			return (
+				<div
+					style={style}
+					css={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						borderBottom: '1px solid #eee',
+						borderRight: '1px solid #eee',
+						fontSize: '13px',
+					}}
+				>
+					<Flex
+						justifyContent="space-between"
+						alignItems="center"
+						css={{
+							width: '100%',
+							padding: '10px',
+						}}
+					>
+						<Flex alignItems="center">
+							{mappings.properties[
+								visibleColumns[columnIndex - 1]
+							] && (
+								<MappingsDropdown
+									mapping={
+										mappings.properties[
+											visibleColumns[columnIndex - 1]
+										]
+									}
+								/>
+							)}
+							<span css={{ marginLeft: '10px' }}>
+								{visibleColumns[columnIndex - 1]}
+							</span>
+						</Flex>
+						{mappings.properties[visibleColumns[columnIndex - 1]] &&
+							mappings.properties[visibleColumns[columnIndex - 1]]
+								.type &&
+							srotableTypes.indexOf(
+								mappings.properties[
+									visibleColumns[columnIndex - 1]
+								].type,
+							) > -1 && (
+								<button
+									type="button"
+									onClick={() => {
+										this.handleSort(
+											visibleColumns[columnIndex - 1],
+											columnIndex,
+										);
+									}}
+									css={{
+										outline: 0,
+										height: '15px',
+										width: '15px',
+										border: 0,
+										cursor: 'pointer',
+										background: 'none',
+									}}
+								>
+									{sortField.indexOf(
+										visibleColumns[columnIndex - 1],
+									) === -1 && (
+										<img
+											src={SortIcon}
+											alt="sort-icon"
+											css={{
+												height: '15px',
+												marginTop: '-10px',
+												marginLeft: '-5px',
+											}}
+										/>
+									)}
+									{sortField.indexOf(
+										visibleColumns[columnIndex - 1],
+									) > -1 && (
+										<Icon
+											type={
+												sort === 'asc'
+													? 'caret-down'
+													: 'caret-up'
+											}
+										/>
+									)}
+								</button>
+							)}
+					</Flex>
+				</div>
+			);
+		}
+		return (
+			<div
+				css={{
+					display: 'flex',
+					alignItems: 'center',
+					padding: '10px',
+					borderBottom: '1px solid #eee',
+					borderRight: '1px solid #eee',
+					fontSize: '12px',
+				}}
+				key={key}
+				style={style}
+			>
+				{columnIndex === 0 && data[rowIndex]._id}
+
+				{columnIndex > 0 &&
+					(isMetaField(visibleColumns[columnIndex - 1]) ? (
+						<div>
+							{data[rowIndex][visibleColumns[columnIndex - 1]]}
+						</div>
+					) : (
+						<Cell
+							row={rowIndex}
+							column={visibleColumns[columnIndex - 1]}
+							mode={mode}
+							onChange={value =>
+								this.handleChange(
+									rowIndex,
+									visibleColumns[columnIndex - 1],
+									value,
+								)
+							}
+							mapping={
+								mappings.properties[
+									visibleColumns[columnIndex - 1]
+								]
+							}
+							shouldAutoFocus
+						>
+							{data[rowIndex][visibleColumns[columnIndex - 1]]}
+						</Cell>
+					))}
+			</div>
+		);
 	};
 
 	render() {
-		const { mappings, visibleColumns: displayedColumns, mode } = this.props;
+		const { visibleColumns, mode, scrollToColumn } = this.props;
 		const { data } = this.state;
-		const visibleColumns = [ID, ...displayedColumns];
+
 		return (
 			<div
-				id="result-list"
 				css={{
-					overflow: 'auto',
-					borderRadius: '4px',
-					margin: '20px 0',
-					minHeight: '100px',
-					maxHeight: '450px',
-					border: `1px solid ${colors.tableBorderColor}`,
 					position: 'relative',
+					'.TopRightGrid_ScrollWrapper .ReactVirtualized__Grid': {
+						overflow: 'hidden !important',
+					},
+					'.BottomLeftGrid_ScrollWrapper .ReactVirtualized__Grid': {
+						overflow: 'hidden !important',
+					},
 				}}
 			>
-				<table
-					css={{
-						overflow: 'auto',
-						borderRadius: '4px',
-					}}
-				>
-					<thead>
-						<tr>
-							{visibleColumns.map(col => (
-								<StyledCell
-									key={col}
-									isHeader
-									className={
-										col === ID &&
-										css({
-											zIndex: '101',
-										})
-									}
-									isFixed={col === ID}
-									isEditing={mode === MODES.EDIT}
-								>
-									<CellContent>
-										<Flex
-											justifyContent="space-between"
-											alignItems="center"
-											css={{
-												width: '100%',
-											}}
-										>
-											<Flex alignItems="center">
-												{mappings.properties[col] && (
-													<MappingsDropdown
-														mapping={
-															mappings.properties[
-																col
-															]
-														}
-													/>
-												)}
-												<span
-													css={{
-														marginLeft:
-															col === '_id'
-																? '35px'
-																: '5px',
-													}}
-												>
-													{col}
-												</span>
-											</Flex>
-											{mappings.properties[col] &&
-												mappings.properties[col].type &&
-												srotableTypes.indexOf(
-													mappings.properties[col]
-														.type,
-												) > -1 && (
-													<button
-														type="button"
-														onClick={() => {
-															this.handleSort(
-																col,
-															);
-														}}
-														css={{
-															outline: 0,
-															height: '15px',
-															width: '15px',
-															border: 0,
-															cursor: 'pointer',
-															background: 'none',
-														}}
-													>
-														<img
-															src={SortIcon}
-															alt="sort-icon"
-															css={{
-																height: '15px',
-																marginTop:
-																	'-10px',
-																marginLeft:
-																	'-5px',
-															}}
-														/>
-													</button>
-												)}
-										</Flex>
-									</CellContent>
-								</StyledCell>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((dataItem, row) => (
-							<tr key={dataItem._id}>
-								{visibleColumns.map(col => (
-									<StyledCell
-										key={`${dataItem._id}-${col}`}
-										className={
-											col === ID &&
-											css({
-												zIndex: 3,
-												background: colors.white,
-											})
-										}
-										isFixed={col === ID}
-										isEditing={mode === MODES.EDIT}
-									>
-										<CellContent>
-											{isMetaField(col) ? (
-												<Fragment>
-													{col === ID ? (
-														<Flex
-															wrap="nowrap"
-															alignItems="center"
-															css={{
-																overflow:
-																	'hidden',
-															}}
-														>
-															<span
-																css={{
-																	margin:
-																		'0 10px',
-																	color:
-																		colors.primary,
-																}}
-															>
-																{row + 1}
-															</span>
-															<div
-																css={
-																	overflowText
-																}
-															>
-																<Popover
-																	placement="topLeft"
-																	content={
-																		dataItem[
-																			col
-																		]
-																	}
-																>
-																	{
-																		dataItem[
-																			col
-																		]
-																	}
-																</Popover>
-															</div>
-														</Flex>
-													) : (
-														<div css={overflowText}>
-															<Popover
-																placement="topLeft"
-																content={
-																	dataItem[
-																		col
-																	]
-																}
-															>
-																{dataItem[col]}
-															</Popover>
-														</div>
-													)}
-												</Fragment>
-											) : (
-												<Cell
-													row={row}
-													column={col}
-													mode={mode}
-													onChange={value =>
-														this.handleChange(
-															row,
-															col,
-															value,
-														)
-													}
-													mapping={
-														mappings.properties[col]
-													}
-													shouldAutoFocus
-												>
-													{dataItem[col]}
-												</Cell>
-											)}
-										</CellContent>
-									</StyledCell>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</table>
+				<AutoSizer disableHeight>
+					{({ width }) => (
+						<MultiGrid
+							ref={this.setRef}
+							fixedColumnCount={1}
+							fixedRowCount={1}
+							scrollToColumn={scrollToColumn}
+							scrollToRow={0}
+							cellRenderer={this.cellRender}
+							columnWidth={250}
+							columnCount={visibleColumns.length + 1}
+							enableFixedColumnScroll
+							enableFixedRowScroll
+							height={500}
+							rowHeight={mode === MODES.EDIT ? 50 : 30}
+							rowCount={data.length}
+							style={{
+								border: `1px solid ${colors.tableBorderColor}`,
+								borderRadius: '4px',
+							}}
+							styleBottomLeftGrid={{
+								borderRight: `2px solid ${
+									colors.tableBorderColor
+								}`,
+								borderBottom: `1px solid ${
+									colors.tableBorderColor
+								}`,
+								borderBottomLeftRadius: 4,
+								backgroundColor: colors.tableHead,
+							}}
+							styleTopLeftGrid={{
+								borderBottom: `2px solid ${
+									colors.tableBorderColor
+								}`,
+								borderRight: `2px solid ${
+									colors.tableBorderColor
+								}`,
+								fontWeight: 'bold',
+							}}
+							styleTopRightGrid={{
+								borderBottom: `2px solid ${
+									colors.tableBorderColor
+								}`,
+								fontWeight: 'bold',
+							}}
+							width={width}
+							hideTopRightGridScrollbar
+							hideBottomLeftGridScrollbar
+							onScroll={this.handleScroll}
+						/>
+					)}
+				</AutoSizer>
 			</div>
 		);
 	}
@@ -369,10 +344,14 @@ DataTable.propTypes = {
 	visibleColumns: arrayOf(string).isRequired,
 	handleSortChange: func.isRequired,
 	mode: string,
-	appUrl: string,
-	setError: func,
-	clearError: func,
-	updateReactiveList: func,
+	// appUrl: string,
+	// setError: func,
+	// clearError: func,
+	// updateReactiveList: func,
+	onLoadMore: func,
+	scrollToColumn: number,
+	sortField: string,
+	sort: string,
 };
 
 const mapStateToProps = state => ({
