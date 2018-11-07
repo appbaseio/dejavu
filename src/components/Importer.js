@@ -1,5 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-const Importer = () => <h1>Importer</h1>;
+import { IMPORTER_LINK } from '../constants';
+
+const Importer = () => (
+	<Fragment>
+		<iframe
+			title="Importer"
+			src={`${IMPORTER_LINK}`}
+			frameBorder="0"
+			width="100%"
+			height={`${window.innerHeight - 243 || 600}px`}
+		/>
+	</Fragment>
+);
 
 export default Importer;

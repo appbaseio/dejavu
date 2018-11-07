@@ -4,3 +4,5 @@ export const MODES = {
 };
 
 export const LOCAL_CONNECTIONS = 'localConnections';
+
+export const IMPORTER_LINK = 'https://importer.appbase.io/?app=';
