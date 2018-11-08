@@ -9,7 +9,7 @@ import { saveAs } from 'file-saver';
 import { getIndexes, getTypes } from '../../reducers/mappings';
 import { getUrl } from '../../reducers/app';
 import { addDataRequest } from '../../actions';
-import exportData from '../../utils/exportData';
+import exportData, { flatten } from '../../utils/exportData';
 
 import Flex from '../Flex';
 
@@ -76,7 +76,8 @@ class ExportData extends Component<Props, State> {
 
 	onCSVClick = () => {
 		const { data } = this.state;
-		const newData = unparse(data);
+		const flattenData = data.map(item => flatten(item));
+		const newData = unparse(flattenData);
 		const file = new File([newData], 'data.csv', {
 			type: 'text/comma-separated-values;charset=utf-8',
 		});

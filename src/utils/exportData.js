@@ -11,7 +11,7 @@ const defaultQuery = () => ({
 /**
  * A function to convert multilevel object to single level object and use key value pairs as Column and row pairs using recursion
  */
-const flatten = data => {
+export const flatten = data => {
 	const result = {};
 
 	function recurse(cur, prop = '') {
@@ -96,7 +96,7 @@ const scrollApi = async (rawUrl, indexes, types, info) => {
 			let exportData = JSON.parse(data);
 			exportData = exportData.map(value => {
 				const item = Object.assign(value._source);
-				return flatten(item);
+				return item;
 			});
 
 			return exportData;

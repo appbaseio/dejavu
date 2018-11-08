@@ -216,6 +216,7 @@ class DataTable extends Component<Props, State> {
 			<StyledCell key={key} style={style} tabIndex="0">
 				{columnIndex === 0 && (
 					<StyledCell css={{ borderRight: 0 }}>
+						<span css={{ marginRight: 5 }}>{rowIndex}</span>
 						<Popover
 							content={
 								<div

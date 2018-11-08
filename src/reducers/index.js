@@ -6,6 +6,7 @@ import cell from './cell';
 import data from './data';
 import mode from './mode';
 import error from './error';
+import batteriesReducers from '../batteries/modules/reducers';
 
 const rootReducer = combineReducers({
 	app,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
 	data,
 	mode,
 	error,
+	...batteriesReducers,
 });
 
 export default rootReducer;
