@@ -249,9 +249,8 @@ class ConnectApp extends Component<Props, State> {
 								disabled={isConnected}
 								required
 								css={{
-									color: isUrlHidden
-										? 'transparent !important'
-										: '#bfbfbf',
+									color:
+										isUrlHidden && 'transparent !important',
 								}}
 								addonAfter={
 									<switch

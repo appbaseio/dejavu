@@ -7,7 +7,7 @@ import ErrorFlashMessage from './ErrorFlashMessage';
 import ConnectApp from './ConnectApp';
 import SearchSandbox from '../batteries/components/SearchSandbox';
 import BaseContainer from '../batteries/components/BaseContainer';
-import Editor from '../batteries/components/SearchSandbox/containers/AceEditor';
+import Editor from '../batteries/components/SearchSandbox/containers/Editor';
 
 import { getIsConnected, getAppname, getUrl } from '../reducers/app';
 import { parseUrl } from '../utils';
