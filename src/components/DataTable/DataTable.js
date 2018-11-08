@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
@@ -25,12 +27,34 @@ import Cell from '../Cell';
 import Flex from '../Flex';
 import MappingsDropdown from '../MappingsDropdown';
 import SortIcon from '../../images/icons/sort.svg';
+import StyledCell from './StyledCell';
 import overflowText from './overflow.style';
 // import { addData, deleteData } from '../../apis';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 const srotableTypes = getSortableTypes();
-class DataTable extends Component {
+
+type State = {
+	data: any[],
+};
+
+type Props = {
+	data: any[],
+	mappings: any,
+	setCellValue: (string, string, any, string, string) => void,
+	visibleColumns: string[],
+	handleSortChange: (string, number) => void,
+	mode: string,
+	// appUrl: string,
+	// setError: func,
+	// clearError: func,
+	// updateReactiveList: func,
+	onLoadMore: () => void,
+	scrollToColumn: number,
+	sortField: string,
+	sort: string,
+};
+class DataTable extends Component<Props, State> {
 	gridRef = null;
 
 	state = {
@@ -43,6 +67,7 @@ class DataTable extends Component {
 		}
 
 		if (prevProps.mode !== this.props.mode) {
+			// $FlowFixMe
 			this.gridRef.recomputeGridSize();
 		}
 	}
@@ -108,79 +133,48 @@ class DataTable extends Component {
 	cellRender = ({ columnIndex, key, rowIndex, style }) => {
 		const { visibleColumns, mappings, mode, sortField, sort } = this.props;
 		const { data } = this.state;
+		let col = '';
+		if (columnIndex > 0) {
+			col = visibleColumns[columnIndex - 1];
+		} else {
+			col = '_id';
+		}
 
 		if (columnIndex === 0 && rowIndex === 0) {
 			return (
-				<div
-					style={style}
-					css={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						borderBottom: '1px solid #eee',
-						borderRight: '1px solid #eee',
-					}}
-					key={key}
-				>
+				<StyledCell style={style} key={key} tabIndex="0">
 					_id
-				</div>
+				</StyledCell>
 			);
 		}
 
 		if (rowIndex === 0 && columnIndex > 0) {
 			return (
-				<div
-					style={style}
-					css={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						borderBottom: '1px solid #eee',
-						borderRight: '1px solid #eee',
-						fontSize: '13px',
-						...overflowText,
-					}}
-					key={key}
-				>
+				<StyledCell style={style} key={key} tabIndex="0">
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
 						css={{
 							width: '100%',
-							padding: '10px',
 						}}
 					>
 						<Flex alignItems="center">
-							{mappings.properties[
-								visibleColumns[columnIndex - 1]
-							] && (
+							{mappings.properties[col] && (
 								<MappingsDropdown
-									mapping={
-										mappings.properties[
-											visibleColumns[columnIndex - 1]
-										]
-									}
+									mapping={mappings.properties[col]}
 								/>
 							)}
-							<span css={{ marginLeft: '10px' }}>
-								{visibleColumns[columnIndex - 1]}
-							</span>
+							<span css={{ marginLeft: '10px' }}>{col}</span>
 						</Flex>
-						{mappings.properties[visibleColumns[columnIndex - 1]] &&
-							mappings.properties[visibleColumns[columnIndex - 1]]
-								.type &&
+						{mappings.properties[col] &&
+							mappings.properties[col].type &&
 							srotableTypes.indexOf(
-								mappings.properties[
-									visibleColumns[columnIndex - 1]
-								].type,
+								mappings.properties[col].type,
 							) > -1 && (
 								<button
 									type="button"
 									onClick={() => {
-										this.handleSort(
-											visibleColumns[columnIndex - 1],
-											columnIndex,
-										);
+										this.handleSort(col, columnIndex);
 									}}
 									css={{
 										outline: 0,
@@ -191,9 +185,7 @@ class DataTable extends Component {
 										background: 'none',
 									}}
 								>
-									{sortField.indexOf(
-										visibleColumns[columnIndex - 1],
-									) === -1 && (
+									{sortField.indexOf(col) === -1 && (
 										<img
 											src={SortIcon}
 											alt="sort-icon"
@@ -204,9 +196,7 @@ class DataTable extends Component {
 											}}
 										/>
 									)}
-									{sortField.indexOf(
-										visibleColumns[columnIndex - 1],
-									) > -1 && (
+									{sortField.indexOf(col) > -1 && (
 										<Icon
 											type={
 												sort === 'asc'
@@ -218,63 +208,39 @@ class DataTable extends Component {
 								</button>
 							)}
 					</Flex>
-				</div>
+				</StyledCell>
 			);
 		}
 		return (
-			<div
-				key={key}
-				style={style}
-				css={{
-					display: 'flex',
-					alignItems: 'center',
-					padding: '10px',
-					borderBottom: '1px solid #eee',
-					borderRight: '1px solid #eee',
-					fontSize: '12px',
-					cursor: 'pointer',
-				}}
-			>
+			<StyledCell key={key} style={style} tabIndex="0">
 				{columnIndex === 0 && (
-					<div css={overflowText}>
-						<Popover
-							placement="topLeft"
-							content={data[rowIndex]._id}
-							trigger="click"
-						>
-							{data[rowIndex]._id}
-						</Popover>
-					</div>
+					<Popover
+						placement="topLeft"
+						content={data[rowIndex]._id}
+						trigger="click"
+					>
+						<div css={overflowText}>{data[rowIndex]._id}</div>
+					</Popover>
 				)}
 
 				{columnIndex > 0 &&
-					(isMetaField(visibleColumns[columnIndex - 1]) ? (
-						<div>
-							{data[rowIndex][visibleColumns[columnIndex - 1]]}
-						</div>
+					(isMetaField(col) ? (
+						<div>{data[rowIndex][col]}</div>
 					) : (
 						<Cell
 							row={rowIndex}
-							column={visibleColumns[columnIndex - 1]}
+							column={col}
 							mode={mode}
 							onChange={value =>
-								this.handleChange(
-									rowIndex,
-									visibleColumns[columnIndex - 1],
-									value,
-								)
+								this.handleChange(rowIndex, col, value)
 							}
-							mapping={
-								mappings.properties[
-									visibleColumns[columnIndex - 1]
-								]
-							}
+							mapping={mappings.properties[col]}
 							shouldAutoFocus
 						>
-							{data[rowIndex][visibleColumns[columnIndex - 1]]}
+							{data[rowIndex][col]}
 						</Cell>
 					))}
-			</div>
+			</StyledCell>
 		);
 	};
 
