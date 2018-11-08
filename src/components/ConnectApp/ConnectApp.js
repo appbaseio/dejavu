@@ -41,6 +41,7 @@ type State = {
 	url: string,
 	pastApps: any[],
 	isShowingAppSwitcher: boolean,
+	isUrlHidden: boolean,
 };
 
 const { Item } = Form;
@@ -59,6 +60,7 @@ class ConnectApp extends Component<Props, State> {
 		url: this.props.url || '',
 		pastApps: [],
 		isShowingAppSwitcher: true,
+		isUrlHidden: false,
 	};
 
 	componentDidMount() {
@@ -212,8 +214,20 @@ class ConnectApp extends Component<Props, State> {
 		}
 	};
 
+	handleUrlToggle = () => {
+		this.setState(({ isUrlHidden }) => ({
+			isUrlHidden: !isUrlHidden,
+		}));
+	};
+
 	render() {
-		const { appname, url, pastApps, isShowingAppSwitcher } = this.state;
+		const {
+			appname,
+			url,
+			pastApps,
+			isShowingAppSwitcher,
+			isUrlHidden,
+		} = this.state;
 		const { isLoading, isConnected } = this.props;
 		return (
 			<div>
@@ -234,6 +248,21 @@ class ConnectApp extends Component<Props, State> {
 								onChange={this.handleChange}
 								disabled={isConnected}
 								required
+								css={{
+									color: isUrlHidden
+										? 'transparent !important'
+										: '#bfbfbf',
+								}}
+								addonAfter={
+									<switch
+										className={`fas ${
+											isUrlHidden
+												? 'fa-eye-slash'
+												: 'fa-eye'
+										}`}
+										onClick={this.handleUrlToggle}
+									/>
+								}
 							/>
 						</Item>
 						<Item {...formItemProps}>
