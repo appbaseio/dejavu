@@ -28,6 +28,7 @@ import Flex from '../Flex';
 import MappingsDropdown from '../MappingsDropdown';
 import SortIcon from '../../images/icons/sort.svg';
 import StyledCell from './StyledCell';
+import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 // import { addData, deleteData } from '../../apis';
 
@@ -214,13 +215,27 @@ class DataTable extends Component<Props, State> {
 		return (
 			<StyledCell key={key} style={style} tabIndex="0">
 				{columnIndex === 0 && (
-					<Popover
-						placement="topLeft"
-						content={data[rowIndex]._id}
-						trigger="click"
-					>
+					<StyledCell css={{ borderRight: 0 }}>
+						<Popover
+							content={
+								<div
+									css={{
+										maxWidth: '400px',
+										maxHeight: '300px',
+										overflow: 'auto',
+									}}
+								>
+									<JsonView json={data[rowIndex]} />
+								</div>
+							}
+							trigger="click"
+						>
+							<span
+								css={{ cursor: 'pointer', marginRight: '10px' }}
+							>{` {...} `}</span>
+						</Popover>
 						<div css={overflowText}>{data[rowIndex]._id}</div>
-					</Popover>
+					</StyledCell>
 				)}
 
 				{columnIndex > 0 &&
