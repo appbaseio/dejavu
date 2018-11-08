@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
-import { Icon } from 'antd';
+import { Icon, Popover } from 'antd';
 
 import 'react-virtualized/styles.css';
 
@@ -25,7 +25,7 @@ import Cell from '../Cell';
 import Flex from '../Flex';
 import MappingsDropdown from '../MappingsDropdown';
 import SortIcon from '../../images/icons/sort.svg';
-// import overflowText from './overflow.style';
+import overflowText from './overflow.style';
 // import { addData, deleteData } from '../../apis';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
@@ -120,6 +120,7 @@ class DataTable extends Component {
 						borderBottom: '1px solid #eee',
 						borderRight: '1px solid #eee',
 					}}
+					key={key}
 				>
 					_id
 				</div>
@@ -137,7 +138,9 @@ class DataTable extends Component {
 						borderBottom: '1px solid #eee',
 						borderRight: '1px solid #eee',
 						fontSize: '13px',
+						...overflowText,
 					}}
+					key={key}
 				>
 					<Flex
 						justifyContent="space-between"
@@ -220,6 +223,8 @@ class DataTable extends Component {
 		}
 		return (
 			<div
+				key={key}
+				style={style}
 				css={{
 					display: 'flex',
 					alignItems: 'center',
@@ -227,11 +232,20 @@ class DataTable extends Component {
 					borderBottom: '1px solid #eee',
 					borderRight: '1px solid #eee',
 					fontSize: '12px',
+					cursor: 'pointer',
 				}}
-				key={key}
-				style={style}
 			>
-				{columnIndex === 0 && data[rowIndex]._id}
+				{columnIndex === 0 && (
+					<div css={overflowText}>
+						<Popover
+							placement="topLeft"
+							content={data[rowIndex]._id}
+							trigger="click"
+						>
+							{data[rowIndex]._id}
+						</Popover>
+					</div>
+				)}
 
 				{columnIndex > 0 &&
 					(isMetaField(visibleColumns[columnIndex - 1]) ? (

@@ -40,8 +40,7 @@ class App extends Component {
 			setLocalStorageData(
 				LOCAL_CONNECTIONS,
 				JSON.stringify({
-					appNames: [],
-					urls: [],
+					pastApps: [],
 				}),
 			);
 		}

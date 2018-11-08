@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Button, Alert, AutoComplete } from 'antd';
+import { Form, Button, Alert, AutoComplete, Input } from 'antd';
 import { connect } from 'react-redux';
 import { string, func, bool, object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -39,8 +39,7 @@ type Props = {
 type State = {
 	appname: string,
 	url: string,
-	pastUrls: string[],
-	pastApps: string[],
+	pastApps: any[],
 	isShowingAppSwitcher: boolean,
 };
 
@@ -59,7 +58,6 @@ class ConnectApp extends Component<Props, State> {
 		appname: this.props.appname || '',
 		url: this.props.url || '',
 		pastApps: [],
-		pastUrls: [],
 		isShowingAppSwitcher: true,
 	};
 
@@ -136,8 +134,7 @@ class ConnectApp extends Component<Props, State> {
 			);
 
 			this.setState({
-				pastApps: pastConnections.appNames || [],
-				pastUrls: pastConnections.urls || [],
+				pastApps: pastConnections.pastApps || [],
 			});
 		}, 100);
 	};
@@ -149,13 +146,15 @@ class ConnectApp extends Component<Props, State> {
 		});
 	};
 
-	handleUrlChange = url => {
-		this.setState({
-			url,
-		});
-	};
-
 	handleAppNameChange = appname => {
+		const { pastApps } = this.state;
+		const newApp = pastApps.find(app => app.appname === appname);
+
+		if (newApp) {
+			this.setState({
+				url: newApp.url,
+			});
+		}
 		this.setState({
 			appname,
 		});
@@ -187,26 +186,26 @@ class ConnectApp extends Component<Props, State> {
 			searchQuery += `&appname=${appname}&url=${url}&mode=${
 				this.props.mode
 			}`;
+			const { pastApps } = this.state;
+			const newApps = [...pastApps];
 
-			const { pastApps, pastUrls } = this.state;
+			const newApp = pastApps.find(app => app.appname === appname);
 
-			const newApps =
-				pastApps.indexOf(appname) > -1
-					? [...pastApps]
-					: [...pastApps, appname];
-			const newUrls =
-				pastUrls.indexOf(url) > -1 ? [...pastUrls] : [...pastUrls, url];
+			if (!newApp) {
+				newApps.push({
+					appname,
+					url,
+				});
+			}
 
 			this.setState({
 				pastApps: newApps,
-				pastUrls: newUrls,
 			});
 
 			setLocalStorageData(
 				LOCAL_CONNECTIONS,
 				JSON.stringify({
-					appNames: newApps,
-					urls: newUrls,
+					pastApps: newApps,
 				}),
 			);
 			this.props.history.push({ search: searchQuery });
@@ -214,13 +213,7 @@ class ConnectApp extends Component<Props, State> {
 	};
 
 	render() {
-		const {
-			appname,
-			url,
-			pastApps,
-			pastUrls,
-			isShowingAppSwitcher,
-		} = this.state;
+		const { appname, url, pastApps, isShowingAppSwitcher } = this.state;
 		const { isLoading, isConnected } = this.props;
 		return (
 			<div>
@@ -234,23 +227,18 @@ class ConnectApp extends Component<Props, State> {
 						}}
 					>
 						<Item {...formItemProps}>
-							<AutoComplete
-								dataSource={pastUrls}
+							<Input
+								name="url"
 								value={url}
 								placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-								filterOption={(inputValue, option) =>
-									option.props.children
-										.toUpperCase()
-										.indexOf(inputValue.toUpperCase()) !==
-									-1
-								}
-								onChange={this.handleUrlChange}
+								onChange={this.handleChange}
 								disabled={isConnected}
+								required
 							/>
 						</Item>
 						<Item {...formItemProps}>
 							<AutoComplete
-								dataSource={pastApps}
+								dataSource={pastApps.map(app => app.appname)}
 								value={appname}
 								placeholder="Appname (aka index) goes here"
 								filterOption={(inputValue, option) =>

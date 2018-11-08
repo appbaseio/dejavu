@@ -79,12 +79,12 @@ class ShowHideColumns extends Component<Props, State> {
 		let currentVissibleColums = visibleColumns;
 
 		// to append meta fields at the beginning of array
-		if (metaType > -1) {
+		if (metaType > -1 && metaType > 1) {
 			currentVissibleColums.splice(metaType, 1);
 			currentVissibleColums = ['_type', ...currentVissibleColums];
 		}
 
-		if (metaIndex > -1) {
+		if (metaIndex > -1 && metaIndex > 1) {
 			currentVissibleColums.splice(metaIndex, 1);
 			currentVissibleColums = ['_index', ...currentVissibleColums];
 		}
