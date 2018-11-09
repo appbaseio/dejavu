@@ -6,6 +6,8 @@ import cell from './cell';
 import data from './data';
 import mode from './mode';
 import error from './error';
+import selectedRows from './selectedRows';
+import updatingRow from './updatingRow';
 import batteriesReducers from '../batteries/modules/reducers';
 
 const rootReducer = combineReducers({
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
 	data,
 	mode,
 	error,
+	selectedRows,
+	updatingRow,
 	...batteriesReducers,
 });
 

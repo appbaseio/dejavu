@@ -60,13 +60,13 @@ const TextCell = ({
 								overflow: 'auto',
 							}}
 						>
-							<div>{children}</div>
+							<div css={{ cursor: 'pointer' }}>{children}</div>
 						</div>
 					}
 				>
 					{children && (
 						<div
-							css={overflowText}
+							css={{ ...overflowText, cursor: 'pointer' }}
 							dangerouslySetInnerHTML={{ __html: children }}
 						/>
 					)}

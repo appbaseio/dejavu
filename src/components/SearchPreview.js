@@ -21,7 +21,7 @@ type Props = {
 const SearchPreview = ({ isConnected, appName, rawUrl }: Props) => {
 	const { credentials, url } = parseUrl(rawUrl);
 	return (
-		<section css={{ marginRight: '25px' }}>
+		<section>
 			<ErrorFlashMessage />
 			{!isConnected ? (
 				<ConnectApp />
@@ -30,6 +30,7 @@ const SearchPreview = ({ isConnected, appName, rawUrl }: Props) => {
 					appName={appName}
 					shouldFetchAppPlan={false}
 					shouldFetchAppInfo={false}
+					url={url}
 				>
 					<SearchSandbox
 						appName={appName}

@@ -26,7 +26,7 @@ import {
 	getTypes,
 	getSearchableColumns,
 } from '../../reducers/mappings';
-import { parseUrl } from '../../utils';
+import { parseUrl, numberWithCommas } from '../../utils';
 
 type Props = {
 	appname: string,
@@ -155,6 +155,7 @@ class DataBrowser extends Component<Props, State> {
 												input: `ant-input ${css`
 													padding-left: 35px;
 													height: 32px;
+													background: #fff !important;
 												`}`,
 											}}
 											showIcon={false}
@@ -247,7 +248,8 @@ class DataBrowser extends Component<Props, State> {
 													textAlign: 'center',
 												}}
 											>
-												Found &nbsp; <b>{total}</b>
+												Found &nbsp;{' '}
+												<b>{numberWithCommas(total)}</b>
 												&nbsp;results
 											</Flex>
 										)}

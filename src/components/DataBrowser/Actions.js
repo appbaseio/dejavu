@@ -1,14 +1,20 @@
 // @flow
 
-import React from 'react';
+import React, { Fragment } from 'react';
 import { func } from 'prop-types';
 import { Button, Select, Tag, Icon } from 'antd';
+import { connect } from 'react-redux';
 
 import Flex from '../Flex';
 import AddFieldModal from './AddFieldModal';
 import ShowHideColumn from './ShowHideColumns';
 import ModeSwitch from './ModeSwitch';
 import ExportData from './ExportData';
+import DeleteRows from './DeleteRows';
+import UpdaeRow from './UpdateRow';
+
+import { getSelectedRows } from '../../reducers/selectedRows';
+import { getUpdatingRow } from '../../reducers/updatingRow';
 
 const { Option } = Select;
 
@@ -19,6 +25,8 @@ type Props = {
 	sort?: string,
 	sortField?: string,
 	onResetSort: () => void,
+	selectedRows: string[],
+	updatingRow?: any,
 };
 
 const Actions = ({
@@ -28,18 +36,29 @@ const Actions = ({
 	sort,
 	sortField,
 	onResetSort,
+	selectedRows,
+	updatingRow,
 }: Props) => (
 	<div css={{ margin: '20px 0' }}>
 		<Flex alignItems="flex-end" justifyContent="space-between">
 			<div>
-				<ExportData />
-				<Button
-					icon="reload"
-					onClick={onReload}
-					css={{ marginRight: '5px' }}
-				>
-					Reload
-				</Button>
+				{selectedRows.length > 0 ? (
+					<Fragment>
+						<DeleteRows />
+						{updatingRow && <UpdaeRow />}
+					</Fragment>
+				) : (
+					<Fragment>
+						<ExportData />
+						<Button
+							icon="reload"
+							onClick={onReload}
+							css={{ marginRight: '5px' }}
+						>
+							Reload
+						</Button>
+					</Fragment>
+				)}
 				<ModeSwitch />
 				<AddFieldModal />
 			</div>
@@ -75,4 +94,9 @@ Actions.propTypes = {
 	onReload: func.isRequired,
 };
 
-export default Actions;
+const mpaStateToProps = state => ({
+	selectedRows: getSelectedRows(state),
+	updatingRow: getUpdatingRow(state),
+});
+
+export default connect(mpaStateToProps)(Actions);

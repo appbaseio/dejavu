@@ -198,6 +198,15 @@ class ConnectApp extends Component<Props, State> {
 					appname,
 					url,
 				});
+			} else {
+				const appIndex = newApps.findIndex(
+					item => item.appname === appname,
+				);
+
+				newApps[appIndex] = {
+					appname,
+					url,
+				};
 			}
 
 			this.setState({
@@ -253,7 +262,7 @@ class ConnectApp extends Component<Props, State> {
 										isUrlHidden && 'transparent !important',
 								}}
 								addonAfter={
-									<switch
+									<link
 										className={`fas ${
 											isUrlHidden
 												? 'fa-eye-slash'

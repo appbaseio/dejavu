@@ -82,6 +82,14 @@ const getLocalStorageItem = item => window.localStorage.getItem(item) || null;
 const setLocalStorageData = (item, data) =>
 	window.localStorage.setItem(item, data);
 
+const numberWithCommas = x =>
+	x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+const getOnlySource = data => {
+	const { _id, _index, _type, ...others } = data;
+	return others;
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -93,4 +101,6 @@ export {
 	updateQueryStringParameter,
 	getLocalStorageItem,
 	setLocalStorageData,
+	numberWithCommas,
+	getOnlySource,
 };

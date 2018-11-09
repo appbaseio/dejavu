@@ -2,22 +2,35 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Row, Col, Button, Form } from 'antd';
-import { func, string, object } from 'prop-types';
+import { object } from 'prop-types';
+import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/json';
 import 'brace/theme/github';
 
-import { isVaildJSON } from '../../utils';
+import {
+	setError,
+	clearError,
+	updateReactiveList,
+	setUpdatingRow,
+	setSelectedRows,
+} from '../../actions';
+import { isVaildJSON, getOnlySource } from '../../utils';
+import { getUpdatingRow } from '../../reducers/updatingRow';
+import { getUrl } from '../../reducers/app';
+import { addData } from '../../apis/data';
 
 const { Item } = Form;
 
 type Props = {
-	index: string,
-	type: string,
-	documentId: string,
 	data: object,
-	handleUpdateData: func,
+	appUrl: string,
+	setError: any => void,
+	clearError: () => void,
+	updateReactiveList: () => void,
+	setSelectedRows: any => void,
+	setUpdatingRow: any => void,
 };
 
 type State = {
@@ -30,13 +43,16 @@ class UpdateRowModal extends Component<Props, State> {
 	state = {
 		isShowingModal: false,
 		dataError: false,
-		jsonValue: JSON.stringify(this.props.data || {}, null, 2),
+		jsonValue: JSON.stringify(
+			getOnlySource(this.props.data || {}),
+			null,
+			2,
+		),
 	};
 
 	handleAfterClose = () => {
 		this.setState({
 			dataError: false,
-			jsonValue: `{\n}`,
 		});
 	};
 
@@ -53,20 +69,43 @@ class UpdateRowModal extends Component<Props, State> {
 		}));
 	};
 
-	handleSubmit = () => {
+	handleSubmit = async () => {
 		const { dataError, jsonValue } = this.state;
-		const { index, type, documentId, handleUpdateData } = this.props;
+		const { _id: documentId, _index: index, _type: type } = this.props.data;
 
 		if (!dataError) {
-			handleUpdateData(index, type, documentId, JSON.parse(jsonValue));
+			const {
+				appUrl,
+				setError: onSetError,
+				clearError: onClearError,
+				updateReactiveList: onUpdateReactiveList,
+				setSelectedRows: onSetSelectedRows,
+				setUpdatingRow: onSetUpdatingRow,
+			} = this.props;
+
+			try {
+				onClearError();
+				await addData(
+					index,
+					type,
+					documentId,
+					appUrl,
+					JSON.parse(jsonValue),
+				);
+				onUpdateReactiveList();
+				onSetUpdatingRow(null);
+				onSetSelectedRows([]);
+			} catch (error) {
+				onSetError(error);
+			}
 			this.toggleModal();
 		}
 	};
 
 	render() {
-		const { index, type, documentId } = this.props;
 		const { isShowingModal, dataError, jsonValue } = this.state;
-
+		const { _id: documentId, _index: index, _type: type } = this.props.data;
+		console.log(jsonValue);
 		return (
 			<Fragment>
 				<Button
@@ -76,7 +115,9 @@ class UpdateRowModal extends Component<Props, State> {
 						margin: '0 3px',
 					}}
 					onClick={this.toggleModal}
-				/>
+				>
+					Update
+				</Button>
 
 				<Modal
 					visible={isShowingModal}
@@ -130,12 +171,20 @@ class UpdateRowModal extends Component<Props, State> {
 	}
 }
 
-UpdateRowModal.propTypes = {
-	index: string.isRequired,
-	type: string.isRequired,
-	documentId: string.isRequired,
-	data: object,
-	handleUpdateData: func.isRequired,
+const mapStateToProps = state => ({
+	appUrl: getUrl(state),
+	data: getUpdatingRow(state),
+});
+
+const mapDispatchToProps = {
+	setError,
+	clearError,
+	updateReactiveList,
+	setSelectedRows,
+	setUpdatingRow,
 };
 
-export default UpdateRowModal;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(UpdateRowModal);

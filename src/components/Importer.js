@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { IMPORTER_LINK } from '../constants';
 
 const Importer = () => (
-	<Fragment>
+	<section css={{ height: '85vh' }}>
 		<iframe
 			title="Importer"
 			src={`${IMPORTER_LINK}`}
 			frameBorder="0"
 			width="100%"
-			height={`${window.innerHeight - 243 || 600}px`}
+			height="100%"
 		/>
-	</Fragment>
+	</section>
 );
 
 export default Importer;

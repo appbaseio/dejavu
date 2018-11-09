@@ -27,6 +27,8 @@ import {
 	addDataFailure,
 	updateReactiveList,
 } from './data';
+import setSelectedRows from './selectedRows';
+import setUpdatingRow from './updatingRow';
 
 export {
 	// app
@@ -57,4 +59,8 @@ export {
 	// error
 	setError,
 	clearError,
+	// selectedRows,
+	setSelectedRows,
+	// updatingRow,
+	setUpdatingRow,
 };

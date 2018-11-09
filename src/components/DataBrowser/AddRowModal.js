@@ -88,7 +88,7 @@ class AddRowModal extends Component<Props, State> {
 			if (tab === 'gui') {
 				data = tabData;
 			} else {
-				data = addDataValue;
+				data = JSON.parse(addDataValue);
 			}
 
 			this.props.addDataRequest(

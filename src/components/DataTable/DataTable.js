@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
-import { Icon, Popover } from 'antd';
+import { Popover, Checkbox } from 'antd';
 
 import 'react-virtualized/styles.css';
 
@@ -15,18 +15,21 @@ import {
 	setError,
 	clearError,
 	updateReactiveList,
+	setSelectedRows,
+	setUpdatingRow,
 } from '../../actions';
 import { getUrl } from '../../reducers/app';
 import { getVisibleColumns } from '../../reducers/mappings';
+import { getSelectedRows } from '../../reducers/selectedRows';
 import { META_FIELDS, getSortableTypes } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
 import { MODES } from '../../constants';
+import { getOnlySource } from '../../utils';
 
 import Cell from '../Cell';
 import Flex from '../Flex';
 import MappingsDropdown from '../MappingsDropdown';
-import SortIcon from '../../images/icons/sort.svg';
 import StyledCell from './StyledCell';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
@@ -54,6 +57,9 @@ type Props = {
 	scrollToColumn: number,
 	sortField: string,
 	sort: string,
+	selectedRows: string[],
+	setSelectedRows: (string[]) => void,
+	setUpdatingRow: any => void,
 };
 class DataTable extends Component<Props, State> {
 	gridRef = null;
@@ -131,8 +137,62 @@ class DataTable extends Component<Props, State> {
 		}
 	};
 
+	handleRowSelectChange = e => {
+		const {
+			target: { checked, value },
+		} = e;
+		const currentSelectedRows = [...this.props.selectedRows];
+		const currentValueIndex = currentSelectedRows.indexOf(value);
+		let newSelectedRows = [];
+		if (checked && currentValueIndex === -1) {
+			newSelectedRows = [...currentSelectedRows, value];
+		} else {
+			newSelectedRows = [
+				...currentSelectedRows.slice(0, currentValueIndex),
+				...currentSelectedRows.slice(currentValueIndex + 1),
+			];
+		}
+
+		if (newSelectedRows.length === 1) {
+			const data = this.state.data.find(
+				item => item._id === newSelectedRows[0],
+			);
+			this.props.setUpdatingRow(data);
+		} else {
+			this.props.setUpdatingRow(null);
+		}
+
+		this.props.setSelectedRows(newSelectedRows);
+	};
+
+	handleSelectAllRows = e => {
+		const {
+			target: { checked },
+		} = e;
+
+		const {
+			setSelectedRows: onSetSelectedRows,
+			setUpdatingRow: onSetUpdatingRow,
+		} = this.props;
+		const { data } = this.state;
+
+		if (checked) {
+			onSetSelectedRows(data.map(item => item._id));
+		} else {
+			onSetSelectedRows([]);
+		}
+		onSetUpdatingRow(null);
+	};
+
 	cellRender = ({ columnIndex, key, rowIndex, style }) => {
-		const { visibleColumns, mappings, mode, sortField, sort } = this.props;
+		const {
+			visibleColumns,
+			mappings,
+			mode,
+			sortField,
+			sort,
+			selectedRows,
+		} = this.props;
 		const { data } = this.state;
 		let col = '';
 		if (columnIndex > 0) {
@@ -143,15 +203,41 @@ class DataTable extends Component<Props, State> {
 
 		if (columnIndex === 0 && rowIndex === 0) {
 			return (
-				<StyledCell style={style} key={key} tabIndex="0">
-					_id
+				<StyledCell
+					style={style}
+					key={key}
+					css={{
+						display: 'flex',
+						justifyContet: 'left',
+						alignItems: 'center',
+					}}
+				>
+					<div
+						css={{
+							width: '25%',
+						}}
+					>
+						{selectedRows.length >= 1 && (
+							<Checkbox
+								onChange={this.handleSelectAllRows}
+								checked={
+									data.length &&
+									data.length === selectedRows.length
+								}
+								css={{
+									marginLeft: '10px',
+								}}
+							/>
+						)}
+					</div>
+					<div css={{ marginLeft: '10px' }}>_id</div>
 				</StyledCell>
 			);
 		}
 
 		if (rowIndex === 0 && columnIndex > 0) {
 			return (
-				<StyledCell style={style} key={key} tabIndex="0">
+				<StyledCell style={style} key={key}>
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
@@ -187,23 +273,19 @@ class DataTable extends Component<Props, State> {
 									}}
 								>
 									{sortField.indexOf(col) === -1 && (
-										<img
-											src={SortIcon}
-											alt="sort-icon"
-											css={{
-												height: '15px',
-												marginTop: '-10px',
-												marginLeft: '-5px',
-											}}
+										<i
+											className="fas fa-sort"
+											css={{ fontSize: 15 }}
 										/>
 									)}
 									{sortField.indexOf(col) > -1 && (
-										<Icon
-											type={
+										<i
+											className={
 												sort === 'asc'
-													? 'caret-down'
-													: 'caret-up'
+													? 'fas fa-caret-down'
+													: 'fas fa-caret-up'
 											}
+											css={{ fontSize: 15 }}
 										/>
 									)}
 								</button>
@@ -213,10 +295,54 @@ class DataTable extends Component<Props, State> {
 			);
 		}
 		return (
-			<StyledCell key={key} style={style} tabIndex="0">
+			<StyledCell key={key} style={style}>
 				{columnIndex === 0 && (
-					<StyledCell css={{ borderRight: 0 }}>
-						<span css={{ marginRight: 5 }}>{rowIndex}</span>
+					<Flex wrap="nowrap" css={{ width: '100%' }}>
+						<div
+							css={{
+								maxWidth: '15%',
+								minWidth: '15%',
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								'.ant-checkbox-wrapper': {
+									display:
+										selectedRows.indexOf(
+											data[rowIndex - 1]._id,
+										) > -1
+											? 'block !important'
+											: 'none',
+								},
+								'&:hover': {
+									'.ant-checkbox-wrapper': {
+										display: 'block !important',
+									},
+									'.index-no': {
+										display: 'none',
+									},
+								},
+							}}
+						>
+							<Checkbox
+								onChange={this.handleRowSelectChange}
+								value={data[rowIndex - 1]._id}
+								checked={
+									selectedRows.indexOf(
+										data[rowIndex - 1]._id,
+									) > -1
+								}
+							/>
+
+							{selectedRows.indexOf(data[rowIndex - 1]._id) ===
+								-1 && (
+								<div
+									className="index-no"
+									css={{ marginRight: 5 }}
+								>
+									{rowIndex}
+								</div>
+							)}
+						</div>
 						<Popover
 							content={
 								<div
@@ -226,22 +352,54 @@ class DataTable extends Component<Props, State> {
 										overflow: 'auto',
 									}}
 								>
-									<JsonView json={data[rowIndex]} />
+									<JsonView
+										json={getOnlySource(data[rowIndex - 1])}
+									/>
 								</div>
 							}
 							trigger="click"
 						>
 							<span
-								css={{ cursor: 'pointer', marginRight: '10px' }}
+								css={{
+									cursor: 'pointer',
+									maxWidth: '10%',
+									minWidth: '10%',
+								}}
 							>{` {...} `}</span>
 						</Popover>
-						<div css={overflowText}>{data[rowIndex]._id}</div>
-					</StyledCell>
+						<Popover
+							content={
+								<div
+									css={{
+										maxWidth: '400px',
+										maxHeight: '300px',
+										overflow: 'auto',
+									}}
+								>
+									{data[rowIndex - 1]._id}
+								</div>
+							}
+							placement="topLeft"
+							trigger="click"
+						>
+							<div
+								css={{
+									cursor: 'pointer',
+									maxWidth: '75%',
+									minWidth: '75%',
+									marginLeft: '10px',
+									...overflowText,
+								}}
+							>
+								{data[rowIndex - 1]._id}
+							</div>
+						</Popover>
+					</Flex>
 				)}
 
 				{columnIndex > 0 &&
 					(isMetaField(col) ? (
-						<div>{data[rowIndex][col]}</div>
+						<div>{data[rowIndex - 1][col]}</div>
 					) : (
 						<Cell
 							row={rowIndex}
@@ -253,7 +411,7 @@ class DataTable extends Component<Props, State> {
 							mapping={mappings.properties[col]}
 							shouldAutoFocus
 						>
-							{data[rowIndex][col]}
+							{data[rowIndex - 1][col]}
 						</Cell>
 					))}
 			</StyledCell>
@@ -290,8 +448,9 @@ class DataTable extends Component<Props, State> {
 							enableFixedColumnScroll
 							enableFixedRowScroll
 							height={500}
-							rowHeight={mode === MODES.EDIT ? 50 : 30}
-							rowCount={data.length}
+							rowHeight={mode === MODES.EDIT ? 50 : 35}
+							rowCount={data.length + 1}
+							tabIndex={null}
 							style={{
 								border: `1px solid ${colors.tableBorderColor}`,
 								borderRadius: '4px',
@@ -348,12 +507,16 @@ DataTable.propTypes = {
 	scrollToColumn: number,
 	sortField: string,
 	sort: string,
+	selectedRows: arrayOf(string),
+	setUpdatingRow: func,
+	setSelectedRows: func,
 };
 
 const mapStateToProps = state => ({
 	visibleColumns: getVisibleColumns(state),
 	mode: getMode(state),
 	appUrl: getUrl(state),
+	selectedRows: getSelectedRows(state),
 });
 
 const mapDispatchToProps = {
@@ -362,6 +525,8 @@ const mapDispatchToProps = {
 	setError,
 	clearError,
 	updateReactiveList,
+	setSelectedRows,
+	setUpdatingRow,
 };
 
 export default connect(
