@@ -274,7 +274,7 @@ class DataTable extends Component<Props, State> {
 								>
 									{sortField.indexOf(col) === -1 && (
 										<i
-											className="fas fa-sort"
+											className="fa fa-sort"
 											css={{ fontSize: 15 }}
 										/>
 									)}
@@ -282,8 +282,8 @@ class DataTable extends Component<Props, State> {
 										<i
 											className={
 												sort === 'asc'
-													? 'fas fa-caret-down'
-													: 'fas fa-caret-up'
+													? 'fa fa-caret-down'
+													: 'fa fa-caret-up'
 											}
 											css={{ fontSize: 15 }}
 										/>

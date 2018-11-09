@@ -2,7 +2,7 @@
 
 import React, { Fragment } from 'react';
 import { func } from 'prop-types';
-import { Button, Select, Tag, Icon } from 'antd';
+import { Button, Select, Tag } from 'antd';
 import { connect } from 'react-redux';
 
 import Flex from '../Flex';
@@ -65,11 +65,11 @@ const Actions = ({
 			<div>
 				{sortField !== '_score' && (
 					<Tag closable onClose={onResetSort}>
-						<Icon
-							type={
+						<i
+							className={
 								sort === 'asc'
-									? 'sort-ascending'
-									: 'sort-descending'
+									? 'fa fa-sort-alpha-asc'
+									: 'fa fa-sort-alpha-desc'
 							}
 						/>
 						&nbsp; {(sortField || '').split('.')[0]}

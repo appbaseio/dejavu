@@ -263,11 +263,14 @@ class ConnectApp extends Component<Props, State> {
 								}}
 								addonAfter={
 									<link
-										className={`fas ${
+										className={`fa ${
 											isUrlHidden
 												? 'fa-eye-slash'
 												: 'fa-eye'
 										}`}
+										css={{
+											cursor: 'pointer',
+										}}
 										onClick={this.handleUrlToggle}
 									/>
 								}
