@@ -64,6 +64,25 @@ class AddFieldModal extends Component<Props, State> {
 		selectedPrimitiveType: Object.keys(customMappings)[0],
 	};
 
+	handleAfterClose = () => {
+		this.setState({
+			isShowingModal: false,
+			addColumnError: false,
+			addColumnField: '',
+			isColumnFieldValid: true,
+			addColumnMapping: `{\n}`,
+			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+			types: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			],
+			selectedType: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			][0],
+			selectedShape: DATA_SHAPE[0],
+			selectedPrimitiveType: Object.keys(customMappings)[0],
+		});
+	};
+
 	handleInputChange = e => {
 		const { value } = e.target;
 		const { appname, mappings } = this.props;
@@ -200,7 +219,8 @@ class AddFieldModal extends Component<Props, State> {
 						top: '10px',
 					}}
 					maskClosable={false}
-					destroyOnHide
+					destroyOnClose
+					afterClose={this.handleAfterClose}
 				>
 					<Row>
 						<Col span={12}>

@@ -3,6 +3,7 @@ import {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
+	setHeaders,
 } from './app';
 import {
 	fetchMappings,
@@ -36,6 +37,7 @@ export {
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
+	setHeaders,
 	// mappings
 	fetchMappings,
 	fetchMappingsSuccess,

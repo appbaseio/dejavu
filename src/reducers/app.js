@@ -5,10 +5,11 @@ const initialState = {
 	url: null,
 	isConnected: false,
 	isLoading: false,
+	headers: [],
 };
 
 const app = (state = initialState, action) => {
-	const { appname, url, type } = action;
+	const { appname, url, type, headers } = action;
 	switch (type) {
 		case APP.CONNECT_REQUEST:
 			return {
@@ -30,6 +31,8 @@ const app = (state = initialState, action) => {
 			};
 		case APP.DISCONNECT:
 			return initialState;
+		case APP.SET_HEADERS:
+			return { ...state, headers };
 		default:
 			return state;
 	}
@@ -40,7 +43,8 @@ const getAppname = state => state.app.appname;
 const getUrl = state => state.app.url;
 const getIsConnected = state => state.app.isConnected;
 const getIsLoading = state => state.app.isLoading;
+const getHeaders = state => state.app.headers;
 
-export { getAppname, getUrl, getIsLoading, getIsConnected };
+export { getAppname, getUrl, getIsLoading, getIsConnected, getHeaders };
 
 export default app;

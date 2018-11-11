@@ -59,6 +59,24 @@ class AddRowModal extends Component<Props, State> {
 		tabData: {},
 	};
 
+	handleAfterClose = () => {
+		this.setState({
+			isShowingModal: false,
+			addDataError: false,
+			addDataValue: `{\n}`,
+			documentId: '',
+			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+			types: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			],
+			selectedType: this.props.indexTypeMap[
+				Object.keys(this.props.indexTypeMap)[0]
+			][0],
+			tab: 'json',
+			tabData: {},
+		});
+	};
+
 	handleDocumentIdChange = e => {
 		this.setState({
 			documentId: e.target.value,
@@ -171,8 +189,9 @@ class AddRowModal extends Component<Props, State> {
 					css={{
 						top: '10px',
 					}}
-					destroyOnHide
+					destroyOnClose
 					maskClosable={false}
+					afterClose={this.handleAfterClose}
 				>
 					<Row>
 						<Col span={12}>
@@ -241,6 +260,7 @@ class AddRowModal extends Component<Props, State> {
 								css={{
 									maxHeight: '350px',
 									overflow: 'auto',
+									paddingRight: 15,
 								}}
 							>
 								{Object.keys(properties).map(item => (

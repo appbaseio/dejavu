@@ -108,7 +108,7 @@ class ExportData extends Component<Props, State> {
 					visible={isShowingModal}
 					afterClose={this.handleAfterClose}
 					onCancel={this.toggleModal}
-					destroyOnHide
+					destroyOnClose
 					maskClosable={false}
 					title="Export Data"
 					footer={[

@@ -297,7 +297,11 @@ class DataTable extends Component<Props, State> {
 		return (
 			<StyledCell key={key} style={style}>
 				{columnIndex === 0 && (
-					<Flex wrap="nowrap" css={{ width: '100%' }}>
+					<Flex
+						wrap="nowrap"
+						css={{ width: '100%' }}
+						alignItems="center"
+					>
 						<div
 							css={{
 								maxWidth: '15%',

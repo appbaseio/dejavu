@@ -20,4 +20,15 @@ const disconnectApp = () => ({
 	type: APP.DISCONNECT,
 });
 
-export { connectApp, disconnectApp, connectAppSuccess, connectAppFailure };
+const setHeaders = headers => ({
+	type: APP.SET_HEADERS,
+	headers,
+});
+
+export {
+	connectApp,
+	disconnectApp,
+	connectAppSuccess,
+	connectAppFailure,
+	setHeaders,
+};

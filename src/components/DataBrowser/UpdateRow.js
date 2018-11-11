@@ -105,7 +105,7 @@ class UpdateRowModal extends Component<Props, State> {
 	render() {
 		const { isShowingModal, dataError, jsonValue } = this.state;
 		const { _id: documentId, _index: index, _type: type } = this.props.data;
-		console.log(jsonValue);
+
 		return (
 			<Fragment>
 				<Button
@@ -125,6 +125,7 @@ class UpdateRowModal extends Component<Props, State> {
 					afterClose={this.handleAfterClose}
 					onOk={this.handleSubmit}
 					okButtonProps={{ disabled: dataError }}
+					destroyOnClose
 					css={{
 						top: '10px',
 					}}

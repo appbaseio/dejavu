@@ -1,9 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Button, Alert, AutoComplete, Input } from 'antd';
+import { Form, Button, Alert, AutoComplete, Input, Modal } from 'antd';
 import { connect } from 'react-redux';
-import { string, func, bool, object } from 'prop-types';
+import { string, func, bool, object, array } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import {
@@ -11,16 +11,20 @@ import {
 	getUrl,
 	getIsLoading,
 	getIsConnected,
+	getHeaders,
 } from '../../reducers/app';
-import { connectApp, disconnectApp, setMode } from '../../actions';
+import { connectApp, disconnectApp, setMode, setHeaders } from '../../actions';
 import {
 	getUrlParams,
 	getLocalStorageItem,
 	setLocalStorageData,
+	getCustomHeaders,
 } from '../../utils';
 
 import { getMode } from '../../reducers/mode';
 import { LOCAL_CONNECTIONS, MODES } from '../../constants';
+
+import Flex from '../Flex';
 
 type Props = {
 	appname?: string,
@@ -34,6 +38,8 @@ type Props = {
 	mode: string,
 	setMode: string => void,
 	onErrorClose: () => void,
+	headers: any[],
+	setHeaders: any => void,
 };
 
 type State = {
@@ -42,9 +48,12 @@ type State = {
 	pastApps: any[],
 	isShowingAppSwitcher: boolean,
 	isUrlHidden: boolean,
+	isShowingHeadersModal: boolean,
+	customHeaders: any[],
 };
 
 const { Item } = Form;
+const { Group } = Input;
 
 const formItemProps = {
 	wrapperCol: {
@@ -61,6 +70,10 @@ class ConnectApp extends Component<Props, State> {
 		pastApps: [],
 		isShowingAppSwitcher: true,
 		isUrlHidden: false,
+		isShowingHeadersModal: false,
+		customHeaders: this.props.headers.length
+			? this.props.headers
+			: [{ key: '', value: '' }],
 	};
 
 	componentDidMount() {
@@ -119,6 +132,12 @@ class ConnectApp extends Component<Props, State> {
 			this.setAppSwitcher(false);
 		}
 
+		const customHeaders = getCustomHeaders(appname);
+
+		this.props.setHeaders(customHeaders);
+		this.setState({
+			customHeaders,
+		});
 		this.setPastConnections();
 	}
 
@@ -150,11 +169,12 @@ class ConnectApp extends Component<Props, State> {
 
 	handleAppNameChange = appname => {
 		const { pastApps } = this.state;
-		const newApp = pastApps.find(app => app.appname === appname);
+		const pastApp = pastApps.find(app => app.appname === appname);
 
-		if (newApp) {
+		if (pastApp) {
 			this.setState({
-				url: newApp.url,
+				url: pastApp.url,
+				customHeaders: pastApp.headers,
 			});
 		}
 		this.setState({
@@ -164,7 +184,7 @@ class ConnectApp extends Component<Props, State> {
 
 	handleSubmit = e => {
 		e.preventDefault();
-		const { appname, url } = this.state;
+		const { appname, url, customHeaders } = this.state;
 		const { sidebar, appswitcher } = getUrlParams(window.location.search);
 
 		let searchQuery = '?';
@@ -184,6 +204,7 @@ class ConnectApp extends Component<Props, State> {
 			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {
 			this.props.connectApp(appname, url);
+			this.props.setHeaders(customHeaders);
 			// update history with correct appname and url
 			searchQuery += `&appname=${appname}&url=${url}&mode=${
 				this.props.mode
@@ -191,12 +212,13 @@ class ConnectApp extends Component<Props, State> {
 			const { pastApps } = this.state;
 			const newApps = [...pastApps];
 
-			const newApp = pastApps.find(app => app.appname === appname);
+			const pastApp = pastApps.find(app => app.appname === appname);
 
-			if (!newApp) {
+			if (!pastApp) {
 				newApps.push({
 					appname,
 					url,
+					headers: customHeaders,
 				});
 			} else {
 				const appIndex = newApps.findIndex(
@@ -206,6 +228,7 @@ class ConnectApp extends Component<Props, State> {
 				newApps[appIndex] = {
 					appname,
 					url,
+					headers: customHeaders,
 				};
 			}
 
@@ -229,6 +252,57 @@ class ConnectApp extends Component<Props, State> {
 		}));
 	};
 
+	toggleHeadersModal = () => {
+		this.setState(({ isShowingHeadersModal }) => ({
+			isShowingHeadersModal: !isShowingHeadersModal,
+		}));
+	};
+
+	handleHeaderItemChange = (e, index, field) => {
+		const {
+			target: { value },
+		} = e;
+		const { customHeaders } = this.state;
+
+		this.setState({
+			customHeaders: [
+				...customHeaders.slice(0, index),
+				{
+					...customHeaders[index],
+					[field]: value,
+				},
+				...customHeaders.slice(index + 1),
+			],
+		});
+	};
+
+	handleHeadersSubmit = () => {
+		const { customHeaders } = this.state;
+
+		const filteredHeaders = customHeaders.filter(
+			item => item.key.trim() && item.value.trim(),
+		);
+
+		this.props.setHeaders(filteredHeaders);
+		this.toggleHeadersModal();
+	};
+
+	addMoreHeader = () => {
+		const { customHeaders } = this.state;
+
+		this.setState({
+			customHeaders: [...customHeaders, { key: '', value: '' }],
+		});
+	};
+
+	handleHeaderAfterClose = () => {
+		this.setState({
+			customHeaders: this.props.headers.length
+				? this.props.headers
+				: [{ key: '', value: '' }],
+		});
+	};
+
 	render() {
 		const {
 			appname,
@@ -236,6 +310,8 @@ class ConnectApp extends Component<Props, State> {
 			pastApps,
 			isShowingAppSwitcher,
 			isUrlHidden,
+			isShowingHeadersModal,
+			customHeaders,
 		} = this.state;
 		const { isLoading, isConnected } = this.props;
 		return (
@@ -245,36 +321,59 @@ class ConnectApp extends Component<Props, State> {
 						layout="inline"
 						onSubmit={this.handleSubmit}
 						css={{
-							display: 'grid',
-							gridTemplateColumns: '1fr 1fr auto',
+							display: 'flex',
+							alignItems: 'center',
 						}}
 					>
-						<Item {...formItemProps}>
-							<Input
-								name="url"
-								value={url}
-								placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-								onChange={this.handleChange}
-								disabled={isConnected}
-								required
+						<Item {...formItemProps} css={{ flex: 1 }}>
+							<Group
+								compact
 								css={{
-									color:
-										isUrlHidden && 'transparent !important',
+									display: 'flex !important',
 								}}
-								addonAfter={
-									<link
+							>
+								<Input
+									name="url"
+									value={url}
+									placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+									onChange={this.handleChange}
+									disabled={isConnected}
+									required
+									css={{
+										color:
+											isUrlHidden &&
+											'transparent !important',
+									}}
+								/>
+								<Button
+									css={{
+										cursor: 'pointer',
+										'&:hover': {
+											borderColor: '#d9d9d9 !important',
+										},
+									}}
+									onClick={this.handleUrlToggle}
+								>
+									<i
 										className={`fa ${
 											isUrlHidden
 												? 'fa-eye-slash'
 												: 'fa-eye'
 										}`}
-										css={{
-											cursor: 'pointer',
-										}}
-										onClick={this.handleUrlToggle}
 									/>
-								}
-							/>
+								</Button>
+								<Button
+									type="button"
+									css={{
+										'&:hover': {
+											borderColor: '#d9d9d9 !important',
+										},
+									}}
+									onClick={this.toggleHeadersModal}
+								>
+									Headers
+								</Button>
+							</Group>
 						</Item>
 						<Item {...formItemProps}>
 							<AutoComplete
@@ -309,6 +408,70 @@ class ConnectApp extends Component<Props, State> {
 								{isConnected ? 'Disconnect' : 'Connect'}
 							</Button>
 						</Item>
+						<Modal
+							visible={isShowingHeadersModal}
+							onCancel={this.toggleHeadersModal}
+							onOk={this.handleHeadersSubmit}
+							maskClosable={false}
+							destroyOnClose
+							title="Add Custom Headers"
+							css={{ top: 10 }}
+							afterClose={this.handleHeaderAfterClose}
+						>
+							<div
+								css={{
+									maxHeight: '500px',
+									overflow: 'auto',
+									paddingRight: 10,
+								}}
+							>
+								<Flex css={{ marginBottom: 10 }}>
+									<div css={{ flex: 1 }}>Key</div>
+									<div css={{ marginLeft: 10, flex: 1 }}>
+										Value
+									</div>
+								</Flex>
+								{customHeaders.map((item, i) => (
+									<Flex
+										key={`header-${item.key}`}
+										css={{ marginBottom: 10 }}
+									>
+										<div css={{ flex: 1 }}>
+											<Input
+												value={item.key}
+												onChange={e =>
+													this.handleHeaderItemChange(
+														e,
+														i,
+														'key',
+													)
+												}
+											/>
+										</div>
+										<div css={{ marginLeft: 10, flex: 1 }}>
+											<Input
+												value={item.value}
+												onChange={e =>
+													this.handleHeaderItemChange(
+														e,
+														i,
+														'value',
+													)
+												}
+											/>
+										</div>
+									</Flex>
+								))}
+							</div>
+							<Button
+								icon="plus"
+								type="primary"
+								css={{
+									marginTop: 10,
+								}}
+								onClick={this.addMoreHeader}
+							/>
+						</Modal>
 					</Form>
 				)}
 				{!isLoading &&
@@ -347,12 +510,14 @@ const mapStateToProps = state => ({
 	isConnected: getIsConnected(state),
 	isLoading: getIsLoading(state),
 	mode: getMode(state),
+	headers: getHeaders(state),
 });
 
 const mapDispatchToProps = {
 	connectApp,
 	disconnectApp,
 	setMode,
+	setHeaders,
 };
 
 ConnectApp.propTypes = {
@@ -365,6 +530,8 @@ ConnectApp.propTypes = {
 	history: object,
 	setMode: func.isRequired,
 	mode: string,
+	headers: array,
+	setHeaders: func,
 };
 
 export default withRouter(

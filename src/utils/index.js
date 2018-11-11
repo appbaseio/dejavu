@@ -90,6 +90,34 @@ const getOnlySource = data => {
 	return others;
 };
 
+const convertArrayToHeaders = data => {
+	const headers = {};
+	if (data.length) {
+		data.forEach(item => {
+			headers[item.key] = item.value;
+		});
+
+		return headers;
+	}
+
+	return {};
+};
+
+const getCustomHeaders = appname => {
+	const localConnections = JSON.parse(
+		getLocalStorageItem('localConnections'),
+	);
+
+	const { pastApps } = localConnections;
+	const currentApp = pastApps.find(item => item.appname === appname);
+
+	if (currentApp && currentApp.headers) {
+		return currentApp.headers;
+	}
+
+	return [];
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -103,4 +131,6 @@ export {
 	setLocalStorageData,
 	numberWithCommas,
 	getOnlySource,
+	convertArrayToHeaders,
+	getCustomHeaders,
 };

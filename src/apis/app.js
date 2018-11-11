@@ -1,12 +1,19 @@
-import { parseUrl, getHeaders, isEmptyObject } from '../utils';
+import {
+	parseUrl,
+	getHeaders,
+	isEmptyObject,
+	getCustomHeaders,
+	convertArrayToHeaders,
+} from '../utils';
 
 const testConnection = async (appname, rawUrl) => {
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
+		const customHeaders = getCustomHeaders(appname);
 		const res = await fetch(`${url}/${appname}`, {
 			'Content-Type': 'application/json',
-			headers,
+			headers: { ...headers, ...convertArrayToHeaders(customHeaders) },
 		}).then(response => response.json());
 		if (res.status >= 400) {
 			throw new Error(res.message || 'Unable to connect');

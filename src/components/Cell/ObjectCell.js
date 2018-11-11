@@ -31,6 +31,14 @@ class ObjectCell extends Component<Props, State> {
 		value: JSON.stringify(this.props.children, null, 2),
 	};
 
+	handleAfterClose = () => {
+		this.setState({
+			showModal: false,
+			error: false,
+			value: JSON.stringify(this.props.children, null, 2),
+		});
+	};
+
 	toggleModal = () => {
 		this.setState(({ showModal }) => ({
 			showModal: !showModal,
@@ -96,7 +104,8 @@ class ObjectCell extends Component<Props, State> {
 					onCancel={this.toggleModal}
 					onOk={this.saveValue}
 					okButtonProps={{ disabled: error }}
-					destroyOnHide
+					destroyOnClose
+					afterClose={this.handleAfterClose}
 				>
 					<br />
 					<AceEditor
