@@ -174,7 +174,7 @@ class ConnectApp extends Component<Props, State> {
 		if (pastApp) {
 			this.setState({
 				url: pastApp.url,
-				customHeaders: pastApp.headers,
+				customHeaders: pastApp.headers || [],
 			});
 		}
 		this.setState({
@@ -490,7 +490,7 @@ class ConnectApp extends Component<Props, State> {
 									</p>
 									<pre>
 										{`http.port: 9200
-http.cors.allow-origin: http://localhost:1357
+http.cors.allow-origin: http://localhost:1358
 http.cors.enabled: true
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 http.cors.allow-credentials: true`}

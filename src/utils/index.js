@@ -108,7 +108,7 @@ const getCustomHeaders = appname => {
 		getLocalStorageItem('localConnections'),
 	);
 
-	const { pastApps } = localConnections;
+	const { pastApps } = localConnections || [];
 	const currentApp = pastApps.find(item => item.appname === appname);
 
 	if (currentApp && currentApp.headers) {
