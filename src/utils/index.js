@@ -2,6 +2,8 @@ import urlParser from 'url-parser-lite';
 
 import getDateFormat from './date';
 
+import { LOCAL_CONNECTIONS } from '../constants';
+
 const parseUrl = url => {
 	if (!url) {
 		return {
@@ -104,11 +106,20 @@ const convertArrayToHeaders = data => {
 };
 
 const getCustomHeaders = appname => {
-	const localConnections = JSON.parse(
-		getLocalStorageItem('localConnections'),
-	);
+	let localConnections = JSON.parse(getLocalStorageItem(LOCAL_CONNECTIONS));
 
-	const { pastApps } = localConnections || [];
+	if (!localConnections) {
+		setLocalStorageData(
+			LOCAL_CONNECTIONS,
+			JSON.stringify({
+				pastApps: [],
+			}),
+		);
+
+		localConnections = { pastApps: [] };
+	}
+
+	const { pastApps } = localConnections;
 	const currentApp = pastApps.find(item => item.appname === appname);
 
 	if (currentApp && currentApp.headers) {

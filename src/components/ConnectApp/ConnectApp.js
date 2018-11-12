@@ -136,7 +136,9 @@ class ConnectApp extends Component<Props, State> {
 
 		this.props.setHeaders(customHeaders);
 		this.setState({
-			customHeaders,
+			customHeaders: customHeaders.length
+				? customHeaders
+				: [{ key: '', value: '' }],
 		});
 		this.setPastConnections();
 	}
@@ -433,7 +435,7 @@ class ConnectApp extends Component<Props, State> {
 								</Flex>
 								{customHeaders.map((item, i) => (
 									<Flex
-										key={`header-${item.key}`}
+										key={`header-${i}`} // eslint-disable-line
 										css={{ marginBottom: 10 }}
 									>
 										<div css={{ flex: 1 }}>
