@@ -57,7 +57,9 @@ const TextCell = ({
 							css={{
 								maxWidth: '230px',
 								maxHeight: '300px',
-								overflow: 'auto',
+								overflowY: 'auto',
+								overflowX: 'hidden',
+								wordWrap: 'break-word',
 							}}
 						>
 							<div css={{ cursor: 'pointer' }}>{children}</div>

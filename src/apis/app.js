@@ -11,6 +11,7 @@ const testConnection = async (appname, rawUrl) => {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(appname);
+
 		const res = await fetch(`${url}/${appname}`, {
 			'Content-Type': 'application/json',
 			headers: { ...headers, ...convertArrayToHeaders(customHeaders) },

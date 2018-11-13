@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Button, Alert, AutoComplete, Input, Modal } from 'antd';
+import { Form, Button, Alert, AutoComplete, Input, Modal, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { string, func, bool, object, array } from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -220,7 +220,9 @@ class ConnectApp extends Component<Props, State> {
 				newApps.push({
 					appname,
 					url,
-					headers: customHeaders,
+					headers: customHeaders.filter(
+						item => item.key.trim() && item.value.trim(),
+					),
 				});
 			} else {
 				const appIndex = newApps.findIndex(
@@ -230,7 +232,9 @@ class ConnectApp extends Component<Props, State> {
 				newApps[appIndex] = {
 					appname,
 					url,
-					headers: customHeaders,
+					headers: customHeaders.filter(
+						item => item.key.trim() && item.value.trim(),
+					),
 				};
 			}
 
@@ -302,6 +306,16 @@ class ConnectApp extends Component<Props, State> {
 			customHeaders: this.props.headers.length
 				? this.props.headers
 				: [{ key: '', value: '' }],
+		});
+	};
+
+	handleRemoveHeader = index => {
+		const { customHeaders } = this.state;
+		this.setState({
+			customHeaders: [
+				...customHeaders.slice(0, index),
+				...customHeaders.slice(index + 1),
+			],
 		});
 	};
 
@@ -419,6 +433,7 @@ class ConnectApp extends Component<Props, State> {
 							title="Add Custom Headers"
 							css={{ top: 10 }}
 							afterClose={this.handleHeaderAfterClose}
+							closable={false}
 						>
 							<div
 								css={{
@@ -428,7 +443,9 @@ class ConnectApp extends Component<Props, State> {
 								}}
 							>
 								<Flex css={{ marginBottom: 10 }}>
-									<div css={{ flex: 1 }}>Key</div>
+									<div css={{ flex: 1, marginLeft: 5 }}>
+										Key
+									</div>
 									<div css={{ marginLeft: 10, flex: 1 }}>
 										Value
 									</div>
@@ -437,8 +454,9 @@ class ConnectApp extends Component<Props, State> {
 									<Flex
 										key={`header-${i}`} // eslint-disable-line
 										css={{ marginBottom: 10 }}
+										alignItems="center"
 									>
-										<div css={{ flex: 1 }}>
+										<div css={{ flex: 1, marginLeft: 5 }}>
 											<Input
 												value={item.key}
 												onChange={e =>
@@ -450,7 +468,7 @@ class ConnectApp extends Component<Props, State> {
 												}
 											/>
 										</div>
-										<div css={{ marginLeft: 10, flex: 1 }}>
+										<div css={{ flex: 1, marginLeft: 10 }}>
 											<Input
 												value={item.value}
 												onChange={e =>
@@ -462,6 +480,26 @@ class ConnectApp extends Component<Props, State> {
 												}
 											/>
 										</div>
+										<div
+											css={{
+												marginLeft: 10,
+												minWidth: 15,
+											}}
+										>
+											{customHeaders.length > 1 && (
+												<Icon
+													type="close"
+													onClick={() =>
+														this.handleRemoveHeader(
+															i,
+														)
+													}
+													css={{
+														cursor: 'pointer',
+													}}
+												/>
+											)}
+										</div>
 									</Flex>
 								))}
 							</div>
@@ -470,6 +508,7 @@ class ConnectApp extends Component<Props, State> {
 								type="primary"
 								css={{
 									marginTop: 10,
+									marginLeft: 5,
 								}}
 								onClick={this.addMoreHeader}
 							/>
