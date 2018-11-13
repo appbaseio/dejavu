@@ -34,7 +34,6 @@ import StyledCell from './StyledCell';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 import popoverContent from '../CommonStyles/popoverContent';
-// import { addData, deleteData } from '../../apis';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 const srotableTypes = getSortableTypes();
@@ -50,10 +49,6 @@ type Props = {
 	visibleColumns: string[],
 	handleSortChange: (string, number) => void,
 	mode: string,
-	// appUrl: string,
-	// setError: func,
-	// clearError: func,
-	// updateReactiveList: func,
 	onLoadMore: () => void,
 	scrollToColumn: number,
 	sortField: string,

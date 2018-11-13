@@ -15,6 +15,7 @@ import {
 } from '../../reducers/mappings';
 import { addDataRequest } from '../../actions';
 import { isVaildJSON } from '../../utils';
+import getSampleData from '../../utils/sampleData';
 
 import Item from './Item.styles';
 import Cell from '../Cell';
@@ -59,22 +60,56 @@ class AddRowModal extends Component<Props, State> {
 		tabData: {},
 	};
 
-	handleAfterClose = () => {
+	componentDidMount() {
+		this.setSampleData();
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		const { selectedIndex, selectedType } = this.state;
+		if (
+			prevState.selectedIndex !== selectedIndex ||
+			prevState.selectedType !== selectedType
+		) {
+			this.setSampleData();
+		}
+	}
+
+	setSampleData = () => {
+		const { typePropertyMapping } = this.props;
+		const { selectedIndex, selectedType } = this.state;
+		// $FlowFixMe
+		const properties = typePropertyMapping[selectedIndex][selectedType]
+			? // $FlowFixMe
+			  typePropertyMapping[selectedIndex][selectedType]
+			: {};
+
+		const sampleData = getSampleData(properties);
 		this.setState({
-			isShowingModal: false,
-			addDataError: false,
-			addDataValue: `{\n}`,
-			documentId: '',
-			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
-			types: this.props.indexTypeMap[
-				Object.keys(this.props.indexTypeMap)[0]
-			],
-			selectedType: this.props.indexTypeMap[
-				Object.keys(this.props.indexTypeMap)[0]
-			][0],
-			tab: 'json',
-			tabData: {},
+			addDataValue: JSON.stringify(sampleData, null, 2),
 		});
+	};
+
+	handleAfterClose = () => {
+		this.setState(
+			{
+				isShowingModal: false,
+				addDataError: false,
+				addDataValue: `{\n}`,
+				documentId: '',
+				selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+				types: this.props.indexTypeMap[
+					Object.keys(this.props.indexTypeMap)[0]
+				],
+				selectedType: this.props.indexTypeMap[
+					Object.keys(this.props.indexTypeMap)[0]
+				][0],
+				tab: 'json',
+				tabData: {},
+			},
+			() => {
+				this.setSampleData();
+			},
+		);
 	};
 
 	handleDocumentIdChange = e => {
@@ -96,11 +131,11 @@ class AddRowModal extends Component<Props, State> {
 			addDataValue,
 			selectedIndex,
 			selectedType,
-			documentId,
 			tab,
 			tabData,
+			documentId,
 		} = this.state;
-		if (!addDataError && selectedIndex && selectedType && documentId) {
+		if (!addDataError && selectedIndex && selectedType) {
 			let data = {};
 
 			if (tab === 'gui') {

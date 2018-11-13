@@ -19,7 +19,7 @@ import {
 import { isVaildJSON, getOnlySource } from '../../utils';
 import { getUpdatingRow } from '../../reducers/updatingRow';
 import { getUrl } from '../../reducers/app';
-import { addData } from '../../apis/data';
+import { putData } from '../../apis/data';
 
 const { Item } = Form;
 
@@ -85,7 +85,7 @@ class UpdateRowModal extends Component<Props, State> {
 
 			try {
 				onClearError();
-				await addData(
+				await putData(
 					index,
 					type,
 					documentId,
