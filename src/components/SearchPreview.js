@@ -23,9 +23,8 @@ const SearchPreview = ({ isConnected, appName, rawUrl }: Props) => {
 	return (
 		<section>
 			<ErrorFlashMessage />
-			{!isConnected ? (
-				<ConnectApp />
-			) : (
+			<ConnectApp isHidden />
+			{isConnected && (
 				<BaseContainer
 					appName={appName}
 					shouldFetchAppPlan={false}

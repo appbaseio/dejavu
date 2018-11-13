@@ -13,12 +13,19 @@ import {
 	getIsConnected,
 	getHeaders,
 } from '../../reducers/app';
-import { connectApp, disconnectApp, setMode, setHeaders } from '../../actions';
+import {
+	connectApp,
+	disconnectApp,
+	setMode,
+	setHeaders,
+	setError,
+} from '../../actions';
 import {
 	getUrlParams,
 	getLocalStorageItem,
 	setLocalStorageData,
 	getCustomHeaders,
+	isMultiIndexApp,
 } from '../../utils';
 
 import { getMode } from '../../reducers/mode';
@@ -40,6 +47,9 @@ type Props = {
 	onErrorClose: () => void,
 	headers: any[],
 	setHeaders: any => void,
+	location: any,
+	isHidden?: boolean,
+	setError: any => void,
 };
 
 type State = {
@@ -63,6 +73,22 @@ const formItemProps = {
 	},
 };
 
+const ROUTES_WITHOUT_MULTIPLE_INDEX = ['/mappings', '/preview'];
+
+const shouldConnect = (pathname, appname) => {
+	let isConnecting = false;
+
+	if (ROUTES_WITHOUT_MULTIPLE_INDEX.indexOf(pathname) === -1) {
+		isConnecting = true;
+	} else if (!isMultiIndexApp(appname)) {
+		isConnecting = true;
+	} else {
+		isConnecting = false;
+	}
+
+	return isConnecting;
+};
+
 class ConnectApp extends Component<Props, State> {
 	state = {
 		appname: this.props.appname || '',
@@ -80,7 +106,7 @@ class ConnectApp extends Component<Props, State> {
 		// sync state from url
 		let appname = '';
 		let url = '';
-		const { mode } = this.props;
+		const { mode, isConnected, isHidden } = this.props;
 		const {
 			appname: queryApp,
 			url: queryUrl,
@@ -103,8 +129,26 @@ class ConnectApp extends Component<Props, State> {
 			url,
 		});
 
-		if (appname && url) {
-			this.props.connectApp(appname, url);
+		if (appname && url && !isConnected) {
+			const { pathname } = this.props.location;
+
+			if (shouldConnect(pathname, appname)) {
+				this.props.connectApp(appname, url);
+
+				if (isHidden) {
+					this.setAppSwitcher(false);
+				}
+			} else {
+				this.props.setError({
+					message:
+						"Sorry canno't to connect app with multiple indexes",
+					stack: 'Please try using single index',
+				});
+			}
+		}
+
+		if (isConnected && isHidden) {
+			this.setAppSwitcher(false);
 		}
 
 		if (!queryApp && !queryUrl) {
@@ -150,16 +194,14 @@ class ConnectApp extends Component<Props, State> {
 	};
 
 	setPastConnections = () => {
-		setTimeout(() => {
-			const pastConnections = JSON.parse(
-				// $FlowFixMe
-				getLocalStorageItem(LOCAL_CONNECTIONS) || {},
-			);
+		const pastConnections = JSON.parse(
+			// $FlowFixMe
+			getLocalStorageItem(LOCAL_CONNECTIONS) || {},
+		);
 
-			this.setState({
-				pastApps: pastConnections.pastApps || [],
-			});
-		}, 100);
+		this.setState({
+			pastApps: pastConnections.pastApps || [],
+		});
 	};
 
 	handleChange = e => {
@@ -188,6 +230,7 @@ class ConnectApp extends Component<Props, State> {
 		e.preventDefault();
 		const { appname, url, customHeaders } = this.state;
 		const { sidebar, appswitcher } = getUrlParams(window.location.search);
+		const { pathname } = this.props.location;
 
 		let searchQuery = '?';
 
@@ -205,50 +248,62 @@ class ConnectApp extends Component<Props, State> {
 
 			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {
-			this.props.connectApp(appname, url);
-			this.props.setHeaders(customHeaders);
-			// update history with correct appname and url
-			searchQuery += `&appname=${appname}&url=${url}&mode=${
-				this.props.mode
-			}`;
-			const { pastApps } = this.state;
-			const newApps = [...pastApps];
+			if (shouldConnect(pathname, appname)) {
+				this.props.connectApp(appname, url);
+				this.props.setHeaders(customHeaders);
+				// update history with correct appname and url
+				searchQuery += `&appname=${appname}&url=${url}&mode=${
+					this.props.mode
+				}`;
+				const { pastApps } = this.state;
+				const newApps = [...pastApps];
 
-			const pastApp = pastApps.find(app => app.appname === appname);
+				const pastApp = pastApps.find(app => app.appname === appname);
 
-			if (!pastApp) {
-				newApps.push({
-					appname,
-					url,
-					headers: customHeaders.filter(
-						item => item.key.trim() && item.value.trim(),
-					),
-				});
-			} else {
-				const appIndex = newApps.findIndex(
-					item => item.appname === appname,
-				);
+				if (!pastApp) {
+					newApps.push({
+						appname,
+						url,
+						headers: customHeaders.filter(
+							item => item.key.trim() && item.value.trim(),
+						),
+					});
+				} else {
+					const appIndex = newApps.findIndex(
+						item => item.appname === appname,
+					);
 
-				newApps[appIndex] = {
-					appname,
-					url,
-					headers: customHeaders.filter(
-						item => item.key.trim() && item.value.trim(),
-					),
-				};
-			}
+					newApps[appIndex] = {
+						appname,
+						url,
+						headers: customHeaders.filter(
+							item => item.key.trim() && item.value.trim(),
+						),
+					};
+				}
 
-			this.setState({
-				pastApps: newApps,
-			});
-
-			setLocalStorageData(
-				LOCAL_CONNECTIONS,
-				JSON.stringify({
+				this.setState({
 					pastApps: newApps,
-				}),
-			);
-			this.props.history.push({ search: searchQuery });
+				});
+
+				setLocalStorageData(
+					LOCAL_CONNECTIONS,
+					JSON.stringify({
+						pastApps: newApps,
+					}),
+				);
+				this.props.history.push({ search: searchQuery });
+
+				if (this.props.isHidden) {
+					this.setAppSwitcher(false);
+				}
+			} else {
+				this.props.setError({
+					message:
+						"Sorry canno't connect to app with multiple indexes",
+					stack: 'Please try using single index',
+				});
+			}
 		}
 	};
 
@@ -330,6 +385,7 @@ class ConnectApp extends Component<Props, State> {
 			customHeaders,
 		} = this.state;
 		const { isLoading, isConnected } = this.props;
+
 		return (
 			<div>
 				{isShowingAppSwitcher && (
@@ -531,7 +587,7 @@ class ConnectApp extends Component<Props, State> {
 									</p>
 									<pre>
 										{`http.port: 9200
-http.cors.allow-origin: http://localhost:1358
+http.cors.allow-origin: http://localhost:1357
 http.cors.enabled: true
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 http.cors.allow-credentials: true`}
@@ -559,6 +615,7 @@ const mapDispatchToProps = {
 	disconnectApp,
 	setMode,
 	setHeaders,
+	setError,
 };
 
 ConnectApp.propTypes = {
@@ -573,6 +630,9 @@ ConnectApp.propTypes = {
 	mode: string,
 	headers: array,
 	setHeaders: func,
+	location: object,
+	isHidden: bool,
+	setError: func,
 };
 
 export default withRouter(

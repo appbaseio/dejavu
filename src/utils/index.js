@@ -129,6 +129,9 @@ const getCustomHeaders = appname => {
 	return [];
 };
 
+const isMultiIndexApp = appname =>
+	appname.indexOf('*') > -1 || appname.indexOf(',') > -1;
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -144,4 +147,5 @@ export {
 	getOnlySource,
 	convertArrayToHeaders,
 	getCustomHeaders,
+	isMultiIndexApp,
 };

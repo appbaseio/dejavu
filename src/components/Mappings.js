@@ -22,13 +22,13 @@ const MappingsPage = ({ isConnected, appName, rawUrl }: Props) => {
 	return (
 		<section>
 			<ErrorFlashMessage />
-			{!isConnected ? (
-				<ConnectApp />
-			) : (
+			<ConnectApp isHidden />
+			{isConnected && (
 				<BaseContainer
 					appName={appName}
 					shouldFetchAppPlan={false}
 					shouldFetchAppInfo={false}
+					url={url}
 				>
 					<Mappings
 						appName={appName}
