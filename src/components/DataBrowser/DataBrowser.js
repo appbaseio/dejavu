@@ -50,7 +50,7 @@ type State = {
 
 class DataBrowser extends Component<Props, State> {
 	state = {
-		sort: 'asc',
+		sort: 'desc',
 		sortField: '_score',
 		pageSize: 20,
 		scrollToColumn: 0,
@@ -89,7 +89,7 @@ class DataBrowser extends Component<Props, State> {
 
 	resetSort = () => {
 		this.setState({
-			sort: 'asc',
+			sort: 'desc',
 			sortField: '_score',
 			scrollToColumn: 0,
 		});
@@ -116,7 +116,7 @@ class DataBrowser extends Component<Props, State> {
 		];
 		const weights = [
 			...Array(searchableColumns.length).fill(3),
-			...Array(searchableColumns.length).fill(1),
+			...Array(searchableColumns.length).fill(3),
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
@@ -165,6 +165,7 @@ class DataBrowser extends Component<Props, State> {
 													scrollToColumn: 0,
 												});
 											}}
+											queryFormat="and"
 										/>
 										<Icon
 											type="search"
