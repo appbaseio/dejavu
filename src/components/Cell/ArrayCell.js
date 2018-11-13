@@ -7,6 +7,8 @@ import { func, string, any } from 'prop-types';
 import { MODES } from '../../constants';
 import JsonView from '../JsonView';
 
+import popoverContent from '../CommonStyles/popoverContent';
+
 type Props = {
 	children: [],
 	onChange: func,
@@ -68,13 +70,7 @@ class ArrayCell extends Component<Props, State> {
 					Boolean(data.length) && (
 						<Popover
 							content={
-								<div
-									css={{
-										maxWidth: '400px',
-										maxHeight: '300px',
-										overflow: 'auto',
-									}}
-								>
+								<div css={popoverContent}>
 									<JsonView json={data} />
 								</div>
 							}

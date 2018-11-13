@@ -7,6 +7,7 @@ import { func, any, bool, string } from 'prop-types';
 import CellStyled from './Cell.styles';
 import overflowText from '../DataTable/overflow.style';
 import { MODES } from '../../constants';
+import popoverContent from '../CommonStyles/popoverContent';
 
 type Props = {
 	children: [],
@@ -53,15 +54,7 @@ const TextCell = ({
 					placement="topLeft"
 					trigger="click"
 					content={
-						<div
-							css={{
-								maxWidth: '230px',
-								maxHeight: '300px',
-								overflowY: 'auto',
-								overflowX: 'hidden',
-								wordWrap: 'break-word',
-							}}
-						>
+						<div css={popoverContent}>
 							<div css={{ cursor: 'pointer' }}>{children}</div>
 						</div>
 					}

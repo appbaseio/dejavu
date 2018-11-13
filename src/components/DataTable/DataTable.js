@@ -33,6 +33,7 @@ import MappingsDropdown from '../MappingsDropdown';
 import StyledCell from './StyledCell';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
+import popoverContent from '../CommonStyles/popoverContent';
 // import { addData, deleteData } from '../../apis';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
@@ -349,13 +350,7 @@ class DataTable extends Component<Props, State> {
 						</div>
 						<Popover
 							content={
-								<div
-									css={{
-										maxWidth: '400px',
-										maxHeight: '300px',
-										overflow: 'auto',
-									}}
-								>
+								<div css={popoverContent}>
 									<JsonView
 										json={getOnlySource(data[rowIndex - 1])}
 									/>
@@ -373,13 +368,7 @@ class DataTable extends Component<Props, State> {
 						</Popover>
 						<Popover
 							content={
-								<div
-									css={{
-										maxWidth: '400px',
-										maxHeight: '300px',
-										overflow: 'auto',
-									}}
-								>
+								<div css={popoverContent}>
 									{data[rowIndex - 1]._id}
 								</div>
 							}

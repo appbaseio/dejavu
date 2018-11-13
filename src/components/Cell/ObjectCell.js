@@ -12,6 +12,7 @@ import CellStyled from './Cell.styles';
 import JsonView from '../JsonView';
 import { isVaildJSON } from '../../utils';
 import { MODES } from '../../constants';
+import popoverContent from '../CommonStyles/popoverContent';
 
 type Props = {
 	children: any,
@@ -77,13 +78,7 @@ class ObjectCell extends Component<Props, State> {
 				>
 					<Popover
 						content={
-							<div
-								css={{
-									maxWidth: '400px',
-									maxHeight: '300px',
-									overflow: 'auto',
-								}}
-							>
+							<div css={popoverContent}>
 								<JsonView json={children || {}} />
 							</div>
 						}

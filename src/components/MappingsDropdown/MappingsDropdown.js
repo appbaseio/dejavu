@@ -6,6 +6,7 @@ import { Popover } from 'antd';
 
 import JsonView from '../JsonView';
 import MappingsIcon from '../MappingsIcon';
+import popoverContent from '../CommonStyles/popoverContent';
 
 type Props = {
 	mapping: object,
@@ -14,13 +15,7 @@ type Props = {
 const MappingsDropdown = ({ mapping }: Props) => (
 	<Popover
 		content={
-			<div
-				css={{
-					maxHeight: '400px',
-					maxWidth: '300px',
-					overflow: 'auto',
-				}}
-			>
+			<div css={popoverContent}>
 				<JsonView json={mapping} />
 			</div>
 		}
