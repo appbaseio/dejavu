@@ -100,7 +100,7 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
-	handleSort = (col, colIndex) => {
+	handleSort = (col, colIndex, style) => {
 		const { mappings, handleSortChange } = this.props;
 		let column = col;
 
@@ -115,6 +115,8 @@ class DataTable extends Component<Props, State> {
 					? `${col}.keyword`
 					: `${col}.raw`;
 		}
+
+		console.log(style);
 
 		handleSortChange(column, colIndex);
 	};
@@ -274,7 +276,11 @@ class DataTable extends Component<Props, State> {
 								<button
 									type="button"
 									onClick={() => {
-										this.handleSort(col, columnIndex);
+										this.handleSort(
+											col,
+											columnIndex,
+											style,
+										);
 									}}
 									css={{
 										outline: 0,

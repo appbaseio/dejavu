@@ -274,21 +274,42 @@ class AddRowModal extends Component<Props, State> {
 					</Item>
 					<Tabs activeKey={tab} onChange={this.handleTabChange}>
 						<TabPane tab="JSON Input" key="json">
-							<Item label="JSON document" />
-							<AceEditor
-								tabSize={2}
-								mode="json"
-								theme="github"
-								onChange={this.handleJsonInput}
-								name="add-row-modal"
-								value={addDataValue}
-								height="auto"
-								width="100%"
-								css={{
-									minHeight: '200px',
-									maxHeight: '300px',
-								}}
-							/>
+							<Flex flexDirection="row">
+								<Flex
+									flexDirection="column"
+									css={{ flex: 0.3 }}
+								>
+									<Fragment>
+										JSON
+										<small>
+											(use array for adding multiple
+											records,{' '}
+											<a
+												href="https://gist.githubusercontent.com/siddharthlatest/5f580917f575d72dee182caa5b5ed1b3/raw/c0f80b5410f4d7c84d37d49f2d1f5dd11a03a78e/bulk_add_dejavu.json"
+												target="_blank" // eslint-disable-line
+											>
+												see an example.
+											</a>
+											)
+										</small>
+									</Fragment>
+								</Flex>
+								<AceEditor
+									tabSize={2}
+									mode="json"
+									theme="github"
+									onChange={this.handleJsonInput}
+									name="add-row-modal"
+									value={addDataValue}
+									height="auto"
+									width="100%"
+									css={{
+										minHeight: '200px',
+										maxHeight: '300px',
+										flex: 1,
+									}}
+								/>
+							</Flex>
 						</TabPane>
 						<TabPane tab="Editable View" key="gui">
 							<div
