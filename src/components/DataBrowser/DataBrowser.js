@@ -27,6 +27,7 @@ import {
 	getSearchableColumns,
 } from '../../reducers/mappings';
 import { parseUrl, numberWithCommas } from '../../utils';
+import colors from '../theme/colors';
 
 type Props = {
 	appname: string,
@@ -180,7 +181,13 @@ class DataBrowser extends Component<Props, State> {
 								</div>
 								<div
 									id="result-list"
-									css={{ marginTop: '20px' }}
+									css={{
+										marginTop: '20px',
+										border: `1px solid ${
+											colors.tableBorderColor
+										}`,
+										borderRadius: '4px',
+									}}
 								>
 									<ReactiveList
 										key={String(reactiveListKey)}

@@ -210,22 +210,39 @@ class DataTable extends Component<Props, State> {
 				>
 					<div
 						css={{
-							width: '25%',
+							width: '15%',
 						}}
 					>
-						{selectedRows.length >= 1 && (
-							<Checkbox
-								onChange={this.handleSelectAllRows}
-								checked={
-									data.length &&
-									data.length === selectedRows.length
-								}
-								css={{
-									marginLeft: '10px',
-								}}
-							/>
-						)}
+						{selectedRows.length >= 1 &&
+							mode === MODES.EDIT && (
+								<Checkbox
+									onChange={this.handleSelectAllRows}
+									checked={
+										data.length &&
+										data.length === selectedRows.length
+									}
+									css={{
+										marginLeft: '10px',
+									}}
+								/>
+							)}
 					</div>
+					<Popover
+						content={
+							<div css={popoverContent}>
+								Clicking on {`{...}`} displays the JSON data.
+							</div>
+						}
+						trigger="click"
+					>
+						<span
+							css={{
+								cursor: 'pointer',
+								maxWidth: '10%',
+								minWidth: '10%',
+							}}
+						>{` {...} `}</span>
+					</Popover>
 					<div css={{ marginLeft: '10px' }}>_id</div>
 				</StyledCell>
 			);
@@ -315,10 +332,16 @@ class DataTable extends Component<Props, State> {
 								},
 								'&:hover': {
 									'.ant-checkbox-wrapper': {
-										display: 'block !important',
+										display:
+											mode === MODES.EDIT
+												? 'block !important'
+												: 'none',
 									},
 									'.index-no': {
-										display: 'none',
+										display:
+											mode === MODES.EDIT
+												? 'none'
+												: 'block',
 									},
 								},
 							}}
@@ -439,10 +462,6 @@ class DataTable extends Component<Props, State> {
 							rowHeight={mode === MODES.EDIT ? 50 : 35}
 							rowCount={data.length + 1}
 							tabIndex={null}
-							style={{
-								border: `1px solid ${colors.tableBorderColor}`,
-								borderRadius: '4px',
-							}}
 							styleBottomLeftGrid={{
 								borderRight: `2px solid ${
 									colors.tableBorderColor
