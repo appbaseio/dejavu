@@ -107,13 +107,14 @@ class DataTable extends Component<Props, State> {
 		let column = col;
 		const { horizontalScroll } = this;
 
-		if (
-			mappings.properties[col] &&
-			mappings.properties[col].type &&
-			(mappings.properties[col].type === 'text' ||
-				mappings.properties[col].type === 'string')
-		) {
-			column = col;
+		if (mappings.properties[col] && mappings.properties[col].type) {
+			switch (mappings.properties[col].type) {
+				case 'text':
+					column = `${col}.keyword`;
+					break;
+				default:
+					column = col;
+			}
 		}
 
 		setTimeout(() => {
@@ -446,21 +447,23 @@ class DataTable extends Component<Props, State> {
 		const { data } = this.state;
 
 		return (
-			<div
-				css={{
-					position: 'relative',
-					'.TopRightGrid_ScrollWrapper .ReactVirtualized__Grid': {
-						overflow: 'hidden !important',
-					},
-					'.BottomLeftGrid_ScrollWrapper .ReactVirtualized__Grid': {
-						overflow: 'hidden !important',
-					},
-					'.ReactVirtualized__Grid__innerScrollContainer': {
-						overflowX: 'scroll !important',
-					},
-				}}
-			>
-				{Boolean(data.length) && (
+			Boolean(data.length) && (
+				<div
+					css={{
+						position: 'relative',
+						'.TopRightGrid_ScrollWrapper .ReactVirtualized__Grid': {
+							overflow: 'hidden !important',
+						},
+						'.BottomLeftGrid_ScrollWrapper .ReactVirtualized__Grid': {
+							overflow: 'hidden !important',
+						},
+						'.ReactVirtualized__Grid__innerScrollContainer': {
+							overflowX: 'scroll !important',
+						},
+						border: `1px solid ${colors.tableBorderColor}`,
+						borderRadius: '4px',
+					}}
+				>
 					<AutoSizer disableHeight>
 						{({ width }) => (
 							<MultiGrid
@@ -511,8 +514,8 @@ class DataTable extends Component<Props, State> {
 							/>
 						)}
 					</AutoSizer>
-				)}
-			</div>
+				</div>
+			)
 		);
 	}
 }

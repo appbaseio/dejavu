@@ -26,7 +26,7 @@ const testConnection = async (appname, rawUrl) => {
 		return res;
 	} catch (error) {
 		let message = error;
-		console.log(error.toString());
+
 		if (error.toString().indexOf('TypeError: Failed to fetch') > -1) {
 			message = 'Error: Invalid connection string or index name';
 		}
