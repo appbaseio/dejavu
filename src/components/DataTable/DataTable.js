@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, object, string, func } from 'prop-types';
+import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
 import { Popover, Checkbox } from 'antd';
@@ -50,6 +50,7 @@ type Props = {
 	handleSortChange: (string, number) => void,
 	mode: string,
 	onLoadMore: () => void,
+	scrollToColumn: number,
 	sortField: string,
 	sort: string,
 	selectedRows: string[],
@@ -101,7 +102,7 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
-	handleSort = col => {
+	handleSort = (col, colIndex) => {
 		const { mappings, handleSortChange } = this.props;
 		let column = col;
 		const { horizontalScroll } = this;
@@ -112,13 +113,20 @@ class DataTable extends Component<Props, State> {
 			(mappings.properties[col].type === 'text' ||
 				mappings.properties[col].type === 'string')
 		) {
-			column =
-				mappings.properties[col].type === 'text'
-					? `${col}.keyword`
-					: `${col}.raw`;
+			column = col;
 		}
 
-		handleSortChange(column, horizontalScroll);
+		setTimeout(() => {
+			const elements = document.getElementsByClassName(
+				'ReactVirtualized__Grid',
+			);
+
+			if (elements && elements[3]) {
+				elements[3].scrollLeft = horizontalScroll;
+			}
+		}, 1500);
+
+		handleSortChange(column, colIndex);
 	};
 
 	setRef = node => {
@@ -278,7 +286,7 @@ class DataTable extends Component<Props, State> {
 								<button
 									type="button"
 									onClick={() => {
-										this.handleSort(col);
+										this.handleSort(col, columnIndex);
 									}}
 									css={{
 										outline: 0,
@@ -434,7 +442,7 @@ class DataTable extends Component<Props, State> {
 	};
 
 	render() {
-		const { visibleColumns, mode } = this.props;
+		const { visibleColumns, mode, scrollToColumn } = this.props;
 		const { data } = this.state;
 
 		return (
@@ -459,8 +467,8 @@ class DataTable extends Component<Props, State> {
 								ref={this.setRef}
 								fixedColumnCount={1}
 								fixedRowCount={1}
-								isScrollingOptOut
-								// scrollToColumn={scrollToColumn}
+								// isScrollingOptOut
+								scrollToColumn={scrollToColumn}
 								cellRenderer={this.cellRender}
 								columnWidth={250}
 								columnCount={visibleColumns.length + 1}
@@ -516,7 +524,12 @@ DataTable.propTypes = {
 	visibleColumns: arrayOf(string).isRequired,
 	handleSortChange: func.isRequired,
 	mode: string,
+	// appUrl: string,
+	// setError: func,
+	// clearError: func,
+	// updateReactiveList: func,
 	onLoadMore: func,
+	scrollToColumn: number,
 	sortField: string,
 	sort: string,
 	selectedRows: arrayOf(string),

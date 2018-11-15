@@ -46,6 +46,7 @@ type State = {
 	sortField: string,
 	sort: string,
 	pageSize: number,
+	scrollToColumn: number,
 };
 
 class DataBrowser extends Component<Props, State> {
@@ -53,6 +54,7 @@ class DataBrowser extends Component<Props, State> {
 		sort: 'desc',
 		sortField: '_score',
 		pageSize: 20,
+		scrollToColumn: 0,
 	};
 
 	componentDidMount() {
@@ -69,38 +71,28 @@ class DataBrowser extends Component<Props, State> {
 		});
 	};
 
-	handleSortChange = (sortField, horizontalScroll) => {
-		this.setState(
-			prevState => {
-				if (prevState.sortField === sortField) {
-					return {
-						sort: prevState.sort === 'asc' ? 'desc' : 'asc',
-					};
-				}
-
+	handleSortChange = (sortField, scrollToColumn) => {
+		this.setState(prevState => {
+			if (prevState.sortField === sortField) {
 				return {
-					sort: 'asc',
-					sortField,
+					sort: prevState.sort === 'asc' ? 'desc' : 'asc',
+					scrollToColumn,
 				};
-			},
-			() => {
-				setTimeout(() => {
-					const elements = document.getElementsByClassName(
-						'ReactVirtualized__Grid',
-					);
+			}
 
-					if (elements && elements[3]) {
-						elements[3].scrollLeft = horizontalScroll;
-					}
-				}, 1000);
-			},
-		);
+			return {
+				sort: 'asc',
+				sortField,
+				scrollToColumn,
+			};
+		});
 	};
 
 	resetSort = () => {
 		this.setState({
 			sort: 'desc',
 			sortField: '_score',
+			scrollToColumn: 0,
 		});
 	};
 
@@ -129,7 +121,7 @@ class DataBrowser extends Component<Props, State> {
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
-		const { sort, sortField, pageSize } = this.state;
+		const { sort, sortField, pageSize, scrollToColumn } = this.state;
 
 		return (
 			<Skeleton loading={isLoading} active>
@@ -169,6 +161,11 @@ class DataBrowser extends Component<Props, State> {
 											}}
 											showIcon={false}
 											highlight
+											onValueChange={() => {
+												this.setState({
+													scrollToColumn: 0,
+												});
+											}}
 											queryFormat="and"
 										/>
 										<Icon
@@ -239,6 +236,7 @@ class DataBrowser extends Component<Props, State> {
 													this.handleSortChange
 												}
 												onLoadMore={onLoadMore}
+												scrollToColumn={scrollToColumn}
 												sort={sort}
 												sortField={sortField}
 											/>
