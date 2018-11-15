@@ -277,7 +277,7 @@ class AddRowModal extends Component<Props, State> {
 							<Flex flexDirection="row">
 								<Flex
 									flexDirection="column"
-									css={{ flex: 0.3 }}
+									css={{ flex: 0.2 }}
 								>
 									<Fragment>
 										JSON
@@ -305,7 +305,7 @@ class AddRowModal extends Component<Props, State> {
 									width="100%"
 									css={{
 										minHeight: '200px',
-										maxHeight: '300px',
+										maxHeight: '500px',
 										flex: 1,
 									}}
 								/>

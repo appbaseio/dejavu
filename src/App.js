@@ -74,7 +74,10 @@ class App extends Component {
 						)}
 						<Layout>
 							<Content
-								css={{ margin: isShowingSideBar ? 25 : 0 }}
+								css={{
+									margin: isShowingSideBar ? 25 : 0,
+									height: '100%',
+								}}
 							>
 								<div
 									css={{

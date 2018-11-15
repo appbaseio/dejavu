@@ -5,7 +5,7 @@ import DataBrowserContainer from './DataBrowserContainer';
 import ErrorFlashMessage from './ErrorFlashMessage';
 
 const Dejavu = () => (
-	<section css={{ marginRight: '25px', height: '83vh' }}>
+	<section css={{ marginRight: '25px' }}>
 		<ErrorFlashMessage />
 		<ConnectApp />
 		<DataBrowserContainer />

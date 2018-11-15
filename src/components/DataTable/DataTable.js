@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, object, string, func, number } from 'prop-types';
+import { arrayOf, object, string, func } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
 import { Popover, Checkbox } from 'antd';
@@ -50,7 +50,6 @@ type Props = {
 	handleSortChange: (string, number) => void,
 	mode: string,
 	onLoadMore: () => void,
-	scrollToColumn: number,
 	sortField: string,
 	sort: string,
 	selectedRows: string[],
@@ -63,6 +62,8 @@ class DataTable extends Component<Props, State> {
 	state = {
 		data: this.props.data,
 	};
+
+	horizontalScroll = 0;
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.data.length !== this.props.data.length) {
@@ -100,9 +101,10 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
-	handleSort = (col, colIndex, style) => {
+	handleSort = col => {
 		const { mappings, handleSortChange } = this.props;
 		let column = col;
+		const { horizontalScroll } = this;
 
 		if (
 			mappings.properties[col] &&
@@ -116,16 +118,14 @@ class DataTable extends Component<Props, State> {
 					: `${col}.raw`;
 		}
 
-		console.log(style);
-
-		handleSortChange(column, colIndex);
+		handleSortChange(column, horizontalScroll);
 	};
 
 	setRef = node => {
 		this.gridRef = node;
 	};
 
-	handleScroll = ({ scrollTop, clientHeight, scrollHeight }) => {
+	handleScroll = ({ scrollTop, clientHeight, scrollHeight, scrollLeft }) => {
 		if (
 			clientHeight &&
 			scrollHeight &&
@@ -133,6 +133,8 @@ class DataTable extends Component<Props, State> {
 		) {
 			this.props.onLoadMore();
 		}
+
+		this.horizontalScroll = scrollLeft;
 	};
 
 	handleRowSelectChange = e => {
@@ -276,11 +278,7 @@ class DataTable extends Component<Props, State> {
 								<button
 									type="button"
 									onClick={() => {
-										this.handleSort(
-											col,
-											columnIndex,
-											style,
-										);
+										this.handleSort(col);
 									}}
 									css={{
 										outline: 0,
@@ -436,7 +434,7 @@ class DataTable extends Component<Props, State> {
 	};
 
 	render() {
-		const { visibleColumns, mode, scrollToColumn } = this.props;
+		const { visibleColumns, mode } = this.props;
 		const { data } = this.state;
 
 		return (
@@ -449,57 +447,63 @@ class DataTable extends Component<Props, State> {
 					'.BottomLeftGrid_ScrollWrapper .ReactVirtualized__Grid': {
 						overflow: 'hidden !important',
 					},
+					'.ReactVirtualized__Grid__innerScrollContainer': {
+						overflowX: 'scroll !important',
+					},
 				}}
 			>
-				<AutoSizer disableHeight>
-					{({ width }) => (
-						<MultiGrid
-							ref={this.setRef}
-							fixedColumnCount={1}
-							fixedRowCount={1}
-							scrollToColumn={scrollToColumn}
-							scrollToRow={0}
-							cellRenderer={this.cellRender}
-							columnWidth={250}
-							columnCount={visibleColumns.length + 1}
-							enableFixedColumnScroll
-							enableFixedRowScroll
-							height={500}
-							rowHeight={mode === MODES.EDIT ? 50 : 35}
-							rowCount={data.length + 1}
-							tabIndex={null}
-							styleBottomLeftGrid={{
-								borderRight: `2px solid ${
-									colors.tableBorderColor
-								}`,
-								borderBottom: `1px solid ${
-									colors.tableBorderColor
-								}`,
-								borderBottomLeftRadius: 4,
-								backgroundColor: colors.tableHead,
-							}}
-							styleTopLeftGrid={{
-								borderBottom: `2px solid ${
-									colors.tableBorderColor
-								}`,
-								borderRight: `2px solid ${
-									colors.tableBorderColor
-								}`,
-								fontWeight: 'bold',
-							}}
-							styleTopRightGrid={{
-								borderBottom: `2px solid ${
-									colors.tableBorderColor
-								}`,
-								fontWeight: 'bold',
-							}}
-							width={width}
-							hideTopRightGridScrollbar
-							hideBottomLeftGridScrollbar
-							onScroll={this.handleScroll}
-						/>
-					)}
-				</AutoSizer>
+				{Boolean(data.length) && (
+					<AutoSizer disableHeight>
+						{({ width }) => (
+							<MultiGrid
+								ref={this.setRef}
+								fixedColumnCount={1}
+								fixedRowCount={1}
+								isScrollingOptOut
+								// scrollToColumn={scrollToColumn}
+								cellRenderer={this.cellRender}
+								columnWidth={250}
+								columnCount={visibleColumns.length + 1}
+								enableFixedColumnScroll
+								enableFixedRowScroll
+								overscanRowCount={1}
+								rowHeight={mode === MODES.EDIT ? 50 : 35}
+								rowCount={data.length + 1}
+								tabIndex={null}
+								height={window.innerHeight - 310}
+								styleBottomLeftGrid={{
+									borderRight: `2px solid ${
+										colors.tableBorderColor
+									}`,
+									borderBottom: `1px solid ${
+										colors.tableBorderColor
+									}`,
+									borderBottomLeftRadius: 4,
+									backgroundColor: colors.tableHead,
+								}}
+								styleTopLeftGrid={{
+									borderBottom: `2px solid ${
+										colors.tableBorderColor
+									}`,
+									borderRight: `2px solid ${
+										colors.tableBorderColor
+									}`,
+									fontWeight: 'bold',
+								}}
+								styleTopRightGrid={{
+									borderBottom: `2px solid ${
+										colors.tableBorderColor
+									}`,
+									fontWeight: 'bold',
+								}}
+								width={width}
+								hideTopRightGridScrollbar
+								hideBottomLeftGridScrollbar
+								onScroll={this.handleScroll}
+							/>
+						)}
+					</AutoSizer>
+				)}
 			</div>
 		);
 	}
@@ -512,12 +516,7 @@ DataTable.propTypes = {
 	visibleColumns: arrayOf(string).isRequired,
 	handleSortChange: func.isRequired,
 	mode: string,
-	// appUrl: string,
-	// setError: func,
-	// clearError: func,
-	// updateReactiveList: func,
 	onLoadMore: func,
-	scrollToColumn: number,
 	sortField: string,
 	sort: string,
 	selectedRows: arrayOf(string),
