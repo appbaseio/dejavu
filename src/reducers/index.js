@@ -9,6 +9,7 @@ import error from './error';
 import selectedRows from './selectedRows';
 import updatingRow from './updatingRow';
 import batteriesReducers from '../batteries/modules/reducers';
+import termsAggregation from './termsAggregation';
 
 const rootReducer = combineReducers({
 	app,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
 	error,
 	selectedRows,
 	updatingRow,
+	termsAggregation,
 	...batteriesReducers,
 });
 

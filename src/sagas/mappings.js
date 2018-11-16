@@ -1,10 +1,11 @@
 import { put, call, takeLatest, select, all } from 'redux-saga/effects';
 
 import { MAPPINGS } from '../actions/constants';
-import { fetchMappings, addMapping } from '../apis';
+import { fetchMappings, addMapping, fetchTermsAggregations } from '../apis';
 import {
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
+	fetchTermsAggregationSuccess,
 	setError,
 	addMappingSuccess,
 	addMappingFailure,
@@ -12,7 +13,11 @@ import {
 } from '../actions';
 import { getAppname, getUrl } from '../reducers/app';
 import { isEmptyObject } from '../utils';
-import { extractColumns, META_FIELDS } from '../utils/mappings';
+import {
+	extractColumns,
+	META_FIELDS,
+	getSortableTypes,
+} from '../utils/mappings';
 
 const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
@@ -77,6 +82,25 @@ function* handleFetchMappings() {
 				property =>
 					properties[property].type === 'string' ||
 					properties[property].type === 'text',
+			);
+
+			// get fields for which aggregations can be found
+			const sortableTypes = getSortableTypes();
+			const fieldsForAggregations = Object.keys(properties).filter(
+				property =>
+					sortableTypes.indexOf(properties[property].type) > -1,
+			);
+
+			// fetch terms aggregation
+			const aggregationResponse = yield call(
+				fetchTermsAggregations,
+				appname,
+				url,
+				fieldsForAggregations,
+			);
+
+			yield put(
+				fetchTermsAggregationSuccess(aggregationResponse.aggregations),
 			);
 
 			yield put(
