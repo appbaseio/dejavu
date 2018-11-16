@@ -29,7 +29,7 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 				finalData += `\n`;
 			});
 		}
-		const res = await fetch(`${baseUrl}?refresh=true`, {
+		const res = await fetch(`${baseUrl}`, {
 			headers: {
 				...headers,
 				...convertArrayToHeaders(customHeaders),
@@ -54,17 +54,14 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
 
-		const res = await fetch(
-			`${url}/${indexName}/${typeName}/${docId}?refresh=true`,
-			{
-				headers: {
-					...headers,
-					...convertArrayToHeaders(customHeaders),
-				},
-				method: 'PUT',
-				body: JSON.stringify(data),
+		const res = await fetch(`${url}/${indexName}/${typeName}/${docId}`, {
+			headers: {
+				...headers,
+				...convertArrayToHeaders(customHeaders),
 			},
-		).then(response => response.json());
+			method: 'PUT',
+			body: JSON.stringify(data),
+		}).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new Error(res.message || defaultError);
