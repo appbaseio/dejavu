@@ -200,7 +200,7 @@ class ConnectApp extends Component<Props, State> {
 		);
 
 		this.setState({
-			pastApps: pastConnections.pastApps || [],
+			pastApps: (pastConnections || {}).pastApps || [],
 		});
 	};
 
