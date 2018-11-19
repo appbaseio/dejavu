@@ -138,7 +138,7 @@ class DataTable extends Component<Props, State> {
 		if (
 			clientHeight &&
 			scrollHeight &&
-			scrollHeight - scrollTop === clientHeight
+			clientHeight + scrollTop >= scrollHeight - 30
 		) {
 			this.props.onLoadMore();
 		}
@@ -456,9 +456,6 @@ class DataTable extends Component<Props, State> {
 						},
 						'.BottomLeftGrid_ScrollWrapper .ReactVirtualized__Grid': {
 							overflow: 'hidden !important',
-						},
-						'.ReactVirtualized__Grid__innerScrollContainer': {
-							overflowX: 'scroll !important',
 						},
 						border: `1px solid ${colors.tableBorderColor}`,
 						borderRadius: '4px',
