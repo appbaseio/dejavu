@@ -17,7 +17,7 @@
 		"test:watch": "jest --watch",
 		"lint": "eslint .",
 		"build": "NODE_ENV=production webpack",
-		"format": "prettier 'src/**/*.js' --write"
+		"format": "prettier --write --use-tabs 'src/!(batteries*)**/*.js'"
 	},
 	"husky": {
 		"hooks": {
@@ -74,6 +74,7 @@
 		"babel-plugin-emotion": "^9.2.10",
 		"babel-plugin-import": "^1.9.1",
 		"clean-webpack-plugin": "^1.0.0",
+		"copy-webpack-plugin": "^4.6.0",
 		"css-loader": "^1.0.0",
 		"eslint": "^5.6.0",
 		"eslint-config-airbnb": "^17.1.0",
