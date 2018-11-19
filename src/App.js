@@ -109,6 +109,10 @@ class App extends Component {
 											path="/query"
 											component={QueryExplorer}
 										/>
+										<Route
+											path="/404"
+											component={NoMatch}
+										/>
 										<Route component={NoMatch} />
 									</Switch>
 								</div>
