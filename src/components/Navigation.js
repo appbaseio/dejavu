@@ -54,6 +54,12 @@ const Navigation = ({ history, indexes, isConnected }: Props) => {
 					Mappings
 				</Item>
 			)}
+			{(indexes.length <= 1 || !isConnected) && (
+				<Item key="query">
+					<Icon type="search" />
+					Query Explorer
+				</Item>
+			)}
 		</Menu>
 	);
 };

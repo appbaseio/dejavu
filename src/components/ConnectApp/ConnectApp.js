@@ -73,7 +73,7 @@ const formItemProps = {
 	},
 };
 
-const ROUTES_WITHOUT_MULTIPLE_INDEX = ['/mappings', '/preview'];
+const ROUTES_WITHOUT_MULTIPLE_INDEX = ['/mappings', '/preview', '/query'];
 
 const shouldConnect = (pathname, appname) => {
 	let isConnecting = false;

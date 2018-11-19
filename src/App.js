@@ -9,6 +9,7 @@ import SearchPreview from './components/SearchPreview';
 import Mappings from './components/Mappings';
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
+import QueryExplorer from './components/QueryExplorer';
 
 import configureStore from './store';
 import {
@@ -103,6 +104,10 @@ class App extends Component {
 										<Route
 											path="/mappings"
 											component={Mappings}
+										/>
+										<Route
+											path="/query"
+											component={QueryExplorer}
 										/>
 										<Route component={NoMatch} />
 									</Switch>
