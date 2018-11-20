@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
@@ -284,37 +284,39 @@ class DataTable extends Component<Props, State> {
 							srotableTypes.indexOf(
 								mappings.properties[col].type,
 							) > -1 && (
-								<button
-									type="button"
-									onClick={() => {
-										this.handleSort(col, columnIndex);
-									}}
-									css={{
-										outline: 0,
-										height: '15px',
-										width: '15px',
-										border: 0,
-										cursor: 'pointer',
-										background: 'none',
-									}}
-								>
-									{sortField.indexOf(col) === -1 && (
-										<i
-											className="fa fa-sort"
-											css={{ fontSize: 15 }}
-										/>
-									)}
-									{sortField.indexOf(col) > -1 && (
-										<i
-											className={
-												sort === 'asc'
-													? 'fa fa-caret-down'
-													: 'fa fa-caret-up'
-											}
-											css={{ fontSize: 15 }}
-										/>
-									)}
-								</button>
+								<Fragment>
+									<button
+										type="button"
+										onClick={() => {
+											this.handleSort(col, columnIndex);
+										}}
+										css={{
+											outline: 0,
+											height: '15px',
+											width: '15px',
+											border: 0,
+											cursor: 'pointer',
+											background: 'none',
+										}}
+									>
+										{sortField.indexOf(col) === -1 && (
+											<i
+												className="fa fa-sort"
+												css={{ fontSize: 15 }}
+											/>
+										)}
+										{sortField.indexOf(col) > -1 && (
+											<i
+												className={
+													sort === 'asc'
+														? 'fa fa-caret-down'
+														: 'fa fa-caret-up'
+												}
+												css={{ fontSize: 15 }}
+											/>
+										)}
+									</button>
+								</Fragment>
 							)}
 					</Flex>
 				</StyledCell>

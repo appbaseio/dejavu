@@ -30,7 +30,6 @@ import {
 } from './data';
 import setSelectedRows from './selectedRows';
 import setUpdatingRow from './updatingRow';
-import fetchTermsAggregationSuccess from './termsAggregations';
 
 export {
 	// app
@@ -66,6 +65,4 @@ export {
 	setSelectedRows,
 	// updatingRow,
 	setUpdatingRow,
-	// termsAggregations,
-	fetchTermsAggregationSuccess,
 };

@@ -79,25 +79,6 @@ function* handleFetchMappings() {
 					properties[property].type === 'text',
 			);
 
-			// // get fields for which aggregations can be found
-			// const sortableTypes = getSortableTypes();
-			// const fieldsForAggregations = Object.keys(properties).filter(
-			// 	property =>
-			// 		sortableTypes.indexOf(properties[property].type) > -1,
-			// );
-
-			// // fetch terms aggregation
-			// const aggregationResponse = yield call(
-			// 	fetchTermsAggregations,
-			// 	appname,
-			// 	url,
-			// 	fieldsForAggregations,
-			// );
-
-			// yield put(
-			// 	fetchTermsAggregationSuccess(aggregationResponse.aggregations),
-			// );
-
 			yield put(
 				fetchMappingsSuccess(
 					mappings,
