@@ -8,13 +8,20 @@ import {
 } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf } from 'prop-types';
-import { Skeleton, Spin, Icon } from 'antd';
+import { Skeleton, Spin, Icon, Popover } from 'antd';
 import { css } from 'react-emotion';
+import ScrollSync from 'react-virtualized/dist/commonjs/ScrollSync';
+import Grid from 'react-virtualized/dist/commonjs/Grid';
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 
 import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
 import AddRowModal from './AddRowModal';
+import StyledCell from '../DataTable/StyledCell';
+import MappingsDropdown from '../MappingsDropdown';
+import TermFilter from '../DataTable/TermFilter';
 
 import { fetchMappings } from '../../actions';
 import { getAppname, getUrl } from '../../reducers/app';
@@ -25,9 +32,16 @@ import {
 	getIndexes,
 	getTypes,
 	getSearchableColumns,
+	getVisibleColumns,
 } from '../../reducers/mappings';
 import { parseUrl, numberWithCommas } from '../../utils';
-import { getTermsAggregationColumns } from '../../utils/mappings';
+import {
+	getTermsAggregationColumns,
+	getSortableTypes,
+} from '../../utils/mappings';
+import { getSelectedRows } from '../../reducers/selectedRows';
+import { getMode } from '../../reducers/mode';
+import popoverContent from '../CommonStyles/popoverContent';
 
 type Props = {
 	appname: string,
@@ -40,6 +54,7 @@ type Props = {
 	indexes: string[],
 	types: string[],
 	searchableColumns: string[],
+	visibleColumns: string[],
 };
 
 type State = {
@@ -48,6 +63,8 @@ type State = {
 	pageSize: number,
 	scrollToColumn: number,
 };
+
+const srotableTypes = getSortableTypes();
 
 class DataBrowser extends Component<Props, State> {
 	state = {
@@ -96,6 +113,128 @@ class DataBrowser extends Component<Props, State> {
 		});
 	};
 
+	renderHeaderCell = ({ columnIndex, key, style }) => {
+		const { visibleColumns, mappings: propMappings, appname } = this.props;
+		const { sort, sortField } = this.state;
+		let col = '';
+		if (columnIndex > 0) {
+			col = visibleColumns[columnIndex - 1];
+		} else {
+			col = '_id';
+		}
+
+		const mappings = propMappings[appname];
+		const termFilterColumns = getTermsAggregationColumns(mappings);
+
+		if (columnIndex === 0) {
+			return (
+				<StyledCell
+					style={style}
+					key={key}
+					css={{
+						display: 'flex',
+						justifyContet: 'left',
+						alignItems: 'center',
+					}}
+				>
+					<div
+						css={{
+							width: '15%',
+						}}
+					/>
+					<Popover
+						content={
+							<div css={popoverContent}>
+								Clicking on {`{...}`} displays the JSON data.
+							</div>
+						}
+						trigger="click"
+					>
+						<span
+							css={{
+								cursor: 'pointer',
+								maxWidth: '10%',
+								minWidth: '10%',
+							}}
+						>{` {...} `}</span>
+					</Popover>
+					<div css={{ marginLeft: '10px' }}>_id</div>
+				</StyledCell>
+			);
+		}
+
+		const termFilterIndex =
+			termFilterColumns.indexOf(col) > -1
+				? termFilterColumns.indexOf(col)
+				: termFilterColumns.indexOf(`${col}.raw`);
+
+		return (
+			<StyledCell style={style} key={key}>
+				<Flex
+					justifyContent="space-between"
+					alignItems="center"
+					css={{
+						width: '100%',
+					}}
+				>
+					<Flex alignItems="center">
+						{mappings.properties[col] && (
+							<MappingsDropdown
+								mapping={mappings.properties[col]}
+							/>
+						)}
+						<span css={{ marginLeft: '10px' }}>{col}</span>
+					</Flex>
+					{mappings.properties[col] &&
+						mappings.properties[col].type &&
+						srotableTypes.indexOf(mappings.properties[col].type) >
+							-1 && (
+							<Flex alignItems="center">
+								{termFilterIndex > -1 && (
+									<TermFilter
+										field={
+											termFilterColumns[termFilterIndex]
+										}
+									/>
+								)}
+								<button
+									type="button"
+									onClick={() => {
+										this.handleSortChange(col, columnIndex);
+									}}
+									css={{
+										outline: 0,
+										height: '15px',
+										width: '15px',
+										border: 0,
+										cursor: 'pointer',
+										background: 'none',
+									}}
+								>
+									{sortField.indexOf(col) === -1 && (
+										<i
+											className="fa fa-sort"
+											css={{ fontSize: 15 }}
+										/>
+									)}
+									{sortField.indexOf(col) > -1 && (
+										<i
+											className={
+												sort === 'asc'
+													? 'fa fa-caret-down'
+													: 'fa fa-caret-up'
+											}
+											css={{ fontSize: 15 }}
+										/>
+									)}
+								</button>
+							</Flex>
+						)}
+				</Flex>
+			</StyledCell>
+		);
+	};
+
 	render() {
 		const {
 			appname,
@@ -107,6 +246,7 @@ class DataBrowser extends Component<Props, State> {
 			indexes,
 			types,
 			searchableColumns,
+			visibleColumns,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
 		const searchColumns = [
@@ -185,84 +325,150 @@ class DataBrowser extends Component<Props, State> {
 										marginTop: '20px',
 									}}
 								>
-									<ReactiveList
-										key={String(reactiveListKey)}
-										componentId="results"
-										dataField={sortField}
-										sortBy={sort}
-										pagination={false}
-										scrollTarget="result-list"
-										size={pageSize}
-										showResultStats
-										react={{
-											and: [
-												'GlobalSearch',
-												...getTermsAggregationColumns(
-													mappings[appname],
-												),
-											],
-										}}
-										innerClass={{
-											poweredBy: css`
-												display: none;
-											`,
-										}}
-										loader={
-											<Flex
-												justifyContent="center"
-												css={{
-													position: 'absolute',
-													bottom: '-30px',
-													left: '50%',
-													zIndex: 100,
-												}}
-											>
-												<Spin />
-											</Flex>
-										}
-										onAllData={(
-											data,
-											streamed,
-											onLoadMore,
-										) => (
-											<DataTable
-												key={
-													data.length
-														? data[0]._id
-														: '0'
-												}
-												data={data}
-												mappings={mappings[appname]}
-												handleSortChange={
-													this.handleSortChange
-												}
-												onLoadMore={onLoadMore}
-												scrollToColumn={scrollToColumn}
-												sort={sort}
-												sortField={sortField}
-											/>
+									<ScrollSync>
+										{({ onScroll, scrollLeft }) => (
+											<div>
+												<AutoSizer disableHeight>
+													{({ width }) => (
+														<Grid
+															style={{
+																overflow:
+																	'hidden !important',
+															}}
+															columnWidth={250}
+															columnCount={
+																visibleColumns.length +
+																1
+															}
+															height={35}
+															overscanColumnCount={
+																0
+															}
+															cellRenderer={
+																this
+																	.renderHeaderCell
+															}
+															rowHeight={35}
+															rowCount={1}
+															scrollLeft={
+																scrollLeft
+															}
+															width={
+																width -
+																scrollbarSize()
+															}
+															tabIndex={null}
+														/>
+													)}
+												</AutoSizer>
+												<ReactiveList
+													key={String(
+														reactiveListKey,
+													)}
+													componentId="results"
+													dataField={sortField}
+													sortBy={sort}
+													pagination={false}
+													scrollTarget="result-list"
+													size={pageSize}
+													showResultStats
+													react={{
+														and: [
+															'GlobalSearch',
+															...getTermsAggregationColumns(
+																mappings[
+																	appname
+																],
+															),
+														],
+													}}
+													innerClass={{
+														poweredBy: css`
+															display: none;
+														`,
+													}}
+													loader={
+														<Flex
+															justifyContent="center"
+															css={{
+																position:
+																	'absolute',
+																bottom: '-30px',
+																left: '50%',
+																zIndex: 100,
+															}}
+														>
+															<Spin />
+														</Flex>
+													}
+													onAllData={(
+														data,
+														streamed,
+														onLoadMore,
+													) => (
+														<DataTable
+															key={
+																data.length
+																	? data[0]
+																			._id
+																	: '0'
+															}
+															data={data}
+															mappings={
+																mappings[
+																	appname
+																]
+															}
+															handleSortChange={
+																this
+																	.handleSortChange
+															}
+															onLoadMore={
+																onLoadMore
+															}
+															scrollToColumn={
+																scrollToColumn
+															}
+															sort={sort}
+															sortField={
+																sortField
+															}
+															onScroll={onScroll}
+														/>
+													)}
+													onResultStats={total => (
+														<Flex
+															justifyContent="center"
+															alignItems="center"
+															css={{
+																position:
+																	'absolute',
+																top: '0',
+																left: '330px',
+																height: '32px',
+																fontSize:
+																	'14px',
+																padding:
+																	'0 15px',
+																lineHeight:
+																	'1.5',
+																textAlign:
+																	'center',
+															}}
+														>
+															Found &nbsp;{' '}
+															<b>
+																{numberWithCommas(
+																	total,
+																)}
+															</b>
+															&nbsp;results
+														</Flex>
+													)}
+												/>
+											</div>
 										)}
-										onResultStats={total => (
-											<Flex
-												justifyContent="center"
-												alignItems="center"
-												css={{
-													position: 'absolute',
-													top: '0',
-													left: '330px',
-													height: '32px',
-													fontSize: '14px',
-													padding: '0 15px',
-													lineHeight: '1.5',
-													textAlign: 'center',
-												}}
-											>
-												Found &nbsp;{' '}
-												<b>{numberWithCommas(total)}</b>
-												&nbsp;results
-											</Flex>
-										)}
-									/>
+									</ScrollSync>
 								</div>
 							</ReactiveBase>
 							<AddRowModal />
@@ -288,6 +494,9 @@ const mapStateToProps = state => ({
 	indexes: getIndexes(state),
 	types: getTypes(state),
 	searchableColumns: getSearchableColumns(state),
+	visibleColumns: getVisibleColumns(state),
+	selectedRows: getSelectedRows(state),
+	mode: getMode(state),
 });
 
 const mapDispatchToProps = {

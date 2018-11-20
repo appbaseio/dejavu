@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
-import MultiGrid from 'react-virtualized/dist/commonjs/MultiGrid';
+import Grid from 'react-virtualized/dist/commonjs/Grid';
 import { Popover, Checkbox } from 'antd';
 
 import 'react-virtualized/styles.css';
@@ -21,11 +21,7 @@ import {
 import { getUrl } from '../../reducers/app';
 import { getVisibleColumns } from '../../reducers/mappings';
 import { getSelectedRows } from '../../reducers/selectedRows';
-import {
-	META_FIELDS,
-	getSortableTypes,
-	getTermsAggregationColumns,
-} from '../../utils/mappings';
+import { META_FIELDS } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
 import { MODES } from '../../constants';
@@ -33,19 +29,16 @@ import { getOnlySource } from '../../utils';
 
 import Cell from '../Cell';
 import Flex from '../Flex';
-import MappingsDropdown from '../MappingsDropdown';
 import StyledCell from './StyledCell';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 import popoverContent from '../CommonStyles/popoverContent';
-import TermFilter from './TermFilter';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
-const srotableTypes = getSortableTypes();
+// const srotableTypes = getSortableTypes();
 
 type State = {
 	data: any[],
-	termFilterColumns: string[],
 };
 
 type Props = {
@@ -57,26 +50,24 @@ type Props = {
 	mode: string,
 	onLoadMore: () => void,
 	scrollToColumn: number,
-	sortField: string,
-	sort: string,
 	selectedRows: string[],
 	setSelectedRows: (string[]) => void,
 	setUpdatingRow: any => void,
+	onScroll: any => void,
 };
 class DataTable extends Component<Props, State> {
 	gridRef = null;
 
 	state = {
 		data: this.props.data,
-		termFilterColumns: getTermsAggregationColumns(this.props.mappings),
 	};
 
 	horizontalScroll = 0;
 
 	componentDidUpdate(prevProps) {
-		// if (prevProps.data.length !== this.props.data.length) {
-		// 	this.updateData(this.props.data);
-		// }
+		if (prevProps.data.length !== this.props.data.length) {
+			this.updateData(this.props.data);
+		}
 
 		if (prevProps.mode !== this.props.mode) {
 			// $FlowFixMe
@@ -150,6 +141,8 @@ class DataTable extends Component<Props, State> {
 			this.props.onLoadMore();
 		}
 
+		this.props.onScroll();
+
 		this.horizontalScroll = scrollLeft;
 	};
 
@@ -201,147 +194,13 @@ class DataTable extends Component<Props, State> {
 	};
 
 	cellRender = ({ columnIndex, key, rowIndex, style }) => {
-		const {
-			visibleColumns,
-			mappings,
-			mode,
-			sortField,
-			sort,
-			selectedRows,
-		} = this.props;
-		const { data, termFilterColumns } = this.state;
+		const { visibleColumns, mappings, mode, selectedRows } = this.props;
+		const { data } = this.state;
 		let col = '';
 		if (columnIndex > 0) {
 			col = visibleColumns[columnIndex - 1];
 		} else {
 			col = '_id';
-		}
-
-		if (columnIndex === 0 && rowIndex === 0) {
-			return (
-				<StyledCell
-					style={style}
-					key={key}
-					css={{
-						display: 'flex',
-						justifyContet: 'left',
-						alignItems: 'center',
-					}}
-				>
-					<div
-						css={{
-							width: '15%',
-						}}
-					>
-						{selectedRows.length >= 1 &&
-							mode === MODES.EDIT && (
-								<Checkbox
-									onChange={this.handleSelectAllRows}
-									checked={
-										data.length &&
-										data.length === selectedRows.length
-									}
-									css={{
-										marginLeft: '10px',
-									}}
-								/>
-							)}
-					</div>
-					<Popover
-						content={
-							<div css={popoverContent}>
-								Clicking on {`{...}`} displays the JSON data.
-							</div>
-						}
-						trigger="click"
-					>
-						<span
-							css={{
-								cursor: 'pointer',
-								maxWidth: '10%',
-								minWidth: '10%',
-							}}
-						>{` {...} `}</span>
-					</Popover>
-					<div css={{ marginLeft: '10px' }}>_id</div>
-				</StyledCell>
-			);
-		}
-
-		if (rowIndex === 0 && columnIndex > 0) {
-			const termFilterIndex =
-				termFilterColumns.indexOf(col) > -1
-					? termFilterColumns.indexOf(col)
-					: termFilterColumns.indexOf(`${col}.raw`);
-
-			return (
-				<StyledCell style={style} key={key}>
-					<Flex
-						justifyContent="space-between"
-						alignItems="center"
-						css={{
-							width: '100%',
-						}}
-					>
-						<Flex alignItems="center">
-							{mappings.properties[col] && (
-								<MappingsDropdown
-									mapping={mappings.properties[col]}
-								/>
-							)}
-							<span css={{ marginLeft: '10px' }}>{col}</span>
-						</Flex>
-						{mappings.properties[col] &&
-							mappings.properties[col].type &&
-							srotableTypes.indexOf(
-								mappings.properties[col].type,
-							) > -1 && (
-								<Flex alignItems="center">
-									{termFilterIndex > -1 && (
-										<TermFilter
-											field={
-												termFilterColumns[
-													termFilterIndex
-												]
-											}
-										/>
-									)}
-									<button
-										type="button"
-										onClick={() => {
-											this.handleSort(col, columnIndex);
-										}}
-										css={{
-											outline: 0,
-											height: '15px',
-											width: '15px',
-											border: 0,
-											cursor: 'pointer',
-											background: 'none',
-										}}
-									>
-										{sortField.indexOf(col) === -1 && (
-											<i
-												className="fa fa-sort"
-												css={{ fontSize: 15 }}
-											/>
-										)}
-										{sortField.indexOf(col) > -1 && (
-											<i
-												className={
-													sort === 'asc'
-														? 'fa fa-caret-down'
-														: 'fa fa-caret-up'
-												}
-												css={{ fontSize: 15 }}
-											/>
-										)}
-									</button>
-								</Flex>
-							)}
-					</Flex>
-				</StyledCell>
-			);
 		}
 		return (
 			<StyledCell key={key} style={style}>
@@ -361,7 +220,7 @@ class DataTable extends Component<Props, State> {
 								'.ant-checkbox-wrapper': {
 									display:
 										selectedRows.indexOf(
-											data[rowIndex - 1]._id,
+											data[rowIndex]._id,
 										) > -1
 											? 'block !important'
 											: 'none',
@@ -384,21 +243,20 @@ class DataTable extends Component<Props, State> {
 						>
 							<Checkbox
 								onChange={this.handleRowSelectChange}
-								value={data[rowIndex - 1]._id}
+								value={data[rowIndex]._id}
 								checked={
-									selectedRows.indexOf(
-										data[rowIndex - 1]._id,
-									) > -1
+									selectedRows.indexOf(data[rowIndex]._id) >
+									-1
 								}
 							/>
 
-							{selectedRows.indexOf(data[rowIndex - 1]._id) ===
+							{selectedRows.indexOf(data[rowIndex]._id) ===
 								-1 && (
 								<div
 									className="index-no"
 									css={{ marginRight: 5 }}
 								>
-									{rowIndex}
+									{rowIndex + 1}
 								</div>
 							)}
 						</div>
@@ -406,7 +264,7 @@ class DataTable extends Component<Props, State> {
 							content={
 								<div css={popoverContent}>
 									<JsonView
-										json={getOnlySource(data[rowIndex - 1])}
+										json={getOnlySource(data[rowIndex])}
 									/>
 								</div>
 							}
@@ -423,7 +281,7 @@ class DataTable extends Component<Props, State> {
 						<Popover
 							content={
 								<div css={popoverContent}>
-									{data[rowIndex - 1]._id}
+									{data[rowIndex]._id}
 								</div>
 							}
 							placement="topLeft"
@@ -438,7 +296,7 @@ class DataTable extends Component<Props, State> {
 									...overflowText,
 								}}
 							>
-								{data[rowIndex - 1]._id}
+								{data[rowIndex]._id}
 							</div>
 						</Popover>
 					</Flex>
@@ -446,7 +304,7 @@ class DataTable extends Component<Props, State> {
 
 				{columnIndex > 0 &&
 					(isMetaField(col) ? (
-						<div>{data[rowIndex - 1][col]}</div>
+						<div>{data[rowIndex][col]}</div>
 					) : (
 						<Cell
 							row={rowIndex}
@@ -458,7 +316,7 @@ class DataTable extends Component<Props, State> {
 							mapping={mappings.properties[col]}
 							shouldAutoFocus
 						>
-							{data[rowIndex - 1][col]}
+							{data[rowIndex][col]}
 						</Cell>
 					))}
 			</StyledCell>
@@ -486,10 +344,9 @@ class DataTable extends Component<Props, State> {
 				>
 					<AutoSizer disableHeight>
 						{({ width }) => (
-							<MultiGrid
+							<Grid
 								ref={this.setRef}
-								fixedColumnCount={1}
-								fixedRowCount={1}
+								// fixedColumnCount={1}
 								// isScrollingOptOut
 								scrollToColumn={scrollToColumn}
 								cellRenderer={this.cellRender}
@@ -499,7 +356,7 @@ class DataTable extends Component<Props, State> {
 								enableFixedRowScroll
 								overscanRowCount={1}
 								rowHeight={mode === MODES.EDIT ? 50 : 35}
-								rowCount={data.length + 1}
+								rowCount={data.length}
 								tabIndex={null}
 								height={window.innerHeight - 310}
 								styleBottomLeftGrid={{
@@ -528,8 +385,8 @@ class DataTable extends Component<Props, State> {
 									fontWeight: 'bold',
 								}}
 								width={width}
-								hideTopRightGridScrollbar
-								hideBottomLeftGridScrollbar
+								// hideTopRightGridScrollbar
+								// hideBottomLeftGridScrollbar
 								onScroll={this.handleScroll}
 							/>
 						)}
@@ -553,11 +410,10 @@ DataTable.propTypes = {
 	// updateReactiveList: func,
 	onLoadMore: func,
 	scrollToColumn: number,
-	sortField: string,
-	sort: string,
 	selectedRows: arrayOf(string),
 	setUpdatingRow: func,
 	setSelectedRows: func,
+	onScroll: func,
 };
 
 const mapStateToProps = state => ({
