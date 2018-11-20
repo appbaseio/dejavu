@@ -141,7 +141,12 @@ class DataTable extends Component<Props, State> {
 			this.props.onLoadMore();
 		}
 
-		this.props.onScroll();
+		this.props.onScroll({
+			scrollTop,
+			clientHeight,
+			scrollHeight,
+			scrollLeft,
+		});
 
 		this.horizontalScroll = scrollLeft;
 	};

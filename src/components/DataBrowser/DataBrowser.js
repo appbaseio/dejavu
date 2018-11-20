@@ -268,7 +268,7 @@ class DataBrowser extends Component<Props, State> {
 				{!isLoading &&
 					!isDataLoading &&
 					mappings && (
-						<div css={{ position: 'relative' }}>
+						<div>
 							<ReactiveBase
 								app={indexes.join(',')}
 								type={types.join(',')}
