@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, object, string, func, number } from 'prop-types';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
@@ -21,7 +21,11 @@ import {
 import { getUrl } from '../../reducers/app';
 import { getVisibleColumns } from '../../reducers/mappings';
 import { getSelectedRows } from '../../reducers/selectedRows';
-import { META_FIELDS, getSortableTypes } from '../../utils/mappings';
+import {
+	META_FIELDS,
+	getSortableTypes,
+	getTermsAggregationColumns,
+} from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
 import { MODES } from '../../constants';
@@ -34,12 +38,14 @@ import StyledCell from './StyledCell';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 import popoverContent from '../CommonStyles/popoverContent';
+import TermFilter from './TermFilter';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 const srotableTypes = getSortableTypes();
 
 type State = {
 	data: any[],
+	termFilterColumns: string[],
 };
 
 type Props = {
@@ -62,14 +68,15 @@ class DataTable extends Component<Props, State> {
 
 	state = {
 		data: this.props.data,
+		termFilterColumns: getTermsAggregationColumns(this.props.mappings),
 	};
 
 	horizontalScroll = 0;
 
 	componentDidUpdate(prevProps) {
-		if (prevProps.data.length !== this.props.data.length) {
-			this.updateData(this.props.data);
-		}
+		// if (prevProps.data.length !== this.props.data.length) {
+		// 	this.updateData(this.props.data);
+		// }
 
 		if (prevProps.mode !== this.props.mode) {
 			// $FlowFixMe
@@ -202,7 +209,7 @@ class DataTable extends Component<Props, State> {
 			sort,
 			selectedRows,
 		} = this.props;
-		const { data } = this.state;
+		const { data, termFilterColumns } = this.state;
 		let col = '';
 		if (columnIndex > 0) {
 			col = visibleColumns[columnIndex - 1];
@@ -262,6 +269,11 @@ class DataTable extends Component<Props, State> {
 		}
 
 		if (rowIndex === 0 && columnIndex > 0) {
+			const termFilterIndex =
+				termFilterColumns.indexOf(col) > -1
+					? termFilterColumns.indexOf(col)
+					: termFilterColumns.indexOf(`${col}.raw`);
+
 			return (
 				<StyledCell style={style} key={key}>
 					<Flex
@@ -284,7 +296,16 @@ class DataTable extends Component<Props, State> {
 							srotableTypes.indexOf(
 								mappings.properties[col].type,
 							) > -1 && (
-								<Fragment>
+								<Flex alignItems="center">
+									{termFilterIndex > -1 && (
+										<TermFilter
+											field={
+												termFilterColumns[
+													termFilterIndex
+												]
+											}
+										/>
+									)}
 									<button
 										type="button"
 										onClick={() => {
@@ -316,7 +337,7 @@ class DataTable extends Component<Props, State> {
 											/>
 										)}
 									</button>
-								</Fragment>
+								</Flex>
 							)}
 					</Flex>
 				</StyledCell>

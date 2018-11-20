@@ -27,6 +27,7 @@ import {
 	getSearchableColumns,
 } from '../../reducers/mappings';
 import { parseUrl, numberWithCommas } from '../../utils';
+import { getTermsAggregationColumns } from '../../utils/mappings';
 
 type Props = {
 	appname: string,
@@ -194,7 +195,12 @@ class DataBrowser extends Component<Props, State> {
 										size={pageSize}
 										showResultStats
 										react={{
-											and: ['GlobalSearch'],
+											and: [
+												'GlobalSearch',
+												...getTermsAggregationColumns(
+													mappings[appname],
+												),
+											],
 										}}
 										innerClass={{
 											poweredBy: css`

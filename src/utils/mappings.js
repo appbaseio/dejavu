@@ -95,5 +95,36 @@ const getSortableTypes = () => {
 	return [...sortableTypes, 'string'];
 };
 
+const getTermsAggregationColumns = mappings => {
+	const columns = [];
+
+	if (mappings && mappings.properties) {
+		Object.keys(mappings.properties).forEach(item => {
+			if (mappings.properties[item].type === 'string') {
+				if ((mappings.properties[item].fields || {}).raw) {
+					columns.push(`${item}.raw`);
+				} else {
+					columns.push(item);
+				}
+			}
+
+			if (
+				mappings.properties[item].type === 'text' &&
+				(mappings.properties[item].fields || {}).raw
+			) {
+				columns.push(`${item}.raw`);
+			}
+		});
+	}
+
+	return columns;
+};
+
 // eslint-disable-next-line
-export { extractColumns, es6mappings, META_FIELDS, getSortableTypes };
+export {
+	extractColumns,
+	es6mappings,
+	META_FIELDS,
+	getSortableTypes,
+	getTermsAggregationColumns,
+};

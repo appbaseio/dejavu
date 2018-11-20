@@ -1,31 +1,50 @@
-import React from 'react';
-import { Popover, Button } from 'antd';
+// @flow
 
-class TermFilter extends React.Component {
+import React, { Component } from 'react';
+import { Popover } from 'antd';
+import { MultiList } from '@appbaseio/reactivesearch';
+
+type Props = {
+	field: string,
+};
+
+type State = {
+	isVisible: boolean,
+};
+class TermFilter extends Component<Props, State> {
 	state = {
-		visible: false,
+		isVisible: false,
 	};
 
-	hide = () => {
+	onHide = () => {
 		this.setState({
-			visible: false,
+			isVisible: false,
 		});
 	};
 
-	handleVisibleChange = visible => {
-		this.setState({ visible });
+	handleVisibleChange = (isVisible: boolean) => {
+		this.setState({ isVisible });
 	};
 
 	render() {
+		const { field } = this.props;
+		const { isVisible } = this.state;
 		return (
 			<Popover
-				content={<Button onClick={this.hide}>Close</Button>}
-				title="Title"
+				content={
+					<MultiList
+						componentId={field}
+						dataField={field}
+						size={100}
+					/>
+				}
+				title="Filter"
 				trigger="click"
-				visible={this.state.visible}
+				visible={isVisible}
 				onVisibleChange={this.handleVisibleChange}
+				placement="bottomRight"
 			>
-				<Button type="primary">Click me</Button>
+				<i className="fa fa-filter" />
 			</Popover>
 		);
 	}
