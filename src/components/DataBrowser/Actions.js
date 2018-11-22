@@ -6,7 +6,6 @@ import { Button, Select, Tag } from 'antd';
 import { connect } from 'react-redux';
 
 import Flex from '../Flex';
-import AddFieldModal from './AddFieldModal';
 import ShowHideColumn from './ShowHideColumns';
 import ModeSwitch from './ModeSwitch';
 import ExportData from './ExportData';
@@ -60,7 +59,6 @@ const Actions = ({
 					</Fragment>
 				)}
 				<ModeSwitch />
-				<AddFieldModal />
 			</div>
 			<div>
 				{sortField !== '_score' && (
@@ -80,7 +78,8 @@ const Actions = ({
 					onChange={onPageSizeChange}
 				>
 					<Option value={10}>10</Option>
-					<Option value={20}>20</Option>
+					<Option value={15}>15</Option>
+					<Option value={25}>25</Option>
 					<Option value={50}>50</Option>
 					<Option value={100}>100</Option>
 				</Select>

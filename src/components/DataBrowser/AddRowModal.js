@@ -207,13 +207,8 @@ class AddRowModal extends Component<Props, State> {
 
 		return (
 			<Fragment>
-				<Button
-					icon="plus"
-					type="primary"
-					onClick={this.toggleModal}
-					css={{ position: 'absolute !important', bottom: -40 }}
-				>
-					Add New Row
+				<Button icon="plus" type="primary" onClick={this.toggleModal}>
+					Add New Data
 				</Button>
 
 				<Modal

@@ -12,4 +12,6 @@ export default styled('div')`
 	width: 100%;
 	font-size: 12px;
 	padding: 10px;
+	min-height: 30px;
+	max-height: 30px;
 `;

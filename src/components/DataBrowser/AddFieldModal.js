@@ -194,13 +194,10 @@ class AddFieldModal extends Component<Props, State> {
 					icon="plus"
 					type="primary"
 					onClick={this.toggleModal}
-					css={{
-						position: 'absolute',
-						top: '104',
-						right: '-32px',
-						zIndex: 1000,
-					}}
-				/>
+					css={{ marginLeft: 10 }}
+				>
+					Add Mapping
+				</Button>
 				<Modal
 					visible={isShowingModal}
 					onCancel={this.toggleModal}
