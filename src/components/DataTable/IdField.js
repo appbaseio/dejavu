@@ -108,7 +108,7 @@ class IdField extends Component<Props> {
 				<Popover
 					content={
 						<div css={popoverContent}>
-							<JsonView json={getOnlySource(data)} />
+							<JsonView json={getOnlySource(data[rowIndex])} />
 						</div>
 					}
 					trigger="click"

@@ -16,6 +16,7 @@ import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import colors from '../theme/colors';
+import { isEqualArray } from '../../utils';
 
 import Cell from '../Cell';
 import StyledCell from './StyledCell';
@@ -37,25 +38,18 @@ type Props = {
 	pageSize: number,
 };
 class DataTable extends Component<Props, State> {
-	gridRef = null;
-
 	state = {
 		data: this.props.data,
 	};
 
-	horizontalScroll = 0;
-
-	componentDidUpdate(prevProps) {
-		if (prevProps.data.length !== this.props.data.length) {
-			this.updateData(this.props.data);
-		}
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			!isEqualArray(this.state.data, nextState.data) ||
+			this.props.mode !== nextProps.mode ||
+			this.props.pageSize !== nextProps.pageSize ||
+			this.props.visibleColumns.length !== nextProps.visibleColumns.length
+		);
 	}
-
-	updateData = data => {
-		this.setState({
-			data,
-		});
-	};
 
 	handleChange = (row, column, value) => {
 		const { setCellValue } = this.props;
@@ -80,81 +74,77 @@ class DataTable extends Component<Props, State> {
 		const { visibleColumns, mode, mappings, pageSize } = this.props;
 		const { data } = this.state;
 		const columns = ['_id', ...visibleColumns];
+		console.log('re-rendering');
 
 		return (
-			Boolean(data.length) && (
-				<table
-					css={{
-						overflowY: 'auto',
-					}}
-				>
-					<tbody>
-						{data.map((dataItem, rowIndex) => (
-							<tr key={dataItem._id}>
-								{columns.map(col => (
-									<td
-										key={`${dataItem._id}-${col}`}
-										css={{
-											minWidth: 200,
-											maxWidth: 200,
-										}}
-										className={
-											col === '_id' &&
-											css({
-												zIndex: '101 !important',
-												left: 0,
-												background: colors.tableHead,
-												position: 'sticky',
-											})
-										}
-									>
-										<StyledCell>
-											{col === '_id' ? (
-												<IdField
-													rowIndex={rowIndex}
-													data={dataItem}
-													pageSize={pageSize}
-													value={dataItem._id}
-												/>
-											) : (
-												<div>
-													{isMetaField(col) ? (
-														<div>
-															{dataItem[col]}
-														</div>
-													) : (
-														<Cell
-															row={rowIndex}
-															column={col}
-															mode={mode}
-															onChange={value =>
-																this.handleChange(
-																	rowIndex,
-																	col,
-																	value,
-																)
-															}
-															mapping={
-																mappings
-																	.properties[
-																	col
-																]
-															}
-															shouldAutoFocus
-														>
-															{dataItem[col]}
-														</Cell>
-													)}
-												</div>
-											)}
-										</StyledCell>
-									</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</table>
-			)
+			<table
+				css={{
+					overflowY: 'auto',
+				}}
+			>
+				<tbody>
+					{data.map((dataItem, rowIndex) => (
+						<tr key={dataItem._id}>
+							{columns.map(col => (
+								<td
+									key={`${dataItem._id}-${col}`}
+									css={{
+										minWidth: 200,
+										maxWidth: 200,
+									}}
+									className={
+										col === '_id' &&
+										css({
+											zIndex: '101 !important',
+											left: 0,
+											background: colors.tableHead,
+											position: 'sticky',
+										})
+									}
+								>
+									<StyledCell>
+										{col === '_id' ? (
+											<IdField
+												rowIndex={rowIndex}
+												data={data}
+												pageSize={pageSize}
+												value={dataItem._id}
+											/>
+										) : (
+											<div>
+												{isMetaField(col) ? (
+													<div>{dataItem[col]}</div>
+												) : (
+													<Cell
+														row={rowIndex}
+														column={col}
+														mode={mode}
+														onChange={value =>
+															this.handleChange(
+																rowIndex,
+																col,
+																value,
+															)
+														}
+														mapping={
+															mappings.properties[
+																col
+															]
+														}
+														shouldAutoFocus
+													>
+														{dataItem[col]}
+													</Cell>
+												)}
+											</div>
+										)}
+									</StyledCell>
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+			</table>
 		);
 	}
 }

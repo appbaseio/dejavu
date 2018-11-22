@@ -132,6 +132,21 @@ const getCustomHeaders = appname => {
 const isMultiIndexApp = appname =>
 	appname.indexOf('*') > -1 || appname.indexOf(',') > -1;
 
+const isEqualArray = (array1 = [], array2 = []) => {
+	if (array1.length !== array2.length) {
+		return false;
+	}
+
+	// eslint-disable-next-line
+	for (let i = 0; i < array1.length; i++) {
+		if (array1[i]._id !== array2[i]._id) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -148,4 +163,5 @@ export {
 	convertArrayToHeaders,
 	getCustomHeaders,
 	isMultiIndexApp,
+	isEqualArray,
 };

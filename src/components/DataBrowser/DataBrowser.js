@@ -191,7 +191,6 @@ class DataBrowser extends Component<Props, State> {
 											borderRadius: 3,
 											widht: '100%',
 											maxHeight: window.innerHeight - 300,
-											minHeight: window.innerHeight - 300,
 											overflowX: 'auto',
 										}}
 									>
@@ -247,19 +246,22 @@ class DataBrowser extends Component<Props, State> {
 													<Spin />
 												</Flex>
 											}
-											onAllData={data => (
-												<DataTable
-													key={
-														data.length
-															? data[0]._id
-															: '0'
-													}
-													data={data}
-													mappings={mappings[appname]}
-													currentPage={currentPage}
-													pageSize={pageSize}
-												/>
-											)}
+											onAllData={data =>
+												data.length ? (
+													<DataTable
+														key={
+															data.length
+																? data[0]._id
+																: '0'
+														}
+														data={data}
+														mappings={
+															mappings[appname]
+														}
+														pageSize={pageSize}
+													/>
+												) : null
+											}
 											onResultStats={total => {
 												this.totalRes = total;
 												return (
