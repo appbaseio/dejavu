@@ -7,7 +7,7 @@ import {
 	DataSearch,
 } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { string, func, bool, object, number, arrayOf } from 'prop-types';
+import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
 import { Skeleton, Spin, Icon } from 'antd';
 import { css } from 'react-emotion';
 
@@ -18,8 +18,8 @@ import AddRowModal from './AddRowModal';
 import AddFieldModal from './AddFieldModal';
 import DataTableHeader from './DataTableHeader';
 
-import { fetchMappings } from '../../actions';
-import { getAppname, getUrl } from '../../reducers/app';
+import { fetchMappings, setSelectedRows, setUpdatingRow } from '../../actions';
+import { getAppname, getUrl, getHeaders } from '../../reducers/app';
 import * as dataSelectors from '../../reducers/data';
 import {
 	getIsLoading,
@@ -28,7 +28,12 @@ import {
 	getTypes,
 	getSearchableColumns,
 } from '../../reducers/mappings';
-import { parseUrl, numberWithCommas, getUrlParams } from '../../utils';
+import {
+	parseUrl,
+	numberWithCommas,
+	getUrlParams,
+	convertArrayToHeaders,
+} from '../../utils';
 import { getTermsAggregationColumns } from '../../utils/mappings';
 import colors from '../theme/colors';
 
@@ -43,6 +48,9 @@ type Props = {
 	indexes: string[],
 	types: string[],
 	searchableColumns: string[],
+	onSelectedRows: any => void,
+	onSetUpdatingRow: any => void,
+	headers: any[],
 };
 
 type State = {
@@ -53,6 +61,8 @@ type State = {
 
 class DataBrowser extends Component<Props, State> {
 	totalRes = 0;
+
+	currentIds = [];
 
 	state = {
 		sort: 'desc',
@@ -107,6 +117,9 @@ class DataBrowser extends Component<Props, State> {
 			indexes,
 			types,
 			searchableColumns,
+			onSelectedRows,
+			onSetUpdatingRow,
+			headers,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
 		const searchColumns = [
@@ -136,6 +149,7 @@ class DataBrowser extends Component<Props, State> {
 								type={types.join(',')}
 								credentials={credentials}
 								url={url}
+								headers={convertArrayToHeaders(headers)}
 							>
 								<div>
 									<Actions
@@ -246,6 +260,10 @@ class DataBrowser extends Component<Props, State> {
 													<Spin />
 												</Flex>
 											}
+											onPageChange={() => {
+												onSelectedRows([]);
+												onSetUpdatingRow(null);
+											}}
 											onAllData={data =>
 												data.length ? (
 													<DataTable
@@ -271,8 +289,8 @@ class DataBrowser extends Component<Props, State> {
 														css={{
 															position:
 																'absolute',
-															top: '-105',
-															left: '330px',
+															bottom: '-40px',
+															right: '330px',
 															height: '32px',
 															fontSize: '14px',
 															padding: '0 15px',
@@ -320,10 +338,13 @@ const mapStateToProps = state => ({
 	indexes: getIndexes(state),
 	types: getTypes(state),
 	searchableColumns: getSearchableColumns(state),
+	headers: getHeaders(state),
 });
 
 const mapDispatchToProps = {
 	fetchMappings,
+	onSelectedRows: setSelectedRows,
+	onSetUpdatingRow: setUpdatingRow,
 };
 
 DataBrowser.propTypes = {
@@ -337,6 +358,7 @@ DataBrowser.propTypes = {
 	indexes: arrayOf(string).isRequired,
 	types: arrayOf(string).isRequired,
 	searchableColumns: arrayOf(string),
+	headers: array,
 };
 
 export default connect(

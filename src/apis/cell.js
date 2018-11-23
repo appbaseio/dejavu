@@ -22,7 +22,7 @@ const setCellValue = async (app, type, rawUrl, id, property, value) => {
 		});
 		return res;
 	} catch (error) {
-		const errorMessage = error.statusText || 'Unable to update data'; // broken in appbase-js, need to fix it later
+		const errorMessage = error.statusText || 'Unable to update data';
 		throw new Error(errorMessage);
 	}
 };

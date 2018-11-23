@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { css } from 'react-emotion';
 
 import {
 	setCellValueRequest,
@@ -10,20 +9,20 @@ import {
 	setError,
 	clearError,
 	updateReactiveList,
+	setCurrentIds,
 } from '../../actions';
 import { getUrl } from '../../reducers/app';
 import { getVisibleColumns } from '../../reducers/mappings';
 import { META_FIELDS } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
-import colors from '../theme/colors';
 import { isEqualArray } from '../../utils';
 
 import Cell from '../Cell';
 import StyledCell from './StyledCell';
 import IdField from './IdField';
+import idFieldStyles from '../CommonStyles/idField';
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
-// const srotableTypes = getSortableTypes();
 
 type State = {
 	data: any[],
@@ -36,11 +35,16 @@ type Props = {
 	visibleColumns: string[],
 	mode: string,
 	pageSize: number,
+	onSetCurrentIds: any => void,
 };
 class DataTable extends Component<Props, State> {
 	state = {
 		data: this.props.data,
 	};
+
+	componentDidMount() {
+		this.props.onSetCurrentIds(this.props.data.map(item => item._id));
+	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
@@ -74,7 +78,6 @@ class DataTable extends Component<Props, State> {
 		const { visibleColumns, mode, mappings, pageSize } = this.props;
 		const { data } = this.state;
 		const columns = ['_id', ...visibleColumns];
-		console.log('re-rendering');
 
 		return (
 			<table
@@ -92,17 +95,9 @@ class DataTable extends Component<Props, State> {
 										minWidth: 200,
 										maxWidth: 200,
 									}}
-									className={
-										col === '_id' &&
-										css({
-											zIndex: '101 !important',
-											left: 0,
-											background: colors.tableHead,
-											position: 'sticky',
-										})
-									}
+									className={col === '_id' && idFieldStyles}
 								>
-									<StyledCell>
+									<StyledCell mode={mode}>
 										{col === '_id' ? (
 											<IdField
 												rowIndex={rowIndex}
@@ -111,7 +106,7 @@ class DataTable extends Component<Props, State> {
 												value={dataItem._id}
 											/>
 										) : (
-											<div>
+											<div css={{ width: '100%' }}>
 												{isMetaField(col) ? (
 													<div>{dataItem[col]}</div>
 												) : (
@@ -161,6 +156,7 @@ const mapDispatchToProps = {
 	setError,
 	clearError,
 	updateReactiveList,
+	onSetCurrentIds: setCurrentIds,
 };
 
 export default connect(

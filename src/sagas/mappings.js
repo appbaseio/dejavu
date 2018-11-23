@@ -53,44 +53,50 @@ function* handleFetchMappings() {
 				});
 			});
 
-			const mappings = {
-				[appname]: {
-					properties,
-				},
-			};
+			if (!isEmptyObject(properties)) {
+				const mappings = {
+					[appname]: {
+						properties,
+					},
+				};
 
-			const allColumns = [
-				...META_FIELDS,
-				...extractColumns(mappings[appname]),
-			];
+				const allColumns = [
+					...META_FIELDS,
+					...extractColumns(mappings[appname]),
+				];
 
-			let visibleColumns = allColumns.filter(col => col !== '_type');
-			if (indexes.length <= 1) {
-				visibleColumns = visibleColumns.filter(col => col !== '_index');
+				let visibleColumns = allColumns.filter(col => col !== '_type');
+				if (indexes.length <= 1) {
+					visibleColumns = visibleColumns.filter(
+						col => col !== '_index',
+					);
+				}
+
+				const filteredTypes = types.filter(
+					type => !INGNORE_META_TYPES.includes(type),
+				);
+
+				const searchableColumns = Object.keys(properties).filter(
+					property =>
+						properties[property].type === 'string' ||
+						properties[property].type === 'text',
+				);
+
+				yield put(
+					fetchMappingsSuccess(
+						mappings,
+						indexes,
+						filteredTypes,
+						indexTypeMap,
+						allColumns,
+						visibleColumns,
+						searchableColumns,
+						typePropertyMapping,
+					),
+				);
+			} else {
+				throw new Error('Mappings not found');
 			}
-
-			const filteredTypes = types.filter(
-				type => !INGNORE_META_TYPES.includes(type),
-			);
-
-			const searchableColumns = Object.keys(properties).filter(
-				property =>
-					properties[property].type === 'string' ||
-					properties[property].type === 'text',
-			);
-
-			yield put(
-				fetchMappingsSuccess(
-					mappings,
-					indexes,
-					filteredTypes,
-					indexTypeMap,
-					allColumns,
-					visibleColumns,
-					searchableColumns,
-					typePropertyMapping,
-				),
-			);
 		} else {
 			throw new Error('Unable to fetch content');
 		}

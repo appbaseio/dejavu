@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Layout } from 'antd';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { mediaMin } from '@divyanshu013/media';
 
 import Dejavu from './components/Dejavu';
 import Importer from './components/Importer';
@@ -63,7 +64,15 @@ class App extends Component {
 						css={{ minHeight: isShowingSideBar ? '100vh' : 'auto' }}
 					>
 						{isShowingSideBar && (
-							<Sider theme="light">
+							<Sider
+								theme="light"
+								css={{
+									display: 'none',
+									[mediaMin.medium]: {
+										display: 'block',
+									},
+								}}
+							>
 								<img
 									src={logo}
 									alt="Dejavu"

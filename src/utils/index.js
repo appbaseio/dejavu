@@ -120,10 +120,13 @@ const getCustomHeaders = appname => {
 	}
 
 	const { pastApps } = localConnections;
-	const currentApp = pastApps.find(item => item.appname === appname);
 
-	if (currentApp && currentApp.headers) {
-		return currentApp.headers;
+	if (pastApps) {
+		const currentApp = pastApps.find(item => item.appname === appname);
+
+		if (currentApp && currentApp.headers) {
+			return currentApp.headers;
+		}
 	}
 
 	return [];

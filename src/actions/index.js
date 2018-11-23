@@ -30,6 +30,7 @@ import {
 } from './data';
 import setSelectedRows from './selectedRows';
 import setUpdatingRow from './updatingRow';
+import setCurrentIds from './currentIds';
 
 export {
 	// app
@@ -65,4 +66,6 @@ export {
 	setSelectedRows,
 	// updatingRow,
 	setUpdatingRow,
+	// setting current ids
+	setCurrentIds,
 };

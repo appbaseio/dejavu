@@ -5,6 +5,8 @@ import { Popover } from 'antd';
 import { MultiList } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
 
+import filterIconStyles from '../CommonStyles/filterIcons';
+
 type Props = {
 	field: string,
 };
@@ -41,7 +43,7 @@ const TermFilter = ({ field }: Props) => (
 		trigger="click"
 		placement="bottomRight"
 	>
-		<i className="fa fa-filter" />
+		<i className={`fa fa-filter ${filterIconStyles}`} />
 	</Popover>
 );
 

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Form, Button, Alert, AutoComplete, Input, Modal, Icon } from 'antd';
 import { connect } from 'react-redux';
-import { string, func, bool, object, array } from 'prop-types';
+import { object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import {
@@ -17,8 +17,8 @@ import {
 	connectApp,
 	disconnectApp,
 	setMode,
-	setHeaders,
 	setError,
+	setHeaders,
 } from '../../actions';
 import {
 	getUrlParams,
@@ -45,11 +45,11 @@ type Props = {
 	mode: string,
 	setMode: string => void,
 	onErrorClose: () => void,
-	headers: any[],
-	setHeaders: any => void,
 	location: any,
 	isHidden?: boolean,
 	setError: any => void,
+	headers: any[],
+	setHeaders: any => void,
 };
 
 type State = {
@@ -177,7 +177,6 @@ class ConnectApp extends Component<Props, State> {
 		}
 
 		const customHeaders = getCustomHeaders(appname);
-
 		this.props.setHeaders(customHeaders);
 		this.setState({
 			customHeaders: customHeaders.length
@@ -245,7 +244,10 @@ class ConnectApp extends Component<Props, State> {
 		if (this.props.isConnected) {
 			this.props.disconnectApp();
 			this.props.setMode(MODES.VIEW);
-
+			this.props.setHeaders([]);
+			this.setState({
+				customHeaders: [{ key: '', value: '' }],
+			});
 			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
@@ -344,16 +346,25 @@ class ConnectApp extends Component<Props, State> {
 			item => item.key.trim() && item.value.trim(),
 		);
 
+		const { isConnected } = this.props;
+
+		if (isConnected) {
+			const { pastApps } = JSON.parse(
+				getLocalStorageItem(LOCAL_CONNECTIONS),
+			);
+
+			const currentApp = pastApps.findIndex(
+				item => item.appname === this.props.appname,
+			);
+			pastApps[currentApp].headers = filteredHeaders;
+
+			setLocalStorageData(
+				LOCAL_CONNECTIONS,
+				JSON.stringify({ pastApps }),
+			);
+		}
 		this.props.setHeaders(filteredHeaders);
 		this.toggleHeadersModal();
-	};
-
-	addMoreHeader = () => {
-		const { customHeaders } = this.state;
-
-		this.setState({
-			customHeaders: [...customHeaders, { key: '', value: '' }],
-		});
 	};
 
 	handleHeaderAfterClose = () => {
@@ -361,6 +372,14 @@ class ConnectApp extends Component<Props, State> {
 			customHeaders: this.props.headers.length
 				? this.props.headers
 				: [{ key: '', value: '' }],
+		});
+	};
+
+	addMoreHeader = () => {
+		const { customHeaders } = this.state;
+
+		this.setState({
+			customHeaders: [...customHeaders, { key: '', value: '' }],
 		});
 	};
 
@@ -488,8 +507,8 @@ class ConnectApp extends Component<Props, State> {
 							destroyOnClose
 							title="Add Custom Headers"
 							css={{ top: 10 }}
-							afterClose={this.handleHeaderAfterClose}
 							closable={false}
+							afterClose={this.handleHeaderAfterClose}
 						>
 							<div
 								css={{
@@ -614,25 +633,8 @@ const mapDispatchToProps = {
 	connectApp,
 	disconnectApp,
 	setMode,
-	setHeaders,
 	setError,
-};
-
-ConnectApp.propTypes = {
-	appname: string,
-	url: string,
-	connectApp: func.isRequired,
-	disconnectApp: func.isRequired,
-	isConnected: bool.isRequired,
-	isLoading: bool.isRequired,
-	history: object,
-	setMode: func.isRequired,
-	mode: string,
-	headers: array,
-	setHeaders: func,
-	location: object,
-	isHidden: bool,
-	setError: func,
+	setHeaders,
 };
 
 export default withRouter(
