@@ -152,6 +152,17 @@ class DataTableHeader extends Component<Props> {
 												}}
 											>
 												_id
+												<i
+													css={{
+														fontSize: 12,
+														fontWeight: 'normal',
+													}}
+												>
+													{selectedRows.length > 0 &&
+														`  (${
+															selectedRows.length
+														} rows selected)`}
+												</i>
 											</div>
 										</StyledCell>
 									) : (

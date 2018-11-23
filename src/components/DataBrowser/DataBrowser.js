@@ -137,6 +137,9 @@ class DataBrowser extends Component<Props, State> {
 		const { sort, sortField, pageSize } = this.state;
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
+		const otherBaseProps = headers.length
+			? convertArrayToHeaders(headers)
+			: {};
 
 		return (
 			<Skeleton loading={isLoading} active>
@@ -149,7 +152,7 @@ class DataBrowser extends Component<Props, State> {
 								type={types.join(',')}
 								credentials={credentials}
 								url={url}
-								headers={convertArrayToHeaders(headers)}
+								{...otherBaseProps}
 							>
 								<div>
 									<Actions

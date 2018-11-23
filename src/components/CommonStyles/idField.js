@@ -4,6 +4,8 @@ import colors from '../theme/colors';
 
 const styles = css({
 	position: 'relative',
+	minWidth: 240,
+	maxWidth: 240,
 
 	[mediaMin.medium]: {
 		zIndex: '101 !important',
