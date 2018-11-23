@@ -4,6 +4,7 @@ import React, { Fragment } from 'react';
 import { func } from 'prop-types';
 import { Button, Select, Tag } from 'antd';
 import { connect } from 'react-redux';
+import { mediaMin } from '@divyanshu013/media';
 
 import Flex from '../Flex';
 import ShowHideColumn from './ShowHideColumns';
@@ -38,7 +39,15 @@ const Actions = ({
 	selectedRows,
 	updatingRow,
 }: Props) => (
-	<div css={{ margin: '20px 0' }}>
+	<div
+		css={{
+			margin: '20px 0',
+			display: 'none',
+			[mediaMin.medium]: {
+				display: 'block',
+			},
+		}}
+	>
 		<Flex alignItems="flex-end" justifyContent="space-between">
 			<div>
 				{selectedRows.length > 0 ? (

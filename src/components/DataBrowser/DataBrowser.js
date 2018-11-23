@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
 import { Skeleton, Spin, Icon } from 'antd';
 import { css } from 'react-emotion';
+import { mediaMin } from '@divyanshu013/media';
 
 import DataTable from '../DataTable';
 import Flex from '../Flex';
@@ -240,12 +241,16 @@ class DataBrowser extends Component<Props, State> {
 												`,
 												pagination: css({
 													position: 'absolute',
-													bottom: '-50px',
+													bottom: '-100px',
 													right: 0,
 													zIndex: 105,
 													'.active': {
 														backgroundColor:
 															'#1890ff !important',
+													},
+
+													[mediaMin.medium]: {
+														bottom: '-50px',
 													},
 												}),
 											}}
@@ -290,15 +295,24 @@ class DataBrowser extends Component<Props, State> {
 														justifyContent="center"
 														alignItems="center"
 														css={{
-															position:
-																'absolute',
-															bottom: '-40px',
-															right: '330px',
-															height: '32px',
-															fontSize: '14px',
-															padding: '0 15px',
-															lineHeight: '1.5',
-															textAlign: 'center',
+															display: 'none',
+															[mediaMin.medium]: {
+																display:
+																	'block',
+																position:
+																	'absolute',
+																bottom: '-45px',
+																right: '330px',
+																height: '32px',
+																fontSize:
+																	'14px',
+																padding:
+																	'0 15px',
+																lineHeight:
+																	'1.5',
+																textAlign:
+																	'center',
+															},
 														}}
 													>
 														Found &nbsp;{' '}
@@ -315,7 +329,15 @@ class DataBrowser extends Component<Props, State> {
 									</div>
 								</div>
 							</ReactiveBase>
-							<Flex css={{ marginTop: 10 }}>
+							<Flex
+								css={{
+									marginTop: 100,
+									[mediaMin.medium]: {
+										marginTop: 10,
+									},
+								}}
+								wrap="no-wrap"
+							>
 								<AddRowModal />
 								<AddFieldModal />
 							</Flex>

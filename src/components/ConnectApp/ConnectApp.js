@@ -5,6 +5,7 @@ import { Form, Button, Alert, AutoComplete, Input, Modal, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { mediaMin } from '@divyanshu013/media';
 
 import {
 	getAppname,
@@ -408,186 +409,202 @@ class ConnectApp extends Component<Props, State> {
 		return (
 			<div>
 				{isShowingAppSwitcher && (
-					<Form
-						layout="inline"
-						onSubmit={this.handleSubmit}
-						css={{
-							display: 'flex',
-							alignItems: 'center',
-						}}
-					>
-						<Item {...formItemProps} css={{ flex: 1 }}>
-							<Group
-								compact
+					<Form layout="inline" onSubmit={this.handleSubmit}>
+						<Flex alignItems="center">
+							<Item
+								{...formItemProps}
 								css={{
-									display: 'flex !important',
+									[mediaMin.medium]: {
+										flex: 1,
+									},
 								}}
 							>
-								<Input
-									name="url"
-									value={url}
-									placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
-									onChange={this.handleChange}
-									disabled={isConnected}
-									required
+								<Group
+									compact
 									css={{
-										color:
-											isUrlHidden &&
-											'transparent !important',
+										display: 'flex !important',
 									}}
-								/>
-								<Button
-									css={{
-										cursor: 'pointer',
-										'&:hover': {
-											borderColor: '#d9d9d9 !important',
-										},
-									}}
-									onClick={this.handleUrlToggle}
 								>
-									<i
-										className={`fa ${
-											isUrlHidden
-												? 'fa-eye-slash'
-												: 'fa-eye'
-										}`}
+									<Input
+										name="url"
+										value={url}
+										placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
+										onChange={this.handleChange}
+										disabled={isConnected}
+										required
+										css={{
+											color:
+												isUrlHidden &&
+												'transparent !important',
+										}}
 									/>
-								</Button>
-								<Button
-									type="button"
-									css={{
-										'&:hover': {
-											borderColor: '#d9d9d9 !important',
-										},
-									}}
-									onClick={this.toggleHeadersModal}
-								>
-									Headers
-								</Button>
-							</Group>
-						</Item>
-						<Item {...formItemProps}>
-							<AutoComplete
-								dataSource={pastApps.map(app => app.appname)}
-								value={appname}
-								placeholder="Appname (aka index) goes here"
-								filterOption={(inputValue, option) =>
-									option.props.children
-										.toUpperCase()
-										.indexOf(inputValue.toUpperCase()) !==
-									-1
-								}
-								onChange={this.handleAppNameChange}
-								disabled={isConnected}
-							/>
-						</Item>
+									<Button
+										css={{
+											cursor: 'pointer',
+											'&:hover': {
+												borderColor:
+													'#d9d9d9 !important',
+											},
+										}}
+										onClick={this.handleUrlToggle}
+									>
+										<i
+											className={`fa ${
+												isUrlHidden
+													? 'fa-eye-slash'
+													: 'fa-eye'
+											}`}
+										/>
+									</Button>
+									<Button
+										type="button"
+										css={{
+											'&:hover': {
+												borderColor:
+													'#d9d9d9 !important',
+											},
+										}}
+										onClick={this.toggleHeadersModal}
+									>
+										Headers
+									</Button>
+								</Group>
+							</Item>
+							<Item {...formItemProps}>
+								<AutoComplete
+									dataSource={pastApps.map(
+										app => app.appname,
+									)}
+									value={appname}
+									placeholder="Appname (aka index) goes here"
+									filterOption={(inputValue, option) =>
+										option.props.children
+											.toUpperCase()
+											.indexOf(
+												inputValue.toUpperCase(),
+											) !== -1
+									}
+									onChange={this.handleAppNameChange}
+									disabled={isConnected}
+								/>
+							</Item>
 
-						<Item
-							css={{
-								marginRight: '0px !important',
-							}}
-						>
-							<Button
-								type={isConnected ? 'danger' : 'primary'}
-								htmlType="submit"
-								icon={
-									isConnected ? 'pause-circle' : 'play-circle'
-								}
-								disabled={!(appname && url)}
-								loading={isLoading}
-							>
-								{isConnected ? 'Disconnect' : 'Connect'}
-							</Button>
-						</Item>
-						<Modal
-							visible={isShowingHeadersModal}
-							onCancel={this.toggleHeadersModal}
-							onOk={this.handleHeadersSubmit}
-							maskClosable={false}
-							destroyOnClose
-							title="Add Custom Headers"
-							css={{ top: 10 }}
-							closable={false}
-							afterClose={this.handleHeaderAfterClose}
-						>
-							<div
+							<Item
 								css={{
-									maxHeight: '500px',
-									overflow: 'auto',
-									paddingRight: 10,
+									marginRight: '0px !important',
 								}}
 							>
-								<Flex css={{ marginBottom: 10 }}>
-									<div css={{ flex: 1, marginLeft: 5 }}>
-										Key
-									</div>
-									<div css={{ marginLeft: 10, flex: 1 }}>
-										Value
-									</div>
-								</Flex>
-								{customHeaders.map((item, i) => (
-									<Flex
-										key={`header-${i}`} // eslint-disable-line
-										css={{ marginBottom: 10 }}
-										alignItems="center"
-									>
+								<Button
+									type={isConnected ? 'danger' : 'primary'}
+									htmlType="submit"
+									icon={
+										isConnected
+											? 'pause-circle'
+											: 'play-circle'
+									}
+									disabled={!(appname && url)}
+									loading={isLoading}
+								>
+									{isConnected ? 'Disconnect' : 'Connect'}
+								</Button>
+							</Item>
+							<Modal
+								visible={isShowingHeadersModal}
+								onCancel={this.toggleHeadersModal}
+								onOk={this.handleHeadersSubmit}
+								maskClosable={false}
+								destroyOnClose
+								title="Add Custom Headers"
+								css={{ top: 10 }}
+								closable={false}
+								afterClose={this.handleHeaderAfterClose}
+							>
+								<div
+									css={{
+										maxHeight: '500px',
+										overflow: 'auto',
+										paddingRight: 10,
+									}}
+								>
+									<Flex css={{ marginBottom: 10 }}>
 										<div css={{ flex: 1, marginLeft: 5 }}>
-											<Input
-												value={item.key}
-												onChange={e =>
-													this.handleHeaderItemChange(
-														e,
-														i,
-														'key',
-													)
-												}
-											/>
+											Key
 										</div>
-										<div css={{ flex: 1, marginLeft: 10 }}>
-											<Input
-												value={item.value}
-												onChange={e =>
-													this.handleHeaderItemChange(
-														e,
-														i,
-														'value',
-													)
-												}
-											/>
-										</div>
-										<div
-											css={{
-												marginLeft: 10,
-												minWidth: 15,
-											}}
-										>
-											{customHeaders.length > 1 && (
-												<Icon
-													type="close"
-													onClick={() =>
-														this.handleRemoveHeader(
-															i,
-														)
-													}
-													css={{
-														cursor: 'pointer',
-													}}
-												/>
-											)}
+										<div css={{ marginLeft: 10, flex: 1 }}>
+											Value
 										</div>
 									</Flex>
-								))}
-							</div>
-							<Button
-								icon="plus"
-								type="primary"
-								css={{
-									marginTop: 10,
-									marginLeft: 5,
-								}}
-								onClick={this.addMoreHeader}
-							/>
-						</Modal>
+									{customHeaders.map((item, i) => (
+										<Flex
+											key={`header-${i}`} // eslint-disable-line
+											css={{ marginBottom: 10 }}
+											alignItems="center"
+										>
+											<div
+												css={{ flex: 1, marginLeft: 5 }}
+											>
+												<Input
+													value={item.key}
+													onChange={e =>
+														this.handleHeaderItemChange(
+															e,
+															i,
+															'key',
+														)
+													}
+												/>
+											</div>
+											<div
+												css={{
+													flex: 1,
+													marginLeft: 10,
+												}}
+											>
+												<Input
+													value={item.value}
+													onChange={e =>
+														this.handleHeaderItemChange(
+															e,
+															i,
+															'value',
+														)
+													}
+												/>
+											</div>
+											<div
+												css={{
+													marginLeft: 10,
+													minWidth: 15,
+												}}
+											>
+												{customHeaders.length > 1 && (
+													<Icon
+														type="close"
+														onClick={() =>
+															this.handleRemoveHeader(
+																i,
+															)
+														}
+														css={{
+															cursor: 'pointer',
+														}}
+													/>
+												)}
+											</div>
+										</Flex>
+									))}
+								</div>
+								<Button
+									icon="plus"
+									type="primary"
+									css={{
+										marginTop: 10,
+										marginLeft: 5,
+									}}
+									onClick={this.addMoreHeader}
+								/>
+							</Modal>
+						</Flex>
 					</Form>
 				)}
 				{!isLoading &&
