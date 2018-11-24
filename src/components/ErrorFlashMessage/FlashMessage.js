@@ -23,7 +23,7 @@ const FlashMessage = ({ error, onDismissError }: Props) => (
 				closable
 				css={{ marginBottom: 10 }}
 				onClose={onDismissError}
-				description={<ErrorMessage description={error.stack} />}
+				description={<ErrorMessage description={error.description} />}
 			/>
 		)}
 	</Fragment>

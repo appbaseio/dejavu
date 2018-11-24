@@ -5,8 +5,10 @@ import {
 	getCustomHeaders,
 	convertArrayToHeaders,
 } from '../utils';
+import CustomError from '../utils/CustomError';
 
 const testConnection = async (appname, rawUrl) => {
+	const defaultError = 'Unable to connect';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
@@ -16,22 +18,43 @@ const testConnection = async (appname, rawUrl) => {
 			'Content-Type': 'application/json',
 			headers: { ...headers, ...convertArrayToHeaders(customHeaders) },
 		}).then(response => response.json());
+
 		if (res.status >= 400) {
-			throw new Error(res.message || 'Error: Unable to connect');
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${defaultError}`,
+			);
 		}
 
 		if (isEmptyObject(res)) {
-			throw new Error(res.message || 'Error: Index not found');
+			throw new CustomError(
+				JSON.stringify(
+					{
+						error: `Unable to find ${appname}`,
+					},
+					null,
+					2,
+				),
+				`Error: Index not found`,
+			);
 		}
 		return res;
 	} catch (error) {
-		let message = error;
-
-		if (error.toString().indexOf('TypeError: Failed to fetch') > -1) {
-			message = 'Error: Invalid connection string or index name';
+		console.log(error);
+		const err = error;
+		if (err.message === 'Failed to fetch') {
+			err.message = defaultError;
 		}
 
-		throw new Error(message);
+		throw new CustomError(
+			err.description && !isEmptyObject(JSON.parse(err.description))
+				? err.description
+				: `<b> Possible Errors </b>
+				<ul><li>Invalid connection string or index name </li>
+				<li> Please check is Elasticsearch cluster is up and running</li></ul>`,
+			err.message || defaultError,
+			err.stack,
+		);
 	}
 };
 

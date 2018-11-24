@@ -19,7 +19,7 @@ function* handleConnectApp({ appname, url }) {
 		yield put(
 			setError({
 				message: error.message,
-				stack: error.stack,
+				description: error.description,
 			}),
 		);
 	}

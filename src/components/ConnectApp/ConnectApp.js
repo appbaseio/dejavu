@@ -142,8 +142,8 @@ class ConnectApp extends Component<Props, State> {
 			} else {
 				this.props.setError({
 					message:
-						"Sorry canno't to connect app with multiple indexes",
-					stack: 'Please try using single index',
+						'Sorry can not connect to the app with multiple indexes',
+					description: 'Please try using single index',
 				});
 			}
 		}
@@ -303,8 +303,8 @@ class ConnectApp extends Component<Props, State> {
 			} else {
 				this.props.setError({
 					message:
-						"Sorry canno't connect to app with multiple indexes",
-					stack: 'Please try using single index',
+						'Sorry can not connect to the app with multiple indexes',
+					description: 'Please try using single index',
 				});
 			}
 		}

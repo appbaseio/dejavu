@@ -1,5 +1,6 @@
 import appbase from 'appbase-js';
 import { parseUrl, getCustomHeaders, convertArrayToHeaders } from '../utils';
+import CustomError from '../utils/CustomError';
 
 const setCellValue = async (app, type, rawUrl, id, property, value) => {
 	const customHeaders = getCustomHeaders(app);
@@ -23,7 +24,12 @@ const setCellValue = async (app, type, rawUrl, id, property, value) => {
 		return res;
 	} catch (error) {
 		const errorMessage = error.statusText || 'Unable to update data';
-		throw new Error(errorMessage);
+
+		throw new CustomError(
+			JSON.stringify(error.error || errorMessage, null, 2),
+			error.errorMessage,
+			error.stack,
+		);
 	}
 };
 

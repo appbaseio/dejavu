@@ -32,7 +32,10 @@ class ErrorMessage extends Component<Props, State> {
 					{isShowingDetails ? 'Hide' : 'Show'}
 					&nbsp; information
 				</Button>
-				{isShowingDetails && <pre>{description}</pre>}
+				<br />
+				{isShowingDetails && (
+					<div dangerouslySetInnerHTML={{ __html: description }} />
+				)}
 			</Fragment>
 		);
 	}

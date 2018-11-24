@@ -4,6 +4,7 @@ import {
 	convertArrayToHeaders,
 	getCustomHeaders,
 } from '../utils';
+import CustomError from '../utils/CustomError';
 
 export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 	const defaultError = 'Unable to put data';
@@ -39,11 +40,18 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 		}).then(response => response.json());
 
 		if (res.status >= 400) {
-			throw new Error(res.message || defaultError);
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${defaultError}`,
+			);
 		}
 		return res;
 	} catch (error) {
-		throw new Error(error);
+		throw new CustomError(
+			error.description || defaultError,
+			error.message,
+			error.stack,
+		);
 	}
 };
 
@@ -64,11 +72,18 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 		}).then(response => response.json());
 
 		if (res.status >= 400) {
-			throw new Error(res.message || defaultError);
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${defaultError}`,
+			);
 		}
 		return res;
 	} catch (error) {
-		throw new Error(error);
+		throw new CustomError(
+			error.description || defaultError,
+			error.message,
+			error.stack,
+		);
 	}
 };
 
@@ -96,10 +111,17 @@ export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
 		).then(response => response.json());
 
 		if (res.status >= 400) {
-			throw new Error(res.message || defaultError);
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${defaultError}`,
+			);
 		}
 		return res;
 	} catch (error) {
-		throw new Error(error);
+		throw new CustomError(
+			error.description || defaultError,
+			error.message,
+			error.stack,
+		);
 	}
 };

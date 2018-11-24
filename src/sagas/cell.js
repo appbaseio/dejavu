@@ -26,7 +26,7 @@ function* handleSetValue({ id, property, value, index, esType }) {
 		yield put(setCellValueSuccess(data));
 	} catch (error) {
 		yield put(setCellValueFailure());
-		yield put(setError(error.message));
+		yield put(setError(error));
 	}
 }
 
