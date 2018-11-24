@@ -13,10 +13,13 @@ import {
 import { getAppname, getUrl } from '../reducers/app';
 import { isEmptyObject } from '../utils';
 import { extractColumns, META_FIELDS } from '../utils/mappings';
+import CustomError from '../utils/CustomError';
 
 const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
 function* handleFetchMappings() {
+	const defaultError = 'Unable to get mappings';
+	const defaultErrorDescription = 'Please add mappings';
 	try {
 		yield put(clearError());
 		const appname = yield select(getAppname);
@@ -95,10 +98,10 @@ function* handleFetchMappings() {
 					),
 				);
 			} else {
-				throw new Error('Mappings not found');
+				throw new CustomError(defaultErrorDescription, defaultError);
 			}
 		} else {
-			throw new Error('Unable to fetch content');
+			throw new CustomError(defaultErrorDescription, defaultError);
 		}
 	} catch (error) {
 		yield put(fetchMappingsFailure());
