@@ -33,73 +33,76 @@ function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
-				Object.keys(data[index].mappings).forEach(type => {
-					if (
-						data[index].mappings[type].properties &&
-						INGNORE_META_TYPES.indexOf(type) === -1
-					) {
-						indexTypeMap[index] = [
-							...(indexTypeMap[index] || []),
-							type,
-						];
-						types.push(type);
+				const typesList = Object.keys(data[index].mappings);
 
-						properties = {
-							...properties,
-							...data[index].mappings[type].properties,
-						};
+				if (typesList.length) {
+					Object.keys(data[index].mappings).forEach(type => {
+						if (
+							data[index].mappings[type].properties &&
+							INGNORE_META_TYPES.indexOf(type) === -1
+						) {
+							indexTypeMap[index] = [
+								...(indexTypeMap[index] || []),
+								type,
+							];
+							types.push(type);
 
-						typePropertyMapping[index] = {};
-						typePropertyMapping[index][type] =
-							data[index].mappings[type].properties;
-					}
-				});
+							properties = {
+								...properties,
+								...data[index].mappings[type].properties,
+							};
+
+							typePropertyMapping[index] = {};
+							typePropertyMapping[index][type] =
+								data[index].mappings[type].properties;
+						}
+					});
+				} else {
+					types.push('_doc');
+					indexTypeMap[index] = ['_doc'];
+					typePropertyMapping[index] = {};
+					typePropertyMapping[index]._doc = {};
+				}
 			});
 
-			if (!isEmptyObject(properties)) {
-				const mappings = {
-					[appname]: {
-						properties,
-					},
-				};
+			const mappings = {
+				[appname]: {
+					properties,
+				},
+			};
 
-				const allColumns = [
-					...META_FIELDS,
-					...extractColumns(mappings[appname]),
-				];
+			const allColumns = [
+				...META_FIELDS,
+				...extractColumns(mappings[appname]),
+			];
 
-				let visibleColumns = allColumns.filter(col => col !== '_type');
-				if (indexes.length <= 1) {
-					visibleColumns = visibleColumns.filter(
-						col => col !== '_index',
-					);
-				}
-
-				const filteredTypes = types.filter(
-					type => !INGNORE_META_TYPES.includes(type),
-				);
-
-				const searchableColumns = Object.keys(properties).filter(
-					property =>
-						properties[property].type === 'string' ||
-						properties[property].type === 'text',
-				);
-
-				yield put(
-					fetchMappingsSuccess(
-						mappings,
-						indexes,
-						filteredTypes,
-						indexTypeMap,
-						allColumns,
-						visibleColumns,
-						searchableColumns,
-						typePropertyMapping,
-					),
-				);
-			} else {
-				throw new CustomError(defaultErrorDescription, defaultError);
+			let visibleColumns = allColumns.filter(col => col !== '_type');
+			if (indexes.length <= 1) {
+				visibleColumns = visibleColumns.filter(col => col !== '_index');
 			}
+
+			const filteredTypes = types.filter(
+				type => !INGNORE_META_TYPES.includes(type),
+			);
+
+			const searchableColumns = Object.keys(properties).filter(
+				property =>
+					properties[property].type === 'string' ||
+					properties[property].type === 'text',
+			);
+
+			yield put(
+				fetchMappingsSuccess(
+					mappings,
+					indexes,
+					filteredTypes,
+					indexTypeMap,
+					allColumns,
+					visibleColumns,
+					searchableColumns,
+					typePropertyMapping,
+				),
+			);
 		} else {
 			throw new CustomError(defaultErrorDescription, defaultError);
 		}

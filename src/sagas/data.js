@@ -14,7 +14,7 @@ function* handleAddData({ indexName, typeName, docId, data }) {
 	try {
 		yield put(clearError());
 		const url = yield select(getUrl);
-		yield call(addData, indexName, typeName, docId, url, data); // not handling response currently
+		yield call(addData, indexName, typeName, docId, url, data);
 		yield put(addDataSuccess());
 	} catch (error) {
 		yield put(addDataFailure());

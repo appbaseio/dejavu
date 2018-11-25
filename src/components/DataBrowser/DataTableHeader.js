@@ -73,210 +73,227 @@ class DataTableHeader extends Component<Props> {
 			? getTermsAggregationColumns(mappings[appname])
 			: [];
 
-		return (
-			<table
-				css={{
-					overflowX: 'auto',
-					position: 'sticky',
-					top: 0,
-					height: 26,
-					zIndex: 102,
-					background: colors.tableHead,
-				}}
-			>
-				<thead>
-					<tr>
-						{columns.map(col => {
-							const termFilterIndex =
-								termFilterColumns.indexOf(col) > -1
-									? termFilterColumns.indexOf(col)
-									: termFilterColumns.indexOf(`${col}.raw`);
-							return (
-								<th
-									key={col}
-									css={{
-										minWidth: 200,
-										maxWidth: 200,
-									}}
-									className={col === '_id' && idFieldStyles}
-								>
-									{col === '_id' ? (
-										<StyledCell
-											css={{
-												display: 'flex',
-												justifyContet: 'left',
-												alignItems: 'center',
-											}}
-										>
-											<Flex
+		if (columns.length > 1) {
+			return (
+				<table
+					css={{
+						overflowX: 'auto',
+						position: 'sticky',
+						top: 0,
+						height: 26,
+						zIndex: 102,
+						background: colors.tableHead,
+					}}
+				>
+					<thead>
+						<tr>
+							{columns.map(col => {
+								const termFilterIndex =
+									termFilterColumns.indexOf(col) > -1
+										? termFilterColumns.indexOf(col)
+										: termFilterColumns.indexOf(
+												`${col}.raw`,
+										  );
+								return (
+									<th
+										key={col}
+										css={{
+											minWidth: 200,
+											maxWidth: 200,
+										}}
+										className={
+											col === '_id' && idFieldStyles
+										}
+									>
+										{col === '_id' ? (
+											<StyledCell
 												css={{
-													width: '15%',
-												}}
-												alignItems="center"
-												justifyContent="center"
-											>
-												{selectedRows.length >= 1 &&
-													mode === MODES.EDIT && (
-														<Checkbox
-															onChange={
-																this
-																	.handleSelectAllRows
-															}
-															checked={
-																selectedRows.length ===
-																currentIds.length
-															}
-														/>
-													)}
-											</Flex>
-											<Popover
-												content={
-													<div css={popoverContent}>
-														Clicking on {`{...}`}{' '}
-														displays the JSON data.
-													</div>
-												}
-												trigger="click"
-											>
-												<span
-													css={{
-														cursor: 'pointer',
-														maxWidth: '10%',
-														minWidth: '10%',
-													}}
-												>{` {...} `}</span>
-											</Popover>
-											<div
-												css={{
-													marginLeft: '10px',
+													display: 'flex',
+													justifyContet: 'left',
+													alignItems: 'center',
 												}}
 											>
-												_id
-												<i
+												<Flex
 													css={{
-														fontSize: 12,
-														fontWeight: 'normal',
+														width: '15%',
 													}}
+													alignItems="center"
+													justifyContent="center"
 												>
-													{selectedRows.length > 0 &&
-														`  (${
-															selectedRows.length
-														} rows selected)`}
-												</i>
-											</div>
-										</StyledCell>
-									) : (
-										<StyledCell>
-											<Flex
-												justifyContent="space-between"
-												alignItems="center"
-												css={{
-													width: '100%',
-												}}
-											>
-												<Flex alignItems="center">
-													{mappings[appname]
-														.properties[col] && (
-														<MappingsDropdown
-															mapping={
-																mappings[
-																	appname
-																].properties[
-																	col
-																]
-															}
-														/>
-													)}
+													{selectedRows.length >= 1 &&
+														mode === MODES.EDIT && (
+															<Checkbox
+																onChange={
+																	this
+																		.handleSelectAllRows
+																}
+																checked={
+																	selectedRows.length ===
+																	currentIds.length
+																}
+															/>
+														)}
+												</Flex>
+												<Popover
+													content={
+														<div
+															css={popoverContent}
+														>
+															Clicking on{' '}
+															{`{...}`} displays
+															the JSON data.
+														</div>
+													}
+													trigger="click"
+												>
 													<span
 														css={{
-															marginLeft: '10px',
+															cursor: 'pointer',
+															maxWidth: '10%',
+															minWidth: '10%',
+														}}
+													>{` {...} `}</span>
+												</Popover>
+												<div
+													css={{
+														marginLeft: '10px',
+													}}
+												>
+													_id
+													<i
+														css={{
+															fontSize: 12,
+															fontWeight:
+																'normal',
 														}}
 													>
-														{col}
-													</span>
-												</Flex>
-												{mappings[appname].properties[
-													col
-												] &&
-													mappings[appname]
-														.properties[col].type &&
-													srotableTypes.indexOf(
+														{selectedRows.length >
+															0 &&
+															`  (${
+																selectedRows.length
+															} rows selected)`}
+													</i>
+												</div>
+											</StyledCell>
+										) : (
+											<StyledCell>
+												<Flex
+													justifyContent="space-between"
+													alignItems="center"
+													css={{
+														width: '100%',
+													}}
+												>
+													<Flex alignItems="center">
+														{mappings[appname]
+															.properties[
+															col
+														] && (
+															<MappingsDropdown
+																mapping={
+																	mappings[
+																		appname
+																	]
+																		.properties[
+																		col
+																	]
+																}
+															/>
+														)}
+														<span
+															css={{
+																marginLeft:
+																	'10px',
+															}}
+														>
+															{col}
+														</span>
+													</Flex>
+													{mappings[appname]
+														.properties[col] &&
 														mappings[appname]
 															.properties[col]
-															.type,
-													) > -1 && (
-														<Flex alignItems="center">
-															{termFilterIndex >
-																-1 && (
-																<TermFilter
-																	field={
-																		termFilterColumns[
-																			termFilterIndex
-																		]
-																	}
-																/>
-															)}
-															<button
-																type="button"
-																onClick={() => {
-																	handleSort(
-																		col,
-																	);
-																}}
-																css={{
-																	outline: 0,
-																	height:
-																		'15px',
-																	width:
-																		'15px',
-																	border: 0,
-																	cursor:
-																		'pointer',
-																	background:
-																		'none',
-																}}
-																className={
-																	filterIconStyles
-																}
-															>
-																{sortField.indexOf(
-																	col,
-																) === -1 && (
-																	<i
-																		className="fa fa-sort"
-																		css={{
-																			fontSize: 15,
-																		}}
-																	/>
-																)}
-																{sortField.indexOf(
-																	col,
-																) > -1 && (
-																	<i
-																		className={
-																			sort ===
-																			'asc'
-																				? 'fa fa-caret-down'
-																				: 'fa fa-caret-up'
+															.type &&
+														srotableTypes.indexOf(
+															mappings[appname]
+																.properties[col]
+																.type,
+														) > -1 && (
+															<Flex alignItems="center">
+																{termFilterIndex >
+																	-1 && (
+																	<TermFilter
+																		field={
+																			termFilterColumns[
+																				termFilterIndex
+																			]
 																		}
-																		css={{
-																			fontSize: 15,
-																		}}
 																	/>
 																)}
-															</button>
-														</Flex>
-													)}
-											</Flex>
-										</StyledCell>
-									)}
-								</th>
-							);
-						})}
-					</tr>
-				</thead>
-			</table>
-		);
+																<button
+																	type="button"
+																	onClick={() => {
+																		handleSort(
+																			col,
+																		);
+																	}}
+																	css={{
+																		outline: 0,
+																		height:
+																			'15px',
+																		width:
+																			'15px',
+																		border: 0,
+																		cursor:
+																			'pointer',
+																		background:
+																			'none',
+																	}}
+																	className={
+																		filterIconStyles
+																	}
+																>
+																	{sortField.indexOf(
+																		col,
+																	) ===
+																		-1 && (
+																		<i
+																			className="fa fa-sort"
+																			css={{
+																				fontSize: 15,
+																			}}
+																		/>
+																	)}
+																	{sortField.indexOf(
+																		col,
+																	) > -1 && (
+																		<i
+																			className={
+																				sort ===
+																				'asc'
+																					? 'fa fa-caret-down'
+																					: 'fa fa-caret-up'
+																			}
+																			css={{
+																				fontSize: 15,
+																			}}
+																		/>
+																	)}
+																</button>
+															</Flex>
+														)}
+												</Flex>
+											</StyledCell>
+										)}
+									</th>
+								);
+							})}
+						</tr>
+					</thead>
+				</table>
+			);
+		}
+		return null;
 	}
 }
 

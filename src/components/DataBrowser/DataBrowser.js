@@ -335,20 +335,22 @@ class DataBrowser extends Component<Props, State> {
 									</div>
 								</div>
 							</ReactiveBase>
-							<Flex
-								css={{
-									marginTop: 100,
-									[mediaMin.medium]: {
-										marginTop: 10,
-									},
-								}}
-								wrap="no-wrap"
-							>
-								<AddRowModal />
-								<AddFieldModal />
-							</Flex>
 						</div>
 					)}
+				{mappings && (
+					<Flex
+						css={{
+							marginTop: 100,
+							[mediaMin.medium]: {
+								marginTop: 10,
+							},
+						}}
+						wrap="no-wrap"
+					>
+						<AddRowModal />
+						<AddFieldModal />
+					</Flex>
+				)}
 				{(isLoading || isDataLoading) && (
 					<Flex css={{ marginTop: '20px' }} justifyContent="center">
 						<Spin />
