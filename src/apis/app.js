@@ -43,7 +43,7 @@ const testConnection = async (appname, rawUrl) => {
 		const err = error;
 		let description = `<b> Possible Errors </b>
 		<ul><li>Invalid connection string or index name </li>
-		<li> Please check is Elasticsearch cluster is up and running</li></ul>`;
+		<li> Please check if Elasticsearch cluster is up and running</li></ul>`;
 
 		if (err.message === 'Failed to fetch') {
 			err.message = defaultError;

@@ -32,7 +32,7 @@ const QueryExplorer = ({ isConnected, rawUrl = '' }: Props) => (
 				frameBorder="0"
 				width="100%"
 				style={{
-					height: '75vh',
+					height: '80vh',
 				}}
 			/>
 		)}

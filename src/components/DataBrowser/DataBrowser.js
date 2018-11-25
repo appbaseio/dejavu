@@ -19,7 +19,12 @@ import AddRowModal from './AddRowModal';
 import AddFieldModal from './AddFieldModal';
 import DataTableHeader from './DataTableHeader';
 
-import { fetchMappings, setSelectedRows, setUpdatingRow } from '../../actions';
+import {
+	fetchMappings,
+	setSelectedRows,
+	setUpdatingRow,
+	updateReactiveList,
+} from '../../actions';
 import { getAppname, getUrl, getHeaders } from '../../reducers/app';
 import * as dataSelectors from '../../reducers/data';
 import {
@@ -52,6 +57,7 @@ type Props = {
 	onSelectedRows: any => void,
 	onSetUpdatingRow: any => void,
 	headers: any[],
+	onUpdateReactiveList: () => void,
 };
 
 type State = {
@@ -83,6 +89,7 @@ class DataBrowser extends Component<Props, State> {
 		this.setState({
 			pageSize,
 		});
+		this.props.onUpdateReactiveList();
 	};
 
 	handleSortChange = sortField => {
@@ -315,7 +322,6 @@ class DataBrowser extends Component<Props, State> {
 															},
 														}}
 													>
-														Found &nbsp;{' '}
 														<b>
 															{numberWithCommas(
 																total,
@@ -370,6 +376,7 @@ const mapDispatchToProps = {
 	fetchMappings,
 	onSelectedRows: setSelectedRows,
 	onSetUpdatingRow: setUpdatingRow,
+	onUpdateReactiveList: updateReactiveList,
 };
 
 DataBrowser.propTypes = {

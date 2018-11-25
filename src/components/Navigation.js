@@ -40,24 +40,18 @@ const Navigation = ({ history, indexes, isConnected }: Props) => {
 			</Item>
 			<Item key="import">
 				<Icon type="upload" />
-				Import
+				Import Data
 			</Item>
-			{(indexes.length <= 1 || !isConnected) && (
-				<Item key="preview">
-					<Icon type="search" />
-					Search Preview
-				</Item>
-			)}
-			{(indexes.length <= 1 || !isConnected) && (
-				<Item key="mappings">
-					<Icon type="sliders" />
-					Mappings
-				</Item>
-			)}
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="query">
 					<Icon type="search" />
 					Query Explorer
+				</Item>
+			)}
+			{(indexes.length <= 1 || !isConnected) && (
+				<Item key="preview">
+					<Icon type="experiment" />
+					Search Preview
 				</Item>
 			)}
 		</Menu>

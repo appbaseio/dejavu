@@ -16,6 +16,7 @@ import {
 import { addDataRequest } from '../../actions';
 import { isVaildJSON } from '../../utils';
 import getSampleData from '../../utils/sampleData';
+import labelStyles from '../CommonStyles/label';
 
 import Item from './Item.styles';
 import Cell from '../Cell';
@@ -219,6 +220,7 @@ class AddRowModal extends Component<Props, State> {
 					css={{
 						top: '10px',
 					}}
+					className={labelStyles}
 					destroyOnClose
 					maskClosable={false}
 					afterClose={this.handleAfterClose}

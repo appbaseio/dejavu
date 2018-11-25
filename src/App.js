@@ -7,7 +7,7 @@ import { mediaMin } from '@divyanshu013/media';
 import Dejavu from './components/Dejavu';
 import Importer from './components/Importer';
 import SearchPreview from './components/SearchPreview';
-import Mappings from './components/Mappings';
+// import Mappings from './components/Mappings';
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
 import QueryExplorer from './components/QueryExplorer';
@@ -109,10 +109,10 @@ class App extends Component {
 											path="/preview"
 											component={SearchPreview}
 										/>
-										<Route
+										{/* <Route
 											path="/mappings"
 											component={Mappings}
-										/>
+										/> */}
 										<Route
 											path="/query"
 											component={QueryExplorer}

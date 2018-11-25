@@ -14,6 +14,7 @@ import { getMappings, getIndexTypeMap } from '../../reducers/mappings';
 import { addMappingRequest } from '../../actions';
 import { es6mappings } from '../../utils/mappings';
 import { isVaildJSON } from '../../utils';
+import labelStyles from '../CommonStyles/label';
 
 import Item from './Item.styles';
 
@@ -215,6 +216,7 @@ class AddFieldModal extends Component<Props, State> {
 					css={{
 						top: '10px',
 					}}
+					className={labelStyles}
 					maskClosable={false}
 					destroyOnClose
 					afterClose={this.handleAfterClose}
