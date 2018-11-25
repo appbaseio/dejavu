@@ -146,7 +146,7 @@ class DataBrowser extends Component<Props, State> {
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 		const otherBaseProps = headers.length
-			? convertArrayToHeaders(headers)
+			? { headers: convertArrayToHeaders(headers) }
 			: {};
 
 		return (
