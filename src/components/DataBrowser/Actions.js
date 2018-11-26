@@ -2,9 +2,10 @@
 
 import React, { Fragment } from 'react';
 import { func } from 'prop-types';
-import { Button, Select, Tag } from 'antd';
+import { Button, Select } from 'antd';
 import { connect } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
+import { SelectedFilters } from '@appbaseio/reactivesearch';
 
 import Flex from '../Flex';
 import ShowHideColumn from './ShowHideColumns';
@@ -15,6 +16,8 @@ import UpdaeRow from './UpdateRow';
 
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getUpdatingRow } from '../../reducers/updatingRow';
+import colors from '../theme/colors';
+import overflowStyles from '../CommonStyles/overflowText';
 
 const { Option } = Select;
 
@@ -69,9 +72,23 @@ const Actions = ({
 				)}
 				<ModeSwitch />
 			</div>
-			<div>
+			<Flex alignItems="center">
+				<SelectedFilters />
 				{sortField !== '_score' && (
-					<Tag closable onClose={onResetSort}>
+					<Flex
+						alignItems="center"
+						css={{
+							margin: '0 5px',
+							background: colors.background,
+							minHeight: 30,
+							borderRadius: 3,
+							padding: '5px 8px',
+							lineHeight: '1.2rem',
+							maxWidth: 200,
+							fontSize: 13,
+						}}
+						className={overflowStyles}
+					>
 						<i
 							className={
 								sort === 'asc'
@@ -79,8 +96,28 @@ const Actions = ({
 									: 'fa fa-sort-alpha-desc'
 							}
 						/>
-						&nbsp; {(sortField || '').split('.')[0]}
-					</Tag>
+						<span
+							css={{
+								padding: '0 8px',
+								maxWidth: '80%',
+							}}
+							className={overflowStyles}
+						>
+							{(sortField || '').split('.')[0]}
+						</span>
+						<button
+							type="button"
+							css={{
+								outline: 0,
+								border: 0,
+								cursor: 'pointer',
+								background: 'none',
+							}}
+							onClick={onResetSort}
+						>
+							✕
+						</button>
+					</Flex>
 				)}
 				<Select
 					defaultValue={defaultPageSize}
@@ -93,7 +130,7 @@ const Actions = ({
 					<Option value={100}>100</Option>
 				</Select>
 				<ShowHideColumn />
-			</div>
+			</Flex>
 		</Flex>
 	</div>
 );

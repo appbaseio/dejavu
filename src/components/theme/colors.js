@@ -12,4 +12,5 @@ export default {
 	primary: '#1890ff',
 	editing: '#f0ad4e',
 	viewing: '#5cb85c',
+	background: '#eee',
 };
