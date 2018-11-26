@@ -103,16 +103,19 @@ const getTermsAggregationColumns = mappings => {
 			if (mappings.properties[item].type === 'string') {
 				if ((mappings.properties[item].fields || {}).raw) {
 					columns.push(`${item}.raw`);
+				} else if ((mappings.properties[item].fields || {}).keyword) {
+					columns.push(`${item}.keyword`);
 				} else {
 					columns.push(item);
 				}
 			}
 
-			if (
-				mappings.properties[item].type === 'text' &&
-				(mappings.properties[item].fields || {}).raw
-			) {
-				columns.push(`${item}.raw`);
+			if (mappings.properties[item].type === 'text') {
+				if ((mappings.properties[item].fields || {}).raw) {
+					columns.push(`${item}.raw`);
+				} else if ((mappings.properties[item].fields || {}).keyword) {
+					columns.push(`${item}.keyword`);
+				}
 			}
 		});
 	}

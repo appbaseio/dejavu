@@ -33,13 +33,16 @@ type Props = {
 	mode: string,
 	mappings: any,
 	appname: string,
-	handleSort: string => void,
+	handleSort: (string, any) => void,
 	sortField: string,
 	sort: string,
 	currentIds: any[],
 	onSelectedRows: any => void,
 	onSetUpdatingRow: any => void,
 };
+
+const getTermFilterIndex = (termFilterColumns, col) =>
+	termFilterColumns.findIndex(item => item.split('.').indexOf(col) > -1);
 
 class DataTableHeader extends Component<Props> {
 	handleSelectAllRows = e => {
@@ -54,6 +57,26 @@ class DataTableHeader extends Component<Props> {
 			onSelectedRows([]);
 		}
 		onSetUpdatingRow(null);
+	};
+
+	getSortableColum = col => {
+		const { mappings, appname } = this.props;
+
+		if (
+			mappings[appname].properties[col] &&
+			mappings[appname].properties[col].type &&
+			srotableTypes.indexOf(mappings[appname].properties[col].type) > -1
+		) {
+			if (
+				mappings[appname].properties[col].fields &&
+				mappings[appname].properties[col].fields.keyword
+			) {
+				return `${col}.keyword`;
+			}
+			return col;
+		}
+
+		return null;
 	};
 
 	render() {
@@ -88,12 +111,10 @@ class DataTableHeader extends Component<Props> {
 					<thead>
 						<tr>
 							{columns.map(col => {
-								const termFilterIndex =
-									termFilterColumns.indexOf(col) > -1
-										? termFilterColumns.indexOf(col)
-										: termFilterColumns.indexOf(
-												`${col}.raw`,
-										  );
+								const termFilterIndex = getTermFilterIndex(
+									termFilterColumns,
+									col,
+								);
 								return (
 									<th
 										key={col}
@@ -209,79 +230,75 @@ class DataTableHeader extends Component<Props> {
 															{col}
 														</span>
 													</Flex>
-													{mappings[appname]
-														.properties[col] &&
-														mappings[appname]
-															.properties[col]
-															.type &&
-														srotableTypes.indexOf(
-															mappings[appname]
-																.properties[col]
-																.type,
-														) > -1 && (
-															<Flex alignItems="center">
-																{termFilterIndex >
-																	-1 && (
-																	<TermFilter
-																		field={
-																			termFilterColumns[
-																				termFilterIndex
-																			]
-																		}
+													{this.getSortableColum(
+														col,
+													) && (
+														<Flex alignItems="center">
+															{termFilterIndex >
+																-1 && (
+																<TermFilter
+																	field={
+																		termFilterColumns[
+																			termFilterIndex
+																		]
+																	}
+																/>
+															)}
+															<button
+																type="button"
+																onClick={() => {
+																	const sortingCol = this.getSortableColum(
+																		col,
+																	);
+																	handleSort(
+																		// $FlowFixMe
+																		sortingCol,
+																	);
+																}}
+																css={{
+																	outline: 0,
+																	height:
+																		'15px',
+																	width:
+																		'15px',
+																	border: 0,
+																	cursor:
+																		'pointer',
+																	background:
+																		'none',
+																}}
+																className={
+																	filterIconStyles
+																}
+															>
+																{sortField.indexOf(
+																	col,
+																) === -1 && (
+																	<i
+																		className="fa fa-sort"
+																		css={{
+																			fontSize: 15,
+																		}}
 																	/>
 																)}
-																<button
-																	type="button"
-																	onClick={() => {
-																		handleSort(
-																			col,
-																		);
-																	}}
-																	css={{
-																		outline: 0,
-																		height:
-																			'15px',
-																		width:
-																			'15px',
-																		border: 0,
-																		cursor:
-																			'pointer',
-																		background:
-																			'none',
-																	}}
-																	className={
-																		filterIconStyles
-																	}
-																>
-																	{sortField.indexOf(
-																		col,
-																	) ===
-																		-1 && (
-																		<i
-																			className="fa fa-sort"
-																			css={{
-																				fontSize: 15,
-																			}}
-																		/>
-																	)}
-																	{sortField.indexOf(
-																		col,
-																	) > -1 && (
-																		<i
-																			className={
-																				sort ===
-																				'asc'
-																					? 'fa fa-caret-down'
-																					: 'fa fa-caret-up'
-																			}
-																			css={{
-																				fontSize: 15,
-																			}}
-																		/>
-																	)}
-																</button>
-															</Flex>
-														)}
+																{sortField.indexOf(
+																	col,
+																) > -1 && (
+																	<i
+																		className={
+																			sort ===
+																			'asc'
+																				? 'fa fa-caret-down'
+																				: 'fa fa-caret-up'
+																		}
+																		css={{
+																			fontSize: 15,
+																		}}
+																	/>
+																)}
+															</button>
+														</Flex>
+													)}
 												</Flex>
 											</StyledCell>
 										)}

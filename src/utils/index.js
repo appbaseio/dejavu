@@ -88,7 +88,7 @@ const numberWithCommas = x =>
 	x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 const getOnlySource = data => {
-	const { _id, _index, _type, ...others } = data;
+	const { _id, _index, _type, highlight, ...others } = data;
 	return others;
 };
 
