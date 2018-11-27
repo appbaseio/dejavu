@@ -248,6 +248,8 @@ class ConnectApp extends Component<Props, State> {
 			this.props.setHeaders([]);
 			this.setState({
 				customHeaders: [{ key: '', value: '' }],
+				appname: '',
+				url: '',
 			});
 			this.props.history.push({ search: searchQuery });
 		} else if (appname && url) {

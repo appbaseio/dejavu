@@ -10,6 +10,9 @@ const initialState = {
 	visibleColumns: [],
 	searchableColumns: [],
 	typePropertyMapping: {},
+	nestedVisibleColumns: [],
+	nestedSearchableColumns: [],
+	nestedColumns: [],
 };
 
 const mappings = (state = initialState, action) => {
@@ -23,6 +26,10 @@ const mappings = (state = initialState, action) => {
 		visibleColumns,
 		searchableColumns,
 		typePropertyMapping,
+		nestedVisibleColumns,
+		nestedSearchableColumns,
+		nestedColumns,
+		appName,
 	} = action;
 	switch (type) {
 		case MAPPINGS.MAPPINGS_FETCH_REQUEST:
@@ -42,6 +49,9 @@ const mappings = (state = initialState, action) => {
 				visibleColumns,
 				searchableColumns,
 				typePropertyMapping,
+				nestedVisibleColumns,
+				nestedSearchableColumns,
+				nestedColumns,
 			};
 		case MAPPINGS.MAPPINGS_FETCH_FAILURE:
 			return {
@@ -52,6 +62,26 @@ const mappings = (state = initialState, action) => {
 			return {
 				...state,
 				visibleColumns,
+			};
+		case MAPPINGS.SET_NESTED_VISIBLE_COLUMNS:
+			return {
+				...state,
+				nestedVisibleColumns,
+			};
+		case MAPPINGS.SET_ARRAY_FIELDS:
+			return {
+				...state,
+				nestedColumns,
+				nestedVisibleColumns,
+				data: {
+					[appName]: {
+						...state.data[appName],
+						nestedProperties: {
+							...state.data[appName].nestedProperties,
+							...action.nestedMappings,
+						},
+					},
+				},
 			};
 		default:
 			return state;
@@ -68,6 +98,10 @@ const getColumns = state => state.mappings.columns;
 const getVisibleColumns = state => state.mappings.visibleColumns;
 const getSearchableColumns = state => state.mappings.searchableColumns;
 const getTypePropertyMapping = state => state.mappings.typePropertyMapping;
+const getNestedColumns = state => state.mappings.nestedColumns;
+const getNestedVisibleColumns = state => state.mappings.nestedVisibleColumns;
+const getNestedSearchableColumns = state =>
+	state.mappings.nestedSearchableColumns;
 
 export {
 	getMappings,
@@ -79,6 +113,9 @@ export {
 	getVisibleColumns,
 	getSearchableColumns,
 	getTypePropertyMapping,
+	getNestedColumns,
+	getNestedVisibleColumns,
+	getNestedSearchableColumns,
 };
 
 export default mappings;

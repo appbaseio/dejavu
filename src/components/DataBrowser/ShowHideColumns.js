@@ -2,19 +2,30 @@
 
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
-import { string, arrayOf, func, object } from 'prop-types';
 import { Button, Checkbox, Dropdown } from 'antd';
 
-import { getColumns, getVisibleColumns } from '../../reducers/mappings';
-import { setVisibleColumns } from '../../actions/mappings';
+import {
+	getColumns,
+	getVisibleColumns,
+	getNestedVisibleColumns,
+	getNestedColumns,
+} from '../../reducers/mappings';
+import {
+	setVisibleColumns,
+	setNestedVisibleColumns,
+} from '../../actions/mappings';
 import colors from '../theme/colors';
 
 const { Group } = Checkbox;
 
 type Props = {
 	columns: string[],
+	nestedColumns: string[],
 	visibleColumns: string[],
 	setVisibleColumns: (string[]) => void,
+	nestedVisibleColumns: string[],
+	isShowingNestedColumns: boolean,
+	setNestedVisibleColumns: (string[]) => void,
 };
 
 type State = {
@@ -43,7 +54,7 @@ class ShowHideColumns extends Component<Props, State> {
 		);
 	}
 
-	handleDropdownOutsideClick = (e: object) => {
+	handleDropdownOutsideClick = (e: any) => {
 		if (
 			this.showHideDropdownNode &&
 			this.showHideDropdownNode.current &&
@@ -64,13 +75,26 @@ class ShowHideColumns extends Component<Props, State> {
 
 	handleSelectAll = e => {
 		const { checked } = e.target;
+		const {
+			columns,
+			nestedColumns,
+			isShowingNestedColumns,
+			setNestedVisibleColumns: onSetNestedVisibleColumns,
+			setVisibleColumns: onSetVisibleColumns,
+		} = this.props;
 		let visibleColumns;
+
 		if (checked) {
-			visibleColumns = this.props.columns;
+			visibleColumns = isShowingNestedColumns ? nestedColumns : columns;
 		} else {
 			visibleColumns = [];
 		}
-		this.props.setVisibleColumns(visibleColumns);
+
+		if (isShowingNestedColumns) {
+			onSetNestedVisibleColumns(visibleColumns);
+		} else {
+			onSetVisibleColumns(visibleColumns);
+		}
 	};
 
 	handleVisibleColumnsChange = visibleColumns => {
@@ -89,7 +113,11 @@ class ShowHideColumns extends Component<Props, State> {
 			currentVissibleColums = ['_index', ...currentVissibleColums];
 		}
 
-		this.props.setVisibleColumns(currentVissibleColums);
+		if (this.props.isShowingNestedColumns) {
+			this.props.setNestedVisibleColumns(currentVissibleColums);
+		} else {
+			this.props.setVisibleColumns(currentVissibleColums);
+		}
 	};
 
 	toggleDropDown = () => {
@@ -99,8 +127,20 @@ class ShowHideColumns extends Component<Props, State> {
 	};
 
 	render() {
-		const { columns: allColumns, visibleColumns } = this.props;
+		const {
+			columns: allColumns,
+			nestedColumns: allNestedColumns,
+			visibleColumns,
+			isShowingNestedColumns,
+			nestedVisibleColumns,
+		} = this.props;
 		const { showDropdown } = this.state;
+		const allMappingColumns = isShowingNestedColumns
+			? allNestedColumns
+			: allColumns;
+		const columns = isShowingNestedColumns
+			? nestedVisibleColumns
+			: visibleColumns;
 
 		return (
 			<Dropdown
@@ -119,11 +159,11 @@ class ShowHideColumns extends Component<Props, State> {
 					>
 						<Checkbox
 							checked={
-								visibleColumns.length === allColumns.length
+								columns.length === allMappingColumns.length
 							}
 							indeterminate={
-								visibleColumns.length < allColumns.length &&
-								visibleColumns.length
+								columns.length < allMappingColumns.length &&
+								columns.length
 							}
 							css={{
 								marginBottom: 5,
@@ -134,12 +174,12 @@ class ShowHideColumns extends Component<Props, State> {
 							Select All
 						</Checkbox>
 						<Group
-							options={allColumns}
+							options={allMappingColumns}
 							css={{
 								display: 'grid',
 								gridGap: 5,
 							}}
-							value={visibleColumns}
+							value={columns}
 							onChange={this.handleVisibleColumnsChange}
 						/>
 					</div>
@@ -165,17 +205,14 @@ class ShowHideColumns extends Component<Props, State> {
 
 const mapStateToProps = state => ({
 	columns: getColumns(state),
+	nestedColumns: getNestedColumns(state),
 	visibleColumns: getVisibleColumns(state),
+	nestedVisibleColumns: getNestedVisibleColumns(state),
 });
 
 const mapDispatchToProps = {
 	setVisibleColumns,
-};
-
-ShowHideColumns.propTypes = {
-	columns: arrayOf(string).isRequired,
-	visibleColumns: arrayOf(string).isRequired,
-	setVisibleColumns: func.isRequired,
+	setNestedVisibleColumns,
 };
 
 export default connect(

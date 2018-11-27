@@ -13,4 +13,7 @@ export default {
 	editing: '#f0ad4e',
 	viewing: '#5cb85c',
 	background: '#eee',
+	text: '#333',
+	hoverBackground: '#ccc',
+	hoverLink: '#096dd9',
 };

@@ -1,4 +1,6 @@
 import appbase from 'appbase-js';
+import { unflatten } from 'flat';
+
 import { parseUrl, getCustomHeaders, convertArrayToHeaders } from '../utils';
 import CustomError from '../utils/CustomError';
 
@@ -12,13 +14,12 @@ const setCellValue = async (app, type, rawUrl, id, property, value) => {
 			credentials,
 		});
 		api.setHeaders(convertArrayToHeaders(customHeaders));
+		const doc = unflatten({ [property]: value });
 		const res = await api.update({
 			type,
 			id,
 			body: {
-				doc: {
-					[property]: value,
-				},
+				doc,
 			},
 		});
 		return res;

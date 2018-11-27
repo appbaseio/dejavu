@@ -8,16 +8,16 @@ import {
 } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { string, func, bool, object, number, arrayOf, array } from 'prop-types';
-import { Skeleton, Spin, Icon } from 'antd';
+import { Skeleton, Spin, Icon, Checkbox } from 'antd';
 import { css } from 'react-emotion';
 import { mediaMin } from '@divyanshu013/media';
 
-import DataTable from '../DataTable';
 import Flex from '../Flex';
 import Actions from './Actions';
 import AddRowModal from './AddRowModal';
 import AddFieldModal from './AddFieldModal';
 import DataTableHeader from './DataTableHeader';
+import DataTable from '../DataTable';
 
 import {
 	fetchMappings,
@@ -33,6 +33,7 @@ import {
 	getIndexes,
 	getTypes,
 	getSearchableColumns,
+	getNestedSearchableColumns,
 } from '../../reducers/mappings';
 import {
 	parseUrl,
@@ -58,12 +59,14 @@ type Props = {
 	onSetUpdatingRow: any => void,
 	headers: any[],
 	onUpdateReactiveList: () => void,
+	nestedSearchableColumns: string[],
 };
 
 type State = {
 	sortField: string,
 	sort: string,
 	pageSize: number,
+	isShowingNestedColumns: boolean,
 };
 
 class DataBrowser extends Component<Props, State> {
@@ -75,6 +78,7 @@ class DataBrowser extends Component<Props, State> {
 		sort: 'desc',
 		sortField: '_score',
 		pageSize: 15,
+		isShowingNestedColumns: false,
 	};
 
 	componentDidMount() {
@@ -83,6 +87,15 @@ class DataBrowser extends Component<Props, State> {
 
 	handleReload = () => {
 		this.props.fetchMappings();
+	};
+
+	handleNestedColumnToggle = e => {
+		const {
+			target: { checked },
+		} = e;
+		this.setState({
+			isShowingNestedColumns: checked,
+		});
 	};
 
 	handlePageSizeChange = pageSize => {
@@ -123,13 +136,22 @@ class DataBrowser extends Component<Props, State> {
 			reactiveListKey,
 			isDataLoading,
 			indexes,
-			types,
-			searchableColumns,
+			searchableColumns: searchCols,
 			onSelectedRows,
 			onSetUpdatingRow,
+			nestedSearchableColumns,
 			headers,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
+		const {
+			sort,
+			sortField,
+			pageSize,
+			isShowingNestedColumns,
+		} = this.state;
+		const searchableColumns = isShowingNestedColumns
+			? nestedSearchableColumns
+			: searchCols;
 		const searchColumns = [
 			...searchableColumns,
 			...searchableColumns.map(field => `${field}.raw`),
@@ -142,10 +164,12 @@ class DataBrowser extends Component<Props, State> {
 			...Array(searchableColumns.length).fill(1),
 			...Array(searchableColumns.length).fill(1),
 		];
-		const { sort, sortField, pageSize } = this.state;
+
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
-		const otherBaseProps = headers.length
+		const otherBaseProps = headers.filter(
+			item => item.key.trim() && item.value.trim(),
+		).length
 			? { headers: convertArrayToHeaders(headers) }
 			: {};
 
@@ -157,7 +181,6 @@ class DataBrowser extends Component<Props, State> {
 						<div css={{ position: 'relative' }}>
 							<ReactiveBase
 								app={indexes.join(',')}
-								type={types.join(',')}
 								credentials={credentials}
 								url={url}
 								{...otherBaseProps}
@@ -172,7 +195,32 @@ class DataBrowser extends Component<Props, State> {
 										sort={sort}
 										sortField={sortField}
 										onResetSort={this.resetSort}
+										isShowingNestedColumns={
+											isShowingNestedColumns
+										}
 									/>
+									<Flex
+										justifyContent="flex-end"
+										css={{
+											width: '100%',
+											marginBottom: 10,
+										}}
+									>
+										<Checkbox
+											checked={isShowingNestedColumns}
+											onChange={
+												this.handleNestedColumnToggle
+											}
+											css={{
+												marginLeft: 10,
+											}}
+										>
+											{isShowingNestedColumns
+												? 'Hide '
+												: 'Show '}
+											object data as columns
+										</Checkbox>
+									</Flex>
 									<div css={{ position: 'relative' }}>
 										<DataSearch
 											componentId="GlobalSearch"
@@ -223,6 +271,9 @@ class DataBrowser extends Component<Props, State> {
 											sort={sort}
 											sortField={sortField}
 											handleSort={this.handleSortChange}
+											isShowingNestedColumns={
+												isShowingNestedColumns
+											}
 										/>
 										<ReactiveList
 											key={String(reactiveListKey)}
@@ -292,6 +343,9 @@ class DataBrowser extends Component<Props, State> {
 															mappings[appname]
 														}
 														pageSize={pageSize}
+														isShowingNestedColumns={
+															isShowingNestedColumns
+														}
 													/>
 												) : null
 											}
@@ -346,6 +400,7 @@ class DataBrowser extends Component<Props, State> {
 							},
 						}}
 						wrap="no-wrap"
+						alignItems="center"
 					>
 						<AddRowModal />
 						<AddFieldModal />
@@ -371,6 +426,7 @@ const mapStateToProps = state => ({
 	indexes: getIndexes(state),
 	types: getTypes(state),
 	searchableColumns: getSearchableColumns(state),
+	nestedSearchableColumns: getNestedSearchableColumns(state),
 	headers: getHeaders(state),
 });
 
@@ -393,6 +449,7 @@ DataBrowser.propTypes = {
 	types: arrayOf(string).isRequired,
 	searchableColumns: arrayOf(string),
 	headers: array,
+	nestedSearchableColumns: arrayOf(string),
 };
 
 export default connect(

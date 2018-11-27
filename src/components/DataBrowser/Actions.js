@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Fragment } from 'react';
-import { func } from 'prop-types';
 import { Button, Select } from 'antd';
 import { connect } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
@@ -30,6 +29,7 @@ type Props = {
 	onResetSort: () => void,
 	selectedRows: string[],
 	updatingRow?: any,
+	isShowingNestedColumns: boolean,
 };
 
 const Actions = ({
@@ -41,10 +41,11 @@ const Actions = ({
 	onResetSort,
 	selectedRows,
 	updatingRow,
+	isShowingNestedColumns,
 }: Props) => (
 	<div
 		css={{
-			margin: '20px 0',
+			margin: '10px 0',
 			display: 'none',
 			[mediaMin.medium]: {
 				display: 'block',
@@ -73,12 +74,16 @@ const Actions = ({
 				<ModeSwitch />
 			</div>
 			<Flex alignItems="center">
-				<SelectedFilters />
+				<SelectedFilters
+					css={{
+						marginRight: 5,
+					}}
+				/>
 				{sortField !== '_score' && (
 					<Flex
 						alignItems="center"
 						css={{
-							margin: '0 5px',
+							marginRight: 5,
 							background: colors.background,
 							minHeight: 30,
 							borderRadius: 3,
@@ -86,6 +91,13 @@ const Actions = ({
 							lineHeight: '1.2rem',
 							maxWidth: 200,
 							fontSize: 13,
+							'&:hover': {
+								backgroundColor: colors.hoverBackground,
+								color: colors.hoverLink,
+								span: {
+									textDecoration: 'line-through',
+								},
+							},
 						}}
 						className={overflowStyles}
 					>
@@ -129,15 +141,13 @@ const Actions = ({
 					<Option value={50}>50</Option>
 					<Option value={100}>100</Option>
 				</Select>
-				<ShowHideColumn />
+				<ShowHideColumn
+					isShowingNestedColumns={isShowingNestedColumns}
+				/>
 			</Flex>
 		</Flex>
 	</div>
 );
-
-Actions.propTypes = {
-	onReload: func.isRequired,
-};
 
 const mpaStateToProps = state => ({
 	selectedRows: getSelectedRows(state),

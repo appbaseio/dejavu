@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import get from 'lodash/get';
+import difference from 'lodash/difference';
 
 import {
 	setCellValueRequest,
@@ -10,12 +12,17 @@ import {
 	clearError,
 	updateReactiveList,
 	setCurrentIds,
+	setArrayFields,
 } from '../../actions';
-import { getUrl } from '../../reducers/app';
-import { getVisibleColumns } from '../../reducers/mappings';
-import { META_FIELDS } from '../../utils/mappings';
+import { getUrl, getAppname } from '../../reducers/app';
+import {
+	getVisibleColumns,
+	getNestedVisibleColumns,
+	getNestedColumns,
+} from '../../reducers/mappings';
+import { META_FIELDS, getNestedArrayField } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
-import { isEqualArray } from '../../utils';
+import { isEqualArray, isEmptyObject } from '../../utils';
 
 import Cell from '../Cell';
 import StyledCell from './StyledCell';
@@ -33,9 +40,14 @@ type Props = {
 	mappings: any,
 	setCellValue: (string, string, any, string, string) => void,
 	visibleColumns: string[],
+	nestedVisibleColumns: string[],
 	mode: string,
 	pageSize: number,
 	onSetCurrentIds: any => void,
+	isShowingNestedColumns: boolean,
+	nestedColumns: string[],
+	appName: string,
+	onSetArrayFields: (string[], string[], any, string) => void,
 };
 class DataTable extends Component<Props, State> {
 	state = {
@@ -51,8 +63,67 @@ class DataTable extends Component<Props, State> {
 			!isEqualArray(this.state.data, nextState.data) ||
 			this.props.mode !== nextProps.mode ||
 			this.props.pageSize !== nextProps.pageSize ||
-			this.props.visibleColumns.length !== nextProps.visibleColumns.length
+			this.props.visibleColumns.length !==
+				nextProps.visibleColumns.length ||
+			this.props.isShowingNestedColumns !==
+				nextProps.isShowingNestedColumns ||
+			this.props.nestedVisibleColumns.length !==
+				nextProps.nestedVisibleColumns.length
 		);
+	}
+
+	componentDidUpdate(prevProps) {
+		const {
+			isShowingNestedColumns,
+			mappings,
+			nestedColumns,
+			nestedVisibleColumns,
+			data,
+			appName,
+			onSetArrayFields,
+		} = this.props;
+		if (
+			prevProps.isShowingNestedColumns !== isShowingNestedColumns &&
+			isShowingNestedColumns
+		) {
+			const { fieldsToBeDeleted, parentFields } = getNestedArrayField(
+				data,
+				mappings.nestedProperties,
+			);
+
+			if (
+				!isEmptyObject(parentFields) &&
+				difference(
+					Object.keys(parentFields),
+					Object.keys(mappings.nestedProperties),
+				).length > 0
+			) {
+				const diffAllFields = difference(
+					nestedColumns,
+					Object.keys(fieldsToBeDeleted),
+				);
+
+				const diffVisibleFields = difference(
+					nestedVisibleColumns,
+					Object.keys(fieldsToBeDeleted),
+				);
+
+				const parentFieldsMapping = {};
+				Object.keys(parentFields).forEach(key => {
+					parentFieldsMapping[key] = get(
+						mappings.properties,
+						key.split('.').join('.properties.'),
+					);
+				});
+
+				onSetArrayFields(
+					[...diffAllFields, ...Object.keys(parentFields)],
+					[...diffVisibleFields, ...Object.keys(parentFields)],
+					parentFieldsMapping,
+					appName,
+				);
+			}
+		}
 	}
 
 	handleChange = (row, column, value) => {
@@ -75,9 +146,23 @@ class DataTable extends Component<Props, State> {
 	};
 
 	render() {
-		const { visibleColumns, mode, mappings, pageSize } = this.props;
+		const {
+			visibleColumns,
+			mode,
+			mappings,
+			pageSize,
+			nestedVisibleColumns,
+			isShowingNestedColumns,
+		} = this.props;
 		const { data } = this.state;
-		const columns = ['_id', ...visibleColumns];
+		const mappingCols = isShowingNestedColumns
+			? nestedVisibleColumns
+			: visibleColumns;
+
+		const columns = ['_id', ...mappingCols];
+		const mapProp = isShowingNestedColumns
+			? 'nestedProperties'
+			: 'properties';
 
 		return (
 			<table
@@ -122,13 +207,13 @@ class DataTable extends Component<Props, State> {
 															)
 														}
 														mapping={
-															mappings.properties[
+															mappings[mapProp][
 																col
 															]
 														}
 														shouldAutoFocus
 													>
-														{dataItem[col]}
+														{get(dataItem, col)}
 													</Cell>
 												)}
 											</div>
@@ -148,6 +233,9 @@ const mapStateToProps = state => ({
 	visibleColumns: getVisibleColumns(state),
 	mode: getMode(state),
 	appUrl: getUrl(state),
+	nestedVisibleColumns: getNestedVisibleColumns(state),
+	nestedColumns: getNestedColumns(state),
+	appName: getAppname(state),
 });
 
 const mapDispatchToProps = {
@@ -157,6 +245,7 @@ const mapDispatchToProps = {
 	clearError,
 	updateReactiveList,
 	onSetCurrentIds: setCurrentIds,
+	onSetArrayFields: setArrayFields,
 };
 
 export default connect(

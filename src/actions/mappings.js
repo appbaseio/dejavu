@@ -13,6 +13,9 @@ const fetchMappingsSuccess = (
 	visibleColumns,
 	searchableColumns,
 	typePropertyMapping,
+	nestedVisibleColumns,
+	nestedSearchableColumns,
+	nestedColumns,
 ) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
@@ -23,6 +26,9 @@ const fetchMappingsSuccess = (
 	visibleColumns,
 	searchableColumns,
 	typePropertyMapping,
+	nestedVisibleColumns,
+	nestedSearchableColumns,
+	nestedColumns,
 });
 
 const fetchMappingsFailure = () => ({
@@ -50,6 +56,24 @@ const setVisibleColumns = visibleColumns => ({
 	visibleColumns,
 });
 
+const setNestedVisibleColumns = nestedVisibleColumns => ({
+	type: MAPPINGS.SET_NESTED_VISIBLE_COLUMNS,
+	nestedVisibleColumns,
+});
+
+const setArrayFields = (
+	nestedColumns,
+	nestedVisibleColumns,
+	nestedMappings,
+	appName,
+) => ({
+	type: MAPPINGS.SET_ARRAY_FIELDS,
+	nestedColumns,
+	nestedVisibleColumns,
+	nestedMappings,
+	appName,
+});
+
 export {
 	fetchMappings,
 	fetchMappingsSuccess,
@@ -58,4 +82,6 @@ export {
 	addMappingSuccess,
 	addMappingFailure,
 	setVisibleColumns,
+	setNestedVisibleColumns,
+	setArrayFields,
 };

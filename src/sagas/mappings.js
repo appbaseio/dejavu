@@ -12,7 +12,11 @@ import {
 } from '../actions';
 import { getAppname, getUrl } from '../reducers/app';
 import { isEmptyObject } from '../utils';
-import { extractColumns, META_FIELDS } from '../utils/mappings';
+import {
+	extractColumns,
+	META_FIELDS,
+	getMappingsTree,
+} from '../utils/mappings';
 import CustomError from '../utils/CustomError';
 
 const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
@@ -28,6 +32,7 @@ function* handleFetchMappings() {
 		if (!isEmptyObject(data)) {
 			const indexes = Object.keys(data);
 			let properties = {};
+			let nestedProperties = {};
 			const types = [];
 			const indexTypeMap = {};
 			const typePropertyMapping = {};
@@ -46,15 +51,21 @@ function* handleFetchMappings() {
 								type,
 							];
 							types.push(type);
-
 							properties = {
 								...properties,
 								...data[index].mappings[type].properties,
 							};
+							nestedProperties = {
+								...properties,
+								...getMappingsTree(
+									data[index].mappings[type].properties,
+								),
+							};
 
 							typePropertyMapping[index] = {};
-							typePropertyMapping[index][type] =
-								data[index].mappings[type].properties;
+							typePropertyMapping[index][type] = getMappingsTree(
+								data[index].mappings[type].properties,
+							);
 						}
 					});
 				} else {
@@ -68,17 +79,32 @@ function* handleFetchMappings() {
 			const mappings = {
 				[appname]: {
 					properties,
+					nestedProperties,
 				},
 			};
 
 			const allColumns = [
 				...META_FIELDS,
-				...extractColumns(mappings[appname]),
+				...extractColumns(mappings[appname], 'properties'),
+			];
+
+			const allNestedColumns = [
+				...META_FIELDS,
+				...extractColumns(mappings[appname], 'nestedProperties'),
 			];
 
 			let visibleColumns = allColumns.filter(col => col !== '_type');
 			if (indexes.length <= 1) {
 				visibleColumns = visibleColumns.filter(col => col !== '_index');
+			}
+
+			let nestedVisibleColumns = allNestedColumns.filter(
+				col => col !== '_type',
+			);
+			if (indexes.length <= 1) {
+				nestedVisibleColumns = nestedVisibleColumns.filter(
+					col => col !== '_index',
+				);
 			}
 
 			const filteredTypes = types.filter(
@@ -91,6 +117,14 @@ function* handleFetchMappings() {
 					properties[property].type === 'text',
 			);
 
+			const nestedSearchableColumns = Object.keys(
+				nestedProperties,
+			).filter(
+				property =>
+					nestedProperties[property].type === 'string' ||
+					nestedProperties[property].type === 'text',
+			);
+
 			yield put(
 				fetchMappingsSuccess(
 					mappings,
@@ -101,6 +135,9 @@ function* handleFetchMappings() {
 					visibleColumns,
 					searchableColumns,
 					typePropertyMapping,
+					nestedVisibleColumns,
+					nestedSearchableColumns,
+					allNestedColumns,
 				),
 			);
 		} else {

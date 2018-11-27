@@ -1,5 +1,7 @@
-const extractColumns = mappings =>
-	Object.keys((mappings || {}).properties || []);
+import get from 'lodash/get';
+
+const extractColumns = (mappings, key) =>
+	Object.keys((mappings || {})[key] || []);
 
 const META_FIELDS = ['_index', '_type'];
 
@@ -100,7 +102,8 @@ const getTermsAggregationColumns = mappings => {
 
 	if (mappings && mappings.properties) {
 		Object.keys(mappings.properties).forEach(item => {
-			if (mappings.properties[item].type === 'string') {
+			const { type } = mappings.properties[item];
+			if (type === 'string') {
 				if ((mappings.properties[item].fields || {}).raw) {
 					columns.push(`${item}.raw`);
 				} else if ((mappings.properties[item].fields || {}).keyword) {
@@ -110,12 +113,25 @@ const getTermsAggregationColumns = mappings => {
 				}
 			}
 
-			if (mappings.properties[item].type === 'text') {
+			if (type === 'text') {
 				if ((mappings.properties[item].fields || {}).raw) {
 					columns.push(`${item}.raw`);
 				} else if ((mappings.properties[item].fields || {}).keyword) {
 					columns.push(`${item}.keyword`);
 				}
+			}
+
+			if (
+				[
+					es6mappings.Long.type,
+					es6mappings.Integer.type,
+					es6mappings.Double.type,
+					es6mappings.Float.type,
+					es6mappings.Date.type,
+					es6mappings.Boolean.type,
+				].indexOf(type) > -1
+			) {
+				columns.push(item);
 			}
 		});
 	}
@@ -123,11 +139,85 @@ const getTermsAggregationColumns = mappings => {
 	return columns;
 };
 
-// eslint-disable-next-line
+const getFieldsTree = (mappings = {}, prefix = null) => {
+	let tree = {};
+	Object.keys(mappings).forEach(key => {
+		if (mappings[key].properties) {
+			tree = {
+				...tree,
+				...getFieldsTree(
+					mappings[key].properties,
+					`${prefix ? `${prefix}.` : ''}${key}`,
+				),
+			};
+		} else {
+			const originalFields = mappings[key].fields;
+			tree = {
+				...tree,
+				[`${prefix ? `${prefix}.` : ''}${key}`]: {
+					type: mappings[key].type,
+					fields: mappings[key].fields
+						? Object.keys(mappings[key].fields)
+						: [],
+					originalFields: originalFields || {},
+				},
+			};
+		}
+	});
+
+	return tree;
+};
+
+const getMappingsTree = (mappings = {}) => {
+	let tree = {};
+	Object.keys(mappings).forEach(key => {
+		if (mappings[key].properties) {
+			tree = {
+				...tree,
+				...getFieldsTree(mappings[key].properties, key),
+			};
+		}
+	});
+
+	return tree;
+};
+
+const getNestedArrayField = (data, mappings) => {
+	const fieldsToBeDeleted = {};
+	const parentFields = {};
+	const indexTypeMap = {};
+	data.forEach(dataItem => {
+		Object.keys(mappings).forEach(col => {
+			if (!get(dataItem, col) && col.indexOf('.') > -1) {
+				const parentPath = col.substring(0, col.lastIndexOf('.'));
+				const parentData = get(dataItem, parentPath);
+				if (parentData && Array.isArray(parentData)) {
+					fieldsToBeDeleted[col] = true;
+					parentFields[parentPath] = true;
+					indexTypeMap[dataItem._index] = {
+						[dataItem._type]: {
+							...(indexTypeMap[dataItem._index]
+								? indexTypeMap[dataItem._index][
+										dataItem._type
+								  ] || {}
+								: {}),
+							[parentPath]: true,
+						},
+					};
+				}
+			}
+		});
+	});
+
+	return { parentFields, fieldsToBeDeleted, indexTypeMap };
+};
+
 export {
 	extractColumns,
 	es6mappings,
 	META_FIELDS,
 	getSortableTypes,
 	getTermsAggregationColumns,
+	getMappingsTree,
+	getNestedArrayField,
 };

@@ -12,6 +12,7 @@ import {
 	addMappingRequest,
 	addMappingSuccess,
 	addMappingFailure,
+	setArrayFields,
 } from './mappings';
 import {
 	setCellActive,
@@ -46,6 +47,7 @@ export {
 	addMappingRequest,
 	addMappingSuccess,
 	addMappingFailure,
+	setArrayFields,
 	// cell
 	setCellActive,
 	setCellHighlight,

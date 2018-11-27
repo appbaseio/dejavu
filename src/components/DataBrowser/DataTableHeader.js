@@ -11,7 +11,11 @@ import Flex from '../Flex';
 
 import { setSelectedRows, setUpdatingRow } from '../../actions';
 import { getAppname } from '../../reducers/app';
-import { getMappings, getVisibleColumns } from '../../reducers/mappings';
+import {
+	getMappings,
+	getVisibleColumns,
+	getNestedVisibleColumns,
+} from '../../reducers/mappings';
 import {
 	getTermsAggregationColumns,
 	getSortableTypes,
@@ -22,10 +26,11 @@ import { getMode } from '../../reducers/mode';
 import popoverContent from '../CommonStyles/popoverContent';
 import colors from '../theme/colors';
 import idFieldStyles from '../CommonStyles/idField';
+import overflowStyles from '../CommonStyles/overflowText';
 import filterIconStyles from '../CommonStyles/filterIcons';
 import { MODES } from '../../constants';
 
-const srotableTypes = getSortableTypes();
+const sortableTypes = getSortableTypes();
 
 type Props = {
 	visibleColumns: string[],
@@ -39,6 +44,8 @@ type Props = {
 	currentIds: any[],
 	onSelectedRows: any => void,
 	onSetUpdatingRow: any => void,
+	nestedVisibleColumns: string[],
+	isShowingNestedColumns: boolean,
 };
 
 const getTermFilterIndex = (termFilterColumns, col) =>
@@ -60,19 +67,30 @@ class DataTableHeader extends Component<Props> {
 	};
 
 	getSortableColum = col => {
-		const { mappings, appname } = this.props;
+		const { mappings, appname, isShowingNestedColumns } = this.props;
+		const mapProp = isShowingNestedColumns
+			? 'nestedProperties'
+			: 'properties';
 
 		if (
-			mappings[appname].properties[col] &&
-			mappings[appname].properties[col].type &&
-			srotableTypes.indexOf(mappings[appname].properties[col].type) > -1
+			mappings[appname][mapProp][col] &&
+			mappings[appname][mapProp][col].type &&
+			sortableTypes.indexOf(mappings[appname][mapProp][col].type) > -1
 		) {
 			if (
-				mappings[appname].properties[col].fields &&
-				mappings[appname].properties[col].fields.keyword
+				mappings[appname][mapProp][col].fields &&
+				mappings[appname][mapProp][col].fields.keyword
 			) {
 				return `${col}.keyword`;
 			}
+
+			if (
+				mappings[appname][mapProp][col].originalFields &&
+				mappings[appname][mapProp][col].originalFields.keyword
+			) {
+				return `${col}.keyword`;
+			}
+
 			return col;
 		}
 
@@ -90,8 +108,16 @@ class DataTableHeader extends Component<Props> {
 			sortField,
 			sort,
 			currentIds,
+			isShowingNestedColumns,
+			nestedVisibleColumns,
 		} = this.props;
-		const columns = ['_id', ...visibleColumns];
+		const mappingCols = isShowingNestedColumns
+			? nestedVisibleColumns
+			: visibleColumns;
+		const columns = ['_id', ...mappingCols];
+		const mapProp = isShowingNestedColumns
+			? 'nestedProperties'
+			: 'properties';
 		const termFilterColumns = mappings
 			? getTermsAggregationColumns(mappings[appname])
 			: [];
@@ -201,34 +227,47 @@ class DataTableHeader extends Component<Props> {
 												<Flex
 													justifyContent="space-between"
 													alignItems="center"
+													wrap="nowrap"
 													css={{
 														width: '100%',
 													}}
 												>
-													<Flex alignItems="center">
-														{mappings[appname]
-															.properties[
-															col
-														] && (
+													<Flex
+														alignItems="center"
+														wrap="nowrap"
+													>
+														{mappings[appname][
+															mapProp
+														][col] && (
 															<MappingsDropdown
 																mapping={
 																	mappings[
 																		appname
-																	]
-																		.properties[
+																	][mapProp][
 																		col
 																	]
 																}
 															/>
 														)}
-														<span
-															css={{
-																marginLeft:
-																	'10px',
-															}}
+														<Popover
+															content={col}
+															trigger="click"
 														>
-															{col}
-														</span>
+															<span
+																css={{
+																	marginLeft:
+																		'10px',
+																	cursor:
+																		'pointer',
+																	maxWidth: 120,
+																}}
+																className={
+																	overflowStyles
+																}
+															>
+																{col}
+															</span>
+														</Popover>
 													</Flex>
 													{this.getSortableColum(
 														col,
@@ -288,11 +327,13 @@ class DataTableHeader extends Component<Props> {
 																		className={
 																			sort ===
 																			'asc'
-																				? 'fa fa-caret-down'
-																				: 'fa fa-caret-up'
+																				? 'fa fa-caret-up'
+																				: 'fa fa-caret-down'
 																		}
 																		css={{
 																			fontSize: 15,
+																			color:
+																				'#333 !important',
 																		}}
 																	/>
 																)}
@@ -321,6 +362,7 @@ const mapStateToProps = state => ({
 	selectedRows: getSelectedRows(state),
 	mode: getMode(state),
 	currentIds: getCurrentIds(state),
+	nestedVisibleColumns: getNestedVisibleColumns(state),
 });
 
 const mapDispatchToProps = {

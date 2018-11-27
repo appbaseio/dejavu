@@ -5,6 +5,7 @@ import { Modal, Input, Select, Row, Col, Button, Tabs } from 'antd';
 import { func, object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
+import { unflatten } from 'flat';
 
 import 'brace/mode/json';
 import 'brace/theme/github';
@@ -86,7 +87,7 @@ class AddRowModal extends Component<Props, State> {
 
 		const sampleData = getSampleData(properties);
 		this.setState({
-			addDataValue: JSON.stringify(sampleData, null, 2),
+			addDataValue: JSON.stringify(unflatten(sampleData), null, 2),
 		});
 	};
 

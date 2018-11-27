@@ -9,7 +9,7 @@ type State = {
 };
 
 type Props = {
-	description: string,
+	description?: string,
 };
 
 class ErrorMessage extends Component<Props, State> {
@@ -42,7 +42,7 @@ class ErrorMessage extends Component<Props, State> {
 }
 
 ErrorMessage.propTypes = {
-	description: string.isRequired,
+	description: string,
 };
 
 export default ErrorMessage;
