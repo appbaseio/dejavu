@@ -290,6 +290,9 @@ class DataBrowser extends Component<Props, State> {
 													'GlobalSearch',
 													...getTermsAggregationColumns(
 														mappings[appname],
+														isShowingNestedColumns
+															? 'nestedProperties'
+															: 'properties',
 													),
 												],
 											}}

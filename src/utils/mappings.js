@@ -97,16 +97,28 @@ const getSortableTypes = () => {
 	return [...sortableTypes, 'string'];
 };
 
-const getTermsAggregationColumns = mappings => {
+const getTermsAggregationColumns = (mappings, mapProp) => {
 	const columns = [];
 
-	if (mappings && mappings.properties) {
-		Object.keys(mappings.properties).forEach(item => {
-			const { type } = mappings.properties[item];
+	if (mappings && mappings[mapProp]) {
+		Object.keys(mappings[mapProp]).forEach(item => {
+			const { type } = mappings[mapProp][item];
 			if (type === 'string') {
-				if ((mappings.properties[item].fields || {}).raw) {
+				if (
+					(
+						mappings[mapProp][item].originalFields ||
+						mappings[mapProp][item].fields ||
+						{}
+					).raw
+				) {
 					columns.push(`${item}.raw`);
-				} else if ((mappings.properties[item].fields || {}).keyword) {
+				} else if (
+					(
+						mappings[mapProp][item].originalFields ||
+						mappings[mapProp][item].fields ||
+						{}
+					).keyword
+				) {
 					columns.push(`${item}.keyword`);
 				} else {
 					columns.push(item);
@@ -114,9 +126,21 @@ const getTermsAggregationColumns = mappings => {
 			}
 
 			if (type === 'text') {
-				if ((mappings.properties[item].fields || {}).raw) {
+				if (
+					(
+						mappings[mapProp][item].originalFields ||
+						mappings[mapProp][item].fields ||
+						{}
+					).raw
+				) {
 					columns.push(`${item}.raw`);
-				} else if ((mappings.properties[item].fields || {}).keyword) {
+				} else if (
+					(
+						mappings[mapProp][item].originalFields ||
+						mappings[mapProp][item].fields ||
+						{}
+					).keyword
+				) {
 					columns.push(`${item}.keyword`);
 				}
 			}

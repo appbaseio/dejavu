@@ -48,8 +48,18 @@ type Props = {
 	isShowingNestedColumns: boolean,
 };
 
-const getTermFilterIndex = (termFilterColumns, col) =>
-	termFilterColumns.findIndex(item => item.split('.').indexOf(col) > -1);
+const getTermFilterIndex = (termFilterColumns, col) => {
+	let index = termFilterColumns.indexOf(col);
+
+	if (index === -1) {
+		index =
+			termFilterColumns.indexOf(`${col}.raw`) > -1
+				? termFilterColumns.indexOf(`${col}.raw`)
+				: termFilterColumns.indexOf(`${col}.keyword`);
+	}
+
+	return index;
+};
 
 class DataTableHeader extends Component<Props> {
 	handleSelectAllRows = e => {
@@ -119,7 +129,7 @@ class DataTableHeader extends Component<Props> {
 			? 'nestedProperties'
 			: 'properties';
 		const termFilterColumns = mappings
-			? getTermsAggregationColumns(mappings[appname])
+			? getTermsAggregationColumns(mappings[appname], mapProp)
 			: [];
 
 		if (columns.length > 1) {
