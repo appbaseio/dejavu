@@ -19,8 +19,13 @@ import {
 	getVisibleColumns,
 	getNestedVisibleColumns,
 	getNestedColumns,
+	getTypePropertyMapping,
 } from '../../reducers/mappings';
-import { META_FIELDS, getNestedArrayField } from '../../utils/mappings';
+import {
+	META_FIELDS,
+	getNestedArrayField,
+	updateIndexTypeMapping,
+} from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
 import { isEqualArray, isEmptyObject } from '../../utils';
 
@@ -47,7 +52,8 @@ type Props = {
 	isShowingNestedColumns: boolean,
 	nestedColumns: string[],
 	appName: string,
-	onSetArrayFields: (string[], string[], any, string) => void,
+	onSetArrayFields: (string[], string[], any, string, any) => void,
+	typePropertyMapping: any,
 };
 class DataTable extends Component<Props, State> {
 	state = {
@@ -81,15 +87,17 @@ class DataTable extends Component<Props, State> {
 			data,
 			appName,
 			onSetArrayFields,
+			typePropertyMapping,
 		} = this.props;
 		if (
 			prevProps.isShowingNestedColumns !== isShowingNestedColumns &&
 			isShowingNestedColumns
 		) {
-			const { fieldsToBeDeleted, parentFields } = getNestedArrayField(
-				data,
-				mappings.nestedProperties,
-			);
+			const {
+				fieldsToBeDeleted,
+				parentFields,
+				indexTypeMap,
+			} = getNestedArrayField(data, mappings.nestedProperties);
 
 			if (
 				!isEmptyObject(parentFields) &&
@@ -116,11 +124,19 @@ class DataTable extends Component<Props, State> {
 					);
 				});
 
+				const newTypePropertyMapping = updateIndexTypeMapping(
+					typePropertyMapping,
+					indexTypeMap,
+					Object.keys(fieldsToBeDeleted),
+					mappings,
+				);
+
 				onSetArrayFields(
 					[...diffAllFields, ...Object.keys(parentFields)],
 					[...diffVisibleFields, ...Object.keys(parentFields)],
 					parentFieldsMapping,
 					appName,
+					newTypePropertyMapping,
 				);
 			}
 		}
@@ -236,6 +252,7 @@ const mapStateToProps = state => ({
 	nestedVisibleColumns: getNestedVisibleColumns(state),
 	nestedColumns: getNestedColumns(state),
 	appName: getAppname(state),
+	typePropertyMapping: getTypePropertyMapping(state),
 });
 
 const mapDispatchToProps = {

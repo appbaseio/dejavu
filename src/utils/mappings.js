@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import cloneDeep from 'lodash/cloneDeep';
 
 const extractColumns = (mappings, key) =>
 	Object.keys((mappings || {})[key] || []);
@@ -236,6 +237,32 @@ const getNestedArrayField = (data, mappings) => {
 	return { parentFields, fieldsToBeDeleted, indexTypeMap };
 };
 
+// function to update mapping of particular type
+const updateIndexTypeMapping = (
+	currentMapping,
+	updatingMap,
+	fieldsToBeDeleted,
+	fullMap,
+) => {
+	const newMapping = cloneDeep(currentMapping);
+	Object.keys(updatingMap).forEach(index => {
+		Object.keys(updatingMap[index]).forEach(type => {
+			Object.keys(updatingMap[index][type]).forEach(key => {
+				newMapping[index][type][key] = get(
+					fullMap.properties,
+					key.split('.').join('.properties.'),
+				);
+			});
+
+			fieldsToBeDeleted.forEach(field => {
+				delete newMapping[index][type][field];
+			});
+		});
+	});
+
+	return newMapping;
+};
+
 export {
 	extractColumns,
 	es6mappings,
@@ -244,4 +271,5 @@ export {
 	getTermsAggregationColumns,
 	getMappingsTree,
 	getNestedArrayField,
+	updateIndexTypeMapping,
 };

@@ -141,7 +141,7 @@ class AddRowModal extends Component<Props, State> {
 			let data = {};
 
 			if (tab === 'gui') {
-				data = tabData;
+				data = unflatten(tabData);
 			} else {
 				data = JSON.parse(addDataValue);
 			}

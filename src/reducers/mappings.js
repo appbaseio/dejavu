@@ -73,6 +73,7 @@ const mappings = (state = initialState, action) => {
 				...state,
 				nestedColumns,
 				nestedVisibleColumns,
+				typePropertyMapping,
 				data: {
 					[appName]: {
 						...state.data[appName],

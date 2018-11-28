@@ -66,12 +66,14 @@ const setArrayFields = (
 	nestedVisibleColumns,
 	nestedMappings,
 	appName,
+	typePropertyMapping,
 ) => ({
 	type: MAPPINGS.SET_ARRAY_FIELDS,
 	nestedColumns,
 	nestedVisibleColumns,
 	nestedMappings,
 	appName,
+	typePropertyMapping,
 });
 
 export {
