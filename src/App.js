@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
@@ -11,6 +11,7 @@ import SearchPreview from './components/SearchPreview';
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
 import QueryExplorer from './components/QueryExplorer';
+import Flex from './components/Flex';
 
 import configureStore from './store';
 import {
@@ -19,6 +20,7 @@ import {
 	setLocalStorageData,
 } from './utils';
 import { LOCAL_CONNECTIONS } from './constants';
+import colors from './components/theme/colors';
 
 import logo from './images/dejavu-logo.svg';
 
@@ -28,13 +30,19 @@ const store = configureStore();
 class App extends Component {
 	state = {
 		isShowingSideBar: true,
+		isShowingFooter: true,
+		isShowingVideo: false,
 	};
 
 	componentDidMount() {
-		const { sidebar } = getUrlParams(window.location.search);
+		const { sidebar, footer } = getUrlParams(window.location.search);
 
 		if (sidebar && sidebar === 'false') {
 			this.setSideBarVisibility(false);
+		}
+
+		if (footer && footer === 'false') {
+			this.setFooterVisibility(false);
 		}
 
 		const localConnections = getLocalStorageItem(LOCAL_CONNECTIONS);
@@ -55,8 +63,30 @@ class App extends Component {
 		});
 	};
 
+	setFooterVisibility = isShowingFooter => {
+		this.setState({
+			isShowingFooter,
+		});
+	};
+
+	showVideoModal = () => {
+		this.setState({
+			isShowingVideo: true,
+		});
+	};
+
+	hideVideoModal = () => {
+		this.setState({
+			isShowingVideo: false,
+		});
+	};
+
 	render() {
-		const { isShowingSideBar } = this.state;
+		const {
+			isShowingSideBar,
+			isShowingFooter,
+			isShowingVideo,
+		} = this.state;
 		return (
 			<Provider store={store}>
 				<BrowserRouter>
@@ -86,7 +116,7 @@ class App extends Component {
 							<Content
 								css={{
 									margin: isShowingSideBar ? 25 : 0,
-									height: '100%',
+									height: isShowingFooter ? '95%' : '100%',
 								}}
 							>
 								<div
@@ -126,6 +156,62 @@ class App extends Component {
 								</div>
 							</Content>
 						</Layout>
+						{isShowingFooter && (
+							<Flex
+								css={{
+									position: 'fixed',
+									width: '100%',
+									bottom: 0,
+									zIndex: 1001,
+									height: 30,
+									background: colors.white,
+									padding: '5px 10px',
+								}}
+								justifyContent="space-between"
+							>
+								<iframe
+									src="https://ghbtns.com/github-btn.html?user=appbaseio&repo=dejavu&type=star&count=true"
+									scrolling="0"
+									width="120px"
+									height="20px"
+									frameBorder="0"
+									title="github-stars"
+								/>
+								<div>
+									{/* eslint-disable-next-line */}
+									<a onClick={this.showVideoModal}>
+										Watch Video
+									</a>
+									<Modal
+										visible={isShowingVideo}
+										onCancel={this.hideVideoModal}
+										width={610}
+										footer={null}
+									>
+										<br />
+										<iframe
+											src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0"
+											allow="autoplay; encrypted-media"
+											width="560"
+											height="315"
+											frameBorder="0"
+											title="video"
+										/>
+									</Modal>
+								</div>
+								<div>
+									Create your <b>Elasticsearch</b> in cloud
+									with{' '}
+									<a
+										href="https://appbase.io"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										appbase.io
+									</a>
+								</div>
+							</Flex>
+						)}
 					</Layout>
 				</BrowserRouter>
 			</Provider>

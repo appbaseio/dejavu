@@ -263,7 +263,7 @@ class DataBrowser extends Component<Props, State> {
 											}`,
 											borderRadius: 3,
 											widht: '100%',
-											maxHeight: window.innerHeight - 300,
+											maxHeight: window.innerHeight - 350,
 											overflowX: 'auto',
 										}}
 									>

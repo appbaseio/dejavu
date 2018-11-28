@@ -113,6 +113,7 @@ class ConnectApp extends Component<Props, State> {
 			url: queryUrl,
 			mode: queryMode,
 			sidebar,
+			footer,
 			appswitcher,
 		} = getUrlParams(window.location.search);
 
@@ -159,6 +160,10 @@ class ConnectApp extends Component<Props, State> {
 
 			if (sidebar) {
 				searchQuery += `&sidebar=${sidebar}`;
+			}
+
+			if (footer) {
+				searchQuery += `&sidebar=${footer}`;
 			}
 
 			if (appswitcher) {
@@ -229,13 +234,19 @@ class ConnectApp extends Component<Props, State> {
 	handleSubmit = e => {
 		e.preventDefault();
 		const { appname, url, customHeaders } = this.state;
-		const { sidebar, appswitcher } = getUrlParams(window.location.search);
+		const { sidebar, appswitcher, footer } = getUrlParams(
+			window.location.search,
+		);
 		const { pathname } = this.props.location;
 
 		let searchQuery = '?';
 
 		if (sidebar) {
 			searchQuery += `&sidebar=${sidebar}`;
+		}
+
+		if (footer) {
+			searchQuery += `&sidebar=${footer}`;
 		}
 
 		if (appswitcher) {
