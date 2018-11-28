@@ -67,7 +67,7 @@ const TermFilter = ({ field }: Props) => (
 						>
 							{label}
 						</span>
-						<span>({count})</span>
+						<span>{count}</span>
 					</Flex>
 				)}
 			/>
