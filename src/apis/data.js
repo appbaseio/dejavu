@@ -93,22 +93,21 @@ export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-
-		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_delete_by_query?refresh=true`,
-			{
-				headers: {
-					...headers,
-					...convertArrayToHeaders(customHeaders),
-				},
-				method: 'POST',
-				body: JSON.stringify({
-					query: {
-						ids: { values: docIds },
-					},
-				}),
+		let data = '';
+		docIds.forEach(item => {
+			data += JSON.stringify({
+				delete: { _index: indexName, _type: typeName, _id: item },
+			});
+			data += `\n`;
+		});
+		const res = await fetch(`${url}/${indexName}/${typeName}/_bulk`, {
+			headers: {
+				...headers,
+				...convertArrayToHeaders(customHeaders),
 			},
-		).then(response => response.json());
+			method: 'POST',
+			body: data,
+		}).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(
