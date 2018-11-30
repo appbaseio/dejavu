@@ -16,6 +16,8 @@ const fetchMappingsSuccess = (
 	nestedVisibleColumns,
 	nestedSearchableColumns,
 	nestedColumns,
+	termsAggregationColumns,
+	sortableColumns,
 ) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
@@ -29,6 +31,8 @@ const fetchMappingsSuccess = (
 	nestedVisibleColumns,
 	nestedSearchableColumns,
 	nestedColumns,
+	termsAggregationColumns,
+	sortableColumns,
 });
 
 const fetchMappingsFailure = () => ({

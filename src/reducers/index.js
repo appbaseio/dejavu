@@ -9,6 +9,9 @@ import error from './error';
 import selectedRows from './selectedRows';
 import updatingRow from './updatingRow';
 import currentIds from './currentIds';
+import sort from './sort';
+import pageSize from './pageSize';
+import nestedColumns from './nestedColumns';
 import batteriesReducers from '../batteries/modules/reducers';
 
 const rootReducer = combineReducers({
@@ -21,6 +24,9 @@ const rootReducer = combineReducers({
 	selectedRows,
 	updatingRow,
 	currentIds,
+	sort,
+	pageSize,
+	nestedColumns,
 	...batteriesReducers,
 });
 

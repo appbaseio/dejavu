@@ -98,25 +98,52 @@ const getSortableTypes = () => {
 	return [...sortableTypes, 'string'];
 };
 
-const getTermsAggregationColumns = (mappings, mapProp) => {
+const getSortableColumns = properties => {
+	const columns = [];
+	const sortableTypes = getSortableTypes();
+
+	if (properties) {
+		Object.keys(properties).forEach(item => {
+			const { type } = properties[item];
+			if (type && sortableTypes.indexOf(type) > -1) {
+				if (properties[item].fields && properties[item].keyword) {
+					columns.push(`${item}.keyword`);
+				}
+
+				if (
+					properties[item].originalFields &&
+					properties[item].originalFields.keyword
+				) {
+					columns.push(`${item}.keyword`);
+				}
+
+				columns.push(item);
+			}
+		});
+	}
+
+	return columns;
+};
+
+const getTermsAggregationColumns = properties => {
 	const columns = [];
 
-	if (mappings && mappings[mapProp]) {
-		Object.keys(mappings[mapProp]).forEach(item => {
-			const { type } = mappings[mapProp][item];
+	if (properties) {
+		Object.keys(properties).forEach(item => {
+			const { type } = properties[item];
 			if (type === 'string') {
 				if (
 					(
-						mappings[mapProp][item].originalFields ||
-						mappings[mapProp][item].fields ||
+						properties[item].originalFields ||
+						properties[item].fields ||
 						{}
 					).raw
 				) {
 					columns.push(`${item}.raw`);
 				} else if (
 					(
-						mappings[mapProp][item].originalFields ||
-						mappings[mapProp][item].fields ||
+						properties[item].originalFields ||
+						properties[item].fields ||
 						{}
 					).keyword
 				) {
@@ -129,16 +156,16 @@ const getTermsAggregationColumns = (mappings, mapProp) => {
 			if (type === 'text') {
 				if (
 					(
-						mappings[mapProp][item].originalFields ||
-						mappings[mapProp][item].fields ||
+						properties[item].originalFields ||
+						properties[item].fields ||
 						{}
 					).raw
 				) {
 					columns.push(`${item}.raw`);
 				} else if (
 					(
-						mappings[mapProp][item].originalFields ||
-						mappings[mapProp][item].fields ||
+						properties[item].originalFields ||
+						properties[item].fields ||
 						{}
 					).keyword
 				) {
@@ -161,7 +188,7 @@ const getTermsAggregationColumns = (mappings, mapProp) => {
 		});
 	}
 
-	return ['_type', '_index', ...columns];
+	return columns;
 };
 
 const getFieldsTree = (mappings = {}, prefix = null) => {
@@ -272,4 +299,5 @@ export {
 	getMappingsTree,
 	getNestedArrayField,
 	updateIndexTypeMapping,
+	getSortableColumns,
 };

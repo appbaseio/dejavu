@@ -32,6 +32,9 @@ import {
 import setSelectedRows from './selectedRows';
 import setUpdatingRow from './updatingRow';
 import setCurrentIds from './currentIds';
+import { setSort, resetSort } from './sort';
+import setPageSize from './pageSize';
+import setIsShwoingNestedColumn from './nestedColumns';
 
 export {
 	// app
@@ -70,4 +73,11 @@ export {
 	setUpdatingRow,
 	// setting current ids
 	setCurrentIds,
+	// sort
+	setSort,
+	resetSort,
+	// page size
+	setPageSize,
+	// nested columns,
+	setIsShwoingNestedColumn,
 };

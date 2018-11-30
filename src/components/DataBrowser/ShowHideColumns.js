@@ -10,6 +10,7 @@ import {
 	getNestedVisibleColumns,
 	getNestedColumns,
 } from '../../reducers/mappings';
+import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import {
 	setVisibleColumns,
 	setNestedVisibleColumns,
@@ -208,6 +209,7 @@ const mapStateToProps = state => ({
 	nestedColumns: getNestedColumns(state),
 	visibleColumns: getVisibleColumns(state),
 	nestedVisibleColumns: getNestedVisibleColumns(state),
+	isShowingNestedColumns: getIsShowingNestedColumns(state),
 });
 
 const mapDispatchToProps = {

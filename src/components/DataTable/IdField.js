@@ -7,6 +7,7 @@ import { Popover, Checkbox } from 'antd';
 import { setSelectedRows, setUpdatingRow } from '../../actions';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getMode } from '../../reducers/mode';
+import { getPageSize } from '../../reducers/pageSize';
 import { MODES } from '../../constants';
 import { getOnlySource, getUrlParams } from '../../utils';
 
@@ -65,6 +66,7 @@ class IdField extends Component<Props> {
 		} = this.props;
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
+
 		return (
 			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
 				<div
@@ -146,6 +148,7 @@ class IdField extends Component<Props> {
 const mapStateToProps = state => ({
 	mode: getMode(state),
 	selectedRows: getSelectedRows(state),
+	pageSize: getPageSize(state),
 });
 
 const mapDispatchToProps = {

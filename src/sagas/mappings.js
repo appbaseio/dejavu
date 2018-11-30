@@ -16,6 +16,8 @@ import {
 	extractColumns,
 	META_FIELDS,
 	getMappingsTree,
+	getTermsAggregationColumns,
+	getSortableColumns,
 } from '../utils/mappings';
 import CustomError from '../utils/CustomError';
 
@@ -125,6 +127,20 @@ function* handleFetchMappings() {
 					nestedProperties[property].type === 'text',
 			);
 
+			const termsAggregationColumns = [
+				'_type',
+				'_index',
+				...getTermsAggregationColumns(properties),
+				...getTermsAggregationColumns(nestedProperties),
+			];
+
+			const sortableColumns = [
+				'_type',
+				'_index',
+				...getSortableColumns(properties),
+				...getSortableColumns(nestedProperties),
+			];
+
 			yield put(
 				fetchMappingsSuccess(
 					mappings,
@@ -138,6 +154,8 @@ function* handleFetchMappings() {
 					nestedVisibleColumns,
 					nestedSearchableColumns,
 					allNestedColumns,
+					termsAggregationColumns,
+					sortableColumns,
 				),
 			);
 		} else {

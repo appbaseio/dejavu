@@ -14,13 +14,14 @@ import {
 	setCurrentIds,
 	setArrayFields,
 } from '../../actions';
-import { getUrl, getAppname } from '../../reducers/app';
+import { getAppname } from '../../reducers/app';
 import {
 	getVisibleColumns,
 	getNestedVisibleColumns,
 	getNestedColumns,
 	getTypePropertyMapping,
 } from '../../reducers/mappings';
+import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import {
 	META_FIELDS,
 	getNestedArrayField,
@@ -179,7 +180,7 @@ class DataTable extends Component<Props, State> {
 		const mapProp = isShowingNestedColumns
 			? 'nestedProperties'
 			: 'properties';
-
+		console.log('re-rendeirng table', mappingCols.length);
 		return (
 			<table
 				css={{
@@ -248,11 +249,11 @@ class DataTable extends Component<Props, State> {
 const mapStateToProps = state => ({
 	visibleColumns: getVisibleColumns(state),
 	mode: getMode(state),
-	appUrl: getUrl(state),
 	nestedVisibleColumns: getNestedVisibleColumns(state),
 	nestedColumns: getNestedColumns(state),
 	appName: getAppname(state),
 	typePropertyMapping: getTypePropertyMapping(state),
+	isShowingNestedColumns: getIsShowingNestedColumns(state),
 });
 
 const mapDispatchToProps = {
