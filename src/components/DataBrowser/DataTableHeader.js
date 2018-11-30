@@ -82,6 +82,10 @@ class DataTableHeader extends Component<Props> {
 			? 'nestedProperties'
 			: 'properties';
 
+		if (col === '_type' || col === '_index') {
+			return col;
+		}
+
 		if (
 			mappings[appname][mapProp][col] &&
 			mappings[appname][mapProp][col].type &&

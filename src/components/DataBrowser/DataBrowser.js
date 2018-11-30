@@ -294,6 +294,8 @@ class DataBrowser extends Component<Props, State> {
 															? 'nestedProperties'
 															: 'properties',
 													),
+													'indexField',
+													'typeField',
 												],
 											}}
 											innerClass={{

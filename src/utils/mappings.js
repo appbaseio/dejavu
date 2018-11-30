@@ -161,7 +161,7 @@ const getTermsAggregationColumns = (mappings, mapProp) => {
 		});
 	}
 
-	return columns;
+	return ['_type', '_index', ...columns];
 };
 
 const getFieldsTree = (mappings = {}, prefix = null) => {
