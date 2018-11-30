@@ -90,89 +90,95 @@ class DataColumnHeader extends Component<Props> {
 			sortableColumns,
 			col,
 		);
-
-		return (
-			<StyledCell>
-				<Flex
-					justifyContent="space-between"
-					alignItems="center"
-					wrap="nowrap"
-					css={{
-						width: '100%',
-					}}
-				>
-					<Flex alignItems="center" wrap="nowrap">
-						{mappings[appname][mapProp][col] && (
-							<MappingsDropdown
-								mapping={mappings[appname][mapProp][col]}
-							/>
-						)}
-						<Popover content={col} trigger="click">
-							<span
-								css={{
-									marginLeft: '10px',
-									cursor: 'pointer',
-									maxWidth: 120,
-								}}
-								className={overflowStyles}
-							>
-								{col}
-							</span>
-						</Popover>
-					</Flex>
-					{sortableColumnIndex > -1 && (
-						<Flex alignItems="center">
-							{termFilterIndex > -1 && (
-								<TermFilter
-									field={
-										termsAggregationColumns[termFilterIndex]
-									}
+		if (mappings) {
+			return (
+				<StyledCell>
+					<Flex
+						justifyContent="space-between"
+						alignItems="center"
+						wrap="nowrap"
+						css={{
+							width: '100%',
+						}}
+					>
+						<Flex alignItems="center" wrap="nowrap">
+							{mappings[appname][mapProp][col] && (
+								<MappingsDropdown
+									mapping={mappings[appname][mapProp][col]}
 								/>
 							)}
-							<button
-								type="button"
-								onClick={() => {
-									this.handleSortChange(
-										sortableColumns[sortableColumnIndex],
-									);
-								}}
-								css={{
-									outline: 0,
-									height: '15px',
-									width: '15px',
-									border: 0,
-									cursor: 'pointer',
-									background: 'none',
-								}}
-								className={filterIconStyles}
-							>
-								{sortField.indexOf(col) === -1 && (
-									<i
-										className="fa fa-sort"
-										css={{
-											fontSize: 15,
-										}}
-									/>
-								)}
-								{sortField.indexOf(col) > -1 && (
-									<i
-										className={
-											sortOrder === 'asc'
-												? 'fa fa-caret-up'
-												: 'fa fa-caret-down'
-										}
-										css={{
-											fontSize: 15,
-											color: '#333 !important',
-										}}
-									/>
-								)}
-							</button>
+							<Popover content={col} trigger="click">
+								<span
+									css={{
+										marginLeft: '10px',
+										cursor: 'pointer',
+										maxWidth: 120,
+									}}
+									className={overflowStyles}
+								>
+									{col}
+								</span>
+							</Popover>
 						</Flex>
-					)}
-				</Flex>
-			</StyledCell>
-		);
+						{sortableColumnIndex > -1 && (
+							<Flex alignItems="center">
+								{termFilterIndex > -1 && (
+									<TermFilter
+										field={
+											termsAggregationColumns[
+												termFilterIndex
+											]
+										}
+									/>
+								)}
+								<button
+									type="button"
+									onClick={() => {
+										this.handleSortChange(
+											sortableColumns[
+												sortableColumnIndex
+											],
+										);
+									}}
+									css={{
+										outline: 0,
+										height: '15px',
+										width: '15px',
+										border: 0,
+										cursor: 'pointer',
+										background: 'none',
+									}}
+									className={filterIconStyles}
+								>
+									{sortField.indexOf(col) === -1 && (
+										<i
+											className="fa fa-sort"
+											css={{
+												fontSize: 15,
+											}}
+										/>
+									)}
+									{sortField.indexOf(col) > -1 && (
+										<i
+											className={
+												sortOrder === 'asc'
+													? 'fa fa-caret-up'
+													: 'fa fa-caret-down'
+											}
+											css={{
+												fontSize: 15,
+												color: '#333 !important',
+											}}
+										/>
+									)}
+								</button>
+							</Flex>
+						)}
+					</Flex>
+				</StyledCell>
+			);
+		}
+		return null;
 	}
 }
 

@@ -1,4 +1,5 @@
 import { put, call, takeLatest, select, all } from 'redux-saga/effects';
+import difference from 'lodash/difference';
 
 import { MAPPINGS } from '../actions/constants';
 import { fetchMappings, addMapping } from '../apis';
@@ -40,14 +41,11 @@ function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
-				const typesList = Object.keys(data[index].mappings);
-
+				let typesList = Object.keys(data[index].mappings);
+				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
 					Object.keys(data[index].mappings).forEach(type => {
-						if (
-							data[index].mappings[type].properties &&
-							INGNORE_META_TYPES.indexOf(type) === -1
-						) {
+						if (data[index].mappings[type].properties) {
 							indexTypeMap[index] = [
 								...(indexTypeMap[index] || []),
 								type,
