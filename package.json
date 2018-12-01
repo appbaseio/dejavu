@@ -39,6 +39,7 @@
 		"file-saver": "^2.0.0-rc.4",
 		"flat": "^4.1.0",
 		"lodash": "^4.17.11",
+		"lzma": "^2.3.2",
 		"moment": "^2.22.2",
 		"papaparse": "^4.6.1",
 		"prop-types": "^15.6.2",
@@ -58,7 +59,8 @@
 		"redux-saga": "^0.16.0",
 		"redux-thunk": "^2.3.0",
 		"reselect": "^4.0.0",
-		"url-parser-lite": "^0.1.0"
+		"url-parser-lite": "^0.1.0",
+		"urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.1.0",

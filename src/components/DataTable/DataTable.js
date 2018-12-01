@@ -180,7 +180,7 @@ class DataTable extends Component<Props, State> {
 		const mapProp = isShowingNestedColumns
 			? 'nestedProperties'
 			: 'properties';
-		console.log('re-rendeirng table', mappingCols.length);
+
 		return (
 			<table
 				css={{
