@@ -24,7 +24,7 @@ import {
 	getIndexes,
 	getTypes,
 } from '../../reducers/mappings';
-import { parseUrl, convertArrayToHeaders } from '../../utils';
+import { parseUrl, convertArrayToHeaders, getUrlParams } from '../../utils';
 import colors from '../theme/colors';
 
 type Props = {
@@ -63,6 +63,8 @@ class DataBrowser extends Component<Props> {
 		).length
 			? { headers: convertArrayToHeaders(headers) }
 			: {};
+		const { appswitcher } = getUrlParams(window.location.search);
+		const hideAppSwitcher = appswitcher && appswitcher === 'false';
 
 		return (
 			<Skeleton loading={isLoading} active>
@@ -95,7 +97,9 @@ class DataBrowser extends Component<Props> {
 											}`,
 											borderRadius: 3,
 											widht: '100%',
-											maxHeight: window.innerHeight - 350,
+											maxHeight:
+												window.innerHeight -
+												(hideAppSwitcher ? 250 : 350),
 											overflowX: 'auto',
 										}}
 									>
