@@ -595,7 +595,8 @@ var help = {
 				url: config.url,
 				appname: config.appname
 			};
-			var historicApps = apps;
+			var nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
+			var historicApps = apps.concat(nextApps.pastApps);
 			if(authFlag) {
 				if(historicApps && historicApps.length) {
 					historicApps.forEach(function(old_app, index) {
