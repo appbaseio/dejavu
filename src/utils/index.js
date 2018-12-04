@@ -105,6 +105,34 @@ const convertArrayToHeaders = data => {
 	return {};
 };
 
+const saveAppToLocalStorage = (appname, url) => {
+	let localConnections = JSON.parse(getLocalStorageItem(LOCAL_CONNECTIONS));
+
+	if (!localConnections) {
+		localConnections = { pastApps: [] };
+	}
+
+	const { pastApps } = localConnections;
+
+	const currentApp = pastApps.findIndex(item => item.appname === appname);
+
+	if (currentApp === -1) {
+		pastApps.push({
+			appname,
+			url,
+			headers: [],
+		});
+	} else {
+		pastApps[currentApp] = {
+			appname,
+			url,
+			...pastApps[currentApp],
+		};
+	}
+
+	setLocalStorageData(LOCAL_CONNECTIONS, JSON.stringify({ pastApps }));
+};
+
 const getCustomHeaders = appname => {
 	let localConnections = JSON.parse(getLocalStorageItem(LOCAL_CONNECTIONS));
 
@@ -167,4 +195,5 @@ export {
 	getCustomHeaders,
 	isMultiIndexApp,
 	isEqualArray,
+	saveAppToLocalStorage,
 };

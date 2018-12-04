@@ -27,6 +27,7 @@ import {
 	setLocalStorageData,
 	getCustomHeaders,
 	isMultiIndexApp,
+	saveAppToLocalStorage,
 } from '../../utils';
 
 import { getMode } from '../../reducers/mode';
@@ -136,6 +137,7 @@ class ConnectApp extends Component<Props, State> {
 
 			if (shouldConnect(pathname, appname)) {
 				this.props.connectApp(appname, url);
+				saveAppToLocalStorage(appname, url);
 
 				if (isHidden) {
 					this.setAppSwitcher(false);
