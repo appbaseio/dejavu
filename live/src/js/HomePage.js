@@ -816,11 +816,13 @@ let HomePage = createReactClass({
 			feed.getIndicesAliases(indexUrl)
 				.done((res) => {
 					const apps = JSON.parse(storageService.getItem('historicApps'));
+					const nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
 					const newApps = [
 						...(Object.keys(res).map(key => ({
 							appname: key, url: indexUrl, fetched: true
 						}))),
-						...apps
+						...apps,
+						...nextApps.pastApps,
 					];
 					const appsObject = {};
 					const uniqueApps = newApps.filter(app => {
@@ -898,7 +900,8 @@ let HomePage = createReactClass({
 	},
 	getApps(cb) {
 		var apps = storageService.getItem('historicApps');
-		cb({historicApps: apps});
+		var nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
+		cb({historicApps: [...apps, ...nextApps.pastApps]});
 	},
 	setApps(authFlag) {
 		help.setApps.call(this, authFlag, this.getApps, (info) => {
