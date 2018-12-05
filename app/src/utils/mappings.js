@@ -106,8 +106,15 @@ const getSortableColumns = properties => {
 		Object.keys(properties).forEach(item => {
 			const { type } = properties[item];
 			if (type && sortableTypes.indexOf(type) > -1) {
-				if (properties[item].fields && properties[item].keyword) {
+				if (
+					properties[item].fields &&
+					properties[item].fields.keyword
+				) {
 					columns.push(`${item}.keyword`);
+				}
+
+				if (properties[item].fields && properties[item].fields.raw) {
+					columns.push(`${item}.raw`);
 				}
 
 				if (
@@ -115,6 +122,13 @@ const getSortableColumns = properties => {
 					properties[item].originalFields.keyword
 				) {
 					columns.push(`${item}.keyword`);
+				}
+
+				if (
+					properties[item].originalFields &&
+					properties[item].originalFields.raw
+				) {
+					columns.push(`${item}.raw`);
 				}
 
 				columns.push(item);

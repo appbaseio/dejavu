@@ -49,7 +49,10 @@ const getTermFilterIndex = (termFilterColumns, col) => {
 const getSortableColumnIndex = (sortableColumns, col) => {
 	let index = sortableColumns.indexOf(`${col}.keyword`);
 	if (index === -1) {
-		index = sortableColumns.indexOf(col);
+		index =
+			sortableColumns.indexOf(`${col}.raw`) > -1
+				? sortableColumns.indexOf(`${col}.raw`)
+				: sortableColumns.indexOf(col);
 	}
 
 	return index;
