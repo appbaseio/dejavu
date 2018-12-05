@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import {
 	GithubButton,
@@ -15,7 +17,7 @@ import {
 	Section,
 	media,
 } from '@appbaseio/designkit';
-import { Input, Form, Icon, Modal, Select, Tag } from 'antd';
+import { Input, Form, Icon, Modal, Select, Tag, Alert } from 'antd';
 import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
 import { CrossStorageClient } from 'cross-storage';
@@ -80,13 +82,23 @@ const imgLink = css({
 	alignItems: 'center',
 });
 
-class App extends Component {
+type State = {
+	stars: string,
+	showModal: boolean,
+	url: string,
+	appname: string,
+	pastApps: any,
+	error: string,
+};
+
+class App extends Component<null, State> {
 	state = {
 		stars: '4,500',
 		showModal: false,
 		url: '',
 		appname: '',
 		pastApps: [],
+		error: '',
 	};
 
 	componentDidMount() {
@@ -117,7 +129,7 @@ class App extends Component {
 			});
 	}
 
-	setPastApps = pastApps => {
+	setPastApps = (pastApps: any) => {
 		this.setState({
 			pastApps,
 		});
@@ -129,11 +141,11 @@ class App extends Component {
 		}));
 	};
 
-	setUrl = url => {
+	setUrl = (url: string) => {
 		this.setState({ url });
 	};
 
-	setAppName = appname => {
+	setAppName = (appname: string) => {
 		this.setState({ appname });
 	};
 
@@ -143,21 +155,35 @@ class App extends Component {
 			url.toString().startsWith('http://') &&
 			window.location.protocol === 'https:'
 		) {
-			// eslint-disable-next-line
-			toastr.warning(
-				'You are trying to load http content over https. You might have to enable mixed content for your browser https://kb.iu.edu/d/bdny#view',
-			);
+			this.setState({
+				error:
+					'You are trying to load http content over https. You might have to enable mixed content for your browser <a href="https://kb.iu.edu/d/bdny#view" target="_blank">https://kb.iu.edu/d/bdny#view</a>',
+			});
 		}
 		if (!appname || !url) {
-			// eslint-disable-next-line
-			toastr.error('Url or appname should not be empty.');
+			this.setState({
+				error: 'Url or appname should not be empty.',
+			});
 		} else {
 			window.location.href = `https://dejavu.appbase.io?appname=${appname}&url=${url}`;
 		}
 	};
 
+	handleAlertClose = () => {
+		this.setState({
+			error: '',
+		});
+	};
+
 	render() {
-		const { stars, showModal, url, pastApps, appname: newApp } = this.state;
+		const {
+			stars,
+			showModal,
+			url,
+			pastApps,
+			appname: newApp,
+			error,
+		} = this.state;
 		return (
 			<section
 				css={{
@@ -170,6 +196,24 @@ class App extends Component {
 					scrollBehavior: 'smooth',
 				}}
 			>
+				{error && (
+					<Alert
+						message="Error"
+						description={
+							<div dangerouslySetInnerHTML={{ __html: error }} />
+						}
+						type="error"
+						closable
+						css={{
+							position: 'absolute',
+							zIndex: 1000,
+							right: 10,
+							top: 10,
+							maxWidth: 300,
+						}}
+						onClose={this.handleAlertClose}
+					/>
+				)}
 				<Navbar height="80px">
 					<Navbar.Logo>
 						<img src={logo} alt="Dejavu Logo" height="45px" />
