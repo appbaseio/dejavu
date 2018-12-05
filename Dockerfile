@@ -12,9 +12,9 @@ RUN yarn
 
 ADD . /dejavu
 
-RUN yarn build
+RUN yarn build:app
 
-RUN cd dist
+RUN cd dist/app
 
 EXPOSE 1358
 
