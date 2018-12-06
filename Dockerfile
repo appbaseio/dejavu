@@ -14,8 +14,6 @@ ADD . /dejavu
 
 RUN yarn build:app
 
-RUN cd dist/app
-
 EXPOSE 1358
 
-CMD ["http-server", "-p 1358"]
+CMD ["http-server", "-p 1358", "dist/app/"]
