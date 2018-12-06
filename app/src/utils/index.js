@@ -190,6 +190,17 @@ const getImporterLink = (appname, rawUrl) => {
 	return params;
 };
 
+const getCloneLink = (appname, rawUrl) => {
+	let params = `https://importer.appbase.io/?`;
+	if (rawUrl.indexOf('appbase.io') > 1) {
+		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"appbase"}`;
+	} else {
+		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"elasticsearch"}`;
+	}
+
+	return params;
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -209,4 +220,5 @@ export {
 	isEqualArray,
 	saveAppToLocalStorage,
 	getImporterLink,
+	getCloneLink,
 };

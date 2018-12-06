@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Button } from 'antd';
 
 import { getIsConnected, getAppname, getUrl } from '../../reducers/app';
-import { getImporterLink, getUrlParams } from '../../utils';
+import { getCloneLink, getUrlParams } from '../../utils';
 
 type Props = {
 	isConnected: boolean,
@@ -26,7 +26,7 @@ const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 				icon="fork"
 				type="primary"
 				target="_blank"
-				href={getImporterLink(appname, rawUrl)}
+				href={getCloneLink(appname, rawUrl)}
 				css={{ marginRight: 10 }}
 			>
 				{' '}

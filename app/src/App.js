@@ -12,6 +12,7 @@ import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
 import QueryExplorer from './components/QueryExplorer';
 import Flex from './components/Flex';
+import OldDejavuBanner from './components/OldDejavuBanner';
 
 import configureStore from './store';
 import {
@@ -113,9 +114,10 @@ class App extends Component {
 							</Sider>
 						)}
 						<Layout>
+							<OldDejavuBanner />
 							<Content
 								css={{
-									margin: isShowingSideBar ? 25 : 0,
+									margin: isShowingSideBar ? '15px 25px' : 0,
 									height: isShowingFooter ? '95%' : '100%',
 								}}
 							>
