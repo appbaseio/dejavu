@@ -82,6 +82,7 @@
     "brace": "^0.11.1",
     "classnames": "^2.2.5",
     "codesandbox": "^1.2.16",
+    "cross-storage": "^1.0.0",
     "emotion": "^9.2.6",
     "fbemitter": "^2.1.1",
     "jquery": "^3.2.1",
@@ -100,8 +101,10 @@
     "react-element-to-jsx-string": "^14.0.1",
     "react-emotion": "^9.2.6",
     "react-expand-collapse": "^0.2.0",
+    "react-joyride": "^2.0.0-15",
     "react-router-dom": "^4.3.1",
     "react-select": "^1.2.1",
+    "reselect": "^4.0.0",
     "url-parser-lite": "^0.1.0"
   },
   "author": "",

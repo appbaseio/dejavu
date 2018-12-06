@@ -573,7 +573,7 @@ var help = {
 			hideUrl: hideUrl
 		};
 	},
-	setApps: function(authFlag, getApps, cb) {
+	setApps: function(authFlag, getApps, storage, cb) {
 		var self = this;
 		if(BRANCH !== 'chrome') {
 			getApps(getAppsCb);
@@ -595,24 +595,31 @@ var help = {
 				url: config.url,
 				appname: config.appname
 			};
-			var nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
-			var historicApps = apps.concat(nextApps.pastApps);
-			if(authFlag) {
-				if(historicApps && historicApps.length) {
-					historicApps.forEach(function(old_app, index) {
-						if(old_app.appname === app.appname) {
-							historicApps.splice(index, 1);
+			storage
+			.onConnect()
+			.then(() => storage.get('localConnections'))
+			.then(res => {
+				if (res) {
+					const { pastApps } = JSON.parse(res || { pastApps: []});
+					var historicApps = apps.concat(pastApps);
+					if(authFlag) {
+						if(historicApps && historicApps.length) {
+							historicApps.forEach(function(old_app, index) {
+								if(old_app.appname === app.appname) {
+									historicApps.splice(index, 1);
+								}
+							})
 						}
-					})
+						if(app.url) {
+							historicApps.push(app);
+						}
+					}
+					cb({
+						historicApps: historicApps
+					});
+					storageService.setItem('historicApps', JSON.stringify(historicApps));
 				}
-				if(app.url) {
-					historicApps.push(app);
-				}
-			}
-			cb({
-				historicApps: historicApps
 			});
-			storageService.setItem('historicApps', JSON.stringify(historicApps));
 		};
 	},
 	defaultQuery: function() {

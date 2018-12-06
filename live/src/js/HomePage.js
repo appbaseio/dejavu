@@ -9,6 +9,9 @@ let Sidebar = require('./Sidebar.js');
 let QueryList = require('./QueryList/index.js');
 let PureRenderMixin = require('react-addons-pure-render-mixin');
 let SharedComponents = require('./helper/SharedComponents');
+const CrossStorageClient = require('cross-storage').CrossStorageClient;
+
+const storage = new CrossStorageClient('https://dejavu.appbase.io');
 
 let HomePage = createReactClass({
 	displayName: 'HomePage',
@@ -68,7 +71,8 @@ let HomePage = createReactClass({
 			hideUrl: false,
 			cleanTypes: false,
 			dejavuExportData: null,
-			showFetchIndex: false
+			showFetchIndex: false,
+			showNewAppBanner: true,
 		};
 	},
 	flatten(data, callback) {
@@ -816,33 +820,40 @@ let HomePage = createReactClass({
 			feed.getIndicesAliases(indexUrl)
 				.done((res) => {
 					const apps = JSON.parse(storageService.getItem('historicApps'));
-					const nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
-					const newApps = [
-						...(Object.keys(res).map(key => ({
-							appname: key, url: indexUrl, fetched: true
-						}))),
-						...apps,
-						...nextApps.pastApps,
-					];
-					const appsObject = {};
-					const uniqueApps = newApps.filter(app => {
-						if(appsObject[app.appname]) {
-							return false;
+					storage
+					.onConnect()
+					.then(() => storage.get('localConnections'))
+					.then(res => {
+						if (res) {
+							const { pastApps } = JSON.parse(res || { pastApps: []});
+							const newApps = [
+								...(Object.keys(res).map(key => ({
+									appname: key, url: indexUrl, fetched: true
+								}))),
+								...apps,
+								...pastApps || [],
+							];
+							const appsObject = {};
+							const uniqueApps = newApps.filter(app => {
+								if(appsObject[app.appname]) {
+									return false;
+								}
+								appsObject[app.appname] = true;
+								return true
+							});
+							// update in state todo
+							// focus on app dropdown
+							this.setState({
+								historicApps: uniqueApps
+							});
+							storageService.setItem('historicApps', JSON.stringify(uniqueApps));
+							setTimeout(() => {
+								document.getElementById('appname-aka-index').focus();
+							}, 1000);
+							this.setState({
+								showFetchIndex: true
+							});
 						}
-						appsObject[app.appname] = true;
-						return true
-					});
-					// update in state todo
-					// focus on app dropdown
-					this.setState({
-						historicApps: uniqueApps
-					});
-					storageService.setItem('historicApps', JSON.stringify(uniqueApps));
-					setTimeout(() => {
-						document.getElementById('appname-aka-index').focus();
-					}, 1000);
-					this.setState({
-						showFetchIndex: true
 					});
 				})
 				.fail(err => {
@@ -900,11 +911,18 @@ let HomePage = createReactClass({
 	},
 	getApps(cb) {
 		var apps = storageService.getItem('historicApps');
-		var nextApps = JSON.parse(storageService.getItem('localConnections') || {pastApps: []})
-		cb({historicApps: [...apps, ...nextApps.pastApps]});
+		storage
+			.onConnect()
+			.then(() => storage.get('localConnections'))
+			.then(res => {
+				if (res) {
+					const { pastApps } = JSON.parse(res || { pastApps: []});
+					cb({historicApps: [...apps, ...pastApps]});
+				}
+			});
 	},
 	setApps(authFlag) {
-		help.setApps.call(this, authFlag, this.getApps, (info) => {
+		help.setApps.call(this, authFlag, this.getApps, storage, (info) => {
 			this.setState(info);
 		});
 		const allHeaders = localStorage.getItem('customHeaders');
@@ -926,6 +944,11 @@ let HomePage = createReactClass({
 	},
 	hideUrlChange() {
 		this.setState(help.hideUrlChange(this.state.hideUrl));
+	},
+	hideShowAppBanner() {
+		this.setState({
+			showNewAppBanner: false,
+		});
 	},
 	render() {
 		var self = this;
@@ -1031,6 +1054,20 @@ let HomePage = createReactClass({
 							/>
 						</div>
 						<div className="col-xs-12 dataContainer">
+							{
+								this.state.connect && this.state.showNewAppBanner && (
+									<div className="newapp-banner">
+										<div>
+											Open app in new Dejavu UI
+											<a href={`https://dejavu.appbase.io?appname=${this.state.appname}&url=${this.state.url}`}>
+												&nbsp;<i className="fa fa-external-link-square" />
+											</a>
+										</div>
+
+										<i className="fa fa-close" onClick={self.hideShowAppBanner} style={{ cursor: 'pointer' }}/>
+									</div>
+								)
+							}
 							<DataTable
 								_data={this.state.documents}
 								sortInfo={this.state.sortInfo}
