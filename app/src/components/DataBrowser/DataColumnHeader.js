@@ -105,11 +105,15 @@ class DataColumnHeader extends Component<Props> {
 						}}
 					>
 						<Flex alignItems="center" wrap="nowrap">
-							{mappings[appname][mapProp][col] && (
-								<MappingsDropdown
-									mapping={mappings[appname][mapProp][col]}
-								/>
-							)}
+							{mappings[appname] &&
+								mappings[appname][mapProp] &&
+								mappings[appname][mapProp][col] && (
+									<MappingsDropdown
+										mapping={
+											mappings[appname][mapProp][col]
+										}
+									/>
+								)}
 							<Popover content={col} trigger="click">
 								<span
 									css={{

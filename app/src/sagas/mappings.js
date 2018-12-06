@@ -2,7 +2,7 @@ import { put, call, takeLatest, select, all } from 'redux-saga/effects';
 import difference from 'lodash/difference';
 
 import { MAPPINGS } from '../actions/constants';
-import { fetchMappings, addMapping } from '../apis';
+import { fetchMappings, addMapping, getVersion } from '../apis';
 import {
 	fetchMappingsSuccess,
 	fetchMappingsFailure,
@@ -32,6 +32,8 @@ function* handleFetchMappings() {
 		const appname = yield select(getAppname);
 		const url = yield select(getUrl);
 		const data = yield call(fetchMappings, appname, url);
+		const version = yield call(getVersion, url, appname);
+
 		if (!isEmptyObject(data)) {
 			const indexes = Object.keys(data);
 			let properties = {};
@@ -69,10 +71,13 @@ function* handleFetchMappings() {
 						}
 					});
 				} else {
-					types.push('_doc');
-					indexTypeMap[index] = ['_doc'];
+					const typeName =
+						parseInt(version.charAt(0), 10) >= 6 ? '_doc' : 'doc';
+
+					types.push(typeName);
+					indexTypeMap[index] = [typeName];
 					typePropertyMapping[index] = {};
-					typePropertyMapping[index]._doc = {};
+					typePropertyMapping[index][typeName] = {};
 				}
 			});
 
