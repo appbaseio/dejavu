@@ -14,6 +14,7 @@ import DataTableHeader from './DataTableHeader';
 import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
+import CloneApp from './CloneApp';
 
 import { fetchMappings } from '../../actions';
 import { getUrl, getHeaders } from '../../reducers/app';
@@ -121,6 +122,7 @@ class DataBrowser extends Component<Props> {
 						wrap="no-wrap"
 						alignItems="center"
 					>
+						<CloneApp />
 						<AddRowModal />
 						<AddFieldModal />
 					</Flex>

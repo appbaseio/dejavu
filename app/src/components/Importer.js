@@ -7,24 +7,12 @@ import ErrorFlashMessage from './ErrorFlashMessage';
 import ConnectApp from './ConnectApp';
 
 import { getIsConnected, getAppname, getUrl } from '../reducers/app';
-import { parseUrl } from '../utils';
+import { getImporterLink } from '../utils';
 
 type Props = {
 	isConnected: boolean,
 	rawUrl?: string,
 	appname?: string,
-};
-
-const getLinkParams = (appname, rawUrl) => {
-	let params = `?header=false`;
-	if (rawUrl.indexOf('appbase.io') > 1) {
-		const { credentials } = parseUrl(rawUrl);
-		params += `&app={"platform":"appbase","appname":"${appname}","credentials":"${credentials}"}`;
-	} else {
-		params += `&app={"platform":"elasticsearch","appname":"${appname}","hosturl":"${rawUrl}"}`;
-	}
-
-	return params;
 };
 
 const Importer = ({ isConnected, rawUrl = '', appname = '' }: Props) => (
@@ -42,10 +30,7 @@ const Importer = ({ isConnected, rawUrl = '', appname = '' }: Props) => (
 		{isConnected && (
 			<iframe
 				title="Importer"
-				src={`https://importer.appbase.io/${getLinkParams(
-					appname,
-					rawUrl,
-				)}`}
+				src={getImporterLink(appname, rawUrl)}
 				frameBorder="0"
 				width="100%"
 				style={{
