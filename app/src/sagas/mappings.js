@@ -46,7 +46,7 @@ function* handleFetchMappings() {
 				let typesList = Object.keys(data[index].mappings);
 				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
-					Object.keys(data[index].mappings).forEach(type => {
+					typesList.forEach(type => {
 						if (data[index].mappings[type].properties) {
 							indexTypeMap[index] = [
 								...(indexTypeMap[index] || []),
