@@ -22,39 +22,43 @@ type Props = {
 };
 
 const Cell = ({ mapping, ...props }: Props) => {
-	switch (mapping.type) {
-		case 'boolean':
-			return <BooleanCell {...props} />;
-		case 'integer':
-		case 'float':
-		case 'long':
-		case 'double':
-			if (Array.isArray(props.children)) {
-				return <ArrayCell {...props} />;
-			}
-			return <NumberCell {...props} />;
-		case 'date':
-			return (
-				<DateCell
-					{...props}
-					format={mapping.format || dateFormatMap.date}
-				/>
-			);
-		case 'object':
-		case 'geo_point':
-		case 'geo_shape':
-			return <ObjectCell {...props} />;
-		case 'string':
-		case 'text':
-			if (Array.isArray(props.children) && props) {
-				return <ArrayCell {...props} />;
-			}
-			if (isObject(mapping.properties)) {
+	if (mapping && mapping.type) {
+		switch (mapping.type) {
+			case 'boolean':
+				return <BooleanCell {...props} />;
+			case 'integer':
+			case 'float':
+			case 'long':
+			case 'double':
+				if (Array.isArray(props.children)) {
+					return <ArrayCell {...props} />;
+				}
+				return <NumberCell {...props} />;
+			case 'date':
+				return (
+					<DateCell
+						{...props}
+						format={mapping.format || dateFormatMap.date}
+					/>
+				);
+			case 'object':
+			case 'geo_point':
+			case 'geo_shape':
 				return <ObjectCell {...props} />;
-			}
-			return <TextCell {...props} />;
-		default:
-			return <ObjectCell {...props} />;
+			case 'string':
+			case 'text':
+				if (Array.isArray(props.children) && props) {
+					return <ArrayCell {...props} />;
+				}
+				if (isObject(mapping.properties)) {
+					return <ObjectCell {...props} />;
+				}
+				return <TextCell {...props} />;
+			default:
+				return <ObjectCell {...props} />;
+		}
+	} else {
+		return null;
 	}
 };
 

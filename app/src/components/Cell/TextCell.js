@@ -55,7 +55,10 @@ const TextCell = ({
 					trigger="click"
 					content={
 						<div css={popoverContent}>
-							<div css={{ cursor: 'pointer' }}>{children}</div>
+							<div
+								css={{ cursor: 'pointer' }}
+								dangerouslySetInnerHTML={{ __html: children }}
+							/>
 						</div>
 					}
 				>

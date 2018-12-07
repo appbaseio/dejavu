@@ -5,12 +5,10 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import difference from 'lodash/difference';
 
+import ColumnRenderer from './ColumnRenderer';
+
 import {
 	setCellValueRequest,
-	addDataRequest,
-	setError,
-	clearError,
-	updateReactiveList,
 	setCurrentIds,
 	setArrayFields,
 } from '../../actions';
@@ -23,19 +21,12 @@ import {
 } from '../../reducers/mappings';
 import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import {
-	META_FIELDS,
 	getNestedArrayField,
 	updateIndexTypeMapping,
 } from '../../utils/mappings';
 import { getMode } from '../../reducers/mode';
+import { getPageSize } from '../../reducers/pageSize';
 import { isEqualArray, isEmptyObject } from '../../utils';
-
-import Cell from '../Cell';
-import StyledCell from './StyledCell';
-import IdField from './IdField';
-import idFieldStyles from '../CommonStyles/idField';
-
-const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
 type State = {
 	data: any[],
@@ -45,37 +36,41 @@ type Props = {
 	data: any[],
 	mappings: any,
 	setCellValue: (string, string, any, string, string) => void,
-	visibleColumns: string[],
 	nestedVisibleColumns: string[],
-	mode: string,
-	pageSize: number,
 	onSetCurrentIds: any => void,
 	isShowingNestedColumns: boolean,
 	nestedColumns: string[],
 	appName: string,
 	onSetArrayFields: (string[], string[], any, string, any) => void,
 	typePropertyMapping: any,
+	visibleColumns: string[],
+	mode: string,
+	pageSize: number,
 };
+
+const LAZY_CHUNK = 3;
 class DataTable extends Component<Props, State> {
 	state = {
-		data: this.props.data,
+		data: this.props.data.slice(0, LAZY_CHUNK),
 	};
 
 	componentDidMount() {
 		this.props.onSetCurrentIds(this.props.data.map(item => item._id));
+		this.lazyLoad();
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			!isEqualArray(this.state.data, nextState.data) ||
-			this.props.mode !== nextProps.mode ||
-			this.props.pageSize !== nextProps.pageSize ||
+			!isEqualArray(this.props.data, nextProps.data) ||
 			this.props.visibleColumns.length !==
 				nextProps.visibleColumns.length ||
 			this.props.isShowingNestedColumns !==
 				nextProps.isShowingNestedColumns ||
 			this.props.nestedVisibleColumns.length !==
-				nextProps.nestedVisibleColumns.length
+				nextProps.nestedVisibleColumns.length ||
+			this.props.mode !== nextProps.mode ||
+			this.props.pageSize !== nextProps.pageSize
 		);
 	}
 
@@ -143,7 +138,7 @@ class DataTable extends Component<Props, State> {
 		}
 	}
 
-	handleChange = (row, column, value) => {
+	handleCellChange = (row, column, value) => {
 		const { setCellValue } = this.props;
 		const { data } = this.state;
 
@@ -162,24 +157,31 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
+	lazyLoad = () => {
+		setTimeout(() => {
+			const hasMore =
+				this.state.data.length + LAZY_CHUNK < this.props.data.length;
+
+			this.setState(prevState => ({
+				data: this.props.data.slice(
+					0,
+					prevState.data.length + LAZY_CHUNK,
+				),
+			}));
+
+			if (hasMore) this.lazyLoad();
+		}, 0);
+	};
+
 	render() {
+		const { data } = this.state;
 		const {
+			mappings,
 			visibleColumns,
 			mode,
-			mappings,
-			pageSize,
 			nestedVisibleColumns,
 			isShowingNestedColumns,
 		} = this.props;
-		const { data } = this.state;
-		const mappingCols = isShowingNestedColumns
-			? nestedVisibleColumns
-			: visibleColumns;
-
-		const columns = ['_id', ...mappingCols];
-		const mapProp = isShowingNestedColumns
-			? 'nestedProperties'
-			: 'properties';
 
 		return (
 			<table
@@ -190,54 +192,17 @@ class DataTable extends Component<Props, State> {
 				<tbody>
 					{data.map((dataItem, rowIndex) => (
 						<tr key={dataItem._id}>
-							{columns.map(col => (
-								<td
-									key={`${dataItem._id}-${col}`}
-									css={{
-										minWidth: 200,
-										maxWidth: 200,
-									}}
-									className={col === '_id' && idFieldStyles}
-								>
-									<StyledCell mode={mode}>
-										{col === '_id' ? (
-											<IdField
-												rowIndex={rowIndex}
-												data={data}
-												pageSize={pageSize}
-												value={dataItem._id}
-											/>
-										) : (
-											<div css={{ width: '100%' }}>
-												{isMetaField(col) ? (
-													<div>{dataItem[col]}</div>
-												) : (
-													<Cell
-														row={rowIndex}
-														column={col}
-														mode={mode}
-														onChange={value =>
-															this.handleChange(
-																rowIndex,
-																col,
-																value,
-															)
-														}
-														mapping={
-															mappings[mapProp][
-																col
-															]
-														}
-														shouldAutoFocus
-													>
-														{get(dataItem, col)}
-													</Cell>
-												)}
-											</div>
-										)}
-									</StyledCell>
-								</td>
-							))}
+							<ColumnRenderer
+								rowIndex={rowIndex}
+								dataItem={dataItem}
+								data={data}
+								mappings={mappings}
+								onCellChange={this.handleCellChange}
+								visibleColumns={visibleColumns}
+								mode={mode}
+								nestedVisibleColumns={nestedVisibleColumns}
+								isShowingNestedColumns={isShowingNestedColumns}
+							/>
 						</tr>
 					))}
 				</tbody>
@@ -247,21 +212,18 @@ class DataTable extends Component<Props, State> {
 }
 
 const mapStateToProps = state => ({
-	visibleColumns: getVisibleColumns(state),
-	mode: getMode(state),
 	nestedVisibleColumns: getNestedVisibleColumns(state),
 	nestedColumns: getNestedColumns(state),
 	appName: getAppname(state),
 	typePropertyMapping: getTypePropertyMapping(state),
 	isShowingNestedColumns: getIsShowingNestedColumns(state),
+	visibleColumns: getVisibleColumns(state),
+	mode: getMode(state),
+	pageSize: getPageSize(state),
 });
 
 const mapDispatchToProps = {
 	setCellValue: setCellValueRequest,
-	addDataRequest,
-	setError,
-	clearError,
-	updateReactiveList,
 	onSetCurrentIds: setCurrentIds,
 	onSetArrayFields: setArrayFields,
 };
