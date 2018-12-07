@@ -24,14 +24,15 @@ const BooleanCell = ({ children, onChange, mode }: Props) => (
 				}
 				css={{ width: '100%' }}
 				onChange={value => {
-					onChange(Boolean(value));
+					// convert string into boolean value
+					onChange(value === 'true');
 				}}
 			>
 				<Option value="true">true</Option>
 				<Option value="false">false</Option>
 			</Select>
 		) : (
-			children
+			children !== 'undefined' && <span>{String(children)}</span>
 		)}
 	</CellStyled>
 );
