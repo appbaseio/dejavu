@@ -23,12 +23,28 @@ type Props = {
 	updateReactiveList: () => void,
 };
 
-class GlobalSearch extends Component<Props> {
+type State = {
+	searchValue: string,
+};
+
+class GlobalSearch extends Component<Props, State> {
+	state = {
+		searchValue: '',
+	};
+
 	componentDidUpdate(nextProps) {
-		if (this.props.mode !== nextProps.mode) {
+		const { searchValue } = this.state;
+
+		if (this.props.mode !== nextProps.mode && searchValue.trim()) {
 			this.props.updateReactiveList();
 		}
 	}
+
+	handleSearchValueChange = searchValue => {
+		this.setState({
+			searchValue,
+		});
+	};
 
 	render() {
 		const {
@@ -67,9 +83,11 @@ class GlobalSearch extends Component<Props> {
 							background: #fff !important;
 						`}`,
 					}}
+					debounce={5}
 					showIcon={false}
 					highlight={mode === MODES.VIEW}
 					queryFormat="and"
+					onValueChange={this.handleSearchValueChange}
 				/>
 				<Icon
 					type="search"

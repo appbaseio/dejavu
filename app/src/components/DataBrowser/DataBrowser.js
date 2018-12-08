@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { ReactiveBase } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { Skeleton, Spin } from 'antd';
+import { Skeleton } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
 
 import Flex from '../Flex';
@@ -15,6 +15,7 @@ import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
 import CloneApp from './CloneApp';
+import Loader from '../Loader';
 
 import { fetchMappings } from '../../actions';
 import { getUrl, getHeaders } from '../../reducers/app';
@@ -101,6 +102,7 @@ class DataBrowser extends Component<Props> {
 											maxHeight:
 												window.innerHeight -
 												(hideAppSwitcher ? 250 : 350),
+											minHeight: 200,
 											overflowX: 'auto',
 										}}
 									>
@@ -125,11 +127,6 @@ class DataBrowser extends Component<Props> {
 						<CloneApp />
 						<AddRowModal />
 						<AddFieldModal />
-					</Flex>
-				)}
-				{(isLoading || isDataLoading) && (
-					<Flex css={{ marginTop: '20px' }} justifyContent="center">
-						<Spin />
 					</Flex>
 				)}
 			</Skeleton>

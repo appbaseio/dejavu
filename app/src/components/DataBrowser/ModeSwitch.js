@@ -24,7 +24,7 @@ type Props = {
 class ModeSwitch extends Component<Props> {
 	handleModeChange = value => {
 		this.props.setMode(value);
-		this.setSearchQuery(value);
+		// this.setSearchQuery(value);
 	};
 
 	setSearchQuery = mode => {

@@ -42,7 +42,7 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 		if (res.status >= 400) {
 			throw new CustomError(
 				JSON.stringify(res.error, null, 2),
-				`HTTP STATUS: ${res.status} - ${defaultError}`,
+				`HTTP STATUS: ${res.status} - ${res.message || defaultError}`,
 			);
 		}
 		return res;
@@ -74,13 +74,13 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 		if (res.status >= 400) {
 			throw new CustomError(
 				JSON.stringify(res.error, null, 2),
-				`HTTP STATUS: ${res.status} - ${defaultError}`,
+				`HTTP STATUS: ${res.status} - ${res.message || defaultError}`,
 			);
 		}
 		return res;
 	} catch (error) {
 		throw new CustomError(
-			error.description || defaultError,
+			error.description || error.message || defaultError,
 			error.message,
 			error.stack,
 		);
@@ -112,13 +112,13 @@ export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
 		if (res.status >= 400) {
 			throw new CustomError(
 				JSON.stringify(res.error, null, 2),
-				`HTTP STATUS: ${res.status} - ${defaultError}`,
+				`HTTP STATUS: ${res.status} - ${res.message || defaultError}`,
 			);
 		}
 		return res;
 	} catch (error) {
 		throw new CustomError(
-			error.description || defaultError,
+			error.description || error.message || defaultError,
 			error.message,
 			error.stack,
 		);

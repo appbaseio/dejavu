@@ -5,10 +5,10 @@ import { ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { css } from 'react-emotion';
 import { mediaMin } from '@divyanshu013/media';
-import { Spin } from 'antd';
 
 import DataTable from '../DataTable';
 import Flex from '../Flex';
+import Loader from '../Loader';
 
 import { numberWithCommas, getUrlParams } from '../../utils';
 import { getSort } from '../../reducers/sort';
@@ -20,6 +20,7 @@ import {
 	getMappings,
 } from '../../reducers/mappings';
 import { setSelectedRows, setUpdatingRow } from '../../actions';
+import colors from '../theme/colors';
 
 type Props = {
 	reactiveListKey: number,
@@ -76,7 +77,7 @@ const ResultSet = ({
 					right: 0,
 					zIndex: 105,
 					'.active': {
-						backgroundColor: '#1890ff !important',
+						backgroundColor: `${colors.primary} !important`,
 					},
 
 					[mediaMin.medium]: {
@@ -88,14 +89,18 @@ const ResultSet = ({
 				<Flex
 					justifyContent="center"
 					css={{
-						position: 'fixed',
-						bottom: '-80px',
-						left: '50%',
+						minHeight: 150,
+						position: 'absolute',
+						top: 32,
+						left: 2,
+						right: 2,
+						bottom: 2,
 						zIndex: 1000,
+						background: colors.white,
 					}}
 					id="spinner"
 				>
-					<Spin />
+					<Loader />
 				</Flex>
 			}
 			onPageChange={() => {

@@ -24,6 +24,8 @@ const getMappingColumns = props => {
 	return ['_id', ...mappingCols];
 };
 
+const LAZY_CHUNK = 4;
+
 type State = {
 	columns: string[],
 };
@@ -43,11 +45,14 @@ type Props = {
 };
 
 class ColumnRenderer extends Component<Props, State> {
+	isMounted = false;
+
 	state = {
-		columns: getMappingColumns(this.props).slice(0, 4),
+		columns: getMappingColumns(this.props).slice(0, LAZY_CHUNK),
 	};
 
 	componentDidMount() {
+		this.isMounted = true;
 		this.lazyLoad();
 	}
 
@@ -64,18 +69,24 @@ class ColumnRenderer extends Component<Props, State> {
 		}
 	}
 
+	componentWillUnmount() {
+		this.isMounted = false;
+	}
+
 	lazyLoad = () => {
 		setTimeout(() => {
 			const hasMore =
-				this.state.columns.length + 4 <
+				this.state.columns.length + LAZY_CHUNK <
 				getMappingColumns(this.props).length;
 
-			this.setState(prevState => ({
-				columns: getMappingColumns(this.props).slice(
-					0,
-					prevState.columns.length + 4,
-				),
-			}));
+			if (this.isMounted) {
+				this.setState(prevState => ({
+					columns: getMappingColumns(this.props).slice(
+						0,
+						prevState.columns.length + LAZY_CHUNK,
+					),
+				}));
+			}
 
 			if (hasMore) this.lazyLoad();
 		}, 0);

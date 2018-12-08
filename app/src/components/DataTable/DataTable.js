@@ -50,11 +50,14 @@ type Props = {
 
 const LAZY_CHUNK = 3;
 class DataTable extends Component<Props, State> {
+	isMounted = false;
+
 	state = {
 		data: this.props.data.slice(0, LAZY_CHUNK),
 	};
 
 	componentDidMount() {
+		this.isMounted = true;
 		this.props.onSetCurrentIds(this.props.data.map(item => item._id));
 		this.lazyLoad();
 	}
@@ -138,6 +141,10 @@ class DataTable extends Component<Props, State> {
 		}
 	}
 
+	componentWillUnmount() {
+		this.isMounted = false;
+	}
+
 	handleCellChange = (row, column, value) => {
 		const { setCellValue } = this.props;
 		const { data } = this.state;
@@ -162,12 +169,14 @@ class DataTable extends Component<Props, State> {
 			const hasMore =
 				this.state.data.length + LAZY_CHUNK < this.props.data.length;
 
-			this.setState(prevState => ({
-				data: this.props.data.slice(
-					0,
-					prevState.data.length + LAZY_CHUNK,
-				),
-			}));
+			if (this.isMounted) {
+				this.setState(prevState => ({
+					data: this.props.data.slice(
+						0,
+						prevState.data.length + LAZY_CHUNK,
+					),
+				}));
+			}
 
 			if (hasMore) this.lazyLoad();
 		}, 0);
