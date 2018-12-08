@@ -15,7 +15,6 @@ import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
 import CloneApp from './CloneApp';
-import Loader from '../Loader';
 
 import { fetchMappings } from '../../actions';
 import { getUrl, getHeaders } from '../../reducers/app';
