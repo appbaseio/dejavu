@@ -622,31 +622,57 @@ class ConnectApp extends Component<Props, State> {
 						</Flex>
 					</Form>
 				)}
-				{!isLoading &&
-					!isConnected && (
-						<Alert
-							type="info"
-							showIcon
-							message="Connecting to ElasticSearch"
-							description={
+				{!isLoading && !isConnected && (
+					<Alert
+						type="info"
+						showIcon
+						message="Connecting to ElasticSearch"
+						description={
+							<React.Fragment>
 								<div>
 									<p>
-										To make sure you enable CORS settings
-										for your ElasticSearch instance, add the
-										following lines in the ES configuration
-										file:
+										To make sure you have enabled CORS
+										settings for your ElasticSearch
+										instance, add the following lines in the
+										ES configuration file:
 									</p>
 									<pre>
 										{`http.port: 9200
-http.cors.allow-origin: http://localhost:1357
+http.cors.allow-origin: http://localhost:1358,http://127.0.0.1:1358
 http.cors.enabled: true
 http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 http.cors.allow-credentials: true`}
 									</pre>
 								</div>
-							}
-						/>
-					)}
+								<div style={{ marginTop: '2rem' }}>
+									<p>
+										If you are running ElasticSearch via
+										Docker, use the following command:
+										<br />
+										<div
+											style={{
+												background: '#fefefe',
+												padding: '8px',
+											}}
+										>
+											<code>
+												docker run --name es -d -p
+												9200:9200 -e http.port=9200 -e
+												http.cors.enabled=true -e
+												http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+												-e
+												http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+												-e
+												http.cors.allow-credentials=true
+												docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
+											</code>
+										</div>
+									</p>
+								</div>
+							</React.Fragment>
+						}
+					/>
+				)}
 			</div>
 		);
 	}
