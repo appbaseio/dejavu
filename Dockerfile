@@ -4,13 +4,13 @@ MAINTAINER appbase.io <info@appbase.io>
 WORKDIR /dejavu
 ADD package.json yarn.lock /dejavu/
 
-RUN apk --no-cache update && apk --no-cache add build-base libpng-dev lcms2-dev bash git && rm -rf /var/cache/apk/*
+RUN apk --no-cache update && apk --no-cache add git && rm -rf /var/cache/apk/*
 
 RUN yarn global add http-server
 
 ADD . /dejavu
 
-RUN yarn && yarn cache clean && yarn build:app && rm -rf /dejavu/node_modules
+RUN yarn && yarn cache clean && yarn build:app && rm -rf /dejavu/node_modules && rm -rf /tmp/*
 
 EXPOSE 1358
 
