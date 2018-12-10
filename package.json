@@ -20,7 +20,7 @@
 		"build:app": "NODE_ENV=production webpack",
 		"build:site": "NODE_ENV=product webpack --config webpack.config.site.js",
 		"build": "yarn build:app && yarn build:site",
-		"format": "prettier --write --use-tabs 'src/!(batteries*)**/*.js'"
+		"format": "prettier --write --use-tabs 'app/src/!(batteries*)**/*.js'"
 	},
 	"husky": {
 		"hooks": {
@@ -115,7 +115,14 @@
 	"authors": [
 		"Divyanshu Maithani <div.blackcat@gmail.com> (https://github.com/divyanshu013)",
 		"Deepak Grover <deepakgrover333@gmail.com> (https://github.com/metagrover)",
+		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani",
 		"Appbase.io <info@appbase.io> (https://github.com/appbaseio)"
 	],
+	"jest": {
+		"testPathIgnorePatterns": [
+			"<rootDir>/app/src/batteries",
+			"<rootDir>/node_modules/"
+		]
+	},
 	"license": "MIT"
 }
