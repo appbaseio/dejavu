@@ -19,6 +19,7 @@ import {
 	getMappingsTree,
 	getTermsAggregationColumns,
 	getSortableColumns,
+	hasNestedColumns,
 } from '../utils/mappings';
 import CustomError from '../utils/CustomError';
 
@@ -144,6 +145,11 @@ function* handleFetchMappings() {
 				...getSortableColumns(nestedProperties),
 			];
 
+			const shouldShowNestedSwitch = hasNestedColumns(
+				properties,
+				nestedProperties,
+			);
+
 			yield put(
 				fetchMappingsSuccess(
 					mappings,
@@ -159,6 +165,7 @@ function* handleFetchMappings() {
 					allNestedColumns,
 					termsAggregationColumns,
 					sortableColumns,
+					shouldShowNestedSwitch,
 				),
 			);
 		} else {

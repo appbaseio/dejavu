@@ -304,6 +304,10 @@ const updateIndexTypeMapping = (
 	return newMapping;
 };
 
+const hasNestedColumns = (originalProperties, nestedProperties) =>
+	Object.keys(originalProperties).length !==
+	Object.keys(nestedProperties).length;
+
 export {
 	extractColumns,
 	es6mappings,
@@ -314,4 +318,5 @@ export {
 	getNestedArrayField,
 	updateIndexTypeMapping,
 	getSortableColumns,
+	hasNestedColumns,
 };

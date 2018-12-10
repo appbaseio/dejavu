@@ -18,6 +18,7 @@ const fetchMappingsSuccess = (
 	nestedColumns,
 	termsAggregationColumns,
 	sortableColumns,
+	shouldShowNestedSwitch,
 ) => ({
 	type: MAPPINGS.MAPPINGS_FETCH_SUCCESS,
 	data,
@@ -33,6 +34,7 @@ const fetchMappingsSuccess = (
 	nestedColumns,
 	termsAggregationColumns,
 	sortableColumns,
+	shouldShowNestedSwitch,
 });
 
 const fetchMappingsFailure = () => ({
