@@ -4,19 +4,17 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/appbaseio/dejavu.svg)](https://hub.docker.com/r/appbaseio/dejavu/)
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**
-2. **[Features](#2-features)**
-   a. [Easily Connect to Indices](#easily-connect-and-remember-indices)
-   b. [Visual Filters](#visual-filters)
-   c. [Enhanced Filtering with Queries](#enhanced-filtering-with-queries)
-   d. [Modern UI Elements](#modern-ui-elements)
-   e. [Realtime Data Updates](#realtime-data-updates)
-   f. [Import JSON or CSV Data](#import-json-or-csv-data)
-   g. [Build search UIs](#build-search-uis)
+2. **[Features](#2-features)**  
+   a. [Easily Connect to Indices](#easily-connect-and-remember-indices)  
+   b. [Visual Filters](#visual-filters)  
+   c. [Modern UI Elements](#modern-ui-elements)  
+   d. [Import JSON or CSV Data](#import-json-or-csv-data)  
+   e. [Build search UIs](#build-search-uis)  
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
-6. **[Get Dejavu](#6-get-dejavu)**
-   a. [Docker Installation](#docker-installation)
+6. **[Get Dejavu](#6-get-dejavu)**  
+   a. [Docker Installation](#docker-installation)  
    b. [Hosted Alternatives](#hosted-alternatives)
 
 ---
@@ -108,18 +106,19 @@ With Search Preview, you can now build visual search UIs, test search relevancy 
 -   [x] Refactor codebase to improve hackability (Migrate to React 16+, ES6 syntax)
 -   [x] Ability to build (and test) search visually
 
-:sparkles: We just hit the 2.0.0 release:
+:sparkles: We just hit the 3.0.0 release:
 
 -   [x] Rewrite dejavu browser for high performance when browsing large datasets
--   [x] Support addition of custom analyzers, and updating index settings
--   [x] Make editing of data experience more intuitive (in addition to the raw JSON, show a relevant UI field with validations)
--   [x] Connectors to dashboarding systems for a more flavored visualization experience.
+-   [x] Add support for browsing multiple indexes
+-   [x] Powerful filtering of data with field level facet based filters and a global search
+-   [x] Built on React v16.6 and future compatible with React v17
+-   [x] A more intuitive data editing experience (in addition to the raw JSON, we now show a relevant UI field with validations)
 
 Roadmap beyond v3:
 
--   [ ] Improve coverage from 10% to 90%
+-   [ ] Improve test coverage
 -   [ ] Mobile friendly viewing and editing experience
--   [ ] Improve filtering support (add range filters, date filters)
+-   [ ] Additional filtering support (add range filters, date filters)
 
 ---
 
