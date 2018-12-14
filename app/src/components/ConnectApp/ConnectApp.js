@@ -486,7 +486,14 @@ class ConnectApp extends Component<Props, State> {
 									</Button>
 								</Group>
 							</Item>
-							<Item {...formItemProps}>
+							<Item
+								{...formItemProps}
+								css={{
+									[mediaMin.medium]: {
+										flex: 0.35,
+									},
+								}}
+							>
 								<AutoComplete
 									dataSource={pastApps.map(
 										app => app.appname,
