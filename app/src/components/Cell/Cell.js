@@ -22,7 +22,7 @@ type Props = {
 };
 
 const Cell = ({ mapping, ...props }: Props) => {
-	if (mapping && mapping.type) {
+	if (mapping && (mapping.type || mapping.properties)) {
 		switch (mapping.type) {
 			case 'boolean':
 				return <BooleanCell {...props} />;
