@@ -73,58 +73,54 @@ With Search Preview, you can now build visual search UIs, test search relevancy 
 
 ### 3. Comparison with other data browsers
 
-|      Features      |                         dejavu                          |                   ES-head                    |              ES-kopf              |                       ES-browser                        |                        Kibana                        |
-| :----------------: | :-----------------------------------------------------: | :------------------------------------------: | :-------------------------------: | :-----------------------------------------------------: | :--------------------------------------------------: |
-|    Installation    |       Chrome extension, Docker Image, Hosted App.       |      Elasticsearch plugin, static page       | Elasticsearch plugin, static page | Elasticsearch plugin (doesn't work with v2.0 and above) |                 Elasticsearch plugin                 |
-|     Modern UI      | Built with React v16.6. |  Built with jQuery v1.6.1, slightly stodgy   |      Built with Angular 1.x       |           Built with ExtJs, but a bit stodgy            |            Built with Node.JS, Hapi, Jade            |
-|  Browser features  |           CRUD with support for data filters.           | Read data with support for full-text search. |           No data view            |           Data view support for a single type           | Read view with support for visualizations / charting |
-| Data Import/Export |              Yes, in JSON and CSV formats.              |                      -                       |                 -                 |                            -                            |      Only export is supported, no CSV support.       |
-|   Search Preview   |           Visually build and test search Ux.            |                      -                       |                 -                 |                            -                            |                          -                           |
-|    Open Source     |                       MIT license                       |                 Apache v2.0                  |            MIT license            |                       Apache v2.0                       |                     Apache v2.0                      |
+| Features | dejavu | [ES-head](https://github.com/mobz/elasticsearch-head) | [ES-kopf](https://github.com/lmenezes/elasticsearch-kopf) | [ES-browser](https://github.com/OlegKunitsyn/elasticsearch-browser) | [Kibana](https://github.com/elastic/kibana) |
+| :- | :- | :- | :- | :- | :- |
+| Installation | Chrome extension, Docker image, Hosted app | Elasticsearch plugin, static page | Elasticsearch plugin, static page | Elasticsearch plugin (doesn't work with 2.0+) | Elasticsearch plugin |
+| Modern UI | React 16.6. | jQuery 1.6.1, slightly stodgy | Angular 1.x | ExtJs, a bit stodgy | Node.JS, Hapi, Jade |
+| Browser features | [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete), data filters | Read data, full-text search | ❌ | Data view for a single type | Read view, visualizations, charting |
+| Data import/export | ✔️ JSON, CSV | ❌ | ❌ | ❌ | Only export, no CSV |
+| Search preview | Visually build and test search UI | ❌ | ❌ | ❌ | ❌ |
+| License | [MIT](https://github.com/appbaseio/dejavu/blob/dev/LICENSE.md) | [Apache 2.0](https://github.com/mobz/elasticsearch-head/blob/master/LICENCE) | [MIT](https://github.com/lmenezes/elasticsearch-kopf/blob/master/LICENSE) | [Apache 2.0](https://github.com/OlegKunitsyn/elasticsearch-browser/blob/master/LICENSE) | [Apache 2.0](https://github.com/elastic/kibana/blob/master/LICENSE.txt) |
 
 ---
 
 ### 4. Roadmap
 
-<s>Here's a rough roadmap of things to come in the version `1.0.0` release.</s>
+~~Here's a rough roadmap of things to come in the version `1.0.0` release.~~
 
-:fireworks: We just hit the 1.0.0 roadmap.
+🎆 We just hit the 1.0.0 roadmap:
+- [x] Battle-testing with different datasets
+- [x] Feature support for advanced filtering
+        ~~Offline detection and reconnection for realtime updates~~
+- [x] Performance improvements while scrolling
+- [x] Support for importing and exporting data
+- [x] Support for a continuous query view
+- [x] Available as a docker image
 
--   [x] Battle-testing with different datasets
--   [x] Feature support for advanced filtering
-        <s>Offline detection and reconnection for realtime updates</s>
--   [x] Performance improvements while scrolling
--   [x] Support for importing and exporting data
--   [x] Support for a continuous query view
--   [x] Available as a docker image
+🍾 We just hit the 2.0.0 release:
+- [x] An intuitive data editing experience in tabular mode (v/s JSON edit mode)
+- [x] View data types from within the data browser view
+- [x] A more streamlined import process
+- [x] Refactor codebase to improve hackability (Migrate to React 16+, ES6 syntax)
+- [x] Ability to build (and test) search visually
 
-🍾 We just hit the 2.0.0 release.
+✨ We just hit the 3.0.0 release:
+- [x] Rewrite dejavu browser for high performance when browsing large datasets
+- [x] Add support for browsing multiple indexes
+- [x] Powerful filtering of data with field level facet based filters and a global search
+- [x] Built on React 16.6 and future compatible with React 17
+- [x] A more intuitive data editing experience (in addition to the raw JSON, we now show a relevant UI field with validations)
 
--   [x] An intuitive data editing experience in tabular mode (v/s JSON edit mode)
--   [x] View data types from within the data browser view
--   [x] A more streamlined import process
--   [x] Refactor codebase to improve hackability (Migrate to React 16+, ES6 syntax)
--   [x] Ability to build (and test) search visually
-
-:sparkles: We just hit the 3.0.0 release:
-
--   [x] Rewrite dejavu browser for high performance when browsing large datasets
--   [x] Add support for browsing multiple indexes
--   [x] Powerful filtering of data with field level facet based filters and a global search
--   [x] Built on React v16.6 and future compatible with React v17
--   [x] A more intuitive data editing experience (in addition to the raw JSON, we now show a relevant UI field with validations)
-
-Roadmap beyond v3:
-
--   [ ] Improve test coverage
--   [ ] Mobile friendly viewing and editing experience
--   [ ] Additional filtering support (add range filters, date filters)
+🔜 Roadmap beyond 3.0.0:
+- [ ] Improve test coverage
+- [ ] Mobile friendly viewing and editing experience
+- [ ] Additional filtering support (add range filters, date filters)
 
 ---
 
 ### 5. Build Locally
 
-See the **[CONTRIBUTING File](./CONTRIBUTING.md)**
+See the **[contributing guidelines](./CONTRIBUTING.md)**.
 
 ---
 
@@ -132,18 +128,18 @@ See the **[CONTRIBUTING File](./CONTRIBUTING.md)**
 
 #### Docker Installation
 
-```
+```sh
 docker run -p 1358:1358 -d appbaseio/dejavu
 open http://localhost:1358/
 ```
 
-You can also run a specific version of **dejavu** by specifying a tag. For example, version `1.0.0` can be used by specifying the `docker run -p 1358:1358 appbaseio/dejavu:1.5.0` command.
+You can also run a specific version of **dejavu** by specifying a tag. For example, version `1.5.0` can be used by specifying the `docker run -p 1358:1358 appbaseio/dejavu:1.5.0` command.
 
-##### CORS
+##### Cross-origin resource sharing (CORS)
 
-To make sure you enable CORS settings for your ElasticSearch instance, add the following lines in the ES configuration file.
+To make sure you enable CORS settings for your Elasticsearch instance, add the following lines in the `elasticsearch.yml` configuration file.
 
-```sh
+```yaml
 http.port: 9200
 http.cors.allow-origin: "http://localhost:1358"
 http.cors.enabled: true
@@ -151,23 +147,35 @@ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Len
 http.cors.allow-credentials: true
 ```
 
-If you are running your Elasticsearch with docker, you can use flags to pass the custom CORS configuration. See the [docker-compose.yml](https://github.com/appbaseio/dejavu/blob/dev/docker-compose.yml) file for an example.
+If you are running your Elasticsearch with docker-compose, you need to specify the custom CORS configuration in the `elasticsearch.yml` as above.
+You can use the `volumes` property in the docker-compose configuration to mount `elasticsearch.yml` to the Elasticsearch container:
+```yaml
+services:
+  elasticsearch:
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+```
 
-###### Elasticsearch v2.x
+If you are running your Elasticsearch with docker, you can use the following flags to pass the custom CORS configuration:
 
-`docker run --name es -d -p 9200:9200 elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true`
+###### Elasticsearch 2.x
 
-###### Elasticsearch v5.x
+```sh
+docker run -p 9200:9200 -d elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true
+```
 
-`docker run --name es -d -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true`
+###### Elasticsearch 5.x
+
+```sh
+docker run -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true
+```
 
 #### Hosted Alternatives
 
-can also be run via hosted app at https://dejavu.appbase.io or [installed as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh).
+**dejavu** can also be run via hosted app at https://dejavu.appbase.io or [installed as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh).
 
 For example: If you are using the chrome-extension instead of docker image, the `http.cors.allow-origin` in Elasticsearch.yml file would change accordingly:
-
-```sh
+```yaml
 http.port: 9200
 http.cors.allow-origin: "chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh"
 http.cors.enabled: true
