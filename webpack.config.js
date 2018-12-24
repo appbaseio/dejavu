@@ -22,7 +22,7 @@ let plugins = [
 		prefix: 'favicon/',
 	}),
 	new HtmlWebpackHarddiskPlugin(),
-	new CopyWebpackPlugin(['./app/src/_redirects']),
+	new CopyWebpackPlugin(['./app/src/_redirects', 'chrome-specific']),
 ];
 
 const isDevelopment = NODE_ENV === 'development';

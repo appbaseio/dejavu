@@ -133,6 +133,12 @@ class App extends Component {
 											path="/"
 											component={Dejavu}
 										/>
+										{/* Special case for chrom extension */}
+										<Route
+											exact
+											path="/index.html"
+											component={Dejavu}
+										/>
 										<Route
 											path="/import"
 											component={Importer}
