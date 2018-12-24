@@ -1,0 +1,30 @@
+{
+	"name": "dejavu",
+	"version": "3.0.0",
+	"icons": {
+		"16": "favicon/favicon-16x16.png",
+		"32": "favicon/favicon-32x32.png",
+		"48": "favicon/firefox_app_60x60.png",
+		"128": "favicon/firefox_app_128x128.png"
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"web_accessible_resources": ["index.html"],
+	"permissions": [
+		"storage",
+		"system.display",
+		"<all_urls>",
+		"https://appbaseio.auth0.com/*",
+		"https://use.fontawesome.com/*"
+	],
+	"manifest_version": 2,
+	"offline_enabled": true,
+	"browser_action": {
+		"default_icon": "favicon/favicon-32x32.png",
+		"default_title": "Dejavu"
+	},
+	"description": "The missing Web UI for Elasticsearch.",
+	"incognito": "split",
+	"author": "Lakhan Samani, appbase.io"
+}
