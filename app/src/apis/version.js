@@ -15,9 +15,7 @@ export default async (rawUrl, indexName) => {
 		let fetchUrl = url;
 		let fetchHeaders = {};
 
-		const isAppbaseApp = url === 'https://scalr.api.appbase.io';
-
-		if (isAppbaseApp && indexName) {
+		if (indexName) {
 			fetchUrl = `${url}/${indexName}/_settings`;
 			fetchHeaders = convertArrayToHeaders(getCustomHeaders(indexName));
 		}
@@ -39,7 +37,7 @@ export default async (rawUrl, indexName) => {
 
 		let version = '';
 
-		if (isAppbaseApp && indexName) {
+		if (indexName) {
 			version = res[indexName].settings.index.version.created;
 		} else {
 			version = res.version.number;
