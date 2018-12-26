@@ -29,8 +29,6 @@ const app = (state = initialState, action) => {
 				...state,
 				isLoading: false,
 			};
-		case APP.DISCONNECT:
-			return initialState;
 		case APP.SET_HEADERS:
 			return { ...state, headers };
 		default:

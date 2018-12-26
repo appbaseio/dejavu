@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import { APP as APP_CONSTANTS } from '../actions/constants';
 import app from './app';
 import mappings from './mappings';
 import cell from './cell';
@@ -14,7 +15,7 @@ import pageSize from './pageSize';
 import nestedColumns from './nestedColumns';
 import batteriesReducers from '../batteries/modules/reducers';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
 	app,
 	mappings,
 	cell,
@@ -29,5 +30,16 @@ const rootReducer = combineReducers({
 	nestedColumns,
 	...batteriesReducers,
 });
+
+const initialState = appReducer({}, {});
+
+const rootReducer = (state, action) => {
+	let newState = { ...state };
+	if (action.type === APP_CONSTANTS.DISCONNECT) {
+		newState = { ...initialState };
+	}
+
+	return appReducer(newState, action);
+};
 
 export default rootReducer;
