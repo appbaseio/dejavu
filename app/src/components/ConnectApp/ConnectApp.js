@@ -265,6 +265,7 @@ class ConnectApp extends Component<Props, State> {
 				url: '',
 			});
 			this.props.history.push({ search: searchQuery });
+			window.location.reload();
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
 				this.props.connectApp(appname, url);
