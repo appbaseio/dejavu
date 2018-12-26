@@ -38,7 +38,8 @@ export default async (rawUrl, indexName) => {
 		let version = '';
 
 		if (indexName) {
-			version = res[indexName].settings.index.version.created;
+			const defaultIndex = Object.keys(res)[0];
+			version = res[defaultIndex].settings.index.version.created;
 		} else {
 			version = res.version.number;
 		}
