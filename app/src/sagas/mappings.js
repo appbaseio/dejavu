@@ -48,28 +48,26 @@ function* handleFetchMappings() {
 				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
 					typesList.forEach(type => {
-						if (data[index].mappings[type].properties) {
-							indexTypeMap[index] = [
-								...(indexTypeMap[index] || []),
-								type,
-							];
-							types.push(type);
-							properties = {
-								...properties,
-								...data[index].mappings[type].properties,
-							};
-							nestedProperties = {
-								...properties,
-								...getMappingsTree(
-									data[index].mappings[type].properties,
-								),
-							};
+						const typeProperties =
+							data[index].mappings[type].properties || {};
+						indexTypeMap[index] = [
+							...(indexTypeMap[index] || []),
+							type,
+						];
+						types.push(type);
+						properties = {
+							...properties,
+							...typeProperties,
+						};
+						nestedProperties = {
+							...properties,
+							...getMappingsTree(typeProperties),
+						};
 
-							typePropertyMapping[index] = {};
-							typePropertyMapping[index][type] = getMappingsTree(
-								data[index].mappings[type].properties,
-							);
-						}
+						typePropertyMapping[index] = {};
+						typePropertyMapping[index][type] = getMappingsTree(
+							typeProperties,
+						);
 					});
 				} else {
 					const typeName =
