@@ -30,10 +30,7 @@ const DateCell = ({ children, onChange, format, mode }: Props) => (
 					},
 				}}
 				onChange={(momentObject, dateString) => {
-					if (children !== dateString) {
-						// only update value if date string has changed
-						onChange(dateString || null);
-					}
+					onChange(dateString || null);
 				}}
 			/>
 		) : (

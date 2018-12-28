@@ -38,18 +38,15 @@ class NumberCell extends Component<Props, State> {
 	};
 
 	saveChange = () => {
-		const { onChange, children } = this.props;
+		const { onChange } = this.props;
 		const { value } = this.state;
-		if (value !== children) {
-			// only save value if it has changed
-			let nextValue = value;
-			if (value === '' || value === '-') {
-				nextValue = 0;
-				this.setState({ value: nextValue });
-			}
-
-			onChange(Number(nextValue));
+		let nextValue = value;
+		if (value === '' || value === '-') {
+			nextValue = 0;
+			this.setState({ value: nextValue });
 		}
+
+		onChange(Number(nextValue));
 	};
 
 	render() {

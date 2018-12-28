@@ -36,11 +36,7 @@ const TextCell = ({
 				defaultValue={children}
 				onBlur={e => {
 					const { value } = e.target;
-					const child = children || '';
-
-					if (value !== child) {
-						onChange(value);
-					}
+					onChange(value);
 				}}
 				css={{
 					height: '100% important',
