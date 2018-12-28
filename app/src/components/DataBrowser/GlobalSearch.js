@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import {
 	getNestedSearchableColumns,
 	getSearchableColumns,
+	getSearchableColumnsWeights,
+	getNesetedSearchableColumnsWeights,
 } from '../../reducers/mappings';
 import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import { getMode } from '../../reducers/mode';
@@ -21,6 +23,8 @@ type Props = {
 	searchableColumns: string[],
 	mode: string,
 	updateReactiveList: () => void,
+	searchableColumnsWeights: number[],
+	nestedSearchableColumnsWeights: number[],
 };
 
 type State = {
@@ -51,30 +55,23 @@ class GlobalSearch extends Component<Props, State> {
 			isShowingNestedColumns,
 			nestedSearchableColumns,
 			searchableColumns: searchCols,
+			searchableColumnsWeights,
+			nestedSearchableColumnsWeights,
 			mode,
 		} = this.props;
 		const searchableColumns = isShowingNestedColumns
 			? nestedSearchableColumns
 			: searchCols;
-		const searchColumns = [
-			...searchableColumns,
-			...searchableColumns.map(field => `${field}.raw`),
-			...searchableColumns.map(field => `${field}.search`),
-			...searchableColumns.map(field => `${field}.autosuggest`),
-		];
-		const weights = [
-			...Array(searchableColumns.length).fill(3),
-			...Array(searchableColumns.length).fill(3),
-			...Array(searchableColumns.length).fill(1),
-			...Array(searchableColumns.length).fill(1),
-		];
+		const weights = isShowingNestedColumns
+			? nestedSearchableColumnsWeights
+			: searchableColumnsWeights;
 
 		return (
 			<div css={{ position: 'relative' }}>
 				<DataSearch
 					componentId="GlobalSearch"
 					autosuggest={false}
-					dataField={searchColumns}
+					dataField={searchableColumns}
 					fieldWeights={weights}
 					innerClass={{
 						input: `ant-input ${css`
@@ -105,7 +102,9 @@ class GlobalSearch extends Component<Props, State> {
 
 const mapStateToProps = state => ({
 	searchableColumns: getSearchableColumns(state),
+	searchableColumnsWeights: getSearchableColumnsWeights(state),
 	nestedSearchableColumns: getNestedSearchableColumns(state),
+	nestedSearchableColumnsWeights: getNesetedSearchableColumnsWeights(state),
 	isShowingNestedColumns: getIsShowingNestedColumns(state),
 	mode: getMode(state),
 });

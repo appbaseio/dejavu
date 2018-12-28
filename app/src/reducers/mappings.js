@@ -36,6 +36,8 @@ const mappings = (state = initialState, action) => {
 		termsAggregationColumns,
 		sortableColumns,
 		shouldShowNestedSwitch,
+		searchableColumnsWeights,
+		nestedSearchableColumnsWeights,
 	} = action;
 	switch (type) {
 		case MAPPINGS.MAPPINGS_FETCH_REQUEST:
@@ -61,6 +63,8 @@ const mappings = (state = initialState, action) => {
 				termsAggregationColumns,
 				sortableColumns,
 				shouldShowNestedSwitch,
+				searchableColumnsWeights,
+				nestedSearchableColumnsWeights,
 			};
 		case MAPPINGS.MAPPINGS_FETCH_FAILURE:
 			return {
@@ -117,6 +121,10 @@ const getTermsAggregationColumns = state =>
 const getSortableColumns = state => state.mappings.sortableColumns;
 const getShouldShowNestedSwitch = state =>
 	state.mappings.shouldShowNestedSwitch;
+const getSearchableColumnsWeights = state =>
+	state.mappings.searchableColumnsWeights;
+const getNesetedSearchableColumnsWeights = state =>
+	state.mappings.nestedSearchableColumnsWeights;
 
 export {
 	getMappings,
@@ -134,6 +142,8 @@ export {
 	getTermsAggregationColumns,
 	getSortableColumns,
 	getShouldShowNestedSwitch,
+	getSearchableColumnsWeights,
+	getNesetedSearchableColumnsWeights,
 };
 
 export default mappings;

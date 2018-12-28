@@ -115,19 +115,47 @@ function* handleFetchMappings() {
 				type => !INGNORE_META_TYPES.includes(type),
 			);
 
-			const searchableColumns = Object.keys(properties).filter(
+			const searchColumns = Object.keys(properties).filter(
 				property =>
 					properties[property].type === 'string' ||
 					properties[property].type === 'text',
 			);
 
-			const nestedSearchableColumns = Object.keys(
-				nestedProperties,
-			).filter(
+			const nestedSearchColumns = Object.keys(nestedProperties).filter(
 				property =>
 					nestedProperties[property].type === 'string' ||
 					nestedProperties[property].type === 'text',
 			);
+
+			const searchableColumns = [
+				...searchColumns,
+				...searchColumns.map(field => `${field}.raw`),
+				...searchColumns.map(field => `${field}.search`),
+				...searchColumns.map(field => `${field}.autosuggest`),
+				'_id',
+			];
+			const searchableColumnsWeights = [
+				...Array(searchColumns.length).fill(3),
+				...Array(searchColumns.length).fill(3),
+				...Array(searchColumns.length).fill(1),
+				...Array(searchColumns.length).fill(1),
+				1,
+			];
+
+			const nestedSearchableColumns = [
+				...nestedSearchColumns,
+				...nestedSearchColumns.map(field => `${field}.raw`),
+				...nestedSearchColumns.map(field => `${field}.search`),
+				...nestedSearchColumns.map(field => `${field}.autosuggest`),
+				'_id',
+			];
+			const nestedSearchableColumnsWeights = [
+				...Array(nestedSearchColumns.length).fill(3),
+				...Array(nestedSearchColumns.length).fill(3),
+				...Array(nestedSearchColumns.length).fill(1),
+				...Array(nestedSearchColumns.length).fill(1),
+				1,
+			];
 
 			const termsAggregationColumns = [
 				'_type',
@@ -164,6 +192,8 @@ function* handleFetchMappings() {
 					termsAggregationColumns,
 					sortableColumns,
 					shouldShowNestedSwitch,
+					searchableColumnsWeights,
+					nestedSearchableColumnsWeights,
 				),
 			);
 		} else {
