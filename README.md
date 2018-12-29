@@ -43,7 +43,7 @@ Dejavu allows you to connect to any of the indexes present in your cluster and a
 
 #### Visual Filters
 
-![Filter Views](https://www.dropbox.com/s/qgniwj10ga2kbai/f2.gif?raw=1)
+![Filter Views](https://i.imgur.com/iY1KAyW.gif)
 
 Sort through the data, find information visually, hide irrelevant data and make sense of all. With all the native data types we have . Global searchbar allows you to perform text search across your dataset.
 
@@ -51,7 +51,7 @@ Moreover, any filtered view can be exported as a JSON or CSV file.
 
 #### Modern UI elements
 
-![Pagination](https://www.dropbox.com/s/kl30dzi30265klq/f3.gif?raw=1)
+![Pagination](https://i.imgur.com/aTooBMt.gif)
 
 It's not uncommon to have thousands of documents in your index. Dejavu supports paginated view which also allows you to change page size.
 
@@ -147,27 +147,26 @@ http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type,Content-Len
 http.cors.allow-credentials: true
 ```
 
-If you are running your Elasticsearch with docker-compose, you need to specify the custom CORS configuration in the `elasticsearch.yml` as above.
-You can use the `volumes` property in the docker-compose configuration to mount `elasticsearch.yml` to the Elasticsearch container:
-```yaml
-services:
-  elasticsearch:
-    volumes:
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-```
+If you are running your Elasticsearch with docker-compose, you can refer to the example [reference here](https://github.com/appbaseio/dejavu/blob/dev/docker-compose.yml).
 
 If you are running your Elasticsearch with docker, you can use the following flags to pass the custom CORS configuration:
 
 ###### Elasticsearch 2.x
 
 ```sh
-docker run -p 9200:9200 -d elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true
+docker run --name elasticsearch -p 9200:9200 -d elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true
 ```
 
 ###### Elasticsearch 5.x
 
 ```sh
-docker run -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true
+docker run --name elasticsearch -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true
+```
+
+###### Elasticsearch 6.x
+
+```sh
+docker run -p 9200:9200 -d elasticsearch docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.4 -Ehttp.port=9200 -Ehttp.cors.enabled=true -Ehttp.cors.allow-origin=http://localhost:1358 -Ehttp.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Ehttp.cors.allow-credentials=true
 ```
 
 #### Hosted Alternatives
