@@ -21,7 +21,7 @@
 		"build:site": "NODE_ENV=product webpack --config webpack.config.site.js",
 		"build": "yarn build:app && yarn build:site",
 		"format": "prettier --write --use-tabs 'app/src/!(batteries*)**/*.js'",
-		"build:chrome-extension": "yarn build:app && cd dist/app && zip -R ~/dejavu.zip * -x _redirects"
+		"build:chrome-extension": "yarn build:app && cd dist/app && rm favicon/manifest.json _redirects && zip -R ../dejavu.zip *"
 	},
 	"husky": {
 		"hooks": {
