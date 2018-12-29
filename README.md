@@ -37,13 +37,13 @@ Starting with `v3.0`, we support the ability to connect to multiple indexes. You
 
 #### Easily Connect and Remember Indices
 
-![Connect to an Index](./media/f1.gif)
+![Connect to an Index](https://raw.githubusercontent.com/appbaseio/dejavu/dev/media/f1.gif)
 
 Dejavu allows you to connect to any of the indexes present in your cluster and also caches each connected index locally so they are easily accessible when browsing again.
 
 #### Visual Filters
 
-![Filter Views](./media/f2.gif)
+![Filter Views](https://raw.githubusercontent.com/appbaseio/dejavu/dev/media/f2.gif)
 
 Sort through the data, find information visually, hide irrelevant data and make sense of all. With all the native data types we have . Global searchbar allows you to perform text search across your dataset.
 
@@ -51,7 +51,7 @@ Moreover, any filtered view can be exported as a JSON or CSV file.
 
 #### Modern UI elements
 
-![Pagination](./media/f3.gif)
+![Pagination](https://raw.githubusercontent.com/appbaseio/dejavu/dev/media/f3.gif)
 
 It's not uncommon to have thousands of documents in your index. Dejavu supports paginated view which also allows you to change page size.
 
@@ -59,13 +59,13 @@ Dejavu also supports browsing data from multiple indexes and types, updating dat
 
 #### Import JSON or CSV Data
 
-![Import JSON or CSV files](./media/f4.gif)
+![Import JSON or CSV files](https://raw.githubusercontent.com/appbaseio/dejavu/dev/media/f4.gif)
 
 Importer view allows importing CSV or JSON data directly into Elasticsearch through a guided data mappings configuration.
 
 #### Build Search UIs
 
-![Build search UIs](./media/f5.gif)
+![Build search UIs](https://raw.githubusercontent.com/appbaseio/dejavu/dev/media/f5.gif)
 
 With Search Preview, you can now build visual search UIs, test search relevancy and export code to a codesandbox.
 
