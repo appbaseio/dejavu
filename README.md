@@ -1,6 +1,6 @@
 # dejavu: The missing Web UI for Elasticsearch
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md) ![React Version](https://img.shields.io/badge/react-v15.6-brightgreen.svg)
+[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/appbaseio/dejavu/dev/LICENSE.md) ![React Version](https://img.shields.io/badge/react-v16.6-brightgreen.svg)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appbaseio/dejavu.svg)](https://hub.docker.com/r/appbaseio/dejavu/)
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**
@@ -120,7 +120,7 @@ With Search Preview, you can now build visual search UIs, test search relevancy 
 
 ### 5. Build Locally
 
-See the **[contributing guidelines](./CONTRIBUTING.md)**.
+See the **[contributing guidelines](https://github.com/appbaseio/dejavu/blob/dev/CONTRIBUTING.md)**.
 
 ---
 
