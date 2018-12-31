@@ -139,6 +139,8 @@ class DataTable extends Component<Props, State> {
 				);
 			}
 		}
+
+		this.lazyLoad();
 	}
 
 	componentWillUnmount() {
