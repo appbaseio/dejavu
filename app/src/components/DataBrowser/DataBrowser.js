@@ -58,12 +58,22 @@ class DataBrowser extends Component<Props> {
 			headers,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
+		let baseProps = { url, app: indexes.join(',') };
 
-		const otherBaseProps = headers.filter(
+		if (credentials) {
+			baseProps = { ...baseProps, credentials };
+		}
+		const customHeaders = headers.filter(
 			item => item.key.trim() && item.value.trim(),
-		).length
-			? { headers: convertArrayToHeaders(headers) }
-			: {};
+		);
+
+		if (customHeaders.length) {
+			baseProps = {
+				...baseProps,
+				headers: convertArrayToHeaders(headers),
+			};
+		}
+
 		const { appswitcher } = getUrlParams(window.location.search);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
 
@@ -73,12 +83,7 @@ class DataBrowser extends Component<Props> {
 					!isDataLoading &&
 					mappings && (
 						<div css={{ position: 'relative' }}>
-							<ReactiveBase
-								app={indexes.join(',')}
-								credentials={credentials}
-								url={url}
-								{...otherBaseProps}
-							>
+							<ReactiveBase {...baseProps}>
 								<div>
 									<Actions onReload={this.handleReload} />
 									<NestedColumnToggle />

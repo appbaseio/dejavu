@@ -601,7 +601,7 @@ class ConnectApp extends Component<Props, State> {
 													minWidth: 15,
 												}}
 											>
-												{customHeaders.length > 1 && (
+												{customHeaders.length > 0 && (
 													<Icon
 														type="close"
 														onClick={() =>
