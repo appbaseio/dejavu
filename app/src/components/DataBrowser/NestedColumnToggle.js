@@ -42,8 +42,7 @@ class NestedColumnToggle extends PureComponent<Props> {
 							marginLeft: 10,
 						}}
 					>
-						{isShowingNestedColumns ? 'Hide ' : 'Show '}
-						object data as columns
+						Show object data as columns
 					</Checkbox>
 				</Flex>
 			)
