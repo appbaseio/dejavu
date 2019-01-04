@@ -82,6 +82,10 @@ const es6mappings = {
 			},
 		},
 	},
+	Keyword: {
+		type: 'keyword',
+		ignore_above: 256,
+	},
 };
 
 const getSortableTypes = () => {
@@ -195,6 +199,7 @@ const getTermsAggregationColumns = properties => {
 					es6mappings.Float.type,
 					es6mappings.Date.type,
 					es6mappings.Boolean.type,
+					es6mappings.Keyword.type,
 				].indexOf(type) > -1
 			) {
 				columns.push(item);

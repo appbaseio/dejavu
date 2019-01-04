@@ -47,6 +47,7 @@ const Cell = ({ mapping, ...props }: Props) => {
 				return <ObjectCell {...props} />;
 			case 'string':
 			case 'text':
+			case 'keyword':
 				if (Array.isArray(props.children) && props) {
 					return <ArrayCell {...props} />;
 				}

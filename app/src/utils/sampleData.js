@@ -24,6 +24,7 @@ const getSampleData = properties => {
 				break;
 			case 'string':
 			case 'text':
+			case 'keyword':
 				data[item] = '';
 				break;
 			default:
