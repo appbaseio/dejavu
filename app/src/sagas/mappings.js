@@ -119,14 +119,16 @@ function* handleFetchMappings() {
 				property =>
 					properties[property].type === 'string' ||
 					properties[property].type === 'text' ||
-					properties[property].type === 'keyword',
+					(properties[property] &&
+						properties[property].type === 'keyword'),
 			);
 
 			const nestedSearchColumns = Object.keys(nestedProperties).filter(
 				property =>
 					nestedProperties[property].type === 'string' ||
 					nestedProperties[property].type === 'text' ||
-					properties[property].type === 'keyword',
+					(properties[property] &&
+						properties[property].type === 'keyword'),
 			);
 
 			const searchableColumns = [
