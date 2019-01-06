@@ -1,10 +1,12 @@
 // @flow
 
-import React from 'react';
+// $FlowFixMe
+import React, { forwardRef } from 'react';
 import { connect } from 'react-redux';
 
 import IdHeaderField from './IdHeaderField';
-import DataColumneHeader from './DataColumnHeader';
+import ColumneHeader from './ColumnHeader';
+import Flex from '../Flex';
 
 import { setSelectedRows, setUpdatingRow } from '../../actions';
 import {
@@ -12,19 +14,19 @@ import {
 	getNestedVisibleColumns,
 } from '../../reducers/mappings';
 import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
-import colors from '../theme/colors';
-import idFieldStyles from '../CommonStyles/idField';
 
 type Props = {
 	visibleColumns: string[],
 	nestedVisibleColumns: string[],
 	isShowingNestedColumns: boolean,
+	headerRef: any,
 };
 
 const DataTableHeader = ({
 	visibleColumns,
 	isShowingNestedColumns,
 	nestedVisibleColumns,
+	headerRef,
 }: Props) => {
 	const mappingCols = isShowingNestedColumns
 		? nestedVisibleColumns
@@ -33,37 +35,24 @@ const DataTableHeader = ({
 
 	if (columns.length > 1) {
 		return (
-			<table
+			<Flex
+				wrap="nowrap"
 				css={{
-					overflowX: 'auto',
-					position: 'sticky',
-					top: 0,
-					height: 26,
-					zIndex: 102,
-					background: colors.tableHead,
+					zIndex: 100,
+					position: 'relative',
+					overflow: 'hidden',
 				}}
+				innerRef={headerRef}
 			>
-				<thead>
-					<tr>
-						{columns.map(col => (
-							<th
-								key={col}
-								css={{
-									minWidth: 200,
-									maxWidth: 200,
-								}}
-								className={col === '_id' && idFieldStyles}
-							>
-								{col === '_id' ? (
-									<IdHeaderField />
-								) : (
-									<DataColumneHeader col={col} />
-								)}
-							</th>
-						))}
-					</tr>
-				</thead>
-			</table>
+				{columns.map(
+					col =>
+						col === '_id' ? (
+							<IdHeaderField key={col} />
+						) : (
+							<ColumneHeader col={col} key={col} />
+						),
+				)}
+			</Flex>
 		);
 	}
 	return null;
@@ -80,7 +69,11 @@ const mapDispatchToProps = {
 	onSetUpdatingRow: setUpdatingRow,
 };
 
-export default connect(
+const DataTableContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps,
 )(DataTableHeader);
+
+export default forwardRef((props, ref) => (
+	<DataTableContainer {...props} headerRef={ref} />
+));

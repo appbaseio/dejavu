@@ -265,7 +265,7 @@ class ConnectApp extends Component<Props, State> {
 				url: '',
 			});
 			this.props.history.push({ search: searchQuery });
-			window.location.reload();
+			window.location.reload(true);
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
 				this.props.connectApp(appname, url);
@@ -658,26 +658,25 @@ http.cors.allow-credentials: true`}
 										<p>
 											If you are running ElasticSearch via
 											Docker, use the following command:
-											<br />
-											<div
-												style={{
-													background: '#fefefe',
-													padding: '8px',
-												}}
-											>
-												<code>
-													docker run --name es -d -p
-													9200:9200 -e http.port=9200
-													-e http.cors.enabled=true -e
-													http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
-													-e
-													http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
-													-e
-													http.cors.allow-credentials=true
-													docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
-												</code>
-											</div>
 										</p>
+										<div
+											style={{
+												background: '#fefefe',
+												padding: '8px',
+											}}
+										>
+											<code>
+												docker run --name es -d -p
+												9200:9200 -e http.port=9200 -e
+												http.cors.enabled=true -e
+												http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+												-e
+												http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+												-e
+												http.cors.allow-credentials=true
+												docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
+											</code>
+										</div>
 									</div>
 								</React.Fragment>
 							}

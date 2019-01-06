@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Popover } from 'antd';
 
-import StyledCell from '../DataTable/StyledCell';
+import StyledCell from './StyledCell';
 import MappingsDropdown from '../MappingsDropdown';
 import TermFilter from './TermFilter';
 import Flex from '../Flex';
@@ -20,6 +20,7 @@ import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import { setSort } from '../../actions';
 import overflowStyles from '../CommonStyles/overflowText';
 import filterIconStyles from '../CommonStyles/filterIcons';
+import colors from '../theme/colors';
 
 type Props = {
 	mappings: any,
@@ -95,7 +96,9 @@ class DataColumnHeader extends Component<Props> {
 		);
 		if (mappings) {
 			return (
-				<StyledCell>
+				<StyledCell
+					css={{ background: colors.tableHead, fontWeight: 'bold' }}
+				>
 					<Flex
 						justifyContent="space-between"
 						alignItems="center"
