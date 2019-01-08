@@ -345,7 +345,7 @@ class ExportData extends Component<Props, State> {
 							<React.Fragment>
 								<div>
 									Data is exported in set of <b>{MAX_DATA}</b>{' '}
-									Rows and in sequential manner.
+									documents and in a sequential manner.
 								</div>
 							</React.Fragment>
 						}
@@ -354,8 +354,8 @@ class ExportData extends Component<Props, State> {
 					{!isFetchingCount &&
 						selectedChunk && (
 							<p>
-								Now you can export <b>{selectedChunk}</b> in CSV
-								or JSON by selecting appropriate option.
+								Now you can export <b>{selectedChunk}</b> documents in CSV
+								or JSON format by selecting appropriate option.
 							</p>
 						)}
 
