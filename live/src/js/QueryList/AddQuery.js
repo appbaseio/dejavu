@@ -107,8 +107,8 @@ class AddQuery extends React.Component {
 		$('.applyQueryBtn').attr('disabled', true);
 		var self = this;
 		if (!queryValues.operation || queryValues.operation === 'view') {
-			var testQuery = feed.testQuery(queryValues.type, JSON.parse(queryValues.query));
-			testQuery.on('data', function(res) {
+			feed.testQuery(queryValues.type, JSON.parse(queryValues.query))
+			.then(function(res) {
 				if (!res.hasOwnProperty('error')) {
 					$('.applyQueryBtn').removeClass('loading').removeAttr('disabled');
 					self.props.includeQuery(queryValues, self.props.queryIndex);
@@ -119,7 +119,7 @@ class AddQuery extends React.Component {
 						error: res.error
 					});
 				}
-			}).on('error', function(err) {
+			}).catch(function(err) {
 				self.setState({
 					error: err
 				});

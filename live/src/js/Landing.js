@@ -74,6 +74,8 @@ class Landing extends Component {
 		stars: "4,500",
 		newApp: "",
 		showModal: false,
+		url: "",
+		appname: ""
 	};
 
 	componentDidMount() {
@@ -94,6 +96,34 @@ class Landing extends Component {
 			showModal: !showModal,
 		}));
 	}
+
+	setUrl = url => {
+		this.setState({ url });
+	};
+
+	setAppName = appname => {
+		this.setState({ appname });
+	};
+
+	handleConnect = () => {
+		const { appname, url } = this.state;
+		console.log(appname);
+		if (
+			url.toString().startsWith("http://") &&
+			window.location.protocol === "https:"
+		) {
+			// eslint-disable-next-line
+			toastr.warning(
+				"You are trying to load http content over https. You might have to enable mixed content for your browser https://kb.iu.edu/d/bdny#view"
+			);
+		}
+ 		if (!appname || !url) {
+			// eslint-disable-next-line
+			toastr.error("Url or appname should not be empty.");
+		} else {
+			window.location.href = `https://dejavu.appbase.io?appname=${appname}&url=${url}`;
+		}
+	};
 
 	render() {
 		const { stars, newApp, showModal } = this.state;
@@ -189,6 +219,7 @@ class Landing extends Component {
 											onChange={urlVal => {
 												document.getElementById("gg-url").value = urlVal;
 												onUrlChange(urlVal);
+												this.setUrl(urlVal.target.value);
 												setTimeout(() => {
 													document.getElementById(
 														"appname-aka-index"
@@ -215,6 +246,7 @@ class Landing extends Component {
 									<Select
 										onSearch={appName => {
 											this.setState({ newApp: appName });
+											this.setAppName(appName);
 											setTimeout(() => {
 												document.getElementById(
 													"appname-aka-index"
@@ -223,12 +255,13 @@ class Landing extends Component {
 										}}
 										onChange={appName => {
 											const appUrl = apps.find(app => app.appname === appName)
-												.url;
 											if (appUrl) {
-												onAppSelect(appUrl);
+												onAppSelect(appUrl.url);
+												this.setUrl(appUrl.url);
 											}
 											this.setState({ newApp: appName });
 											onAppNameChange(appName);
+											this.setAppName(appName);
 											setTimeout(() => {
 												document.getElementById(
 													"appname-aka-index"
@@ -266,7 +299,7 @@ class Landing extends Component {
 									</Select>
 									<Flex justifyContent="center">
 										<Button
-											onClick={onConnect}
+											onClick={this.handleConnect}
 											big
 											uppercase
 											shadow
@@ -302,7 +335,7 @@ class Landing extends Component {
 												marginBottom: 25
 											})
 										)}
-										href="live?default=true"
+										href="https://dejavu.appbase.io/?appname=gitxplore-live&url=https://2FPZ2UJQW:1c50c6df-4652-4d74-906b-7bc0a6a731b6@scalr.api.appbase.io"
 										target="_blank"
 									>
 										Try a live demo
@@ -414,7 +447,7 @@ class Landing extends Component {
 							description="A ~3,000 listings dataset for building an airbeds search."
 							big
 							src="live/assets/img/airbed.png"
-							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAAKLAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsW71dAzA7YYc-SS2NBdZOu2iiqUDTwzb8SRY-P60qxz_ZFKoJgMwEJushaRl-FxMxQqDCBLVG-xBlA5HfOZXDzUuGnntd_Zw9u4C0YdVJQ8HvMJrVO8AfQy73d9wq7TjySsVRv-NAKU5ZUw4jxU0ynrQflgPkDLN6AGDv4jeOi8Ir9BBSZ-bdv4J2oq7eCzLoC-gl9qTZsTRLHsXPhHvClG5we6nqctwdPgHqEWqj25nG0qo1RkmJYY_ZTF4XEJcMQyIw-2Rck0OE-ZTR7g8d3ste2uR2u9JbeJj9fjtjVNDltaQGN8jaAdUVVriYpB2CzgXN__Rv9tA"
+							link="https://dejavu.appbase.io/?&appname=housing&url=https://0aL1X5Vts:1ee67be1-9195-4f4b-bd4f-a91cd1b5e4b5@scalr.api.appbase.io&mode=view"
 							linkText="BROWSE"
 						/>
 						<ImageCard
@@ -422,7 +455,7 @@ class Landing extends Component {
 							description="A Hacker News dataset of 6,000+ posts."
 							big
 							src="live/assets/img/technews.png"
-							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAAIBAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsxYD52xAToBILCBZUHd4IWhGYOPRqt6o0DlIP1kVVIAmFVFSWIdk3E2cJl2oC_wC7YnoAXPLuLBSIxnd9d0TQ0opmWGwNYOHF30gMi0kIvl7AoiPzO_739ZQI7DS67rzkqlOcfTfQSkE7zipX4Ao9sYHB5yBaKA06JreaIPeE9HzCM5mgYRZ3XpfTFCMJKtlmtqnDnwvuxQb41PqmEQyqWkhmbbkM3A6Xwi4HB1SmUET_lJZAA"
+							link="https://dejavu.appbase.io/?&appname=hackernews-live&url=https://kxBY7RnNe:4d69db99-6049-409d-89bd-e1202a2ad48e@scalr.api.appbase.io&mode=view"
 							linkText="BROWSE"
 						/>
 						<ImageCard
@@ -430,7 +463,7 @@ class Landing extends Component {
 							description="A TMDB derived dataset of 13,000 popular movies."
 							big
 							src="live/assets/img/movie.png"
-							link="https://opensource.appbase.io/dejavu/live/#?input_state=XQAAAALHAQAAAAAAAAA9iIqnY-B2BnTZGEQz6wkFsl_X14MGM4ebXtwfc5RKh8oYUdlolmraYIijUHHIdsLNFR38QB36wFD9mxqQ3hw8UIuWk6anRkqRWWqJdQzL7fsaSb-KVmiJHfYd7IXvQwmbncmve1oOxVqeN5KsFHAvKApT4O8IzfYkBPNy7EkQSwChNYfGVnpSGneCa7C8pZFKIIs5ZN4AjAEnGcyF3fsKbh0s1SXrBiz9ZorBNHtj3Oue3UbKlLc5T07dvgh2dont93VHJExEarqodZLdySSzfl__Jb7qhfLatM1Iu9315nRu0sFK1YSCFWD4lYvqqcJc_NbJVfNB1cj2sMQUOaM6C8DubgTlaFaVIai7QiVvSWxMG8Mn5uvWDvLYJOZVG7Lu0gyOAouIsTpfyP_iQ_QA&editable=false"
+							link="https://dejavu.appbase.io/?appname=MovieAppFinal&url=https%3A%2F%2FRxIAbH9Jc%3A6d3a5016-5e9d-448f-bd2b-63c80b401484%40scalr.api.appbase.io&mode=view"
 							linkText="BROWSE"
 						/>
 						<ImageCard
@@ -457,7 +490,7 @@ class Landing extends Component {
 								width="70%"
 							/>
 						</a>
-						<Button css={button} shadow uppercase bold href="live?default=true">
+						<Button css={button} shadow uppercase bold href="https://dejavu.appbase.io/?appname=gitxplore-live&url=https://2FPZ2UJQW:1c50c6df-4652-4d74-906b-7bc0a6a731b6@scalr.api.appbase.io">
 							Try Live
 						</Button>
 						<a css={imgLink} href="https://hub.docker.com/r/appbaseio/dejavu/" target="_blank" rel="noopener noreferrer">

@@ -1676,3 +1676,12 @@ ul#setApp {
 	font-size: 20px;
 	color: #f0ad4e;
 }
+
+.newapp-banner {
+	background: #b6e0ff;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	align-items: center;
+}

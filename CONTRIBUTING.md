@@ -10,7 +10,9 @@
 
 #### Branches
 
-`dev` branch is the bleeding edge version of dejavu, all new changes go here.
+`next` branch is the actively developer version of dejavu, a complete rewrite that's light-weight and performant and will replace the current dejavu codebase entirely.
+
+`dev` branch is the current version of dejavu, all bug fixes to the current version go here.
 
 `chrome-extension` branch is where we make chrome extension related changes.
 
@@ -20,11 +22,12 @@
 #### Local Installation
 
 1. `git clone` your fork of https://github.com/appbaseio/dejavu
-2. `git checkout dev`
-3. `yarn`
-5. `yarn start` (open dejavu in the browser on http://localhost:1358/live)
+2. `git checkout next`
+3. `git submodule init && git submodule sync && git submodule update --recursive --remote`
+4. `yarn`
+5. `yarn start` (open dejavu in the browser on http://localhost:1358/)
 
-#### Generating an AppName and Url.
+#### Generating an AppName and URL
 
 1. Create an account here: https://dashboard.appbase.io
 2. Follow instructions to create an appname.
@@ -35,7 +38,7 @@
 
 #### Local Build
 
-#### `dev` branch: Webpage
+#### `next` branch: Webpage
 
 ```sh
 $ yarn start
