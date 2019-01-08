@@ -21,5 +21,7 @@ module.exports = {
 		'react/require-default-props': 0,
 		'prettier/prettier': 'error',
 		'no-underscore-dangle': 0,
+		'jsx-a11y/click-events-have-key-events': 0,
+		'jsx-a11y/no-static-element-interactions': 0,
 	},
 };

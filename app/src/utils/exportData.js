@@ -1,12 +1,14 @@
-import { getHeaders, parseUrl } from './index';
+import { search } from '../apis';
 
 let jsonData = [];
 
-const defaultQuery = () => ({
+export const MAX_DATA = 100000;
+
+const defaultQuery = {
 	query: {
 		match_all: {},
 	},
-});
+};
 
 /**
  * A function to convert multilevel object to single level object and use key value pairs as Column and row pairs using recursion
@@ -41,93 +43,82 @@ export const flatten = data => {
 	return result;
 };
 
-// Calling the ES using fetch for the given query
-const applyQuery = (url, queryBody, rawUrl) => {
-	const headers = getHeaders(rawUrl);
-	return fetch(url, {
-		method: 'POST',
-		headers,
-		body: JSON.stringify(queryBody),
-	}).then(data => data.json());
-};
-/**
- * Setting up the query,
- * If scrollId is defined then it will continue the last scroll call and fetch the next chunk of data.
- */
-const scrollQuery = (rawUrl, indexes, types, queryBody, scroll, scrollId) => {
-	const { url } = parseUrl(rawUrl);
-	const createUrl = `${url}/${indexes.join(',')}/${types.join(
-		',',
-	)}/_search?scroll=5m`;
-	const scrollUrl = `${url}/_search/scroll?scroll=5m&scroll_id=${scrollId}`;
-
-	if (scroll) {
-		return applyQuery(scrollUrl, queryBody, rawUrl);
-	}
-
-	return applyQuery(
-		createUrl,
-		Object.assign(
-			{
-				size: 1000,
-			},
-			queryBody,
-		),
-		rawUrl,
-	);
-};
-
-/**
- * Param info { activeQuery, scroll, scroll_id }
- */
-const scrollApi = async (rawUrl, indexes, types, info) => {
+export const searchAfter = async (
+	app,
+	types,
+	url,
+	query,
+	chunkInfo,
+	searchAfterData,
+) => {
 	try {
-		const res = await scrollQuery(
-			rawUrl,
-			indexes,
+		const others = {};
+		if (searchAfterData) {
+			others.search_after = [searchAfterData];
+		}
+		const data = await search(app, types, url, {
+			...query,
+			size: 1000,
+			sort: [
+				{
+					_uid: 'desc',
+				},
+			],
+			...others,
+		});
+
+		// eslint-disable-next-line
+		const res = await getSearchAfterData(
+			app,
 			types,
-			info.activeQuery,
-			info.scroll,
-			info.scroll_id,
+			url,
+			query,
+			chunkInfo,
+			searchAfterData,
+			data,
 		);
 
-		const data = await getScrollApiData(rawUrl, indexes, types, res); // eslint-disable-line
-		if (typeof data === 'string') {
-			let exportData = JSON.parse(data);
+		if (typeof res === 'string') {
+			let exportData = JSON.parse(res);
+			const lastObject = exportData[exportData.length - 1];
 			exportData = exportData.map(value => {
 				const item = Object.assign(value._source);
 				return item;
 			});
 
-			return exportData;
+			return {
+				data: exportData,
+				searchAfter: `${lastObject._type}#${lastObject._id}`,
+			};
 		}
 
-		return data;
+		return res;
 	} catch (e) {
-		throw e;
+		console.error('SEARCH ERROR', e);
+		return e;
 	}
 };
 
-const getScrollApiData = (rawUrl, indexes, types, data) => {
-	const {
-		hits: { hits },
-	} = data;
-	jsonData = jsonData.concat(hits);
+const getSearchAfterData = async (
+	app,
+	types,
+	url,
+	query,
+	chunkInfo,
+	searchAfterData,
+	data,
+) => {
+	const { hits } = data;
 	let str = null;
 	/**
-	 * Checking if the current data length is less then the total hits from the ES results,
-	 * If yes calling the scrollApi function again to fetch the remaining data.
-	 *
-	 * */
-	if (jsonData.length < data.hits.total) {
-		const scrollObj = {
-			scroll_id: data._scroll_id,
-		};
-		return scrollApi(rawUrl, indexes, types, {
-			activeQuery: scrollObj,
-			scroll: true,
-			scroll_id: data._scroll_id,
-		});
+	 * Checking if the current length is less than chunk total, recursive call searchAfter
+	 */
+	if (hits && jsonData.length < chunkInfo.total) {
+		const totalhits = hits.hits;
+		jsonData = jsonData.concat(totalhits);
+		const lastObject = totalhits[totalhits.length - 1];
+		const nextSearchData = `${lastObject._type}#${lastObject._id}`;
+		return searchAfter(app, types, url, query, chunkInfo, nextSearchData);
 	}
 
 	str = JSON.stringify(jsonData, null, 4);
@@ -135,16 +126,37 @@ const getScrollApiData = (rawUrl, indexes, types, data) => {
 	return str;
 };
 
-/*
- * Exports data as a CSV file based on the provided ES app and query info.
+/**
+ * Main function for getting data to be exported;
+ * @param {*} app
+ * @param {*} types
+ * @param {*} url
+ * @param {*} query
+ * @param {*} searchAfter
  */
-const exportData = (rawUrl, indexes, types, query) => {
-	jsonData = [];
+const exportData = async (
+	app,
+	types,
+	url,
+	query,
+	chunkInfo,
+	searchAfterData,
+) => {
+	try {
+		const finalQuery = query || defaultQuery;
+		const res = await searchAfter(
+			app,
+			types,
+			url,
+			finalQuery,
+			chunkInfo,
+			searchAfterData,
+		);
 
-	const activeQuery = query || defaultQuery();
-	return scrollApi(rawUrl, indexes, types, {
-		activeQuery,
-	});
+		return res;
+	} catch (e) {
+		return e;
+	}
 };
 
 export default exportData;
