@@ -14,6 +14,7 @@ import sort from './sort';
 import pageSize from './pageSize';
 import nestedColumns from './nestedColumns';
 import batteriesReducers from '../batteries/modules/reducers';
+import version from './version';
 
 const appReducer = combineReducers({
 	app,
@@ -28,6 +29,7 @@ const appReducer = combineReducers({
 	sort,
 	pageSize,
 	nestedColumns,
+	version,
 	...batteriesReducers,
 });
 

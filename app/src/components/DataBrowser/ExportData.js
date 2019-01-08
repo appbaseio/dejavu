@@ -1,23 +1,26 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { Modal, Button, Spin, Alert } from 'antd';
+import { Modal, Button, Spin, Alert, Row, Col, Select } from 'antd';
 import { connect } from 'react-redux';
 import { unparse } from 'papaparse';
 import { saveAs } from 'file-saver';
 
-import { getIndexes, getTypes } from '../../reducers/mappings';
+import { getIndexTypeMap } from '../../reducers/mappings';
 import { getUrl } from '../../reducers/app';
+import { getVersion } from '../../reducers/version';
 import { addDataRequest } from '../../actions';
 import exportData, { flatten, MAX_DATA } from '../../utils/exportData';
 import { getCount } from '../../apis';
 import colors from '../theme/colors';
 
 import Flex from '../Flex';
+import Item from './Item.styles';
 
+const { Option } = Select;
 type Props = {
-	indexes: string[],
-	types: string[],
 	url: string,
+	version: number,
+	indexTypeMap: any,
 };
 
 type State = {
@@ -28,6 +31,9 @@ type State = {
 	countChunks: any,
 	selectedChunk: string,
 	searchAfterData: string,
+	selectedIndex: string,
+	types: string[],
+	selectedType: string,
 };
 
 class ExportData extends Component<Props, State> {
@@ -39,6 +45,11 @@ class ExportData extends Component<Props, State> {
 		countChunks: {},
 		selectedChunk: '',
 		searchAfterData: '',
+		selectedIndex: Object.keys(this.props.indexTypeMap)[0],
+		types: this.props.indexTypeMap[Object.keys(this.props.indexTypeMap)[0]],
+		selectedType: this.props.indexTypeMap[
+			Object.keys(this.props.indexTypeMap)[0]
+		][0],
 	};
 
 	handleAfterClose = () => {
@@ -55,14 +66,22 @@ class ExportData extends Component<Props, State> {
 		this.setState({
 			isDownloading: true,
 		});
-		const { url, indexes, types } = this.props;
-		const { selectedChunk, countChunks, searchAfterData } = this.state;
+
+		const { url, version } = this.props;
+		const {
+			selectedIndex,
+			selectedType,
+			selectedChunk,
+			countChunks,
+			searchAfterData,
+		} = this.state;
 
 		try {
 			const { data, searchAfter } = await exportData(
-				indexes.join(','),
-				types.join(','),
+				selectedIndex,
+				selectedType,
 				url,
+				version,
 				null, // use default query
 				countChunks[selectedChunk],
 				searchAfterData,
@@ -98,13 +117,11 @@ class ExportData extends Component<Props, State> {
 			isFetchingCount: true,
 		});
 
-		const { url, indexes, types } = this.props;
+		const { url } = this.props;
+		const { selectedIndex, selectedType } = this.state;
+
 		try {
-			const data = await getCount(
-				indexes.join(','),
-				types.join(','),
-				url,
-			);
+			const data = await getCount(selectedIndex, selectedType, url);
 			const count = data.count || 0;
 			const chunks = {};
 
@@ -162,13 +179,16 @@ class ExportData extends Component<Props, State> {
 	};
 
 	onCSVClick = async () => {
-		const { selectedChunk } = this.state;
+		const { selectedChunk, selectedIndex, selectedType } = this.state;
 		const res = await this.fetchData();
 		const flattenData = res.map(item => flatten(item));
 		const newData = unparse(flattenData);
 		const file = new File(
 			[newData],
-			`data_${selectedChunk.replace(/-/g, '_')}.csv`,
+			`data_${selectedIndex}_${selectedType}_${selectedChunk.replace(
+				/-/g,
+				'_',
+			)}.csv`,
 			{
 				type: 'text/comma-separated-values;charset=utf-8',
 			},
@@ -177,11 +197,14 @@ class ExportData extends Component<Props, State> {
 	};
 
 	onJSONClick = async () => {
-		const { selectedChunk } = this.state;
+		const { selectedChunk, selectedIndex, selectedType } = this.state;
 		const res = await this.fetchData();
 		const file = new File(
 			[JSON.stringify(res, null, 4)],
-			`data_${selectedChunk.replace(/-/g, '_')}.json`,
+			`data_${selectedIndex}_${selectedType}_${selectedChunk.replace(
+				/-/g,
+				'_',
+			)}.json`,
 			{
 				type: 'application/json;charset=utf-8',
 			},
@@ -204,6 +227,30 @@ class ExportData extends Component<Props, State> {
 		});
 	};
 
+	handleIndexChange = selectedIndex => {
+		this.setState(
+			{
+				selectedIndex,
+				types: this.props.indexTypeMap[selectedIndex],
+				selectedType: this.props.indexTypeMap[selectedIndex][0],
+			},
+			() => {
+				this.fetchCount();
+			},
+		);
+	};
+
+	handleTypeChange = selectedType => {
+		this.setState(
+			{
+				selectedType,
+			},
+			() => {
+				this.fetchCount();
+			},
+		);
+	};
+
 	render() {
 		const {
 			isShowingModal,
@@ -213,8 +260,12 @@ class ExportData extends Component<Props, State> {
 			countChunks,
 			selectedChunk,
 			searchAfterData,
+			selectedIndex,
+			selectedType,
+			types,
 		} = this.state;
 
+		const { indexTypeMap } = this.props;
 		const chunkList = Object.keys(countChunks);
 		return (
 			<Fragment>
@@ -252,28 +303,64 @@ class ExportData extends Component<Props, State> {
 						</Button>,
 					]}
 				>
+					<Row>
+						<Col span={12}>
+							<Item label="Index">
+								<Select
+									defaultValue={selectedIndex}
+									onChange={this.handleIndexChange}
+									css={{
+										width: '95%',
+									}}
+								>
+									{Object.keys(indexTypeMap).map(index => (
+										<Option key={index} value={index}>
+											{index}
+										</Option>
+									))}
+								</Select>
+							</Item>
+						</Col>
+						<Col span={12}>
+							<Item label="Document Type">
+								<Select
+									value={selectedType}
+									onChange={this.handleTypeChange}
+									css={{
+										width: '100%',
+									}}
+								>
+									{types.map(type => (
+										<Option key={type} value={type}>
+											{type}
+										</Option>
+									))}
+								</Select>
+							</Item>
+						</Col>
+					</Row>
 					<Alert
 						type="info"
-						showIcon
 						description={
 							<React.Fragment>
 								<div>
 									Data is exported in set of <b>{MAX_DATA}</b>{' '}
-									Rows and in sequential manner. To start
-									download from first
+									Rows and in sequential manner.
 								</div>
 							</React.Fragment>
 						}
 					/>
 					<br />
-					{selectedChunk && (
-						<p>
-							Now you can export <b>{selectedChunk}</b> in CSV or
-							JSON by selecting appropriate option.
-						</p>
-					)}
+					{!isFetchingCount &&
+						selectedChunk && (
+							<p>
+								Now you can export <b>{selectedChunk}</b> in CSV
+								or JSON by selecting appropriate option.
+							</p>
+						)}
 
-					{searchAfterData &&
+					{!isFetchingCount &&
+						searchAfterData &&
 						selectedChunk !== chunkList[0] && (
 							<p>
 								To export from beginning,{' '}
@@ -323,9 +410,9 @@ class ExportData extends Component<Props, State> {
 }
 
 const mapStateToProps = state => ({
-	indexes: getIndexes(state),
-	types: getTypes(state),
 	url: getUrl(state),
+	version: getVersion(state),
+	indexTypeMap: getIndexTypeMap(state),
 });
 
 const mapDispatchToProps = {

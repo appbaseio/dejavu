@@ -47,6 +47,7 @@ export const searchAfter = async (
 	app,
 	types,
 	url,
+	version,
 	query,
 	chunkInfo,
 	searchAfterData,
@@ -56,12 +57,13 @@ export const searchAfter = async (
 		if (searchAfterData) {
 			others.search_after = [searchAfterData];
 		}
+		const sortKey = version > 5 ? '_id' : '_uid';
 		const data = await search(app, types, url, {
 			...query,
 			size: 1000,
 			sort: [
 				{
-					_uid: 'desc',
+					[sortKey]: 'desc',
 				},
 			],
 			...others,
@@ -72,6 +74,7 @@ export const searchAfter = async (
 			app,
 			types,
 			url,
+			version,
 			query,
 			chunkInfo,
 			searchAfterData,
@@ -103,6 +106,7 @@ const getSearchAfterData = async (
 	app,
 	types,
 	url,
+	version,
 	query,
 	chunkInfo,
 	searchAfterData,
@@ -118,7 +122,15 @@ const getSearchAfterData = async (
 		jsonData = jsonData.concat(totalhits);
 		const lastObject = totalhits[totalhits.length - 1];
 		const nextSearchData = `${lastObject._type}#${lastObject._id}`;
-		return searchAfter(app, types, url, query, chunkInfo, nextSearchData);
+		return searchAfter(
+			app,
+			types,
+			url,
+			version,
+			query,
+			chunkInfo,
+			nextSearchData,
+		);
 	}
 
 	str = JSON.stringify(jsonData, null, 4);
@@ -138,6 +150,7 @@ const exportData = async (
 	app,
 	types,
 	url,
+	version,
 	query,
 	chunkInfo,
 	searchAfterData,
@@ -148,6 +161,7 @@ const exportData = async (
 			app,
 			types,
 			url,
+			version,
 			finalQuery,
 			chunkInfo,
 			searchAfterData,
