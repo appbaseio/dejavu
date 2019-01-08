@@ -10,6 +10,7 @@ import {
 	addMappingSuccess,
 	addMappingFailure,
 	clearError,
+	setVersion,
 } from '../actions';
 import { getAppname, getUrl } from '../reducers/app';
 import { isEmptyObject } from '../utils';
@@ -34,6 +35,9 @@ function* handleFetchMappings() {
 		const url = yield select(getUrl);
 		const data = yield call(fetchMappings, appname, url);
 		const version = yield call(getVersion, url, appname);
+		const versionCode = parseInt(version.charAt(0), 10);
+
+		yield put(setVersion(versionCode));
 
 		if (!isEmptyObject(data)) {
 			const indexes = Object.keys(data);
@@ -70,8 +74,7 @@ function* handleFetchMappings() {
 						);
 					});
 				} else {
-					const typeName =
-						parseInt(version.charAt(0), 10) >= 6 ? '_doc' : 'doc';
+					const typeName = versionCode >= 6 ? '_doc' : 'doc';
 
 					types.push(typeName);
 					indexTypeMap[index] = [typeName];

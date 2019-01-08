@@ -35,6 +35,7 @@ import setCurrentIds from './currentIds';
 import { setSort, resetSort } from './sort';
 import setPageSize from './pageSize';
 import setIsShwoingNestedColumn from './nestedColumns';
+import setVersion from './version';
 
 export {
 	// app
@@ -80,4 +81,6 @@ export {
 	setPageSize,
 	// nested columns,
 	setIsShwoingNestedColumn,
+	// version
+	setVersion,
 };
