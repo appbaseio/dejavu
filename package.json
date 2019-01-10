@@ -33,7 +33,7 @@
 	},
 	"dependencies": {
 		"@appbaseio/designkit": "^0.9.1",
-		"@appbaseio/reactivesearch": "2.14.1",
+		"@appbaseio/reactivesearch": "^2.16.1",
 		"@divyanshu013/media": "^1.0.0",
 		"antd": "^3.10.4",
 		"appbase-js": "^4.0.2-beta.2",

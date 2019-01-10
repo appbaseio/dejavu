@@ -25,7 +25,7 @@
     react-emotion "^9.0.0"
     react-feather "^1.1.0"
 
-"@appbaseio/reactivecore@^7.0.0":
+"@appbaseio/reactivecore@^7.1.0":
   version "7.3.0"
   resolved "https://registry.npmjs.org/@appbaseio/reactivecore/-/reactivecore-7.3.0.tgz#845a61891ebb7cba0b804d83f1955297e2b73a02"
   integrity sha512-ChJRf2VHoCLBpqHjrRrS8KKhUIhbz6pHVr51QI3hS24GMQBArvEAK6R1KKCrOgCtyv+78++MUtpdm17bMVkqwA==
@@ -34,13 +34,14 @@
     redux "^4.0.0"
     redux-thunk "^2.3.0"
 
-"@appbaseio/reactivesearch@2.14.1":
-  version "2.14.1"
-  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-2.14.1.tgz#8db4ba70ff65a9c38bebd647e981f9dcd2d71226"
-  integrity sha512-6wmEW3iLIEIgtonF3/yrv3sY2/bh/fPlZ+2x+ta4kG6YvIM5ErSt94Mrs4gTLpbgQm+zDTpmeSdS5Y9OT/feFw==
+"@appbaseio/reactivesearch@^2.16.1":
+  version "2.16.1"
+  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-2.16.1.tgz#fb69db8f286c100877b50d471f6f3fdd0d7346b2"
+  integrity sha512-adlEDZALLxLQdXmN+us7xKhTsC7fuZw0cjTJZOy5QHR2d7bnU7tK7UB0GUvNVTccXKrytTzgnPFPCmLH/L8NKg==
   dependencies:
-    "@appbaseio/reactivecore" "^7.0.0"
-    appbase-js "^4.0.2-beta.3"
+    "@appbaseio/reactivecore" "^7.1.0"
+    appbase-js "^4.0.2-beta.4"
+    cross-env "^5.2.0"
     downshift "^1.31.2"
     emotion "^9.0.0"
     emotion-theming "^9.0.0"
@@ -1559,7 +1560,7 @@ appbase-js@^4.0.2-beta.2:
     url-parser-lite "^0.1.0"
     ws "^2.2.0"
 
-appbase-js@^4.0.2-beta.3:
+appbase-js@^4.0.2-beta.4:
   version "4.0.2-beta.4"
   resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.4.tgz#59bcba7265d3f7937f8d3b1cfecb1973f5d059c8"
   integrity sha512-yfljZF2WA4qjAEd1tqOXL49bQSGcnC8DWuDJJU3/DBgS7WB+vFeYPlk7Q+JANFx9+XCT3RXja68gu1Ic0jJWlg==
@@ -1796,7 +1797,7 @@ async-each@^1.0.0:
 
 async-limiter@~1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
+  resolved "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
   integrity sha512-jp/uFnooOiO+L211eZOoSyzpOITMXx1rBITauYykG3BRYPu8h0UcxsPNB04RR5vo4Tyz3+ay17tR6JVf9qzYWg==
 
 async-validator@~1.8.5:
@@ -4173,6 +4174,14 @@ create-react-context@0.2.3:
   dependencies:
     fbjs "^0.8.0"
     gud "^1.0.0"
+
+cross-env@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/cross-env/-/cross-env-5.2.0.tgz#6ecd4c015d5773e614039ee529076669b9d126f2"
+  integrity sha512-jtdNFfFW1hB7sMhr/H6rW1Z45LFqyI431m3qU6bFXcQ3Eh7LtBuG3h74o7ohHZ3crrRkkqHlo4jYHFPcjroANg==
+  dependencies:
+    cross-spawn "^6.0.5"
+    is-windows "^1.0.0"
 
 cross-fetch@^2.2.2:
   version "2.2.3"
@@ -7654,7 +7663,7 @@ is-windows@^0.2.0:
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-0.2.0.tgz#de1aa6d63ea29dd248737b69f1ff8b8002d2108c"
   integrity sha1-3hqm1j6indJIc3tp8f+LgALSEIw=
 
-is-windows@^1.0.1, is-windows@^1.0.2:
+is-windows@^1.0.0, is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
   integrity sha512-eXK1UInq2bPmjyX6e3VHIzMLobc4J94i4AWn+Hpq3OU5KkrRC96OAcR3PRJ/pGu6m8TRnBHP9dkXQVsT/COVIA==
