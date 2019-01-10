@@ -1,6 +1,8 @@
 import get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';
 
+import { dateFormatMap } from './date';
+
 const extractColumns = (mappings, key) =>
 	Object.keys((mappings || {})[key] || []);
 
@@ -63,6 +65,7 @@ const es6mappings = {
 	},
 	Date: {
 		type: 'date',
+		format: dateFormatMap.date,
 	},
 	Boolean: {
 		type: 'boolean',
