@@ -17,6 +17,12 @@ import colors from '../theme/colors';
 
 const OVERSCAN_COUNT = 3;
 const HEIGHT_BUFFER = 32;
+const CELL_STYLE = {
+	borderRight: '0.5px solid #e8e8e8',
+	borderBottom: '1px solid #e8e8e8',
+	fontSize: '12px',
+	padding: '10px',
+};
 
 const ID_WIDTH = isMobile.any ? 120 : 250;
 
@@ -103,17 +109,20 @@ class DataGrid extends Component<Props> {
 			: 'properties';
 		const column = columns[columnIndex];
 		return isMetaField(column) ? (
-			<div style={style} key={key}>
+			<div
+				style={{
+					...style,
+					...CELL_STYLE,
+				}}
+				key={key}
+			>
 				{get(data[rowIndex], column)}
 			</div>
 		) : (
 			<div
 				style={{
 					...style,
-					borderRight: '0.5px solid #e8e8e8',
-					borderBottom: '1px solid #e8e8e8',
-					fontSize: '12px',
-					padding: '10px',
+					...CELL_STYLE,
 				}}
 				key={key}
 			>
