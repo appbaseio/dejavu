@@ -32,6 +32,9 @@ type Props = {
 	onSetUpdatingRow: any => void,
 	mappings: any,
 	appname: string,
+	height: number,
+	width: number,
+	headerRef: any,
 };
 
 const ResultSet = ({
@@ -44,10 +47,12 @@ const ResultSet = ({
 	onSetUpdatingRow,
 	mappings,
 	appname,
+	height,
+	width,
+	headerRef,
 }: Props) => {
 	const { results } = getUrlParams(window.location.search);
 	const currentPage = parseInt(results || 1, 10);
-
 	return (
 		<ReactiveList
 			key={String(reactiveListKey)}
@@ -67,21 +72,20 @@ const ResultSet = ({
 					'typeField',
 				],
 			}}
+			style={{
+				position: 'relative',
+				overflow: 'visible',
+			}}
 			innerClass={{
-				poweredBy: css`
-					display: none;
-				`,
+				poweredBy: css({
+					display: 'none',
+				}),
 				pagination: css({
-					position: 'absolute',
-					bottom: '-100px',
-					right: 0,
+					position: 'fixed',
+					right: 40,
 					zIndex: 105,
 					'.active': {
 						backgroundColor: `${colors.primary} !important`,
-					},
-
-					[mediaMin.medium]: {
-						bottom: '-50px',
 					},
 				}),
 			}}
@@ -113,6 +117,9 @@ const ResultSet = ({
 						key={data.length ? data[0]._id : '0'}
 						data={data}
 						mappings={mappings[appname]}
+						height={height}
+						width={width}
+						headerRef={headerRef}
 					/>
 				) : null
 			}
@@ -125,13 +132,13 @@ const ResultSet = ({
 						[mediaMin.medium]: {
 							display: 'block',
 							position: 'absolute',
-							bottom: '-45px',
-							right: '330px',
+							right: '390px',
 							height: '32px',
 							fontSize: '14px',
 							padding: '0 15px',
 							lineHeight: '1.5',
 							textAlign: 'center',
+							bottom: -45,
 						},
 					}}
 				>

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import difference from 'lodash/difference';
 
-import ColumnRenderer from './ColumnRenderer';
+import DataGrid from './DataGrid';
 
 import {
 	setCellValueRequest,
@@ -46,20 +46,21 @@ type Props = {
 	visibleColumns: string[],
 	mode: string,
 	pageSize: number,
+	height: number,
+	width: number,
+	headerRef: any,
 };
 
-const LAZY_CHUNK = 3;
 class DataTable extends Component<Props, State> {
 	isMounted = false;
 
 	state = {
-		data: this.props.data.slice(0, LAZY_CHUNK),
+		data: this.props.data,
 	};
 
 	componentDidMount() {
 		this.isMounted = true;
 		this.props.onSetCurrentIds(this.props.data.map(item => item._id));
-		this.lazyLoad();
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -139,8 +140,6 @@ class DataTable extends Component<Props, State> {
 				);
 			}
 		}
-
-		this.lazyLoad();
 	}
 
 	componentWillUnmount() {
@@ -166,24 +165,6 @@ class DataTable extends Component<Props, State> {
 		setCellValue(record._id, column, value, record._index, record._type);
 	};
 
-	lazyLoad = () => {
-		setTimeout(() => {
-			const hasMore =
-				this.state.data.length + LAZY_CHUNK < this.props.data.length;
-
-			if (this.isMounted) {
-				this.setState(prevState => ({
-					data: this.props.data.slice(
-						0,
-						prevState.data.length + LAZY_CHUNK,
-					),
-				}));
-			}
-
-			if (hasMore) this.lazyLoad();
-		}, 0);
-	};
-
 	render() {
 		const { data } = this.state;
 		const {
@@ -192,32 +173,24 @@ class DataTable extends Component<Props, State> {
 			mode,
 			nestedVisibleColumns,
 			isShowingNestedColumns,
+			height,
+			width,
+			headerRef,
 		} = this.props;
 
 		return (
-			<table
-				css={{
-					overflowY: 'auto',
-				}}
-			>
-				<tbody>
-					{data.map((dataItem, rowIndex) => (
-						<tr key={dataItem._id}>
-							<ColumnRenderer
-								rowIndex={rowIndex}
-								dataItem={dataItem}
-								data={data}
-								mappings={mappings}
-								onCellChange={this.handleCellChange}
-								visibleColumns={visibleColumns}
-								mode={mode}
-								nestedVisibleColumns={nestedVisibleColumns}
-								isShowingNestedColumns={isShowingNestedColumns}
-							/>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			<DataGrid
+				data={data}
+				mappings={mappings}
+				onCellChange={this.handleCellChange}
+				visibleColumns={visibleColumns}
+				mode={mode}
+				nestedVisibleColumns={nestedVisibleColumns}
+				isShowingNestedColumns={isShowingNestedColumns}
+				height={height}
+				width={width}
+				headerRef={headerRef}
+			/>
 		);
 	}
 }

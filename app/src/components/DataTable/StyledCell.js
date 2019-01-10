@@ -8,12 +8,12 @@ export default styled('div')`
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 100%;
+	width: 200px;
 	font-size: 12px;
 	padding: 10px;
 	border-bottom: 1px solid ${colors.tableBorderColor};
 	border-right: 1px solid ${colors.tableBorderColor};
-
+	flex: 0 0 auto;
 	${props =>
 		props.mode === MODES.EDIT
 			? css`

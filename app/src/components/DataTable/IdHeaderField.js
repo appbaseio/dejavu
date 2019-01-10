@@ -2,8 +2,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Popover, Checkbox } from 'antd';
+import { mediaMin } from '@divyanshu013/media';
 
-import StyledCell from '../DataTable/StyledCell';
+import StyledCell from './StyledCell';
 import Flex from '../Flex';
 
 import { setSelectedRows, setUpdatingRow } from '../../actions';
@@ -12,6 +13,7 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getCurrentIds } from '../../reducers/currentIds';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
+import colors from '../theme/colors';
 
 type Props = {
 	onSelectedRows: any => void,
@@ -41,60 +43,78 @@ class IdHeaderField extends PureComponent<Props> {
 		return (
 			<StyledCell
 				css={{
-					display: 'flex',
-					justifyContet: 'left',
-					alignItems: 'center',
+					background: colors.tableHead,
+					width: 120,
+					fontWeight: 'bold',
+					zIndex: '101 !important',
+					left: 0,
+					top: 0,
+					position: 'sticky',
+
+					[mediaMin.medium]: {
+						width: 250,
+					},
 				}}
 			>
 				<Flex
 					css={{
-						width: '15%',
+						width: '100%',
 					}}
 					alignItems="center"
-					justifyContent="center"
+					justifyContent="left"
+					wrap="nowrap"
 				>
-					{selectedRows.length >= 1 &&
-						mode === MODES.EDIT && (
-							<Checkbox
-								onChange={this.handleSelectAllRows}
-								checked={
-									selectedRows.length === currentIds.length
-								}
-							/>
-						)}
-				</Flex>
-				<Popover
-					content={
-						<div css={popoverContent}>
-							Clicking on {`{...}`} displays the JSON data.
-						</div>
-					}
-					trigger="click"
-				>
-					<span
+					<Flex
 						css={{
-							cursor: 'pointer',
-							maxWidth: '10%',
-							minWidth: '10%',
+							width: '15%',
 						}}
-					>{` {...} `}</span>
-				</Popover>
-				<div
-					css={{
-						marginLeft: '10px',
-					}}
-				>
-					_id
-					<i
+						alignItems="center"
+						justifyContent="center"
+					>
+						{selectedRows.length >= 1 &&
+							mode === MODES.EDIT && (
+								<Checkbox
+									onChange={this.handleSelectAllRows}
+									checked={
+										selectedRows.length ===
+										currentIds.length
+									}
+								/>
+							)}
+					</Flex>
+					<Popover
+						content={
+							<div css={popoverContent}>
+								Clicking on {`{...}`} displays the JSON data.
+							</div>
+						}
+						trigger="click"
+					>
+						<span
+							css={{
+								cursor: 'pointer',
+								maxWidth: '10%',
+								minWidth: '10%',
+							}}
+						>{` {...} `}</span>
+					</Popover>
+					<div
 						css={{
-							fontSize: 12,
-							fontWeight: 'normal',
+							marginLeft: '10px',
 						}}
 					>
-						{selectedRows.length > 0 &&
-							`  (${selectedRows.length} rows selected)`}
-					</i>
-				</div>
+						_id
+						<i
+							css={{
+								fontSize: 12,
+								fontWeight: 'normal',
+							}}
+						>
+							{selectedRows.length > 0 &&
+								`  (${selectedRows.length} rows selected)`}
+						</i>
+					</div>
+				</Flex>
 			</StyledCell>
 		);
 	}

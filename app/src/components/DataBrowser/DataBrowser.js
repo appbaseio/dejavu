@@ -1,16 +1,17 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { ReactiveBase } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import { Skeleton } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
+import { AutoSizer } from 'react-virtualized';
 
 import Flex from '../Flex';
 import Actions from './Actions';
 import AddRowModal from './AddRowModal';
 import AddFieldModal from './AddFieldModal';
-import DataTableHeader from './DataTableHeader';
+import DataTableHeader from '../DataTable/DataTableHeader';
 import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
@@ -40,6 +41,8 @@ type Props = {
 };
 
 class DataBrowser extends Component<Props> {
+	headerRef = createRef();
+
 	componentDidMount() {
 		this.props.fetchMappings();
 	}
@@ -90,29 +93,39 @@ class DataBrowser extends Component<Props> {
 									<GlobalSearch />
 								</div>
 								<div
+									id="result-list"
 									css={{
-										position: 'relative',
+										marginTop: '20px',
+										border: `1px solid ${
+											colors.tableBorderColor
+										}`,
+										borderRadius: 3,
+										width: '100%',
+										height:
+											window.innerHeight -
+											(hideAppSwitcher ? 250 : 350),
+										overflow: 'visible',
 									}}
 								>
-									<div
-										id="result-list"
+									<AutoSizer
 										css={{
-											marginTop: '20px',
-											border: `1px solid ${
-												colors.tableBorderColor
-											}`,
-											borderRadius: 3,
-											widht: '100%',
-											maxHeight:
-												window.innerHeight -
-												(hideAppSwitcher ? 250 : 350),
-											minHeight: 200,
-											overflowX: 'auto',
+											height: '100% !important',
+											width: '100% !important',
 										}}
 									>
-										<DataTableHeader />
-										<ResultList />
-									</div>
+										{({ height, width }) => (
+											<>
+												<DataTableHeader
+													ref={this.headerRef}
+												/>
+												<ResultList
+													height={height}
+													width={width}
+													headerRef={this.headerRef}
+												/>
+											</>
+										)}
+									</AutoSizer>
 								</div>
 							</ReactiveBase>
 						</div>

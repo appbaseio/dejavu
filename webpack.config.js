@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -9,7 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const { NODE_ENV } = process.env;
 
-let plugins = [
+const plugins = [
 	// Ignore all locale files of moment.js
 	new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 	new CleanWebpackPlugin(['dist/app']),
@@ -26,10 +25,6 @@ let plugins = [
 ];
 
 const isDevelopment = NODE_ENV === 'development';
-
-if (isDevelopment) {
-	plugins = plugins.concat(new BundleAnalyzerPlugin());
-}
 
 module.exports = {
 	entry: ['./app/src/index.js'],
