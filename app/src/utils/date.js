@@ -11,6 +11,7 @@ const dateFormatMap = {
 	date_time: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
 	basic_time: 'HHmmss.SSSZ',
 	basic_time_no_millis: 'HHmmssZ',
+	'strict_date_optional_time||epoch_millis': 'YYYYMMDD',
 };
 
 const getDateFormat = format => {

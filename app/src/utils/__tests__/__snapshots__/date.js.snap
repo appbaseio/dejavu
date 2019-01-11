@@ -13,5 +13,6 @@ Object {
   "date_time_no_millis": "YYYY-MM-DDTHH:mm:ss[Z]",
   "epoch_millis": "x",
   "epoch_second": "X",
+  "strict_date_optional_time||epoch_millis": "YYYYMMDD",
 }
 `;
