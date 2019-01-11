@@ -447,7 +447,7 @@ class Landing extends Component {
 							description="A ~3,000 listings dataset for building an airbeds search."
 							big
 							src="live/assets/img/airbed.png"
-							link="https://dejavu.appbase.io/?&appname=housing&url=https://0aL1X5Vts:1ee67be1-9195-4f4b-bd4f-a91cd1b5e4b5@scalr.api.appbase.io&mode=view"
+							link="https://dejavu.appbase.io/?&appname=airbeds-test-app&url=https://X8RsOu0Lp:9b4fe1a4-58c6-4089-a042-505d86d9da30@scalr.api.appbase.io&mode=view"
 							linkText="BROWSE"
 						/>
 						<ImageCard
