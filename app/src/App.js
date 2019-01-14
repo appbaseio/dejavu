@@ -13,6 +13,7 @@ import NoMatch from './components/NoMatch';
 import QueryExplorer from './components/QueryExplorer';
 import Flex from './components/Flex';
 import OldDejavuBanner from './components/OldDejavuBanner';
+import PromotedResults from './components/PromotedResults';
 
 import configureStore from './store';
 import {
@@ -154,6 +155,10 @@ class App extends Component {
 										<Route
 											path="/query"
 											component={QueryExplorer}
+										/>
+										<Route
+											path="/promoted-results"
+											component={PromotedResults}
 										/>
 										<Route
 											path="/404"

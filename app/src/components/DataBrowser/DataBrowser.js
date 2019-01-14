@@ -77,9 +77,15 @@ class DataBrowser extends Component<Props> {
 			};
 		}
 
-		const { appswitcher } = getUrlParams(window.location.search);
+		const { appswitcher, showActions } = getUrlParams(
+			window.location.search,
+		);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
+		let areActionsVisisble = true;
 
+		if (showActions && showActions === 'false') {
+			areActionsVisisble = false;
+		}
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading &&
@@ -137,13 +143,14 @@ class DataBrowser extends Component<Props> {
 							[mediaMin.medium]: {
 								marginTop: 10,
 							},
+							paddingBottom: !areActionsVisisble ? '30px' : 0,
 						}}
 						wrap="no-wrap"
 						alignItems="center"
 					>
 						<CloneApp />
-						<AddRowModal />
-						<AddFieldModal />
+						{areActionsVisisble && <AddRowModal />}
+						{areActionsVisisble && <AddFieldModal />}
 					</Flex>
 				)}
 			</Skeleton>
