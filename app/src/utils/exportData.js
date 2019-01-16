@@ -91,7 +91,10 @@ export const searchAfter = async (
 
 			return {
 				data: exportData,
-				searchAfter: `${lastObject._type}#${lastObject._id}`,
+				searchAfter:
+					version > 5
+						? lastObject._id
+						: `${lastObject._type}#${lastObject._id}`,
 			};
 		}
 
@@ -121,7 +124,10 @@ const getSearchAfterData = async (
 		const totalhits = hits.hits;
 		jsonData = jsonData.concat(totalhits);
 		const lastObject = totalhits[totalhits.length - 1];
-		const nextSearchData = `${lastObject._type}#${lastObject._id}`;
+		const nextSearchData =
+			version > 5
+				? lastObject._id
+				: `${lastObject._type}#${lastObject._id}`;
 		return searchAfter(
 			app,
 			types,
