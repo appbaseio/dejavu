@@ -178,18 +178,6 @@ const isEqualArray = (array1 = [], array2 = []) => {
 	return true;
 };
 
-const getImporterLink = (appname, rawUrl) => {
-	let params = `https://importer.appbase.io/?header=false`;
-	if (rawUrl.indexOf('appbase.io') > 1) {
-		const { credentials } = parseUrl(rawUrl);
-		params += `&app={"platform":"appbase","appname":"${appname}","credentials":"${credentials}"}`;
-	} else {
-		params += `&app={"platform":"elasticsearch","appname":"${appname}","hosturl":"${rawUrl}"}`;
-	}
-
-	return params;
-};
-
 const getCloneLink = (appname, rawUrl) => {
 	let params = `https://importer.appbase.io/?`;
 	if (rawUrl.indexOf('appbase.io') > 1) {
@@ -219,6 +207,5 @@ export {
 	isMultiIndexApp,
 	isEqualArray,
 	saveAppToLocalStorage,
-	getImporterLink,
 	getCloneLink,
 };
