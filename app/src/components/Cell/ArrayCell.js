@@ -34,6 +34,7 @@ class ArrayCell extends Component<Props, State> {
 	render() {
 		const { data } = this.state;
 		const { mode } = this.props;
+
 		return (
 			<Fragment>
 				{mode === MODES.EDIT ? (
@@ -63,7 +64,9 @@ class ArrayCell extends Component<Props, State> {
 						notFoundContent=""
 					>
 						{data.map(child => (
-							<Option key={child}>{child}</Option>
+							<Option key={child} value={child}>
+								{child}
+							</Option>
 						))}
 					</Select>
 				) : (
