@@ -1,5 +1,6 @@
 {
-	"name": "dejavu",
+	"name": "Dejavu: ElasticSearch Web UI",
+	"short_name": "Dejavu",
 	"version": "3.1.0",
 	"icons": {
 		"16": "favicon/favicon-16x16.png",
