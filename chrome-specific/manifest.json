@@ -1,6 +1,6 @@
 {
 	"name": "dejavu",
-	"version": "3.0.2",
+	"version": "3.1.0",
 	"icons": {
 		"16": "favicon/favicon-16x16.png",
 		"32": "favicon/favicon-32x32.png",
@@ -22,9 +22,9 @@
 	"offline_enabled": true,
 	"browser_action": {
 		"default_icon": "favicon/favicon-32x32.png",
-		"default_title": "Dejavu"
+		"default_title": "Dejavu: ElasticSearch Web UI"
 	},
-	"description": "The missing Web UI for Elasticsearch.",
+	"description": "The Missing Data Browser and Web UI for Elasticsearch.",
 	"incognito": "split",
 	"author": "Lakhan Samani, appbase.io"
 }
