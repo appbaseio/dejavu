@@ -52,7 +52,7 @@ class IdHeaderField extends PureComponent<Props> {
 					position: 'sticky',
 
 					[mediaMin.medium]: {
-						width: 250,
+						width: 350,
 					},
 				}}
 			>
@@ -71,16 +71,14 @@ class IdHeaderField extends PureComponent<Props> {
 						alignItems="center"
 						justifyContent="center"
 					>
-						{selectedRows.length >= 1 &&
-							mode === MODES.EDIT && (
-								<Checkbox
-									onChange={this.handleSelectAllRows}
-									checked={
-										selectedRows.length ===
-										currentIds.length
-									}
-								/>
-							)}
+						{selectedRows.length >= 1 && mode === MODES.EDIT && (
+							<Checkbox
+								onChange={this.handleSelectAllRows}
+								checked={
+									selectedRows.length === currentIds.length
+								}
+							/>
+						)}
 					</Flex>
 					<Popover
 						content={

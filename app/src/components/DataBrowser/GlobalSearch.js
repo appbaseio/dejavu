@@ -2,8 +2,6 @@
 
 import React, { Component } from 'react';
 import { DataSearch } from '@appbaseio/reactivesearch';
-import { css } from 'react-emotion';
-import { Icon } from 'antd';
 import { connect } from 'react-redux';
 
 import {
@@ -25,6 +23,7 @@ type Props = {
 	updateReactiveList: () => void,
 	searchableColumnsWeights: number[],
 	nestedSearchableColumnsWeights: number[],
+	searchTerm: string,
 };
 
 type State = {
@@ -58,6 +57,7 @@ class GlobalSearch extends Component<Props, State> {
 			searchableColumnsWeights,
 			nestedSearchableColumnsWeights,
 			mode,
+			searchTerm,
 		} = this.props;
 		const searchableColumns = isShowingNestedColumns
 			? nestedSearchableColumns
@@ -73,26 +73,15 @@ class GlobalSearch extends Component<Props, State> {
 					autosuggest={false}
 					dataField={searchableColumns}
 					fieldWeights={weights}
-					innerClass={{
-						input: `ant-input ${css`
-							padding-left: 35px;
-							height: 32px;
-							background: #fff !important;
-						`}`,
-					}}
-					debounce={5}
+					defaultSelected={searchTerm}
 					showIcon={false}
 					highlight={mode === MODES.VIEW}
 					queryFormat="and"
 					onValueChange={this.handleSearchValueChange}
-				/>
-				<Icon
-					type="search"
-					css={{
-						position: 'absolute',
-						top: '50%',
-						transform: 'translateY(-50%)',
-						left: '10px',
+					style={{
+						visibility: 'hidden',
+						width: 0,
+						height: 0,
 					}}
 				/>
 			</div>

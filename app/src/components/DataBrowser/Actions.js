@@ -4,7 +4,6 @@ import React, { Fragment } from 'react';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
-import { SelectedFilters } from '@appbaseio/reactivesearch';
 
 import Flex from '../Flex';
 import ShowHideColumn from './ShowHideColumns';
@@ -27,7 +26,7 @@ type Props = {
 
 const Actions = ({ onReload, selectedRows, updatingRow }: Props) => {
 	const { showActions } = getUrlParams(window.location.search);
-	let areActionsVisisble = true;
+	let areActionsVisisble = false;
 
 	if (showActions && showActions === 'false') {
 		areActionsVisisble = false;
@@ -66,11 +65,6 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => {
 					{areActionsVisisble && <ModeSwitch />}
 				</div>
 				<Flex alignItems="center">
-					<SelectedFilters
-						css={{
-							marginRight: 5,
-						}}
-					/>
 					<SortFilter />
 					<PageSize />
 					<ShowHideColumn />

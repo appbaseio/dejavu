@@ -2,13 +2,12 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Popover, Checkbox } from 'antd';
+import { Popover, Button, Icon, Tooltip } from 'antd';
 
 import { setSelectedRows, setUpdatingRow } from '../../actions';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getMode } from '../../reducers/mode';
 import { getPageSize } from '../../reducers/pageSize';
-import { MODES } from '../../constants';
 import { getOnlySource, getUrlParams } from '../../utils';
 
 import Flex from '../Flex';
@@ -18,7 +17,6 @@ import popoverContent from '../CommonStyles/popoverContent';
 
 type Props = {
 	value: any,
-	mode: string,
 	selectedRows: any[],
 	setSelectedRows: (string[]) => void,
 	setUpdatingRow: any => void,
@@ -56,14 +54,7 @@ class IdField extends Component<Props> {
 	};
 
 	render() {
-		const {
-			value,
-			selectedRows,
-			mode,
-			data,
-			rowIndex,
-			pageSize,
-		} = this.props;
+		const { value, selectedRows, data, rowIndex, pageSize } = this.props;
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 
@@ -71,41 +62,29 @@ class IdField extends Component<Props> {
 			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
 				<div
 					css={{
-						maxWidth: '15%',
-						minWidth: '15%',
 						display: 'flex',
 						justifyContent: 'center',
 						alignItems: 'center',
-						'.ant-checkbox-wrapper': {
-							display:
-								selectedRows.indexOf(value) > -1
-									? 'block !important'
-									: 'none',
-						},
-						'&:hover': {
-							'.ant-checkbox-wrapper': {
-								display:
-									mode === MODES.EDIT
-										? 'block !important'
-										: 'none',
-							},
-							'.index-no': {
-								display: mode === MODES.EDIT ? 'none' : 'block',
-							},
-						},
 					}}
 				>
-					<Checkbox
-						onChange={this.handleRowSelectChange}
-						value={value}
-						checked={selectedRows.indexOf(value) > -1}
-					/>
-
 					{selectedRows.indexOf(value) === -1 && (
-						<div className="index-no">
+						<div className="index-no" css={{ minWidth: 16 }}>
 							{pageSize * (currentPage - 1) + (rowIndex + 1)}
 						</div>
 					)}
+					&nbsp;&nbsp;&nbsp;
+					<Tooltip placement="top" title="Promote this result">
+						<Button shape="circle">
+							<Icon type="star" theme="filled" />
+						</Button>
+					</Tooltip>
+					&nbsp;
+					<Tooltip placement="top" title="Hide this result">
+						<Button type="dashed" shape="circle">
+							<Icon type="eye-invisible" />
+						</Button>
+					</Tooltip>
+					&nbsp;
 				</div>
 				<Popover
 					content={
@@ -120,8 +99,9 @@ class IdField extends Component<Props> {
 							cursor: 'pointer',
 							maxWidth: '10%',
 							minWidth: '10%',
+							marginLeft: 12,
 						}}
-					>{` {...} `}</span>
+					>{`{...}`}</span>
 				</Popover>
 				<Popover
 					content={<div css={popoverContent}>{value}</div>}
@@ -133,7 +113,6 @@ class IdField extends Component<Props> {
 							cursor: 'pointer',
 							maxWidth: '75%',
 							minWidth: '75%',
-							marginLeft: '10px',
 							...overflowText,
 						}}
 					>

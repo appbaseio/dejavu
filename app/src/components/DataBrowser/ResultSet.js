@@ -81,7 +81,7 @@ const ResultSet = ({
 					display: 'none',
 				}),
 				pagination: css({
-					position: 'fixed',
+					position: 'absolute',
 					right: 40,
 					zIndex: 105,
 					'.active': {

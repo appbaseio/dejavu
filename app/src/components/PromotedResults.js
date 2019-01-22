@@ -8,7 +8,7 @@ const Dejavu = () => (
 	<section>
 		<ErrorFlashMessage />
 		<ConnectApp />
-		<DataBrowserContainer />
+		<DataBrowserContainer searchTerm="harry" />
 	</section>
 );
 

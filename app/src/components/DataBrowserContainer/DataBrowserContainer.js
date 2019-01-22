@@ -3,7 +3,7 @@
 import React from 'react';
 import { Skeleton } from 'antd';
 import { connect } from 'react-redux';
-import { bool } from 'prop-types';
+import { bool, string } from 'prop-types';
 
 import DataBrowser from '../DataBrowser';
 
@@ -12,11 +12,16 @@ import { getIsLoading, getIsConnected } from '../../reducers/app';
 type Props = {
 	isConnected: boolean,
 	isLoading: boolean,
+	searchTerm: string,
 };
 
-const DataBrowserContainer = ({ isConnected, isLoading }: Props) => (
+const DataBrowserContainer = ({
+	isConnected,
+	isLoading,
+	searchTerm,
+}: Props) => (
 	<Skeleton loading={isLoading} active>
-		{isConnected && <DataBrowser />}
+		{isConnected && <DataBrowser searchTerm={searchTerm} />}
 	</Skeleton>
 );
 
@@ -28,6 +33,7 @@ const mapStateToProps = state => ({
 DataBrowserContainer.propTypes = {
 	isLoading: bool.isRequired,
 	isConnected: bool.isRequired,
+	searchTerm: string.isRequired,
 };
 
 export default connect(mapStateToProps)(DataBrowserContainer);

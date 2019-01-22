@@ -3,7 +3,7 @@
 import React, { Component, createRef } from 'react';
 import { ReactiveBase } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { Skeleton } from 'antd';
+import { Skeleton, Icon } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
 import { AutoSizer } from 'react-virtualized';
 
@@ -38,10 +38,13 @@ type Props = {
 	indexes: string[],
 	types: string[],
 	headers: any[],
+	searchTerm: string,
 };
 
 class DataBrowser extends Component<Props> {
 	headerRef = createRef();
+
+	promotedHeaderRef = createRef();
 
 	componentDidMount() {
 		this.props.fetchMappings();
@@ -59,6 +62,7 @@ class DataBrowser extends Component<Props> {
 			isDataLoading,
 			indexes,
 			headers,
+			searchTerm,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
 		let baseProps = { url, app: indexes.join(',') };
@@ -88,54 +92,58 @@ class DataBrowser extends Component<Props> {
 		}
 		return (
 			<Skeleton loading={isLoading} active>
-				{!isLoading &&
-					!isDataLoading &&
-					mappings && (
-						<div css={{ position: 'relative' }}>
-							<ReactiveBase {...baseProps}>
-								<div>
-									<Actions onReload={this.handleReload} />
-									<NestedColumnToggle />
-									<GlobalSearch />
-								</div>
-								<div
-									id="result-list"
+				{!isLoading && !isDataLoading && mappings && (
+					<div css={{ position: 'relative' }}>
+						<ReactiveBase {...baseProps}>
+							<div>
+								<Actions onReload={this.handleReload} />
+								<NestedColumnToggle />
+								<GlobalSearch searchTerm={searchTerm} />
+							</div>
+							<h3 css={{ fontSize: 15, margin: 0 }}>
+								<Icon type="star" theme="filled" /> Promoted
+								Results
+							</h3>
+							<section>TODO: Add promoted results</section>
+							<div
+								id="result-list"
+								css={{
+									marginTop: '20px',
+									border: `1px solid ${
+										colors.tableBorderColor
+									}`,
+									borderRadius: 3,
+									width: '100%',
+									position: 'relative',
+									height:
+										window.innerHeight -
+										(hideAppSwitcher ? 250 : 350),
+									overflow: 'visible',
+								}}
+							>
+								<AutoSizer
 									css={{
-										marginTop: '20px',
-										border: `1px solid ${
-											colors.tableBorderColor
-										}`,
-										borderRadius: 3,
-										width: '100%',
-										height:
-											window.innerHeight -
-											(hideAppSwitcher ? 250 : 350),
-										overflow: 'visible',
+										height: '100% !important',
+										width: '100% !important',
 									}}
 								>
-									<AutoSizer
-										css={{
-											height: '100% !important',
-											width: '100% !important',
-										}}
-									>
-										{({ height, width }) => (
-											<>
-												<DataTableHeader
-													ref={this.headerRef}
-												/>
-												<ResultList
-													height={height}
-													width={width}
-													headerRef={this.headerRef}
-												/>
-											</>
-										)}
-									</AutoSizer>
-								</div>
-							</ReactiveBase>
-						</div>
-					)}
+									{({ height, width }) => (
+										<>
+											<DataTableHeader
+												ref={this.headerRef}
+											/>
+											<ResultList
+												height={height}
+												width={width}
+												headerRef={this.headerRef}
+											/>
+										</>
+									)}
+								</AutoSizer>
+							</div>
+						</ReactiveBase>
+					</div>
+				)}
 				{mappings && (
 					<Flex
 						css={{

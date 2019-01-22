@@ -24,7 +24,7 @@ const CELL_STYLE = {
 	padding: '10px',
 };
 
-const ID_WIDTH = isMobile.any ? 120 : 250;
+const ID_WIDTH = isMobile.any ? 120 : 350;
 
 const isMetaField = field => META_FIELDS.indexOf(field) > -1;
 
