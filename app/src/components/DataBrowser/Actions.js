@@ -11,12 +11,12 @@ import ShowHideColumn from './ShowHideColumns';
 import ModeSwitch from './ModeSwitch';
 import ExportData from './ExportData';
 import DeleteRows from './DeleteRows';
-import UpdaeRow from './UpdateRow';
+import UpdateRow from './UpdateRow';
 import PageSize from './PageSize';
+import SortFilter from './SortFilter';
 
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getUpdatingRow } from '../../reducers/updatingRow';
-import SortFilter from './SortFilter';
 
 type Props = {
 	onReload: () => void,
@@ -39,7 +39,7 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 				{selectedRows.length > 0 ? (
 					<Fragment>
 						<DeleteRows />
-						{updatingRow && <UpdaeRow />}
+						{updatingRow && <UpdateRow />}
 					</Fragment>
 				) : (
 					<Fragment>
@@ -69,9 +69,9 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 	</div>
 );
 
-const mpaStateToProps = state => ({
+const mapStateToProps = state => ({
 	selectedRows: getSelectedRows(state),
 	updatingRow: getUpdatingRow(state),
 });
 
-export default connect(mpaStateToProps)(Actions);
+export default connect(mapStateToProps)(Actions);
