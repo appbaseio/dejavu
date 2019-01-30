@@ -14,6 +14,8 @@ import Flex from '../Flex';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 import popoverContent from '../CommonStyles/popoverContent';
+import PromoteButton from './PromoteButton';
+import HideButton from './HideButton';
 
 type Props = {
 	value: any,
@@ -58,6 +60,8 @@ class IdField extends Component<Props> {
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 
+		const fieldData = data.find(item => item._id === value);
+
 		return (
 			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
 				<div
@@ -73,17 +77,47 @@ class IdField extends Component<Props> {
 						</div>
 					)}
 					&nbsp;&nbsp;&nbsp;
-					<Tooltip placement="top" title="Promote this result">
-						<Button shape="circle">
-							<Icon type="star" theme="filled" />
-						</Button>
-					</Tooltip>
+					<PromoteButton
+						item={fieldData}
+						renderButton={({ promoteResult, isLoading }) => (
+							<Tooltip
+								placement="top"
+								title="Promote this result"
+							>
+								<Button
+									shape="circle"
+									onClick={promoteResult}
+									style={{ borderColor: '#174aff' }}
+								>
+									<Icon
+										type={isLoading ? 'loading' : 'star'}
+										style={{ color: '#174aff' }}
+									/>
+								</Button>
+							</Tooltip>
+						)}
+					/>
 					&nbsp;
-					<Tooltip placement="top" title="Hide this result">
-						<Button type="dashed" shape="circle">
-							<Icon type="eye-invisible" />
-						</Button>
-					</Tooltip>
+					<HideButton
+						id={fieldData._id}
+						renderButton={({ hideItem, isLoading }) => (
+							<Tooltip placement="top" title="Hide this result">
+								<Button
+									shape="circle"
+									type="dashed"
+									onClick={hideItem}
+								>
+									<Icon
+										type={
+											isLoading
+												? 'loading'
+												: 'eye-invisible'
+										}
+									/>
+								</Button>
+							</Tooltip>
+						)}
+					/>
 					&nbsp;
 				</div>
 				<Popover

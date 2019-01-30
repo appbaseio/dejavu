@@ -28,6 +28,9 @@ import {
 } from '../../reducers/mappings';
 import { parseUrl, convertArrayToHeaders, getUrlParams } from '../../utils';
 import colors from '../theme/colors';
+import PromotedResultsContainer from './PromotedResultsContainer';
+import PromotedResults from './PromotedResults';
+import HiddenResults from './HiddenResults';
 
 type Props = {
 	url: string,
@@ -100,47 +103,50 @@ class DataBrowser extends Component<Props> {
 								<NestedColumnToggle />
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
-							<h3 css={{ fontSize: 15, margin: 0 }}>
-								<Icon type="star" theme="filled" /> Promoted
-								Results
-							</h3>
-							<section>TODO: Add promoted results</section>
-							<div
-								id="result-list"
-								css={{
-									marginTop: '20px',
-									border: `1px solid ${
-										colors.tableBorderColor
-									}`,
-									borderRadius: 3,
-									width: '100%',
-									position: 'relative',
-									height:
-										window.innerHeight -
-										(hideAppSwitcher ? 250 : 350),
-									overflow: 'visible',
-								}}
-							>
-								<AutoSizer
+							<PromotedResultsContainer>
+								<h3 css={{ fontSize: 15, margin: 0 }}>
+									<Icon type="star" theme="filled" /> Promoted
+									Results
+								</h3>
+								<PromotedResults />
+								<div
+									id="result-list"
 									css={{
-										height: '100% !important',
-										width: '100% !important',
+										marginTop: '20px',
+										border: `1px solid ${
+											colors.tableBorderColor
+										}`,
+										borderRadius: 3,
+										width: '100%',
+										position: 'relative',
+										height:
+											window.innerHeight -
+											(hideAppSwitcher ? 250 : 350),
+										overflow: 'visible',
 									}}
 								>
-									{({ height, width }) => (
-										<>
-											<DataTableHeader
-												ref={this.headerRef}
-											/>
-											<ResultList
-												height={height}
-												width={width}
-												headerRef={this.headerRef}
-											/>
-										</>
-									)}
-								</AutoSizer>
-							</div>
+									<AutoSizer
+										css={{
+											height: '100% !important',
+											width: '100% !important',
+										}}
+									>
+										{({ height, width }) => (
+											<>
+												<DataTableHeader
+													ref={this.headerRef}
+												/>
+												<ResultList
+													height={height}
+													width={width}
+													headerRef={this.headerRef}
+												/>
+											</>
+										)}
+									</AutoSizer>
+								</div>
+								<HiddenResults />
+							</PromotedResultsContainer>
 						</ReactiveBase>
 					</div>
 				)}
