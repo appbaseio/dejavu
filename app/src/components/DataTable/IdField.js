@@ -79,12 +79,21 @@ class IdField extends Component<Props> {
 					&nbsp;&nbsp;&nbsp;
 					<PromoteButton
 						item={fieldData}
-						renderButton={({ promoteResult, isLoading }) => (
+						renderButton={({
+							promoteResult,
+							isLoading,
+							disabled,
+						}) => (
 							<Tooltip
 								placement="top"
-								title="Promote this result"
+								title={
+									disabled
+										? 'Already Promoted or Hidden'
+										: 'Promote this result'
+								}
 							>
 								<Button
+									disabled={disabled}
 									shape="circle"
 									onClick={promoteResult}
 									style={{ borderColor: '#174aff' }}
@@ -100,11 +109,19 @@ class IdField extends Component<Props> {
 					&nbsp;
 					<HideButton
 						id={fieldData._id}
-						renderButton={({ hideItem, isLoading }) => (
-							<Tooltip placement="top" title="Hide this result">
+						renderButton={({ hideItem, isLoading, disabled }) => (
+							<Tooltip
+								placement="top"
+								title={
+									disabled
+										? 'Already Promoted or Hidden'
+										: 'Promote this result'
+								}
+							>
 								<Button
 									shape="circle"
 									type="dashed"
+									disabled={disabled}
 									onClick={hideItem}
 								>
 									<Icon

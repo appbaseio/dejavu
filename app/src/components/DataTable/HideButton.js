@@ -75,11 +75,19 @@ class HideButton extends React.Component {
 	};
 
 	render() {
-		const { renderButton } = this.props;
+		const { renderButton, id } = this.props;
 		const { isLoading } = this.state;
+		const { promotedResults, hiddenResults } = this.context;
+		const promotedIds = promotedResults.map(
+			promotedItem => promotedItem._id,
+		);
+		const hiddenIds = hiddenResults.map(hiddenItem => hiddenItem.doc_id);
+		const isAlreadyPresent =
+			promotedIds.includes(id) || hiddenIds.includes(id);
 		return renderButton({
 			hideItem: this.hideId,
 			isLoading,
+			disabled: isAlreadyPresent,
 		});
 	}
 }

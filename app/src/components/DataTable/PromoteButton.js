@@ -99,11 +99,19 @@ class PromoteButton extends React.Component {
 	};
 
 	render() {
-		const { renderButton } = this.props;
+		const { renderButton, item } = this.props;
 		const { isLoading } = this.state;
+		const { promotedResults, hiddenResults } = this.context;
+		const promotedIds = promotedResults.map(
+			promotedItem => promotedItem._id,
+		);
+		const hiddenIds = hiddenResults.map(hiddenItem => hiddenItem.doc_id);
+		const isAlreadyPresent =
+			promotedIds.includes(item._id) || hiddenIds.includes(item._id);
 		return renderButton({
 			promoteResult: this.promoteId,
 			isLoading,
+			disabled: isAlreadyPresent,
 		});
 	}
 }
