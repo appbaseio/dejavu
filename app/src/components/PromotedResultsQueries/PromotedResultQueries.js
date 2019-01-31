@@ -41,14 +41,13 @@ class PromotedResultQueries extends React.Component {
 				}));
 
 				const tableQueriesData = filteredQueries.map(rule => {
-					const hiddenItems = rule.hide ? rule.hide.length : 0;
-					const promotedItems = rule.promote
-						? rule.promote.length
-						: 0;
+					const hiddenItems = rule.hide;
+					const promotedItems = rule.promote;
 					return {
 						key: rule.id,
+						id: rule.id,
 						query: rule.query,
-						operators: rule.operator,
+						operator: rule.operator,
 						hiddenItems,
 						promotedItems,
 					};
@@ -112,16 +111,69 @@ class PromotedResultQueries extends React.Component {
 		}
 	};
 
-	handleInputChange = () => {
-		/* Arguments : e, id
-		TODO Add Fetch Request to POST data along with the Body
-		*/
+	handleInputChange = (e, id) => {
+		const { queries } = this.state;
+		const { value } = e.target;
+		const rule = queries.find(queryRule => queryRule.id === id);
+
+		if (rule.query !== value) {
+			rule.query = value;
+			this.updateQueryRule(rule);
+		}
 	};
 
-	handleOperatorChange = () => {
-		/* Arguments value, id
-		TODO Add Fetch Request to POST data along with the Body
-		*/
+	handleOperatorChange = (value, id) => {
+		const { queries } = this.state;
+		const rule = queries.find(queryRule => queryRule.id === id);
+
+		if (rule.operator !== value) {
+			rule.operator = value;
+			this.updateQueryRule(rule);
+		}
+	};
+
+	updateQueryRule = async ruleData => {
+		const { id, hiddenItems, promotedItems, query, operator } = ruleData;
+		const { appname } = getUrlParams(window.location.search);
+
+		const requestBody = {
+			id,
+			if: {
+				query,
+				operator,
+			},
+			then: {
+				hide: hiddenItems,
+				promote: promotedItems,
+			},
+		};
+
+		if (!promotedItems || promotedItems.length === 0) {
+			delete requestBody.then.promote;
+		}
+
+		if (!hiddenItems && hiddenItems.length === 0) {
+			delete requestBody.then.hide;
+		}
+
+		try {
+			const updateRequest = await fetch(
+				`https://accapi.appbase.io/app/${appname}/rule`,
+				{
+					method: 'POST',
+					credentials: 'include',
+					body: JSON.stringify(requestBody),
+				},
+			);
+			const updateQueryResponse = await updateRequest.json();
+			if (updateRequest.status >= 400) {
+				message.error(updateQueryResponse.message);
+			} else {
+				message.success(updateQueryResponse.message);
+			}
+		} catch (e) {
+			message.error('Something went Wrong!');
+		}
 	};
 
 	render() {
@@ -140,8 +192,8 @@ class PromotedResultQueries extends React.Component {
 				),
 			},
 			{
-				title: 'Operators',
-				key: 'operators',
+				title: 'Operator',
+				key: 'operator',
 				render: data => (
 					<Select
 						showSearch
@@ -151,7 +203,7 @@ class PromotedResultQueries extends React.Component {
 							this.handleOperatorChange(value, data.key)
 						}
 						style={{ width: '100%' }}
-						defaultValue={data.operators}
+						defaultValue={data.operator}
 						filterOption={(input, option) =>
 							option.props.children
 								.toLowerCase()
@@ -169,11 +221,23 @@ class PromotedResultQueries extends React.Component {
 				title: 'Promoted Items',
 				dataIndex: 'promotedItems',
 				key: 'promotedItems',
+				render: data => {
+					if (data) {
+						return data.length || 0;
+					}
+					return 0;
+				},
 			},
 			{
 				title: 'Hidden Items',
 				dataIndex: 'hiddenItems',
 				key: 'hiddenItems',
+				render: data => {
+					if (data) {
+						return data.length || 0;
+					}
+					return 0;
+				},
 			},
 			{
 				title: 'Action',
