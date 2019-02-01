@@ -86,9 +86,11 @@ class PromotedResultQueries extends React.Component {
 	redirectURL = data => {
 		const { query, operator, url, appname, rule } = data;
 		const { history } = this.props;
-		history.push(
-			`/promoted-results?&appname=${appname}&url=${url}&searchTerm=${query}&queryOperator=${operator}&mode=edit&showActions=false&cloneApp=false&sidebar=false&footer=false&rule=${rule}`,
-		);
+		let baseURL = `/promoted-results?&appname=${appname}&url=${url}&searchTerm=${query}&queryOperator=${operator}&mode=edit&showActions=false&cloneApp=false&sidebar=false&footer=false`;
+		if (rule) {
+			baseURL = `${baseURL}&rule=${rule}`;
+		}
+		history.push(baseURL);
 	};
 
 	removeRow = id => {
