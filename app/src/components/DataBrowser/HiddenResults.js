@@ -31,7 +31,7 @@ class HiddenResults extends React.Component {
 				>
 					{filteredResults.length && (
 						<Panel
-							header={`${filteredResults.length} Hidden Items`}
+							header={`${filteredResults.length} Hidden Results`}
 							key="1"
 							style={customPanelStyle}
 						>

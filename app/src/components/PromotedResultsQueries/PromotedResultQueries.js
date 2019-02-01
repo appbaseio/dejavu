@@ -152,7 +152,7 @@ class PromotedResultQueries extends React.Component {
 			delete requestBody.then.promote;
 		}
 
-		if (!hiddenItems && hiddenItems.length === 0) {
+		if (!hiddenItems || hiddenItems.length === 0) {
 			delete requestBody.then.hide;
 		}
 
