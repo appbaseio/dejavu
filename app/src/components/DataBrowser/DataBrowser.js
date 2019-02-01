@@ -31,6 +31,7 @@ import colors from '../theme/colors';
 import PromotedResultsContainer from './PromotedResultsContainer';
 import PromotedResults from './PromotedResults';
 import HiddenResults from './HiddenResults';
+import BackButton from './BackButton';
 
 type Props = {
 	url: string,
@@ -104,11 +105,11 @@ class DataBrowser extends Component<Props> {
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
-								<h3 css={{ fontSize: 15, margin: 0 }}>
-									<Icon type="star" theme="filled" /> Promoted
-									Results
-								</h3>
+								<BackButton />
+
 								<PromotedResults />
+
+								<HiddenResults />
 								<div
 									id="result-list"
 									css={{
@@ -145,7 +146,6 @@ class DataBrowser extends Component<Props> {
 										)}
 									</AutoSizer>
 								</div>
-								<HiddenResults />
 							</PromotedResultsContainer>
 						</ReactiveBase>
 					</div>

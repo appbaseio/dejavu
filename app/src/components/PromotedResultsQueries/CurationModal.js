@@ -64,7 +64,7 @@ class CurationModal extends React.Component {
 			<React.Fragment>
 				{renderButton(this.handleModal)}
 				<Modal
-					title="Manage Quer Rule"
+					title="Create Query Rule"
 					visible={visible}
 					okText="Continue"
 					onOk={this.handleCuration}
@@ -75,14 +75,14 @@ class CurationModal extends React.Component {
 					}}
 				>
 					<Form>
+						<Form.Item label="Query">
+							<Input
+								value={query}
+								placeholder="Enter the Query"
+								onChange={this.handleQuery}
+							/>
+						</Form.Item>
 						<Form.Item label="Operator">
-							<Form.Item label="Query">
-								<Input
-									value={query}
-									placeholder="Enter the Query"
-									onChange={this.handleQuery}
-								/>
-							</Form.Item>
 							<Select
 								showSearch
 								placeholder="Select a Operator"

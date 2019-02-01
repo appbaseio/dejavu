@@ -9,7 +9,7 @@ const { Panel } = Collapse;
 const customPanelStyle = {
 	background: '#fff1f0',
 	borderRadius: 4,
-	marginTop: 50,
+	marginTop: 20,
 	marginBottom: 24,
 	border: 0,
 	overflow: 'hidden',
@@ -18,7 +18,6 @@ const customPanelStyle = {
 class HiddenResults extends React.Component {
 	render() {
 		const { hiddenResults } = this.context;
-		console.log(hiddenResults);
 		const filteredResults = hiddenResults.map(item => item.doc_id);
 
 		return (

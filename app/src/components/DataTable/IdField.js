@@ -96,11 +96,19 @@ class IdField extends Component<Props> {
 									disabled={disabled}
 									shape="circle"
 									onClick={promoteResult}
-									style={{ borderColor: '#174aff' }}
+									style={{
+										borderColor: disabled
+											? 'rgba(0,0,0,.25)'
+											: '#174aff',
+									}}
 								>
 									<Icon
 										type={isLoading ? 'loading' : 'star'}
-										style={{ color: '#174aff' }}
+										style={{
+											color: disabled
+												? 'rgba(0, 0, 0, .25)'
+												: '#174aff',
+										}}
 									/>
 								</Button>
 							</Tooltip>
@@ -115,7 +123,7 @@ class IdField extends Component<Props> {
 								title={
 									disabled
 										? 'Already Promoted or Hidden'
-										: 'Promote this result'
+										: 'Hide this result'
 								}
 							>
 								<Button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Icon, Tooltip } from 'antd';
+import { Table, Button, Icon, Tooltip, Alert } from 'antd';
 import { css } from 'emotion';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
@@ -73,43 +73,69 @@ class PromotedResults extends React.Component {
 
 		return (
 			<React.Fragment>
-				<Table
-					dataSource={filteredResults}
-					scroll={{ x: true }}
-					title={() => (
-						<PromotedJSONModal
-							renderButton={({ clickHandler }) => (
-								<Button onClick={clickHandler} type="primary">
-									Add JSON
-								</Button>
-							)}
-						/>
-					)}
-					className={tableStyles}
-				>
-					{allColumns.length > 0
-						? allColumns.map(columnName =>
-								columnName === '_id' ? (
-									<Column
-										title={columnName}
-										key={columnName}
-										dataIndex={columnName}
-										fixed
-										css={{ maxWidth: '1000px !important' }}
-										render={columnValue =>
-											this.renderButtons(columnValue)
-										}
-									/>
-								) : (
-									<Column
-										title={columnName}
-										key={columnName}
-										dataIndex={columnName}
-									/>
-								),
-						  )
-						: null}
-				</Table>
+				{filteredResults && filteredResults.length > 0 ? (
+					<Table
+						dataSource={filteredResults}
+						scroll={{ x: true }}
+						pagination={false}
+						title={() => (
+							<div
+								css={{
+									display: 'flex',
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}
+							>
+								<h3 css={{ fontSize: 15, margin: 0 }}>
+									<Icon type="star" theme="filled" /> Promoted
+									Results
+								</h3>
+								<PromotedJSONModal
+									renderButton={({ clickHandler }) => (
+										<Button
+											onClick={clickHandler}
+											type="primary"
+										>
+											Add JSON
+										</Button>
+									)}
+								/>
+							</div>
+						)}
+						className={tableStyles}
+					>
+						{allColumns.length > 0
+							? allColumns.map(columnName =>
+									columnName === '_id' ? (
+										<Column
+											title={columnName}
+											key={columnName}
+											dataIndex={columnName}
+											fixed
+											css={{
+												maxWidth: '1000px !important',
+											}}
+											render={columnValue =>
+												this.renderButtons(columnValue)
+											}
+										/>
+									) : (
+										<Column
+											title={columnName}
+											key={columnName}
+											dataIndex={columnName}
+										/>
+									),
+							  )
+							: null}
+					</Table>
+				) : (
+					<Alert
+						css={{ marginTop: 10 }}
+						message="No Promoted Results"
+						type="info"
+					/>
+				)}
 			</React.Fragment>
 		);
 	}

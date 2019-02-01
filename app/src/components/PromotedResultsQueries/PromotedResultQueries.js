@@ -1,11 +1,24 @@
 import React from 'react';
 import { Table, Button, message, Popconfirm, Input, Select } from 'antd';
 import { object } from 'prop-types';
+import { css } from 'emotion';
 
 import CurationModal from './CurationModal';
 import { getUrlParams } from '../../utils';
 
 const { Option } = Select;
+
+const actionButtonStyles = (color = '#174aff') => css`
+	cursor: pointer;
+	border: 1px solid transparent;
+	padding: 6px 8px;
+	transition: all ease 0.2s;
+	&:hover {
+		color: ${color};
+		border-radius: 2px;
+		border-color: ${color};
+	}
+`;
 
 class PromotedResultQueries extends React.Component {
 	state = {
@@ -181,7 +194,7 @@ class PromotedResultQueries extends React.Component {
 		const { appname, url } = getUrlParams(window.location.search);
 		const tableStructure = [
 			{
-				title: 'Queries',
+				title: 'Query',
 				key: 'query',
 				render: data => (
 					<Input
@@ -240,7 +253,7 @@ class PromotedResultQueries extends React.Component {
 				},
 			},
 			{
-				title: 'Action',
+				title: 'Actions',
 				width: '200px',
 				render: data => (
 					<div
@@ -250,6 +263,7 @@ class PromotedResultQueries extends React.Component {
 						}}
 					>
 						<span
+							css={actionButtonStyles()}
 							onClick={() =>
 								this.redirectURL({
 									query: data.query,
@@ -268,7 +282,9 @@ class PromotedResultQueries extends React.Component {
 							okText="Yes"
 							cancelText="No"
 						>
-							<span>Delete</span>
+							<span css={actionButtonStyles('#f5222d')}>
+								Delete
+							</span>
 						</Popconfirm>
 					</div>
 				),
@@ -281,6 +297,7 @@ class PromotedResultQueries extends React.Component {
 					bordered={false}
 					dataSource={queries}
 					loading={isLoading}
+					pagination={false}
 					columns={tableStructure}
 					title={() => (
 						<div
