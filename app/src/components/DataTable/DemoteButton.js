@@ -22,6 +22,8 @@ class DemoteButton extends React.Component {
 				},
 			);
 			const deleteObject = await deleteResponse.json();
+
+			this.toggleLoading();
 			if (deleteResponse.status >= 400) {
 				message.error(deleteObject.message);
 			} else {
@@ -52,7 +54,6 @@ class DemoteButton extends React.Component {
 		if (filteredResults.length === 0 && hiddenResults.length === 0) {
 			// We cant send empty then so we remove the query itself
 			this.deleteQuery(rule);
-			this.toggleLoading();
 		} else {
 			const thenBody = {
 				promote: [...filteredResults],

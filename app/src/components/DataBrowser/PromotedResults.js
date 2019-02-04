@@ -42,7 +42,7 @@ class PromotedResults extends React.Component {
 						<Button
 							css={{ marginRight: 10 }}
 							shape="circle"
-							style={{ background: '#174aff' }}
+							style={{ background: '#1890ff' }}
 							onClick={demoteResult}
 						>
 							<Icon
@@ -73,35 +73,30 @@ class PromotedResults extends React.Component {
 
 		return (
 			<React.Fragment>
+				<div
+					css={{
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+						marginTop: '20px',
+					}}
+				>
+					<h3 css={{ fontSize: 15, margin: 0 }}>
+						<Icon type="star" theme="filled" /> Promoted Results
+					</h3>
+					<PromotedJSONModal
+						renderButton={({ clickHandler }) => (
+							<Button onClick={clickHandler} type="primary">
+								Add JSON
+							</Button>
+						)}
+					/>
+				</div>
 				{filteredResults && filteredResults.length > 0 ? (
 					<Table
 						dataSource={filteredResults}
 						scroll={{ x: true }}
 						pagination={false}
-						title={() => (
-							<div
-								css={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									alignItems: 'center',
-								}}
-							>
-								<h3 css={{ fontSize: 15, margin: 0 }}>
-									<Icon type="star" theme="filled" /> Promoted
-									Results
-								</h3>
-								<PromotedJSONModal
-									renderButton={({ clickHandler }) => (
-										<Button
-											onClick={clickHandler}
-											type="primary"
-										>
-											Add JSON
-										</Button>
-									)}
-								/>
-							</div>
-						)}
 						className={tableStyles}
 					>
 						{allColumns.length > 0

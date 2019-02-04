@@ -4,7 +4,7 @@ import { Modal, Select, Input, Form } from 'antd';
 
 const { Option } = Select;
 
-class CurationModal extends React.Component {
+class QueryRuleModal extends React.Component {
 	constructor(props) {
 		super(props);
 		const { query, operator } = props;
@@ -109,16 +109,16 @@ class CurationModal extends React.Component {
 	}
 }
 
-CurationModal.propTypes = {
+QueryRuleModal.propTypes = {
 	handleSuccess: func.isRequired,
 	operator: string,
 	query: string,
 	renderButton: func.isRequired,
 };
 
-CurationModal.defaultProps = {
+QueryRuleModal.defaultProps = {
 	operator: 'is',
 	query: '',
 };
 
-export default CurationModal;
+export default QueryRuleModal;

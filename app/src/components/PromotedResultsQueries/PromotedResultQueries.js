@@ -3,12 +3,12 @@ import { Table, Button, message, Popconfirm, Input, Select } from 'antd';
 import { object } from 'prop-types';
 import { css } from 'emotion';
 
-import CurationModal from './CurationModal';
+import QueryRuleModal from './QueryRuleModal';
 import { getUrlParams } from '../../utils';
 
 const { Option } = Select;
 
-const actionButtonStyles = (color = '#174aff') => css`
+const actionButtonStyles = (color = '#1890ff') => css`
 	cursor: pointer;
 	border: 1px solid transparent;
 	padding: 6px 8px;
@@ -316,7 +316,7 @@ class PromotedResultQueries extends React.Component {
 							>
 								Query Rules
 							</h1>
-							<CurationModal
+							<QueryRuleModal
 								handleSuccess={data =>
 									this.redirectURL({ ...data, appname, url })
 								}

@@ -12,7 +12,7 @@ class HideButton extends React.Component {
 	hideId = async () => {
 		this.toggleLoading();
 		const { id } = this.props;
-		const { queryOperator, searchTerm, appname } = getUrlParams(
+		const { queryOperator, searchTerm, appname, rule } = getUrlParams(
 			window.location.search,
 		);
 		const { appendHiddenResult } = this.context || undefined;
@@ -27,7 +27,12 @@ class HideButton extends React.Component {
 				operator: queryOperator,
 			},
 			then: {
-				hide: [...hiddenResults, { doc_id: id }],
+				hide: [
+					...hiddenResults,
+					{
+						doc_id: id,
+					},
+				],
 			},
 		};
 
@@ -38,6 +43,14 @@ class HideButton extends React.Component {
 					...requestBody.then,
 					promote: promotedResults,
 				},
+			};
+		}
+
+		// After first request we get the id from the API, which we append in the URL and pass it in Body
+		if (rule) {
+			requestBody = {
+				...requestBody,
+				id: rule,
 			};
 		}
 
@@ -55,6 +68,15 @@ class HideButton extends React.Component {
 			if (ruleRequest.status >= 400) {
 				message.error(ruleResponse.message);
 			} else {
+				if (!rule) {
+					// Appending rule id to URL
+					const searchParams = new URLSearchParams(
+						window.location.search,
+					);
+					searchParams.set('rule', ruleResponse.id);
+					window.location.search = searchParams.toString();
+				}
+
 				message.success(ruleResponse.message);
 
 				if (appendHiddenResult) {

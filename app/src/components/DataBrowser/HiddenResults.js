@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse, Icon, Button, Tooltip } from 'antd';
+import { Collapse, Icon, Button, Tooltip, Alert } from 'antd';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
 import UnHideButton from '../DataTable/UnHideButton';
@@ -22,13 +22,16 @@ class HiddenResults extends React.Component {
 
 		return (
 			<React.Fragment>
-				<Collapse
-					bordered={false}
-					expandIcon={({ isActive }) => (
-						<Icon type="caret-right" rotate={isActive ? 90 : 0} />
-					)}
-				>
-					{filteredResults.length && (
+				{filteredResults.length > 0 ? (
+					<Collapse
+						bordered={false}
+						expandIcon={({ isActive }) => (
+							<Icon
+								type="caret-right"
+								rotate={isActive ? 90 : 0}
+							/>
+						)}
+					>
 						<Panel
 							header={`${filteredResults.length} Hidden Results`}
 							key="1"
@@ -47,6 +50,7 @@ class HiddenResults extends React.Component {
 											title="Remove this item"
 										>
 											<Button
+												css={{ marginRight: 10 }}
 												type="danger"
 												loading={isLoading}
 												onClick={unHideItem}
@@ -58,8 +62,14 @@ class HiddenResults extends React.Component {
 								/>
 							))}
 						</Panel>
-					)}
-				</Collapse>
+					</Collapse>
+				) : (
+					<Alert
+						css={{ margin: '15px 0' }}
+						type="error"
+						message="No Hidden Results"
+					/>
+				)}
 			</React.Fragment>
 		);
 	}

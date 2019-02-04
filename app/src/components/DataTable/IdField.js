@@ -63,7 +63,11 @@ class IdField extends Component<Props> {
 		const fieldData = data.find(item => item._id === value);
 
 		return (
-			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
+			<Flex
+				wrap="nowrap"
+				css={{ width: '100%' }}
+				alignItems="center"
+			>
 				<div
 					css={{
 						display: 'flex',
@@ -72,8 +76,12 @@ class IdField extends Component<Props> {
 					}}
 				>
 					{selectedRows.indexOf(value) === -1 && (
-						<div className="index-no" css={{ minWidth: 16 }}>
-							{pageSize * (currentPage - 1) + (rowIndex + 1)}
+						<div
+							className="index-no"
+							css={{ minWidth: 16 }}
+						>
+							{pageSize * (currentPage - 1) +
+								(rowIndex + 1)}
 						</div>
 					)}
 					&nbsp;&nbsp;&nbsp;
@@ -99,15 +107,19 @@ class IdField extends Component<Props> {
 									style={{
 										borderColor: disabled
 											? 'rgba(0,0,0,.25)'
-											: '#174aff',
+											: '#1890ff',
 									}}
 								>
 									<Icon
-										type={isLoading ? 'loading' : 'star'}
+										type={
+											isLoading
+												? 'loading'
+												: 'star'
+										}
 										style={{
 											color: disabled
 												? 'rgba(0, 0, 0, .25)'
-												: '#174aff',
+												: '#1890ff',
 										}}
 									/>
 								</Button>
@@ -117,7 +129,11 @@ class IdField extends Component<Props> {
 					&nbsp;
 					<HideButton
 						id={fieldData._id}
-						renderButton={({ hideItem, isLoading, disabled }) => (
+						renderButton={({
+							hideItem,
+							isLoading,
+							disabled,
+						}) => (
 							<Tooltip
 								placement="top"
 								title={
@@ -148,7 +164,9 @@ class IdField extends Component<Props> {
 				<Popover
 					content={
 						<div css={popoverContent}>
-							<JsonView json={getOnlySource(data[rowIndex])} />
+							<JsonView
+								json={getOnlySource(data[rowIndex])}
+							/>
 						</div>
 					}
 					trigger="click"
