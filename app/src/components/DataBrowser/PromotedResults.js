@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, Icon, Tooltip, Alert } from 'antd';
+import { Table, Button, Icon, Tooltip } from 'antd';
 import { css } from 'emotion';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
@@ -13,6 +13,13 @@ const tableStyles = css`
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
+`;
+
+const noResultStyles = css`
+	margin-top: 10;
+	padding: 12px 20px;
+	background: #eee;
+	border-radius: 2px;
 `;
 
 const { Column } = Table;
@@ -125,11 +132,9 @@ class PromotedResults extends React.Component {
 							: null}
 					</Table>
 				) : (
-					<Alert
-						css={{ marginTop: 10 }}
-						message="No Promoted Results"
-						type="info"
-					/>
+					<div css={noResultStyles}>
+						<span css={{ fontSize: 14 }}>No Promoted Results</span>
+					</div>
 				)}
 			</React.Fragment>
 		);

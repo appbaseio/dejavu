@@ -151,6 +151,7 @@ class PromotedJSONModal extends React.Component {
 							minHeight: '200px',
 							maxHeight: '500px',
 							flex: 1,
+							fontSize: 14,
 						}}
 					/>
 				</Modal>
