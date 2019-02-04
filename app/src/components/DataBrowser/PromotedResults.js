@@ -78,7 +78,7 @@ class PromotedResults extends React.Component {
 						display: 'flex',
 						justifyContent: 'space-between',
 						alignItems: 'center',
-						marginTop: '20px',
+						margin: '20px auto 10px',
 					}}
 				>
 					<h3 css={{ fontSize: 15, margin: 0 }}>

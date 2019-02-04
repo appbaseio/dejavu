@@ -86,7 +86,7 @@ class PromotedResultQueries extends React.Component {
 	redirectURL = data => {
 		const { query, operator, url, appname, rule } = data;
 		const { history } = this.props;
-		let baseURL = `/promoted-results?&appname=${appname}&url=${url}&searchTerm=${query}&queryOperator=${operator}&mode=edit&showActions=false&cloneApp=false&sidebar=false&footer=false`;
+		let baseURL = `/promoted-results?&appname=${appname}&url=${url}&searchTerm=${query}&queryOperator=${operator}&mode=edit&showActions=false&cloneApp=false&sidebar=false&footer=false&appswitcher=false&oldBanner=false`;
 		if (rule) {
 			baseURL = `${baseURL}&rule=${rule}`;
 		}
