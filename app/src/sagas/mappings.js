@@ -68,7 +68,10 @@ function* handleFetchMappings() {
 							...getMappingsTree(typeProperties),
 						};
 
-						typePropertyMapping[index] = {};
+						if (!typePropertyMapping[index]) {
+							typePropertyMapping[index] = {};
+						}
+
 						typePropertyMapping[index][type] = getMappingsTree(
 							typeProperties,
 						);

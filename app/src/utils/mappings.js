@@ -250,6 +250,11 @@ const getMappingsTree = (mappings = {}) => {
 				...tree,
 				...getFieldsTree(mappings[key].properties, key),
 			};
+		} else if (mappings[key].type) {
+			tree = {
+				...tree,
+				[key]: mappings[key],
+			};
 		}
 	});
 
