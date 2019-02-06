@@ -124,3 +124,70 @@ export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
 		);
 	}
 };
+
+export const bulkUpdate = async (
+	rawUrl,
+	indexName,
+	typeName,
+	docIds,
+	updateData,
+) => {
+	const defaultError = 'Unable to update data';
+	try {
+		const { url } = parseUrl(rawUrl);
+		const headers = getHeaders(rawUrl);
+		const customHeaders = getCustomHeaders(indexName);
+		const dataMap = updateData.reduce((str, item) => {
+			let tempStr = str;
+			if (item.value !== null) {
+				tempStr += `ctx._source.${item.field}=`;
+				if (typeof item.value === 'string') {
+					tempStr += `"${item.value}";`;
+				} else {
+					tempStr += `${JSON.stringify(item.value)
+						.replace(/{/g, '[')
+						.replace(/}/g, ']')};`;
+				}
+			}
+
+			return tempStr;
+		}, '');
+
+		const data = {
+			query: {
+				ids: {
+					values: docIds,
+				},
+			},
+			script: {
+				inline: dataMap,
+			},
+		};
+
+		const res = await fetch(
+			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify(data),
+			},
+		).then(response => response.json());
+
+		if (res.status >= 400) {
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${res.message || defaultError}`,
+			);
+		}
+		return res;
+	} catch (error) {
+		throw new CustomError(
+			error.description || error.message || defaultError,
+			error.message,
+			error.stack,
+		);
+	}
+};
