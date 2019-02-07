@@ -8,12 +8,14 @@ import {
 	setError,
 	clearError,
 } from '../actions';
+import { trimUrl } from '../utils';
 
 function* handleConnectApp({ appname, url }) {
+	const appUrl = trimUrl(url);
 	try {
 		yield put(clearError());
-		yield call(testConnection, appname, url);
-		yield put(connectAppSuccess(appname, url));
+		yield call(testConnection, appname, appUrl);
+		yield put(connectAppSuccess(appname, appUrl));
 	} catch (error) {
 		yield put(connectAppFailure());
 		yield put(

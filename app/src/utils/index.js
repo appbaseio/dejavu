@@ -189,6 +189,14 @@ const getCloneLink = (appname, rawUrl) => {
 	return params;
 };
 
+const trimUrl = url => {
+	if (url.lastIndexOf('/') === url.length - 1) {
+		return url.slice(0, -1);
+	}
+
+	return url;
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -208,4 +216,5 @@ export {
 	isEqualArray,
 	saveAppToLocalStorage,
 	getCloneLink,
+	trimUrl,
 };
