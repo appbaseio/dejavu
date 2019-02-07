@@ -107,7 +107,7 @@ const ResultSet = ({
 					css={{
 						minHeight: 150,
 						position: 'absolute',
-						top: 32,
+						top: 0,
 						left: 2,
 						right: 2,
 						bottom: 2,

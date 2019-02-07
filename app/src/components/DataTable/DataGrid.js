@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment, createRef } from 'react';
+import React, { Component, createRef } from 'react';
 import get from 'lodash/get';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Grid, ScrollSync } from 'react-virtualized';
@@ -42,10 +42,17 @@ type Props = {
 	headerRef: any,
 };
 
-class DataGrid extends Component<Props> {
-	dataGridRef = createRef();
+type State = {
+	updateKey: number,
+};
+class DataGrid extends Component<Props, State> {
+	dataGridRef: any = createRef();
 
-	dataScrollRef = createRef();
+	dataScrollRef: any = createRef();
+
+	state = {
+		updateKey: Date.now(),
+	};
 
 	componentDidMount() {
 		this.handleScrollLeft();
@@ -55,10 +62,15 @@ class DataGrid extends Component<Props> {
 		this.handleScrollLeft();
 
 		if (!isEqualArray(prevProps.data, this.props.data)) {
-			// $FlowFixMe
-			this.dataGridRef.current.forceUpdate();
+			this.setUpdateKey();
 		}
 	}
+
+	setUpdateKey = () => {
+		this.setState(prevState => ({
+			updateKey: prevState.updateKey + 1,
+		}));
+	};
 
 	handleScrollLeft = () => {
 		const { headerRef } = this.props;
@@ -67,7 +79,6 @@ class DataGrid extends Component<Props> {
 			headerRef.current &&
 			headerRef.current.scrollLeft > 0
 		) {
-			// $FlowFixMe
 			this.dataScrollRef.current.scrollLeft(headerRef.current.scrollLeft);
 		}
 	};
@@ -165,12 +176,13 @@ class DataGrid extends Component<Props> {
 			nestedVisibleColumns,
 			visibleColumns,
 		} = this.props;
+		const { updateKey } = this.state;
 		const columns = isShowingNestedColumns
 			? nestedVisibleColumns
 			: visibleColumns;
 
 		return (
-			<Fragment>
+			<div key={updateKey}>
 				<ScrollSync>
 					{({ onScroll, scrollTop }) => (
 						<Flex wrap="nowrap">
@@ -224,7 +236,7 @@ class DataGrid extends Component<Props> {
 						</Flex>
 					)}
 				</ScrollSync>
-			</Fragment>
+			</div>
 		);
 	}
 }

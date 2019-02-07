@@ -59,7 +59,7 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 			<Flex alignItems="center">
 				<SelectedFilters
 					css={{
-						marginRight: 5,
+						marginRight: '5px !important',
 					}}
 				/>
 				<SortFilter />
