@@ -58,8 +58,8 @@ class IdField extends Component<Props> {
 	render() {
 		const {
 			value,
-			selectedRows,
 			mode,
+			selectedRows,
 			data,
 			rowIndex,
 			pageSize,
@@ -76,35 +76,20 @@ class IdField extends Component<Props> {
 						display: 'flex',
 						justifyContent: 'center',
 						alignItems: 'center',
-						'.ant-checkbox-wrapper': {
-							display:
-								selectedRows.indexOf(value) > -1
-									? 'block !important'
-									: 'none',
-						},
-						'&:hover': {
-							'.ant-checkbox-wrapper': {
-								display:
-									mode === MODES.EDIT
-										? 'block !important'
-										: 'none',
-							},
-							'.index-no': {
-								display: mode === MODES.EDIT ? 'none' : 'block',
-							},
-						},
 					}}
 				>
-					<Checkbox
-						onChange={this.handleRowSelectChange}
-						value={value}
-						checked={selectedRows.indexOf(value) > -1}
-					/>
-
-					{selectedRows.indexOf(value) === -1 && (
-						<div className="index-no">
-							{pageSize * (currentPage - 1) + (rowIndex + 1)}
-						</div>
+					<div css={{ marginRight: 5 }}>
+						{pageSize * (currentPage - 1) + (rowIndex + 1)}
+					</div>
+					{mode === MODES.EDIT && (
+						<Checkbox
+							onChange={this.handleRowSelectChange}
+							value={value}
+							checked={selectedRows.indexOf(value) > -1}
+							css={{
+								marginRight: 5,
+							}}
+						/>
 					)}
 				</div>
 				<Popover

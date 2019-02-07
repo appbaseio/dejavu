@@ -71,6 +71,18 @@ const VERSION = {
 	SET_VERSION: 'SET_VERSION',
 };
 
+const QUERY = {
+	SET_QUERY: 'SET_QUERY',
+};
+
+const SELECT_ALL = {
+	SET_SELECT_ALL: 'SET_SELECT_ALL',
+};
+
+const APPLY_QUERY = {
+	SET_APPLY_QUERY: 'SET_APPLY_QUERY',
+};
+
 export {
 	APP,
 	CELL,
@@ -85,4 +97,7 @@ export {
 	PAGE_SIZE,
 	NESTED_COLUMNS,
 	VERSION,
+	QUERY,
+	SELECT_ALL,
+	APPLY_QUERY,
 };

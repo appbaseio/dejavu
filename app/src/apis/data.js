@@ -87,27 +87,42 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 	}
 };
 
-export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
+export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
 	const defaultError = 'Unable to delete data';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let data = '';
-		docIds.forEach(item => {
-			data += JSON.stringify({
-				delete: { _index: indexName, _type: typeName, _id: item },
-			});
-			data += `\n`;
-		});
-		const res = await fetch(`${url}/${indexName}/${typeName}/_bulk`, {
-			headers: {
-				...headers,
-				...convertArrayToHeaders(customHeaders),
+		let query = {};
+
+		if (Array.isArray(queryData)) {
+			query = {
+				query: {
+					ids: {
+						values: queryData,
+					},
+				},
+			};
+		} else {
+			query = {
+				query: queryData,
+			};
+		}
+
+		const data = {
+			...query,
+		};
+		const res = await fetch(
+			`${url}/${indexName}/${typeName}/_delete_by_query`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify(data),
 			},
-			method: 'POST',
-			body: data,
-		}).then(response => response.json());
+		).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(
@@ -129,7 +144,7 @@ export const bulkUpdate = async (
 	rawUrl,
 	indexName,
 	typeName,
-	docIds,
+	queryData,
 	updateData,
 ) => {
 	const defaultError = 'Unable to update data';
@@ -153,12 +168,24 @@ export const bulkUpdate = async (
 			return tempStr;
 		}, '');
 
-		const data = {
-			query: {
-				ids: {
-					values: docIds,
+		let query = {};
+
+		if (Array.isArray(queryData)) {
+			query = {
+				query: {
+					ids: {
+						values: queryData,
+					},
 				},
-			},
+			};
+		} else {
+			query = {
+				query: queryData,
+			};
+		}
+
+		const data = {
+			...query,
 			script: {
 				inline: dataMap,
 			},

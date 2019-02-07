@@ -7,10 +7,17 @@ import { mediaMin } from '@divyanshu013/media';
 import StyledCell from './StyledCell';
 import Flex from '../Flex';
 
-import { setSelectedRows, setUpdatingRow } from '../../actions';
+import {
+	setSelectedRows,
+	setUpdatingRow,
+	setSelectAll,
+	setApplyQuery,
+} from '../../actions';
 import { getMode } from '../../reducers/mode';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getCurrentIds } from '../../reducers/currentIds';
+import { getSelectAll } from '../../reducers/selectAll';
+import { getApplyQuery } from '../../reducers/applyQuery';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
@@ -21,6 +28,10 @@ type Props = {
 	currentIds: string[],
 	selectedRows: string[],
 	mode: string,
+	selectAll: boolean,
+	onSetSelectAll: boolean => void,
+	applyQuery: boolean,
+	onSetApplyQuery: boolean => void,
 };
 
 class IdHeaderField extends PureComponent<Props> {
@@ -28,18 +39,27 @@ class IdHeaderField extends PureComponent<Props> {
 		const {
 			target: { checked },
 		} = e;
-		const { onSelectedRows, onSetUpdatingRow, currentIds } = this.props;
+		const {
+			onSelectedRows,
+			onSetUpdatingRow,
+			currentIds,
+			onSetSelectAll,
+			onSetApplyQuery,
+		} = this.props;
 
 		if (checked) {
 			onSelectedRows(currentIds);
+			onSetSelectAll(true);
 		} else {
 			onSelectedRows([]);
+			onSetSelectAll(false);
 		}
+		onSetApplyQuery(false);
 		onSetUpdatingRow(null);
 	};
 
 	render() {
-		const { selectedRows, mode, currentIds } = this.props;
+		const { selectAll, mode, selectedRows, applyQuery } = this.props;
 		return (
 			<StyledCell
 				css={{
@@ -66,21 +86,18 @@ class IdHeaderField extends PureComponent<Props> {
 				>
 					<Flex
 						css={{
-							width: '15%',
+							marginLeft: 12,
+							marginRight: 7,
 						}}
 						alignItems="center"
 						justifyContent="center"
 					>
-						{selectedRows.length >= 1 &&
-							mode === MODES.EDIT && (
-								<Checkbox
-									onChange={this.handleSelectAllRows}
-									checked={
-										selectedRows.length ===
-										currentIds.length
-									}
-								/>
-							)}
+						{mode === MODES.EDIT && (
+							<Checkbox
+								onChange={this.handleSelectAllRows}
+								checked={selectAll || applyQuery}
+							/>
+						)}
 					</Flex>
 					<Popover
 						content={
@@ -124,11 +141,15 @@ const mapStateToProps = state => ({
 	currentIds: getCurrentIds(state),
 	selectedRows: getSelectedRows(state),
 	mode: getMode(state),
+	selectAll: getSelectAll(state),
+	applyQuery: getApplyQuery(state),
 });
 
 const mapDispatchToProps = {
 	onSelectedRows: setSelectedRows,
 	onSetUpdatingRow: setUpdatingRow,
+	onSetSelectAll: setSelectAll,
+	onSetApplyQuery: setApplyQuery,
 };
 
 export default connect(

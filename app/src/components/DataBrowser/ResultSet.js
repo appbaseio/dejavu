@@ -19,7 +19,13 @@ import {
 	getTermsAggregationColumns,
 	getMappings,
 } from '../../reducers/mappings';
-import { setSelectedRows, setUpdatingRow } from '../../actions';
+import {
+	setSelectedRows,
+	setUpdatingRow,
+	setQuery,
+	setSelectAll,
+	setApplyQuery,
+} from '../../actions';
 import colors from '../theme/colors';
 
 type Props = {
@@ -30,11 +36,14 @@ type Props = {
 	termsAggregationColumns: any,
 	onSelectedRows: any => void,
 	onSetUpdatingRow: any => void,
+	onSetQuery: any => void,
 	mappings: any,
 	appname: string,
 	height: number,
 	width: number,
 	headerRef: any,
+	onSetSelectAll: boolean => void,
+	onSetApplyQuery: boolean => void,
 };
 
 const ResultSet = ({
@@ -45,11 +54,14 @@ const ResultSet = ({
 	termsAggregationColumns,
 	onSelectedRows,
 	onSetUpdatingRow,
+	onSetQuery,
 	mappings,
 	appname,
 	height,
 	width,
 	headerRef,
+	onSetSelectAll,
+	onSetApplyQuery,
 }: Props) => {
 	const { results } = getUrlParams(window.location.search);
 	const currentPage = parseInt(results || 1, 10);
@@ -146,6 +158,11 @@ const ResultSet = ({
 					&nbsp;results
 				</Flex>
 			)}
+			onQueryChange={(prevQuery, nextQuery) => {
+				onSetQuery(nextQuery);
+				onSetSelectAll(false);
+				onSetApplyQuery(false);
+			}}
 		/>
 	);
 };
@@ -166,6 +183,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
 	onSelectedRows: setSelectedRows,
 	onSetUpdatingRow: setUpdatingRow,
+	onSetQuery: setQuery,
+	onSetSelectAll: setSelectAll,
+	onSetApplyQuery: setApplyQuery,
 };
 
 export default connect(

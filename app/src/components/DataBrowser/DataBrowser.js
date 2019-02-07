@@ -16,6 +16,7 @@ import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
 import CloneApp from './CloneApp';
+import ApplyQueryBanner from './ApplyQueryBanner';
 
 import { fetchMappings } from '../../actions';
 import { getUrl, getHeaders } from '../../reducers/app';
@@ -92,6 +93,7 @@ class DataBrowser extends Component<Props> {
 									<NestedColumnToggle />
 									<GlobalSearch />
 								</div>
+								<ApplyQueryBanner />
 								<div
 									id="result-list"
 									css={{

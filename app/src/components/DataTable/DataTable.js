@@ -140,11 +140,22 @@ class DataTable extends Component<Props, State> {
 				);
 			}
 		}
+
+		if (!isEqualArray(prevProps.data, this.props.data)) {
+			this.setData(this.props.data);
+		}
 	}
 
 	componentWillUnmount() {
 		this.isMounted = false;
 	}
+
+	setData = data => {
+		this.setState({
+			data,
+		});
+		this.props.onSetCurrentIds(data.map(item => item._id));
+	};
 
 	handleCellChange = (row, column, value) => {
 		const { setCellValue } = this.props;
