@@ -141,8 +141,8 @@ class DataTable extends Component<Props, State> {
 			}
 		}
 
-		if (!isEqualArray(prevProps.data, this.props.data)) {
-			this.setData(this.props.data);
+		if (!isEqualArray(data, prevProps.data)) {
+			this.setData(data);
 		}
 	}
 

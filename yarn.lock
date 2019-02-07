@@ -25,7 +25,7 @@
     react-emotion "^9.0.0"
     react-feather "^1.1.0"
 
-"@appbaseio/reactivecore@^7.1.0":
+"@appbaseio/reactivecore@^7.4.0":
   version "7.4.1"
   resolved "https://registry.npmjs.org/@appbaseio/reactivecore/-/reactivecore-7.4.1.tgz#a9b6f799b42bca0cbcf138ba497b28ad21a3d71a"
   integrity sha512-zqbUw2pTkwp9/vclkU8FaaRLWH6qWezZ9jrJTIxqDJ7OBzEUhSVGkJVNvkIoRChaa9+kkTrn9ksnquaYaPz1xg==
@@ -34,21 +34,23 @@
     redux "^4.0.0"
     redux-thunk "^2.3.0"
 
-"@appbaseio/reactivesearch@^2.16.1":
-  version "2.16.1"
-  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-2.16.1.tgz#fb69db8f286c100877b50d471f6f3fdd0d7346b2"
-  integrity sha512-adlEDZALLxLQdXmN+us7xKhTsC7fuZw0cjTJZOy5QHR2d7bnU7tK7UB0GUvNVTccXKrytTzgnPFPCmLH/L8NKg==
+"@appbaseio/reactivesearch@^3.0.0-alpha.11":
+  version "3.0.0-alpha.11"
+  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-3.0.0-alpha.11.tgz#8752515960a172eef72cd1b544014e0dbd3dcbec"
+  integrity sha512-g5Z6KoZL68sJOOBLgdavAvzL2MbZSk7dgrUOEmYYkBdKa2YTn3lpLtDz1rsf3A3RV4lsa+yLxUHctsrly5PXzA==
   dependencies:
-    "@appbaseio/reactivecore" "^7.1.0"
-    appbase-js "^4.0.2-beta.4"
+    "@appbaseio/reactivecore" "^7.4.0"
+    appbase-js "^4.0.2-beta.04"
     cross-env "^5.2.0"
     downshift "^1.31.2"
     emotion "^9.0.0"
     emotion-theming "^9.0.0"
+    hoist-non-react-statics "^3.2.1"
     polished "^1.9.3"
     prop-types "^15.6.0"
     react-day-picker "^7.0.5"
     react-emotion "^9.0.0"
+    react-highlight-words "^0.14.0"
     react-redux "^5.0.7"
     rheostat "^2.1.1"
     url-search-params "^0.10.0"
@@ -1548,6 +1550,18 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
+appbase-js@^4.0.2-beta.04:
+  version "4.0.2-beta.4"
+  resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.4.tgz#59bcba7265d3f7937f8d3b1cfecb1973f5d059c8"
+  integrity sha512-yfljZF2WA4qjAEd1tqOXL49bQSGcnC8DWuDJJU3/DBgS7WB+vFeYPlk7Q+JANFx9+XCT3RXja68gu1Ic0jJWlg==
+  dependencies:
+    cross-fetch "^2.2.2"
+    json-stable-stringify "^1.0.1"
+    querystring "^0.2.0"
+    stream "^0.0.2"
+    url-parser-lite "^0.1.0"
+    ws "^6.1.2"
+
 appbase-js@^4.0.2-beta.2:
   version "4.0.2-beta.2"
   resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.0.2-beta.2.tgz#a01155ced48c9359be04e45df6c40a312483e5b8"
@@ -1559,18 +1573,6 @@ appbase-js@^4.0.2-beta.2:
     stream "^0.0.2"
     url-parser-lite "^0.1.0"
     ws "^2.2.0"
-
-appbase-js@^4.0.2-beta.4:
-  version "4.0.2-beta.4"
-  resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.4.tgz#59bcba7265d3f7937f8d3b1cfecb1973f5d059c8"
-  integrity sha512-yfljZF2WA4qjAEd1tqOXL49bQSGcnC8DWuDJJU3/DBgS7WB+vFeYPlk7Q+JANFx9+XCT3RXja68gu1Ic0jJWlg==
-  dependencies:
-    cross-fetch "^2.2.2"
-    json-stable-stringify "^1.0.1"
-    querystring "^0.2.0"
-    stream "^0.0.2"
-    url-parser-lite "^0.1.0"
-    ws "^6.1.2"
 
 append-transform@^0.4.0:
   version "0.4.0"
@@ -6763,6 +6765,11 @@ he@1.2.x:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
+highlight-words-core@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/highlight-words-core/-/highlight-words-core-1.2.2.tgz#1eff6d7d9f0a22f155042a00791237791b1eeaaa"
+  integrity sha512-BXUKIkUuh6cmmxzi5OIbUJxrG8OAk2MqoL1DtO3Wo9D2faJg2ph5ntyuQeLqaHJmzER6H5tllCDA9ZnNe9BVGg==
+
 history@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/history/-/history-4.7.2.tgz#22b5c7f31633c5b8021c7f4a8a954ac139ee8d5b"
@@ -6792,6 +6799,13 @@ hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
   version "2.5.5"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
+
+hoist-non-react-statics@^3.2.1:
+  version "3.3.0"
+  resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"
+  integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==
+  dependencies:
+    react-is "^16.7.0"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
@@ -8927,6 +8941,11 @@ mem@^4.0.0:
     map-age-cleaner "^0.1.1"
     mimic-fn "^1.0.0"
     p-is-promise "^1.1.0"
+
+memoize-one@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-4.1.0.tgz#a2387c58c03fff27ca390c31b764a79addf3f906"
+  integrity sha512-2GApq0yI/b22J2j9rhbrAlsHb0Qcz+7yWxeLG8h+95sl1XPUgeLimQSOdur4Vw7cUhrBHwaUZxWFZueojqNRzA==
 
 memory-fs@^0.4.0, memory-fs@~0.4.1:
   version "0.4.1"
@@ -11391,6 +11410,15 @@ react-fuzzy@^0.5.2:
     fuse.js "^3.0.1"
     prop-types "^15.5.9"
 
+react-highlight-words@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.npmjs.org/react-highlight-words/-/react-highlight-words-0.14.0.tgz#a1a40ff0a49ce78e7feb375a4e0a5fd1ca9c9609"
+  integrity sha512-DNp1zAIiNqs1nunFv5K67ca0KVSKihbmpZLNwqQj61yMK6zf8YHoGrpLlEt7WEqj1227FOm41FuXiv9KZgcwdA==
+  dependencies:
+    highlight-words-core "^1.2.0"
+    memoize-one "^4.0.0"
+    prop-types "^15.5.8"
+
 react-html-attributes@^1.4.2:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/react-html-attributes/-/react-html-attributes-1.4.3.tgz#8c36c35fce6b750938d286af428ed1da7625186e"
@@ -11418,6 +11446,11 @@ react-inspector@^2.2.2:
     babel-runtime "^6.26.0"
     is-dom "^1.0.9"
     prop-types "^15.6.1"
+
+react-is@^16.7.0:
+  version "16.8.1"
+  resolved "https://registry.npmjs.org/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"
+  integrity sha512-ioMCzVDWvCvKD8eeT+iukyWrBGrA3DiFYkXfBsVYIRdaREZuBjENG+KjrikavCLasozqRWTwFUagU/O4vPpRMA==
 
 react-joyride@^2.0.0-15:
   version "2.0.0-15"

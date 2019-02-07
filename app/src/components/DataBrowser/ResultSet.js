@@ -123,7 +123,7 @@ const ResultSet = ({
 				onSelectedRows([]);
 				onSetUpdatingRow(null);
 			}}
-			onAllData={data =>
+			renderAllData={({ results: data }) =>
 				data.length ? (
 					<DataTable
 						key={data.length ? data[0]._id : '0'}
@@ -135,7 +135,7 @@ const ResultSet = ({
 					/>
 				) : null
 			}
-			onResultStats={total => (
+			renderResultStats={stats => (
 				<Flex
 					justifyContent="center"
 					alignItems="center"
@@ -154,8 +154,8 @@ const ResultSet = ({
 						},
 					}}
 				>
-					<b>{numberWithCommas(total)}</b>
-					&nbsp;results
+					Showing <b>{numberWithCommas(stats.displayedResults)}</b> of
+					total <b>{numberWithCommas(stats.totalResults)}</b>
 				</Flex>
 			)}
 			onQueryChange={(prevQuery, nextQuery) => {

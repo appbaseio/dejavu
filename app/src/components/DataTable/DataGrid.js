@@ -14,6 +14,7 @@ import Flex from '../Flex';
 import { META_FIELDS } from '../../utils/mappings';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
+import { isEqualArray } from '../../utils';
 
 const OVERSCAN_COUNT = 3;
 const HEIGHT_BUFFER = 32;
@@ -46,7 +47,20 @@ class DataGrid extends Component<Props> {
 
 	dataScrollRef = createRef();
 
-	componentDidUpdate() {
+	componentDidMount() {
+		this.handleScrollLeft();
+	}
+
+	componentDidUpdate(prevProps: any) {
+		this.handleScrollLeft();
+
+		if (!isEqualArray(prevProps.data, this.props.data)) {
+			// $FlowFixMe
+			this.dataGridRef.current.forceUpdate();
+		}
+	}
+
+	handleScrollLeft = () => {
 		const { headerRef } = this.props;
 		if (
 			headerRef &&
@@ -56,7 +70,7 @@ class DataGrid extends Component<Props> {
 			// $FlowFixMe
 			this.dataScrollRef.current.scrollLeft(headerRef.current.scrollLeft);
 		}
-	}
+	};
 
 	handleScroll = ({ target }: any) => {
 		const { scrollTop, scrollLeft } = target;
