@@ -77,7 +77,7 @@ class HideButton extends React.Component {
 					window.location.search = searchParams.toString();
 				}
 
-				message.success(ruleResponse.message);
+				message.success('Query Rule Updated!');
 
 				if (appendHiddenResult) {
 					appendHiddenResult(id);

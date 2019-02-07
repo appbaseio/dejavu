@@ -5,6 +5,7 @@ import { css } from 'emotion';
 import { PromotedResultsContext } from './PromotedResultsContainer';
 import PromotedJSONModal from './PromotedJSONModal';
 import DemoteButton from '../DataTable/DemoteButton';
+import EditPromotedResult from './EditPromotedResult';
 
 const tableStyles = css`
 	.ant-table td {
@@ -30,8 +31,14 @@ class PromotedResults extends React.Component {
 			let columnNames = [];
 			results.forEach(item =>
 				Object.keys(item).forEach(itemProperty => {
-					if (!columnNames.includes(itemProperty)) {
-						columnNames = [...columnNames, itemProperty];
+					if (
+						itemProperty !== 'key' &&
+						itemProperty !== '_index' &&
+						itemProperty !== '_type'
+					) {
+						if (!columnNames.includes(itemProperty)) {
+							columnNames = [...columnNames, itemProperty];
+						}
 					}
 				}),
 			);
@@ -40,31 +47,45 @@ class PromotedResults extends React.Component {
 		return [];
 	};
 
-	renderButtons = id => (
-		<React.Fragment>
-			<DemoteButton
-				item={{ _id: id }}
-				renderButton={({ demoteResult, isLoading }) => (
-					<Tooltip placement="top" title="Demote">
+	renderButtons = id => {
+		const item = this.context.promotedResults.find(
+			promotedItem => promotedItem._id === id,
+		);
+		return (
+			<React.Fragment>
+				<DemoteButton
+					item={{ _id: id }}
+					renderButton={({ demoteResult, isLoading }) => (
+						<Tooltip placement="top" title="Demote">
+							<Button
+								css={{ marginRight: 10 }}
+								shape="circle"
+								style={{ background: '#1890ff' }}
+								onClick={demoteResult}
+							>
+								<Icon
+									type={isLoading ? 'loading' : 'star'}
+									theme={isLoading ? 'outlined' : 'filled'}
+									style={{ color: '#fff' }}
+								/>
+							</Button>
+						</Tooltip>
+					)}
+				/>
+				<EditPromotedResult
+					item={item}
+					renderButton={({ callback }) => (
 						<Button
 							css={{ marginRight: 10 }}
 							shape="circle"
-							style={{ background: '#1890ff' }}
-							onClick={demoteResult}
-						>
-							<Icon
-								type={isLoading ? 'loading' : 'star'}
-								theme={isLoading ? 'outlined' : 'filled'}
-								style={{ color: '#fff' }}
-							/>
-						</Button>
-					</Tooltip>
-				)}
-			/>
-
-			<span>{id}</span>
-		</React.Fragment>
-	);
+							icon="edit"
+							onClick={callback}
+						/>
+					)}
+				/>
+			</React.Fragment>
+		);
+	};
 
 	render() {
 		const { promotedResults } = this.context;
@@ -74,10 +95,7 @@ class PromotedResults extends React.Component {
 			key: resultItem._id,
 		}));
 
-		const allColumns = this.getAllColumns(filteredResults).filter(
-			name => name !== 'key',
-		);
-
+		const allColumns = this.getAllColumns(filteredResults);
 		return (
 			<React.Fragment>
 				<div
@@ -88,17 +106,28 @@ class PromotedResults extends React.Component {
 						margin: '20px auto 10px',
 					}}
 				>
-					<h3 css={{ fontSize: 15, margin: 0 }}>
-						<Icon type="star" theme="filled" /> Promoted Results
-					</h3>
+					<div>
+						<h3 css={{ margin: 0 }}>
+							<Icon type="star" theme="filled" /> Promoted Results
+						</h3>
+						<p css={{ paddingLeft: 20 }} className="ant-form-extra">
+							Promoted results are returned by the API along with
+							the organic hits. Read more on how to use them{' '}
+							<a href="#" target="_blank">
+								here
+							</a>
+							.
+						</p>
+					</div>
 					<PromotedJSONModal
 						renderButton={({ clickHandler }) => (
 							<Button onClick={clickHandler} type="primary">
-								Add JSON
+								Add a manual promotion (JSON)
 							</Button>
 						)}
 					/>
 				</div>
+
 				{filteredResults && filteredResults.length > 0 ? (
 					<Table
 						dataSource={filteredResults}
@@ -110,7 +139,7 @@ class PromotedResults extends React.Component {
 							? allColumns.map(columnName =>
 									columnName === '_id' ? (
 										<Column
-											title={columnName}
+											title="Actions"
 											key={columnName}
 											dataIndex={columnName}
 											fixed

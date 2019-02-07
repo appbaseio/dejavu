@@ -103,7 +103,7 @@ class DemoteButton extends React.Component {
 				if (ruleRequest.status >= 400) {
 					message.error(ruleResponse.message);
 				} else {
-					message.success(ruleResponse.message);
+					message.success('Query Rule Updated!');
 					removeResult(item._id);
 				}
 			} catch (e) {

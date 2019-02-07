@@ -22,6 +22,19 @@ class HiddenResults extends React.Component {
 
 		return (
 			<React.Fragment>
+				<div css={{ margin: '25px 0 10px' }}>
+					<h3 css={{ margin: 0 }}>
+						<Icon type="eye-invisible" /> Hidden Results
+					</h3>
+					<p css={{ paddingLeft: 20 }} className="ant-form-extra">
+						Hidden results are not returned by the API when the
+						query matches the current query conditions. Read more{' '}
+						<a href="#" target="_blank">
+							here
+						</a>
+						.
+					</p>
+				</div>
 				{filteredResults.length > 0 ? (
 					<Collapse
 						bordered={false}
@@ -50,7 +63,9 @@ class HiddenResults extends React.Component {
 											title="Remove this item"
 										>
 											<Button
-												css={{ marginRight: 10 }}
+												css={{
+													marginRight: 10,
+												}}
 												type="danger"
 												loading={isLoading}
 												onClick={unHideItem}

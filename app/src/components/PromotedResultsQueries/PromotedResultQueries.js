@@ -5,6 +5,7 @@ import { css } from 'emotion';
 
 import QueryRuleModal from './QueryRuleModal';
 import { getUrlParams } from '../../utils';
+import AppPlanWrapper from '../DataBrowser/AppPlanWrapper';
 
 const { Option } = Select;
 
@@ -184,7 +185,7 @@ class PromotedResultQueries extends React.Component {
 			if (updateRequest.status >= 400) {
 				message.error(updateQueryResponse.message);
 			} else {
-				message.success(updateQueryResponse.message);
+				message.success('Query Rule Updated!');
 			}
 		} catch (e) {
 			message.error('Something went Wrong!');
@@ -294,7 +295,7 @@ class PromotedResultQueries extends React.Component {
 		];
 
 		return (
-			<React.Fragment>
+			<AppPlanWrapper appName={appname}>
 				<Table
 					bordered={false}
 					dataSource={queries}
@@ -305,17 +306,9 @@ class PromotedResultQueries extends React.Component {
 						<div
 							style={{
 								display: 'flex',
-								justifyContent: 'space-between',
+								justifyContent: 'flex-end',
 							}}
 						>
-							<h1
-								style={{
-									margin: 0,
-									color: 'rgba(0,0,0,.85)',
-								}}
-							>
-								Query Rules
-							</h1>
 							<QueryRuleModal
 								handleSuccess={data =>
 									this.redirectURL({ ...data, appname, url })
@@ -334,7 +327,7 @@ class PromotedResultQueries extends React.Component {
 						</div>
 					)}
 				/>
-			</React.Fragment>
+			</AppPlanWrapper>
 		);
 	}
 }

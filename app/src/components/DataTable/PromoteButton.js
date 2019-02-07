@@ -77,7 +77,8 @@ class PromoteButton extends React.Component {
 					searchParams.set('rule', ruleResponse.id);
 					window.location.search = searchParams.toString();
 				}
-				message.success(ruleResponse.message);
+
+				message.success('Query Rule Updated!');
 
 				if (appendResult) {
 					appendResult({

@@ -1,8 +1,15 @@
 import React from 'react';
 import { string, func } from 'prop-types';
 import { Modal, Select, Input, Form } from 'antd';
+import { css } from 'emotion';
 
 const { Option } = Select;
+
+const formWrapper = css`
+	.ant-form-item-label {
+		line-height: 16px;
+	}
+`;
 
 class QueryRuleModal extends React.Component {
 	constructor(props) {
@@ -74,15 +81,29 @@ class QueryRuleModal extends React.Component {
 						disabled: this.isCurationChanged(),
 					}}
 				>
-					<Form>
-						<Form.Item label="Query">
+					<Form className={formWrapper}>
+						<Form.Item label="Query" colon={false}>
+							<div
+								style={{ margin: '0 0 6px' }}
+								className="ant-form-extra"
+							>
+								When this query is typed by the user, this rule
+								will get triggered.
+							</div>
 							<Input
 								value={query}
 								placeholder="Enter the Query"
 								onChange={this.handleQuery}
 							/>
 						</Form.Item>
-						<Form.Item label="Operator">
+						<Form.Item label="Operator" colon={false}>
+							<div
+								style={{ margin: '0 0 6px' }}
+								className="ant-form-extra"
+							>
+								Operator specifies how the match should be
+								performed.
+							</div>
 							<Select
 								showSearch
 								placeholder="Select a Operator"

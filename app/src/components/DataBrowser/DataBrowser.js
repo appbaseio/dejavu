@@ -3,7 +3,7 @@
 import React, { Component, createRef } from 'react';
 import { ReactiveBase } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
-import { Skeleton, Icon } from 'antd';
+import { Skeleton } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
 import { AutoSizer } from 'react-virtualized';
 
@@ -32,6 +32,8 @@ import PromotedResultsContainer from './PromotedResultsContainer';
 import PromotedResults from './PromotedResults';
 import HiddenResults from './HiddenResults';
 import BackButton from './BackButton';
+import QueryInfo from './QueryInfo';
+import AppPlanWrapper from './AppPlanWrapper';
 
 type Props = {
 	url: string,
@@ -85,7 +87,7 @@ class DataBrowser extends Component<Props> {
 			};
 		}
 
-		const { appswitcher, showActions } = getUrlParams(
+		const { appswitcher, showActions, appname } = getUrlParams(
 			window.location.search,
 		);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
@@ -105,11 +107,15 @@ class DataBrowser extends Component<Props> {
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
-								<BackButton />
+								<AppPlanWrapper appName={appname}>
+									<BackButton />
 
-								<PromotedResults />
+									<PromotedResults />
 
-								<HiddenResults />
+									<HiddenResults />
+									<QueryInfo />
+								</AppPlanWrapper>
+
 								<div
 									id="result-list"
 									css={{

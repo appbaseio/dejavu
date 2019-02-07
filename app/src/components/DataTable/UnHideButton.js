@@ -99,7 +99,7 @@ class UnHideButton extends React.Component {
 				if (ruleRequest.status >= 400) {
 					message.error(ruleResponse.message);
 				} else {
-					message.success(ruleResponse.message);
+					message.success('Query Rule Updated!');
 
 					removeHiddenResult(id);
 				}
