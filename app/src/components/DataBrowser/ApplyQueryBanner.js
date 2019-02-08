@@ -30,7 +30,7 @@ const ApplyQueryBanner = ({
 	<>
 		{applyQuery && (
 			<Alert
-				css={{ marginTop: 10 }}
+				css={{ marginTop: 15 }}
 				message={
 					<div css={{ textAlign: 'center' }}>
 						All records matching current view query will be
@@ -54,7 +54,7 @@ const ApplyQueryBanner = ({
 
 		{selectAll && (
 			<Alert
-				css={{ marginTop: 10 }}
+				css={{ marginTop: 15 }}
 				message={
 					<div css={{ textAlign: 'center' }}>
 						All {selectedRows.length} docs from current page are

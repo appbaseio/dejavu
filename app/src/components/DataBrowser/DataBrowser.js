@@ -97,7 +97,7 @@ class DataBrowser extends Component<Props> {
 								<div
 									id="result-list"
 									css={{
-										marginTop: '20px',
+										marginTop: 15,
 										border: `1px solid ${
 											colors.tableBorderColor
 										}`,
