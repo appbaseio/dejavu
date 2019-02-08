@@ -103,7 +103,7 @@ class IdHeaderField extends PureComponent<Props> {
 							onChange={this.handleSelectAllRows}
 							checked={selectAll || applyQuery}
 							css={{
-								marginLeft: 8,
+								marginLeft: 7,
 							}}
 						/>
 					)}
@@ -122,11 +122,7 @@ class IdHeaderField extends PureComponent<Props> {
 							}}
 						>{` {...} `}</span>
 					</Popover>
-					<div
-						css={{
-							marginLeft: '10px',
-						}}
-					>
+					<div>
 						_id
 						<i
 							css={{
