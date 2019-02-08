@@ -143,7 +143,7 @@ class DataBrowser extends Component<Props> {
 						wrap="no-wrap"
 						alignItems="center"
 					>
-						<CloneApp />
+						{indexes.length <= 1 && <CloneApp />}
 						<AddRowModal />
 						<AddFieldModal />
 					</Flex>
