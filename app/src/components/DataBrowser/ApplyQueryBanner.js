@@ -8,6 +8,8 @@ import { setApplyQuery, setSelectedRows, setSelectAll } from '../../actions';
 import { getApplyQuery } from '../../reducers/applyQuery';
 import { getSelectAll } from '../../reducers/selectAll';
 import { getSelectedRows } from '../../reducers/selectedRows';
+import { getStats } from '../../reducers/stats';
+import { numberWithCommas } from '../../utils';
 import linkButton from '../CommonStyles/linkButton';
 
 type Props = {
@@ -17,6 +19,7 @@ type Props = {
 	onSetApplyQuery: boolean => void,
 	onSetSelectAll: boolean => void,
 	onSetSelectedRows: any => void,
+	stats: any,
 };
 
 const ApplyQueryBanner = ({
@@ -26,6 +29,7 @@ const ApplyQueryBanner = ({
 	onSetApplyQuery,
 	onSetSelectAll,
 	onSetSelectedRows,
+	stats,
 }: Props) => (
 	<>
 		{applyQuery && (
@@ -33,8 +37,7 @@ const ApplyQueryBanner = ({
 				css={{ marginTop: 15 }}
 				message={
 					<div css={{ textAlign: 'center' }}>
-						All records matching current view query will be
-						selected.{' '}
+						All {numberWithCommas(stats.totalResults)} docs selected
 						<button
 							type="button"
 							css={linkButton}
@@ -67,7 +70,8 @@ const ApplyQueryBanner = ({
 								onSetApplyQuery(true);
 							}}
 						>
-							Select all docs based on current view query.
+							Select all {numberWithCommas(stats.totalResults)}{' '}
+							docs instead
 						</button>
 					</div>
 				}
@@ -81,6 +85,7 @@ const mapStateToProps = state => ({
 	applyQuery: getApplyQuery(state),
 	selectAll: getSelectAll(state),
 	selectedRows: getSelectedRows(state),
+	stats: getStats(state),
 });
 
 const mapDispatchToProps = {

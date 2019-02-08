@@ -14,10 +14,12 @@ import { getAppname, getUrl } from '../../reducers/app';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getApplyQuery } from '../../reducers/applyQuery';
 import { getQuery } from '../../reducers/query';
+import { getStats } from '../../reducers/stats';
 import { META_FIELDS } from '../../utils/mappings';
 import labelStyles from '../CommonStyles/label';
 import colors from '../theme/colors';
 import { bulkUpdate } from '../../apis/data';
+import { numberWithCommas } from '../../utils';
 import {
 	setError,
 	clearError,
@@ -47,6 +49,7 @@ type Props = {
 	query: any,
 	onSetApplyQuery: boolean => void,
 	onSetSelectAll: boolean => void,
+	stats: any,
 };
 
 type State = {
@@ -201,7 +204,14 @@ class MultipeUpdate extends Component<Props, State> {
 
 	render() {
 		const { data, isShowingModal, isSavingData } = this.state;
-		const { columns, mappings, appname } = this.props;
+		const {
+			columns,
+			mappings,
+			appname,
+			stats,
+			selectedIds,
+			applyQuery,
+		} = this.props;
 		const { properties } = mappings[appname];
 		return (
 			<Fragment>
@@ -220,7 +230,11 @@ class MultipeUpdate extends Component<Props, State> {
 					visible={isShowingModal}
 					onCancel={this.toggleModal}
 					footer={null}
-					title="Update Multiple Rows"
+					title={`Update Multiple Rows (${
+						applyQuery
+							? numberWithCommas(stats.totalResults)
+							: selectedIds.length
+					} rows selected)`}
 					css={{
 						top: '10px',
 					}}
@@ -230,15 +244,13 @@ class MultipeUpdate extends Component<Props, State> {
 					afterClose={this.handleAfterClose}
 				>
 					{data.map((item, i) => (
-						<Flex
-							flexDirection="column"
-							key={item.field || 'new col'}
-						>
+						<Flex flexDirection="column" key={item.field || i}>
 							<Flex
 								justifyContent="flex-end"
 								alignItems="center"
 								css={{
 									marginRight: 25,
+									height: properties[item.field] ? 'auto' : 0,
 								}}
 							>
 								{properties[item.field] &&
@@ -250,10 +262,7 @@ class MultipeUpdate extends Component<Props, State> {
 									/>
 								)}
 							</Flex>
-							<Flex
-								css={{ marginBottom: 10 }}
-								alignItems="center"
-							>
+							<Flex alignItems="center">
 								<div css={{ flex: 1, marginLeft: 5 }}>
 									<Select
 										showSearch
@@ -383,6 +392,7 @@ const mapStateToProps = state => ({
 	types: getTypes(state),
 	applyQuery: getApplyQuery(state),
 	query: getQuery(state),
+	stats: getStats(state),
 });
 
 const mapDispatchToProps = {

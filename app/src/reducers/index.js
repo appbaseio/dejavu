@@ -18,6 +18,7 @@ import version from './version';
 import query from './query';
 import applyQuery from './applyQuery';
 import selectAll from './selectAll';
+import stats from './stats';
 
 const appReducer = combineReducers({
 	app,
@@ -36,6 +37,7 @@ const appReducer = combineReducers({
 	query,
 	applyQuery,
 	selectAll,
+	stats,
 	...batteriesReducers,
 });
 

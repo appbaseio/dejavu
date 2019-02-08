@@ -19,10 +19,11 @@ import { getCurrentIds } from '../../reducers/currentIds';
 import { getSelectAll } from '../../reducers/selectAll';
 import { getApplyQuery } from '../../reducers/applyQuery';
 import { getPageSize } from '../../reducers/pageSize';
+import { getStats } from '../../reducers/stats';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
-import { getUrlParams, minTwoDigits } from '../../utils';
+import { getUrlParams, minTwoDigits, numberWithCommas } from '../../utils';
 
 type Props = {
 	onSelectedRows: any => void,
@@ -35,6 +36,7 @@ type Props = {
 	applyQuery: boolean,
 	onSetApplyQuery: boolean => void,
 	pageSize: number,
+	stats: any,
 };
 
 class IdHeaderField extends PureComponent<Props> {
@@ -68,6 +70,7 @@ class IdHeaderField extends PureComponent<Props> {
 			selectedRows,
 			applyQuery,
 			pageSize,
+			stats,
 		} = this.props;
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
@@ -131,7 +134,11 @@ class IdHeaderField extends PureComponent<Props> {
 							}}
 						>
 							{selectedRows.length > 0 &&
-								`  (${selectedRows.length} rows selected)`}
+								`  (${
+									applyQuery
+										? numberWithCommas(stats.totalResults)
+										: selectedRows.length
+								} rows selected)`}
 						</i>
 					</div>
 				</Flex>
@@ -147,6 +154,7 @@ const mapStateToProps = state => ({
 	selectAll: getSelectAll(state),
 	applyQuery: getApplyQuery(state),
 	pageSize: getPageSize(state),
+	stats: getStats(state),
 });
 
 const mapDispatchToProps = {

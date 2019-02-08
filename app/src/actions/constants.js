@@ -83,6 +83,10 @@ const APPLY_QUERY = {
 	SET_APPLY_QUERY: 'SET_APPLY_QUERY',
 };
 
+const STATS = {
+	SET_STATS: 'SET_STATS',
+};
+
 export {
 	APP,
 	CELL,
@@ -100,4 +104,5 @@ export {
 	QUERY,
 	SELECT_ALL,
 	APPLY_QUERY,
+	STATS,
 };

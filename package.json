@@ -8,7 +8,7 @@
 		"url": "https://github.com/appbaseio/dejavu/issues"
 	},
 	"engines": {
-		"node": ">=10",
+		"node": ">=8",
 		"yarn": ">=1.3.2"
 	},
 	"scripts": {

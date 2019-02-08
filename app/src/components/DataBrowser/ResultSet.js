@@ -25,6 +25,7 @@ import {
 	setQuery,
 	setSelectAll,
 	setApplyQuery,
+	setStats,
 } from '../../actions';
 import colors from '../theme/colors';
 
@@ -44,6 +45,7 @@ type Props = {
 	headerRef: any,
 	onSetSelectAll: boolean => void,
 	onSetApplyQuery: boolean => void,
+	onSetStats: any => void,
 };
 
 const ResultSet = ({
@@ -62,6 +64,7 @@ const ResultSet = ({
 	headerRef,
 	onSetSelectAll,
 	onSetApplyQuery,
+	onSetStats,
 }: Props) => {
 	const { results } = getUrlParams(window.location.search);
 	const currentPage = parseInt(results || 1, 10);
@@ -137,6 +140,9 @@ const ResultSet = ({
 					/>
 				) : null
 			}
+			onResultStats={stats => {
+				onSetStats(stats);
+			}}
 			renderResultStats={stats => (
 				<Flex
 					justifyContent="center"
@@ -188,6 +194,7 @@ const mapDispatchToProps = {
 	onSetQuery: setQuery,
 	onSetSelectAll: setSelectAll,
 	onSetApplyQuery: setApplyQuery,
+	onSetStats: setStats,
 };
 
 export default connect(

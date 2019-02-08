@@ -39,6 +39,7 @@ import setVersion from './version';
 import setQuery from './query';
 import setSelectAll from './selectAll';
 import setApplyQuery from './applyQuery';
+import setStats from './stats';
 
 export {
 	// app
@@ -92,4 +93,6 @@ export {
 	setSelectAll,
 	// apply query
 	setApplyQuery,
+	// stats
+	setStats,
 };
