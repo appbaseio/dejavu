@@ -18,9 +18,11 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getCurrentIds } from '../../reducers/currentIds';
 import { getSelectAll } from '../../reducers/selectAll';
 import { getApplyQuery } from '../../reducers/applyQuery';
+import { getPageSize } from '../../reducers/pageSize';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
+import { getUrlParams, minTwoDigits } from '../../utils';
 
 type Props = {
 	onSelectedRows: any => void,
@@ -32,6 +34,7 @@ type Props = {
 	onSetSelectAll: boolean => void,
 	applyQuery: boolean,
 	onSetApplyQuery: boolean => void,
+	pageSize: number,
 };
 
 class IdHeaderField extends PureComponent<Props> {
@@ -59,7 +62,15 @@ class IdHeaderField extends PureComponent<Props> {
 	};
 
 	render() {
-		const { selectAll, mode, selectedRows, applyQuery } = this.props;
+		const {
+			selectAll,
+			mode,
+			selectedRows,
+			applyQuery,
+			pageSize,
+		} = this.props;
+		const { results } = getUrlParams(window.location.search);
+		const currentPage = parseInt(results || 1, 10);
 		return (
 			<StyledCell
 				css={{
@@ -84,21 +95,18 @@ class IdHeaderField extends PureComponent<Props> {
 					justifyContent="left"
 					wrap="nowrap"
 				>
-					<Flex
-						css={{
-							marginLeft: 12,
-							marginRight: 7,
-						}}
-						alignItems="center"
-						justifyContent="center"
-					>
-						{mode === MODES.EDIT && (
-							<Checkbox
-								onChange={this.handleSelectAllRows}
-								checked={selectAll || applyQuery}
-							/>
-						)}
-					</Flex>
+					<div css={{ visibility: 'hidden' }}>
+						{minTwoDigits(pageSize * (currentPage - 1) + pageSize)}
+					</div>
+					{mode === MODES.EDIT && (
+						<Checkbox
+							onChange={this.handleSelectAllRows}
+							checked={selectAll || applyQuery}
+							css={{
+								marginLeft: 8,
+							}}
+						/>
+					)}
 					<Popover
 						content={
 							<div css={popoverContent}>
@@ -110,8 +118,7 @@ class IdHeaderField extends PureComponent<Props> {
 						<span
 							css={{
 								cursor: 'pointer',
-								maxWidth: '10%',
-								minWidth: '10%',
+								margin: '0 7px',
 							}}
 						>{` {...} `}</span>
 					</Popover>
@@ -143,6 +150,7 @@ const mapStateToProps = state => ({
 	mode: getMode(state),
 	selectAll: getSelectAll(state),
 	applyQuery: getApplyQuery(state),
+	pageSize: getPageSize(state),
 });
 
 const mapDispatchToProps = {

@@ -122,6 +122,8 @@ const ResultSet = ({
 			onPageChange={() => {
 				onSelectedRows([]);
 				onSetUpdatingRow(null);
+				onSetSelectAll(false);
+				onSetApplyQuery(false);
 			}}
 			renderAllData={({ results: data }) =>
 				data.length ? (
