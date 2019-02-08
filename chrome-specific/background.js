@@ -4,3 +4,5 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		popup: 'popup.html',
 	});
 });
+
+chrome.runtime.setUninstallURL('https://siddharth31.typeform.com/to/Z8AUHk');
