@@ -24,6 +24,7 @@ import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
 import { getUrlParams, minTwoDigits, numberWithCommas } from '../../utils';
+import overflowText from './overflow.style';
 
 type Props = {
 	onSelectedRows: any => void,
@@ -125,7 +126,7 @@ class IdHeaderField extends PureComponent<Props> {
 							}}
 						>{` {...} `}</span>
 					</Popover>
-					<div>
+					<div css={overflowText}>
 						_id
 						<i
 							css={{
