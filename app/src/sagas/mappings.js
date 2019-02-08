@@ -168,17 +168,21 @@ function* handleFetchMappings() {
 			];
 
 			const termsAggregationColumns = [
-				'_type',
-				'_index',
-				...getTermsAggregationColumns(properties),
-				...getTermsAggregationColumns(nestedProperties),
+				...new Set([
+					'_type',
+					'_index',
+					...getTermsAggregationColumns(properties),
+					...getTermsAggregationColumns(nestedProperties),
+				]),
 			];
 
 			const sortableColumns = [
-				'_type',
-				'_index',
-				...getSortableColumns(properties),
-				...getSortableColumns(nestedProperties),
+				...new Set([
+					'_type',
+					'_index',
+					...getSortableColumns(properties),
+					...getSortableColumns(nestedProperties),
+				]),
 			];
 
 			const shouldShowNestedSwitch = hasNestedColumns(

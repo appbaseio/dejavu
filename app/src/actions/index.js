@@ -36,6 +36,10 @@ import { setSort, resetSort } from './sort';
 import setPageSize from './pageSize';
 import setIsShwoingNestedColumn from './nestedColumns';
 import setVersion from './version';
+import setQuery from './query';
+import setSelectAll from './selectAll';
+import setApplyQuery from './applyQuery';
+import setStats from './stats';
 
 export {
 	// app
@@ -83,4 +87,12 @@ export {
 	setIsShwoingNestedColumn,
 	// version
 	setVersion,
+	// query
+	setQuery,
+	// select all
+	setSelectAll,
+	// apply query
+	setApplyQuery,
+	// stats
+	setStats,
 };

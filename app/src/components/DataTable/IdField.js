@@ -9,7 +9,7 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getMode } from '../../reducers/mode';
 import { getPageSize } from '../../reducers/pageSize';
 import { MODES } from '../../constants';
-import { getOnlySource, getUrlParams } from '../../utils';
+import { getOnlySource, getUrlParams, minTwoDigits } from '../../utils';
 
 import Flex from '../Flex';
 import JsonView from '../JsonView';
@@ -58,8 +58,8 @@ class IdField extends Component<Props> {
 	render() {
 		const {
 			value,
-			selectedRows,
 			mode,
+			selectedRows,
 			data,
 			rowIndex,
 			pageSize,
@@ -69,44 +69,21 @@ class IdField extends Component<Props> {
 
 		return (
 			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
-				<div
-					css={{
-						maxWidth: '15%',
-						minWidth: '15%',
-						display: 'flex',
-						justifyContent: 'center',
-						alignItems: 'center',
-						'.ant-checkbox-wrapper': {
-							display:
-								selectedRows.indexOf(value) > -1
-									? 'block !important'
-									: 'none',
-						},
-						'&:hover': {
-							'.ant-checkbox-wrapper': {
-								display:
-									mode === MODES.EDIT
-										? 'block !important'
-										: 'none',
-							},
-							'.index-no': {
-								display: mode === MODES.EDIT ? 'none' : 'block',
-							},
-						},
-					}}
-				>
+				<div>
+					{minTwoDigits(
+						pageSize * (currentPage - 1) + (rowIndex + 1),
+					)}
+				</div>
+				{mode === MODES.EDIT && (
 					<Checkbox
 						onChange={this.handleRowSelectChange}
 						value={value}
 						checked={selectedRows.indexOf(value) > -1}
+						css={{
+							marginLeft: 8,
+						}}
 					/>
-
-					{selectedRows.indexOf(value) === -1 && (
-						<div className="index-no">
-							{pageSize * (currentPage - 1) + (rowIndex + 1)}
-						</div>
-					)}
-				</div>
+				)}
 				<Popover
 					content={
 						<div css={popoverContent}>
@@ -118,8 +95,7 @@ class IdField extends Component<Props> {
 					<span
 						css={{
 							cursor: 'pointer',
-							maxWidth: '10%',
-							minWidth: '10%',
+							margin: '0 7px',
 						}}
 					>{` {...} `}</span>
 				</Popover>
@@ -131,9 +107,6 @@ class IdField extends Component<Props> {
 					<div
 						css={{
 							cursor: 'pointer',
-							maxWidth: '75%',
-							minWidth: '75%',
-							marginLeft: '10px',
 							...overflowText,
 						}}
 					>

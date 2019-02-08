@@ -15,6 +15,10 @@ import pageSize from './pageSize';
 import nestedColumns from './nestedColumns';
 import batteriesReducers from '../batteries/modules/reducers';
 import version from './version';
+import query from './query';
+import applyQuery from './applyQuery';
+import selectAll from './selectAll';
+import stats from './stats';
 
 const appReducer = combineReducers({
 	app,
@@ -30,6 +34,10 @@ const appReducer = combineReducers({
 	pageSize,
 	nestedColumns,
 	version,
+	query,
+	applyQuery,
+	selectAll,
+	stats,
 	...batteriesReducers,
 });
 

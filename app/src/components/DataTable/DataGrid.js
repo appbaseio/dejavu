@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment, createRef } from 'react';
+import React, { Component, createRef } from 'react';
 import get from 'lodash/get';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Grid, ScrollSync } from 'react-virtualized';
@@ -14,6 +14,7 @@ import Flex from '../Flex';
 import { META_FIELDS } from '../../utils/mappings';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
+import { isEqualArray } from '../../utils';
 
 const OVERSCAN_COUNT = 3;
 const HEIGHT_BUFFER = 32;
@@ -41,22 +42,46 @@ type Props = {
 	headerRef: any,
 };
 
-class DataGrid extends Component<Props> {
-	dataGridRef = createRef();
+type State = {
+	updateKey: number,
+};
+class DataGrid extends Component<Props, State> {
+	dataGridRef: any = createRef();
 
-	dataScrollRef = createRef();
+	dataScrollRef: any = createRef();
 
-	componentDidUpdate() {
+	state = {
+		updateKey: Date.now(),
+	};
+
+	componentDidMount() {
+		this.handleScrollLeft();
+	}
+
+	componentDidUpdate(prevProps: any) {
+		this.handleScrollLeft();
+
+		if (!isEqualArray(prevProps.data, this.props.data)) {
+			this.setUpdateKey();
+		}
+	}
+
+	setUpdateKey = () => {
+		this.setState(prevState => ({
+			updateKey: prevState.updateKey + 1,
+		}));
+	};
+
+	handleScrollLeft = () => {
 		const { headerRef } = this.props;
 		if (
 			headerRef &&
 			headerRef.current &&
 			headerRef.current.scrollLeft > 0
 		) {
-			// $FlowFixMe
 			this.dataScrollRef.current.scrollLeft(headerRef.current.scrollLeft);
 		}
-	}
+	};
 
 	handleScroll = ({ target }: any) => {
 		const { scrollTop, scrollLeft } = target;
@@ -151,12 +176,13 @@ class DataGrid extends Component<Props> {
 			nestedVisibleColumns,
 			visibleColumns,
 		} = this.props;
+		const { updateKey } = this.state;
 		const columns = isShowingNestedColumns
 			? nestedVisibleColumns
 			: visibleColumns;
 
 		return (
-			<Fragment>
+			<div key={updateKey}>
 				<ScrollSync>
 					{({ onScroll, scrollTop }) => (
 						<Flex wrap="nowrap">
@@ -210,7 +236,7 @@ class DataGrid extends Component<Props> {
 						</Flex>
 					)}
 				</ScrollSync>
-			</Fragment>
+			</div>
 		);
 	}
 }

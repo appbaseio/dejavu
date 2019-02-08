@@ -197,6 +197,8 @@ const trimUrl = url => {
 	return url;
 };
 
+const minTwoDigits = n => (n < 10 ? '0' : '') + n;
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -217,4 +219,5 @@ export {
 	saveAppToLocalStorage,
 	getCloneLink,
 	trimUrl,
+	minTwoDigits,
 };

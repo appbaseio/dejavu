@@ -87,27 +87,121 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 	}
 };
 
-export const deleteData = async (indexName, typeName, docIds, rawUrl) => {
+export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
 	const defaultError = 'Unable to delete data';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let data = '';
-		docIds.forEach(item => {
-			data += JSON.stringify({
-				delete: { _index: indexName, _type: typeName, _id: item },
-			});
-			data += `\n`;
-		});
-		const res = await fetch(`${url}/${indexName}/${typeName}/_bulk`, {
-			headers: {
-				...headers,
-				...convertArrayToHeaders(customHeaders),
+		let query = {};
+
+		if (Array.isArray(queryData)) {
+			query = {
+				query: {
+					ids: {
+						values: queryData,
+					},
+				},
+			};
+		} else {
+			query = {
+				query: queryData,
+			};
+		}
+
+		const data = {
+			...query,
+		};
+		const res = await fetch(
+			`${url}/${indexName}/${typeName}/_delete_by_query`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify(data),
 			},
-			method: 'POST',
-			body: data,
-		}).then(response => response.json());
+		).then(response => response.json());
+
+		if (res.status >= 400) {
+			throw new CustomError(
+				JSON.stringify(res.error, null, 2),
+				`HTTP STATUS: ${res.status} - ${res.message || defaultError}`,
+			);
+		}
+		return res;
+	} catch (error) {
+		throw new CustomError(
+			error.description || error.message || defaultError,
+			error.message,
+			error.stack,
+		);
+	}
+};
+
+export const bulkUpdate = async (
+	rawUrl,
+	indexName,
+	typeName,
+	queryData,
+	updateData,
+) => {
+	const defaultError = 'Unable to update data';
+	try {
+		const { url } = parseUrl(rawUrl);
+		const headers = getHeaders(rawUrl);
+		const customHeaders = getCustomHeaders(indexName);
+		const dataMap = updateData.reduce((str, item) => {
+			let tempStr = str;
+			if (item.value !== null) {
+				tempStr += `ctx._source.${item.field}=`;
+				if (typeof item.value === 'string') {
+					tempStr += `"${item.value}";`;
+				} else {
+					tempStr += `${JSON.stringify(item.value)
+						.replace(/{/g, '[')
+						.replace(/}/g, ']')};`;
+				}
+			}
+
+			return tempStr;
+		}, '');
+
+		let query = {};
+
+		if (Array.isArray(queryData)) {
+			query = {
+				query: {
+					ids: {
+						values: queryData,
+					},
+				},
+			};
+		} else {
+			query = {
+				query: queryData,
+			};
+		}
+
+		const data = {
+			...query,
+			script: {
+				inline: dataMap,
+			},
+		};
+
+		const res = await fetch(
+			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify(data),
+			},
+		).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(

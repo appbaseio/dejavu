@@ -19,7 +19,14 @@ import {
 	getTermsAggregationColumns,
 	getMappings,
 } from '../../reducers/mappings';
-import { setSelectedRows, setUpdatingRow } from '../../actions';
+import {
+	setSelectedRows,
+	setUpdatingRow,
+	setQuery,
+	setSelectAll,
+	setApplyQuery,
+	setStats,
+} from '../../actions';
 import colors from '../theme/colors';
 
 type Props = {
@@ -30,11 +37,15 @@ type Props = {
 	termsAggregationColumns: any,
 	onSelectedRows: any => void,
 	onSetUpdatingRow: any => void,
+	onSetQuery: any => void,
 	mappings: any,
 	appname: string,
 	height: number,
 	width: number,
 	headerRef: any,
+	onSetSelectAll: boolean => void,
+	onSetApplyQuery: boolean => void,
+	onSetStats: any => void,
 };
 
 const ResultSet = ({
@@ -45,11 +56,15 @@ const ResultSet = ({
 	termsAggregationColumns,
 	onSelectedRows,
 	onSetUpdatingRow,
+	onSetQuery,
 	mappings,
 	appname,
 	height,
 	width,
 	headerRef,
+	onSetSelectAll,
+	onSetApplyQuery,
+	onSetStats,
 }: Props) => {
 	const { results } = getUrlParams(window.location.search);
 	const currentPage = parseInt(results || 1, 10);
@@ -95,7 +110,7 @@ const ResultSet = ({
 					css={{
 						minHeight: 150,
 						position: 'absolute',
-						top: 32,
+						top: 0,
 						left: 2,
 						right: 2,
 						bottom: 2,
@@ -110,8 +125,10 @@ const ResultSet = ({
 			onPageChange={() => {
 				onSelectedRows([]);
 				onSetUpdatingRow(null);
+				onSetSelectAll(false);
+				onSetApplyQuery(false);
 			}}
-			onAllData={data =>
+			renderAllData={({ results: data }) =>
 				data.length ? (
 					<DataTable
 						key={data.length ? data[0]._id : '0'}
@@ -123,7 +140,10 @@ const ResultSet = ({
 					/>
 				) : null
 			}
-			onResultStats={total => (
+			onResultStats={stats => {
+				onSetStats(stats);
+			}}
+			renderResultStats={stats => (
 				<Flex
 					justifyContent="center"
 					alignItems="center"
@@ -142,10 +162,15 @@ const ResultSet = ({
 						},
 					}}
 				>
-					<b>{numberWithCommas(total)}</b>
-					&nbsp;results
+					Showing <b>{numberWithCommas(stats.displayedResults)}</b> of
+					total <b>{numberWithCommas(stats.totalResults)}</b>
 				</Flex>
 			)}
+			onQueryChange={(prevQuery, nextQuery) => {
+				onSetQuery(nextQuery);
+				onSetSelectAll(false);
+				onSetApplyQuery(false);
+			}}
 		/>
 	);
 };
@@ -166,6 +191,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
 	onSelectedRows: setSelectedRows,
 	onSetUpdatingRow: setUpdatingRow,
+	onSetQuery: setQuery,
+	onSetSelectAll: setSelectAll,
+	onSetApplyQuery: setApplyQuery,
+	onSetStats: setStats,
 };
 
 export default connect(

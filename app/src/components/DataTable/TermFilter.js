@@ -41,7 +41,7 @@ const TermFilter = ({ field }: Props) => {
 							width: 'calc(12px / 2) !important',
 							height: 'calc(12px / 5) !important',
 							marginTop: 'calc(12px / -2 / 2 * 0.8) !important',
-							top: '14px !important',
+							top: '8px !important',
 						},
 						'.ant-checkbox-input + label::before': {
 							borderRadius: '3px',

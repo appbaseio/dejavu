@@ -7,11 +7,15 @@ import { connect } from 'react-redux';
 import { getUrl } from '../../reducers/app';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getIndexes, getTypes } from '../../reducers/mappings';
+import { getApplyQuery } from '../../reducers/applyQuery';
+import { getQuery } from '../../reducers/query';
 import {
 	setError,
 	clearError,
 	updateReactiveList,
 	setSelectedRows,
+	setSelectAll,
+	setApplyQuery,
 } from '../../actions';
 import { deleteData } from '../../apis/data';
 
@@ -24,6 +28,10 @@ type Props = {
 	clearError: () => void,
 	updateReactiveList: () => void,
 	setSelectedRows: any => void,
+	applyQuery: boolean,
+	query: any,
+	onSetApplyQuery: boolean => void,
+	onSetSelectAll: boolean => void,
 };
 
 class DeleteRows extends Component<Props> {
@@ -37,19 +45,25 @@ class DeleteRows extends Component<Props> {
 			clearError: onClearError,
 			updateReactiveList: onUpdateReactiveList,
 			setSelectedRows: onSetSelectedRows,
+			onSetApplyQuery,
+			onSetSelectAll,
+			applyQuery,
+			query,
 		} = this.props;
-
+		const queryData = applyQuery ? query.query : selectedRows;
 		try {
 			onClearError();
 			await deleteData(
+				appUrl,
 				indexes.join(','),
 				types.join(','),
-				selectedRows,
-				appUrl,
+				queryData,
 			);
 			setTimeout(() => {
-				onUpdateReactiveList();
 				onSetSelectedRows([]);
+				onSetSelectAll(false);
+				onSetApplyQuery(false);
+				onUpdateReactiveList();
 			}, 100);
 		} catch (error) {
 			onSetError(error);
@@ -82,6 +96,8 @@ const mpaStateToProps = state => ({
 	selectedRows: getSelectedRows(state),
 	indexes: getIndexes(state),
 	types: getTypes(state),
+	applyQuery: getApplyQuery(state),
+	query: getQuery(state),
 });
 
 const mapDispatchToProps = {
@@ -89,6 +105,8 @@ const mapDispatchToProps = {
 	clearError,
 	updateReactiveList,
 	setSelectedRows,
+	onSetApplyQuery: setApplyQuery,
+	onSetSelectAll: setSelectAll,
 };
 export default connect(
 	mpaStateToProps,

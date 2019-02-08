@@ -14,6 +14,7 @@ import DeleteRows from './DeleteRows';
 import UpdateRow from './UpdateRow';
 import PageSize from './PageSize';
 import SortFilter from './SortFilter';
+import MultipleUpdate from './MultipleUpdate';
 
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getUpdatingRow } from '../../reducers/updatingRow';
@@ -39,7 +40,7 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 				{selectedRows.length > 0 ? (
 					<Fragment>
 						<DeleteRows />
-						{updatingRow && <UpdateRow />}
+						{updatingRow ? <UpdateRow /> : <MultipleUpdate />}
 					</Fragment>
 				) : (
 					<Fragment>
@@ -58,7 +59,7 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 			<Flex alignItems="center">
 				<SelectedFilters
 					css={{
-						marginRight: 5,
+						marginRight: '5px !important',
 					}}
 				/>
 				<SortFilter />

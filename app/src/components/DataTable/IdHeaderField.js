@@ -7,13 +7,24 @@ import { mediaMin } from '@divyanshu013/media';
 import StyledCell from './StyledCell';
 import Flex from '../Flex';
 
-import { setSelectedRows, setUpdatingRow } from '../../actions';
+import {
+	setSelectedRows,
+	setUpdatingRow,
+	setSelectAll,
+	setApplyQuery,
+} from '../../actions';
 import { getMode } from '../../reducers/mode';
 import { getSelectedRows } from '../../reducers/selectedRows';
 import { getCurrentIds } from '../../reducers/currentIds';
+import { getSelectAll } from '../../reducers/selectAll';
+import { getApplyQuery } from '../../reducers/applyQuery';
+import { getPageSize } from '../../reducers/pageSize';
+import { getStats } from '../../reducers/stats';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
+import { getUrlParams, minTwoDigits, numberWithCommas } from '../../utils';
+import overflowText from './overflow.style';
 
 type Props = {
 	onSelectedRows: any => void,
@@ -21,6 +32,12 @@ type Props = {
 	currentIds: string[],
 	selectedRows: string[],
 	mode: string,
+	selectAll: boolean,
+	onSetSelectAll: boolean => void,
+	applyQuery: boolean,
+	onSetApplyQuery: boolean => void,
+	pageSize: number,
+	stats: any,
 };
 
 class IdHeaderField extends PureComponent<Props> {
@@ -28,18 +45,36 @@ class IdHeaderField extends PureComponent<Props> {
 		const {
 			target: { checked },
 		} = e;
-		const { onSelectedRows, onSetUpdatingRow, currentIds } = this.props;
+		const {
+			onSelectedRows,
+			onSetUpdatingRow,
+			currentIds,
+			onSetSelectAll,
+			onSetApplyQuery,
+		} = this.props;
 
 		if (checked) {
 			onSelectedRows(currentIds);
+			onSetSelectAll(true);
 		} else {
 			onSelectedRows([]);
+			onSetSelectAll(false);
 		}
+		onSetApplyQuery(false);
 		onSetUpdatingRow(null);
 	};
 
 	render() {
-		const { selectedRows, mode, currentIds } = this.props;
+		const {
+			selectAll,
+			mode,
+			selectedRows,
+			applyQuery,
+			pageSize,
+			stats,
+		} = this.props;
+		const { results } = getUrlParams(window.location.search);
+		const currentPage = parseInt(results || 1, 10);
 		return (
 			<StyledCell
 				css={{
@@ -64,24 +99,18 @@ class IdHeaderField extends PureComponent<Props> {
 					justifyContent="left"
 					wrap="nowrap"
 				>
-					<Flex
-						css={{
-							width: '15%',
-						}}
-						alignItems="center"
-						justifyContent="center"
-					>
-						{selectedRows.length >= 1 &&
-							mode === MODES.EDIT && (
-								<Checkbox
-									onChange={this.handleSelectAllRows}
-									checked={
-										selectedRows.length ===
-										currentIds.length
-									}
-								/>
-							)}
-					</Flex>
+					<div css={{ visibility: 'hidden' }}>
+						{minTwoDigits(pageSize * (currentPage - 1) + pageSize)}
+					</div>
+					{mode === MODES.EDIT && (
+						<Checkbox
+							onChange={this.handleSelectAllRows}
+							checked={selectAll || applyQuery}
+							css={{
+								marginLeft: 7,
+							}}
+						/>
+					)}
 					<Popover
 						content={
 							<div css={popoverContent}>
@@ -93,16 +122,11 @@ class IdHeaderField extends PureComponent<Props> {
 						<span
 							css={{
 								cursor: 'pointer',
-								maxWidth: '10%',
-								minWidth: '10%',
+								margin: '0 7px',
 							}}
 						>{` {...} `}</span>
 					</Popover>
-					<div
-						css={{
-							marginLeft: '10px',
-						}}
-					>
+					<div css={overflowText}>
 						_id
 						<i
 							css={{
@@ -111,7 +135,11 @@ class IdHeaderField extends PureComponent<Props> {
 							}}
 						>
 							{selectedRows.length > 0 &&
-								`  (${selectedRows.length} rows selected)`}
+								`  (${
+									applyQuery
+										? numberWithCommas(stats.totalResults)
+										: selectedRows.length
+								} rows selected)`}
 						</i>
 					</div>
 				</Flex>
@@ -124,11 +152,17 @@ const mapStateToProps = state => ({
 	currentIds: getCurrentIds(state),
 	selectedRows: getSelectedRows(state),
 	mode: getMode(state),
+	selectAll: getSelectAll(state),
+	applyQuery: getApplyQuery(state),
+	pageSize: getPageSize(state),
+	stats: getStats(state),
 });
 
 const mapDispatchToProps = {
 	onSelectedRows: setSelectedRows,
 	onSetUpdatingRow: setUpdatingRow,
+	onSetSelectAll: setSelectAll,
+	onSetApplyQuery: setApplyQuery,
 };
 
 export default connect(
