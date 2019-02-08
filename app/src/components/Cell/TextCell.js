@@ -60,7 +60,13 @@ const TextCell = ({
 				>
 					{children && (
 						<div
-							css={{ ...overflowText, cursor: 'pointer' }}
+							css={{
+								...overflowText,
+								cursor: 'pointer',
+								height: mode === MODES.EDIT ? 45 : 30,
+								lineHeight:
+									mode === MODES.EDIT ? '45px' : '30px',
+							}}
 							dangerouslySetInnerHTML={{ __html: children }}
 						/>
 					)}
