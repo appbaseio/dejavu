@@ -23,7 +23,7 @@ import { getStats } from '../../reducers/stats';
 import popoverContent from '../CommonStyles/popoverContent';
 import { MODES } from '../../constants';
 import colors from '../theme/colors';
-import { getUrlParams, minTwoDigits, numberWithCommas } from '../../utils';
+import { getUrlParams, numberWithCommas } from '../../utils';
 import overflowText from './overflow.style';
 
 type Props = {
@@ -100,7 +100,7 @@ class IdHeaderField extends PureComponent<Props> {
 					wrap="nowrap"
 				>
 					<div css={{ visibility: 'hidden' }}>
-						{minTwoDigits(pageSize * (currentPage - 1) + pageSize)}
+						{pageSize * (currentPage - 1) + pageSize}
 					</div>
 					{mode === MODES.EDIT && (
 						<Checkbox

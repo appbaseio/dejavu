@@ -234,7 +234,7 @@ class MultipeUpdate extends Component<Props, State> {
 						applyQuery
 							? numberWithCommas(stats.totalResults)
 							: selectedIds.length
-					} rows selected)`}
+					} docs selected)`}
 					css={{
 						top: '10px',
 					}}

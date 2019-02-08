@@ -9,7 +9,7 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getMode } from '../../reducers/mode';
 import { getPageSize } from '../../reducers/pageSize';
 import { MODES } from '../../constants';
-import { getOnlySource, getUrlParams, minTwoDigits } from '../../utils';
+import { getOnlySource, getUrlParams, convertToMax } from '../../utils';
 
 import Flex from '../Flex';
 import JsonView from '../JsonView';
@@ -70,8 +70,9 @@ class IdField extends Component<Props> {
 		return (
 			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
 				<div>
-					{minTwoDigits(
+					{convertToMax(
 						pageSize * (currentPage - 1) + (rowIndex + 1),
+						pageSize * (currentPage - 1) + pageSize,
 					)}
 				</div>
 				{mode === MODES.EDIT && (

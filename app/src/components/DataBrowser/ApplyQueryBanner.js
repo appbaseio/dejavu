@@ -37,7 +37,8 @@ const ApplyQueryBanner = ({
 				css={{ marginTop: 15 }}
 				message={
 					<div css={{ textAlign: 'center' }}>
-						All {numberWithCommas(stats.totalResults)} docs selected
+						All {numberWithCommas(stats.totalResults)} docs are
+						selected
 						<button
 							type="button"
 							css={linkButton}

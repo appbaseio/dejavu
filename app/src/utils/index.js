@@ -197,7 +197,15 @@ const trimUrl = url => {
 	return url;
 };
 
-const minTwoDigits = n => (n < 10 ? '0' : '') + n;
+const convertToMax = (number, max) => {
+	const numberLength = number.toString().length;
+	const maxLength = max.toString().length;
+	if (numberLength !== maxLength) {
+		return '0'.repeat(maxLength - numberLength) + number.toString();
+	}
+
+	return number;
+};
 
 export {
 	parseUrl,
@@ -219,5 +227,5 @@ export {
 	saveAppToLocalStorage,
 	getCloneLink,
 	trimUrl,
-	minTwoDigits,
+	convertToMax,
 };
