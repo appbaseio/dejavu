@@ -14,6 +14,8 @@ import Flex from '../Flex';
 import JsonView from '../JsonView';
 import overflowText from './overflow.style';
 import popoverContent from '../CommonStyles/popoverContent';
+import PromoteButton from './PromoteButton';
+import HideButton from './HideButton';
 
 type Props = {
 	value: any,
@@ -58,8 +60,14 @@ class IdField extends Component<Props> {
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 
+		const fieldData = data.find(item => item._id === value);
+
 		return (
-			<Flex wrap="nowrap" css={{ width: '100%' }} alignItems="center">
+			<Flex
+				wrap="nowrap"
+				css={{ width: '100%' }}
+				alignItems="center"
+			>
 				<div
 					css={{
 						display: 'flex',
@@ -68,28 +76,97 @@ class IdField extends Component<Props> {
 					}}
 				>
 					{selectedRows.indexOf(value) === -1 && (
-						<div className="index-no" css={{ minWidth: 16 }}>
-							{pageSize * (currentPage - 1) + (rowIndex + 1)}
+						<div
+							className="index-no"
+							css={{ minWidth: 16 }}
+						>
+							{pageSize * (currentPage - 1) +
+								(rowIndex + 1)}
 						</div>
 					)}
 					&nbsp;&nbsp;&nbsp;
-					<Tooltip placement="top" title="Promote this result">
-						<Button shape="circle">
-							<Icon type="star" theme="filled" />
-						</Button>
-					</Tooltip>
+					<PromoteButton
+						item={fieldData}
+						renderButton={({
+							promoteResult,
+							isLoading,
+							disabled,
+						}) => (
+							<Tooltip
+								placement="top"
+								title={
+									disabled
+										? 'Already Promoted or Hidden'
+										: 'Promote this result'
+								}
+							>
+								<Button
+									disabled={disabled}
+									shape="circle"
+									onClick={promoteResult}
+									style={{
+										borderColor: disabled
+											? 'rgba(0,0,0,.25)'
+											: '#1890ff',
+									}}
+								>
+									<Icon
+										type={
+											isLoading
+												? 'loading'
+												: 'star'
+										}
+										style={{
+											color: disabled
+												? 'rgba(0, 0, 0, .25)'
+												: '#1890ff',
+										}}
+									/>
+								</Button>
+							</Tooltip>
+						)}
+					/>
 					&nbsp;
-					<Tooltip placement="top" title="Hide this result">
-						<Button type="dashed" shape="circle">
-							<Icon type="eye-invisible" />
-						</Button>
-					</Tooltip>
+					<HideButton
+						id={fieldData._id}
+						renderButton={({
+							hideItem,
+							isLoading,
+							disabled,
+						}) => (
+							<Tooltip
+								placement="top"
+								title={
+									disabled
+										? 'Already Promoted or Hidden'
+										: 'Hide this result'
+								}
+							>
+								<Button
+									shape="circle"
+									type="dashed"
+									disabled={disabled}
+									onClick={hideItem}
+								>
+									<Icon
+										type={
+											isLoading
+												? 'loading'
+												: 'eye-invisible'
+										}
+									/>
+								</Button>
+							</Tooltip>
+						)}
+					/>
 					&nbsp;
 				</div>
 				<Popover
 					content={
 						<div css={popoverContent}>
-							<JsonView json={getOnlySource(data[rowIndex])} />
+							<JsonView
+								json={getOnlySource(data[rowIndex])}
+							/>
 						</div>
 					}
 					trigger="click"

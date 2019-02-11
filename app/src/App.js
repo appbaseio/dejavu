@@ -14,6 +14,7 @@ import QueryExplorer from './components/QueryExplorer';
 import Flex from './components/Flex';
 import OldDejavuBanner from './components/OldDejavuBanner';
 import PromotedResults from './components/PromotedResults';
+import PromotedResultsQueries from './components/PromotedResultsQueries';
 
 import configureStore from './store';
 import {
@@ -93,7 +94,9 @@ class App extends Component {
 			<Provider store={store}>
 				<BrowserRouter>
 					<Layout
-						css={{ minHeight: isShowingSideBar ? '100vh' : 'auto' }}
+						css={{
+							minHeight: isShowingSideBar ? '100vh' : 'auto',
+						}}
 					>
 						{isShowingSideBar && (
 							<Sider
@@ -159,6 +162,10 @@ class App extends Component {
 										<Route
 											path="/promoted-results"
 											component={PromotedResults}
+										/>
+										<Route
+											path="/promoted-results-queries"
+											component={PromotedResultsQueries}
 										/>
 										<Route
 											path="/404"
