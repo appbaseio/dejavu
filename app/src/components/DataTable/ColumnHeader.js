@@ -6,7 +6,8 @@ import { Popover } from 'antd';
 
 import StyledCell from './StyledCell';
 import MappingsDropdown from '../MappingsDropdown';
-import TermFilter from './TermFilter';
+import TermAggregation from './TermAggregation';
+import BooleanTermAggregation from './BooleanTermAggregation';
 import Flex from '../Flex';
 
 import { getAppname } from '../../reducers/app';
@@ -21,6 +22,7 @@ import { setSort } from '../../actions';
 import overflowStyles from '../CommonStyles/overflowText';
 import filterIconStyles from '../CommonStyles/filterIcons';
 import colors from '../theme/colors';
+import { es6mappings } from '../../utils/mappings';
 
 type Props = {
 	mappings: any,
@@ -132,15 +134,25 @@ class DataColumnHeader extends Component<Props> {
 						</Flex>
 						{sortableColumnIndex > -1 && (
 							<Flex alignItems="center">
-								{termFilterIndex > -1 && (
-									<TermFilter
-										field={
-											termsAggregationColumns[
-												termFilterIndex
-											]
-										}
-									/>
-								)}
+								{termFilterIndex > -1 &&
+									(mappings[appname][mapProp][col].type ===
+									es6mappings.Boolean.type ? (
+										<BooleanTermAggregation
+											field={
+												termsAggregationColumns[
+													termFilterIndex
+												]
+											}
+										/>
+									) : (
+										<TermAggregation
+											field={
+												termsAggregationColumns[
+													termFilterIndex
+												]
+											}
+										/>
+									))}
 								<button
 									type="button"
 									onClick={() => {
