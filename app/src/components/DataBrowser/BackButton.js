@@ -5,8 +5,8 @@ import { css } from 'emotion';
 
 const buttonStyles = css`
 	position: absolute;
-	top: 5px;
-	left: 0px;
+	top: 15px;
+	left: 20px;
 `;
 
 const BackButton = props => {
