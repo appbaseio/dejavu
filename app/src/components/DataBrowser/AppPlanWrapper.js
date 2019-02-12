@@ -47,7 +47,7 @@ class AppPlanWrapper extends Component {
 				css={{
 					padding: '20px 50px',
 					boxShadow: '0 2px 5px rgba(0,0,0,.2)',
-					margin: '0 0 10px !important',
+					margin: '0 !important',
 					background: 'white',
 				}}
 			>
