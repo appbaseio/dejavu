@@ -135,8 +135,10 @@ class DataColumnHeader extends Component<Props> {
 						{sortableColumnIndex > -1 && (
 							<Flex alignItems="center">
 								{termFilterIndex > -1 &&
-									(mappings[appname][mapProp][col].type ===
-									es6mappings.Boolean.type ? (
+									(mappings[appname][mapProp] &&
+									mappings[appname][mapProp][col] &&
+									mappings[appname][mapProp][col].type ===
+										es6mappings.Boolean.type ? (
 										<BooleanTermAggregation
 											field={
 												termsAggregationColumns[
