@@ -29,7 +29,7 @@ class HiddenResults extends React.Component {
 					<p css={{ paddingLeft: 20 }} className="ant-form-extra">
 						Hidden results are not returned by the API when the
 						query matches the current query conditions. Read more{' '}
-						<a href="#" target="_blank">
+						<a href="https://docs.appbase.io/concepts/query-rules.html" target="_blank">
 							here
 						</a>
 						.
