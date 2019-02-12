@@ -113,7 +113,7 @@ class PromotedResults extends React.Component {
 						<p css={{ paddingLeft: 20 }} className="ant-form-extra">
 							Promoted results are returned by the API along with
 							the organic hits. Read more on how to use them{' '}
-							<a href="#" target="_blank">
+							<a href="https://docs.appbase.io/concepts/query-rules.html" target="_blank">
 								here
 							</a>
 							.
