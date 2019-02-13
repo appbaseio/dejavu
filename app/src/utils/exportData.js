@@ -117,11 +117,12 @@ const getSearchAfterData = async (
 ) => {
 	const { hits } = data;
 	let str = null;
+	console.log('called.....', chunkInfo);
 	/**
 	 * Checking if the current length is less than chunk total, recursive call searchAfter
 	 */
 	if (hits && jsonData.length < chunkInfo.total) {
-		const totalhits = hits.hits;
+		const { hits: totalhits, total } = hits;
 		jsonData = jsonData.concat(totalhits);
 		const lastObject = totalhits[totalhits.length - 1];
 		const nextSearchData =
@@ -135,7 +136,7 @@ const getSearchAfterData = async (
 			version,
 			query,
 			chunkInfo,
-			nextSearchData,
+			totalhits.length === total ? '' : nextSearchData,
 		);
 	}
 

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react';
-import { Modal, Button, Spin, Alert, Row, Col, Select } from 'antd';
+import { Modal, Button, Spin, Alert, Row, Col, Select, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { unparse } from 'papaparse';
 import { saveAs } from 'file-saver';
@@ -10,17 +10,50 @@ import { getUrl } from '../../reducers/app';
 import { getVersion } from '../../reducers/version';
 import { addDataRequest } from '../../actions';
 import exportData, { flatten, MAX_DATA } from '../../utils/exportData';
+import { numberWithCommas } from '../../utils';
 import { getCount } from '../../apis';
+import { getStats } from '../../reducers/stats';
+import { getQuery } from '../../reducers/query';
 import colors from '../theme/colors';
 
 import Flex from '../Flex';
 import Item from './Item.styles';
 
 const { Option } = Select;
+
+const getChunks = (count, maxCount) => {
+	const chunks = {};
+	const max = maxCount || MAX_DATA;
+	if (count < max) {
+		chunks[`0-${count}`] = {
+			from: 0,
+			total: count,
+		};
+	} else {
+		const maxChunks = Math.ceil(count / max);
+		Array(maxChunks)
+			.fill(maxChunks)
+			.forEach((item, index) => {
+				const nextChunk = index * max;
+				chunks[
+					`${nextChunk + 1}-${
+						index < maxChunks - 1 ? nextChunk + max : count
+					}`
+				] = {
+					total: index < maxChunks - 1 ? max : count - nextChunk,
+				};
+			});
+	}
+
+	return chunks;
+};
+
 type Props = {
 	url: string,
 	version: number,
 	indexTypeMap: any,
+	stats: any,
+	query: any,
 };
 
 type State = {
@@ -34,6 +67,8 @@ type State = {
 	selectedIndex: string,
 	types: string[],
 	selectedType: string,
+	applyCurrentQuery: boolean,
+	totalCount: number,
 };
 
 class ExportData extends Component<Props, State> {
@@ -50,6 +85,8 @@ class ExportData extends Component<Props, State> {
 		selectedType: this.props.indexTypeMap[
 			Object.keys(this.props.indexTypeMap)[0]
 		][0],
+		applyCurrentQuery: false,
+		totalCount: 0,
 	};
 
 	handleAfterClose = () => {
@@ -59,6 +96,7 @@ class ExportData extends Component<Props, State> {
 			isFetchingCount: false,
 			selectedChunk: '',
 			searchAfterData: '',
+			applyCurrentQuery: false,
 		});
 	};
 
@@ -67,22 +105,24 @@ class ExportData extends Component<Props, State> {
 			isDownloading: true,
 		});
 
-		const { url, version } = this.props;
+		const { url, version, query } = this.props;
 		const {
 			selectedIndex,
 			selectedType,
 			selectedChunk,
 			countChunks,
 			searchAfterData,
+			applyCurrentQuery,
 		} = this.state;
 
+		const exportQuery = applyCurrentQuery ? { query: query.query } : null;
 		try {
 			const { data, searchAfter } = await exportData(
 				selectedIndex,
 				selectedType,
 				url,
 				version,
-				null, // use default query
+				exportQuery,
 				countChunks[selectedChunk],
 				searchAfterData,
 			);
@@ -123,36 +163,10 @@ class ExportData extends Component<Props, State> {
 		try {
 			const data = await getCount(selectedIndex, selectedType, url);
 			const count = data.count || 0;
-			const chunks = {};
-
-			if (count < MAX_DATA) {
-				chunks[`0-${count}`] = {
-					from: 0,
-					total: count,
-				};
-			} else {
-				const maxChunks = Math.ceil(count / MAX_DATA);
-				Array(maxChunks)
-					.fill(maxChunks)
-					.forEach((item, index) => {
-						const nextChunk = index * MAX_DATA;
-						chunks[
-							`${nextChunk + 1}-${
-								index < maxChunks - 1
-									? nextChunk + MAX_DATA
-									: count
-							}`
-						] = {
-							total:
-								index < maxChunks - 1
-									? MAX_DATA
-									: count - nextChunk,
-						};
-					});
-			}
-
+			const chunks = getChunks(count);
 			this.setState({
 				isFetchingCount: false,
+				totalCount: count,
 				countChunks: chunks,
 				selectedChunk: Object.keys(chunks)[0],
 			});
@@ -251,6 +265,23 @@ class ExportData extends Component<Props, State> {
 		);
 	};
 
+	handleApplyQueryChange = e => {
+		const {
+			target: { checked },
+		} = e;
+
+		const { totalCount } = this.state;
+		const { stats } = this.props;
+		const chunks = checked
+			? getChunks(stats.totalResults)
+			: getChunks(totalCount);
+		this.setState({
+			applyCurrentQuery: checked,
+			countChunks: chunks,
+			selectedChunk: Object.keys(chunks)[0],
+		});
+	};
+
 	render() {
 		const {
 			isShowingModal,
@@ -263,9 +294,10 @@ class ExportData extends Component<Props, State> {
 			selectedIndex,
 			selectedType,
 			types,
+			applyCurrentQuery,
 		} = this.state;
 
-		const { indexTypeMap } = this.props;
+		const { indexTypeMap, stats } = this.props;
 		const chunkList = Object.keys(countChunks);
 		return (
 			<Fragment>
@@ -354,8 +386,9 @@ class ExportData extends Component<Props, State> {
 					{!isFetchingCount &&
 						selectedChunk && (
 							<p>
-								Now you can export <b>{selectedChunk}</b> documents in CSV
-								or JSON format by selecting appropriate option.
+								Now you can export <b>{selectedChunk}</b>{' '}
+								documents in CSV or JSON format by selecting
+								appropriate option.
 							</p>
 						)}
 
@@ -402,6 +435,16 @@ class ExportData extends Component<Props, State> {
 								We are fetching the result data, please wait...
 							</Flex>
 						)}
+						<Checkbox
+							checked={applyCurrentQuery}
+							onChange={this.handleApplyQueryChange}
+							css={{
+								width: '100%',
+							}}
+						>
+							Export {numberWithCommas(stats.totalResults || 0)}{' '}
+							documents (current view)
+						</Checkbox>
 					</Flex>
 				</Modal>
 			</Fragment>
@@ -413,6 +456,8 @@ const mapStateToProps = state => ({
 	url: getUrl(state),
 	version: getVersion(state),
 	indexTypeMap: getIndexTypeMap(state),
+	stats: getStats(state),
+	query: getQuery(state),
 });
 
 const mapDispatchToProps = {
