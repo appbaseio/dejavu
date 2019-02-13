@@ -127,8 +127,7 @@ class App extends Component {
 							>
 								<div
 									css={{
-										padding: 20,
-										background: '#fff',
+										background: 'white',
 									}}
 								>
 									<Switch>

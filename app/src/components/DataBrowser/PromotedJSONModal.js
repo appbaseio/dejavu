@@ -1,6 +1,7 @@
 import React from 'react';
 import AceEditor from 'react-ace';
 import { Modal, message } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import 'brace/mode/json';
 import 'brace/theme/github';
@@ -84,11 +85,13 @@ class PromotedJSONModal extends React.Component {
 				message.error(ruleResponse.message);
 			} else {
 				if (!rule) {
-					const searchParams = new URLSearchParams(
-						window.location.search,
+					const {
+						history,
+						location: { pathname, search },
+					} = this.props;
+					history.push(
+						`${pathname}${search}&rule=${ruleResponse.id}`,
 					);
-					searchParams.set('rule', ruleResponse.id);
-					window.location.search = searchParams.toString();
 				}
 
 				message.success('Query Rule Updated!');
@@ -161,6 +164,6 @@ class PromotedJSONModal extends React.Component {
 	}
 }
 
-PromotedJSONModal.contextType = PromotedResultsContext;
+export default withRouter(PromotedJSONModal);
 
-export default PromotedJSONModal;
+PromotedJSONModal.contextType = PromotedResultsContext;

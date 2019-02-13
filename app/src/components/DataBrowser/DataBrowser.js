@@ -6,13 +6,12 @@ import { connect } from 'react-redux';
 import { Skeleton } from 'antd';
 import { mediaMin } from '@divyanshu013/media';
 import { AutoSizer } from 'react-virtualized';
+import { injectGlobal } from 'emotion';
 
 import Flex from '../Flex';
-import Actions from './Actions';
 import AddRowModal from './AddRowModal';
 import AddFieldModal from './AddFieldModal';
 import DataTableHeader from '../DataTable/DataTableHeader';
-import NestedColumnToggle from './NestedColumnToggle';
 import GlobalSearch from './GlobalSearch';
 import ResultList from './ResultSet';
 import CloneApp from './CloneApp';
@@ -46,6 +45,12 @@ type Props = {
 	headers: any[],
 	searchTerm: string,
 };
+
+injectGlobal`
+	*{
+		font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
+	}
+`;
 
 class DataBrowser extends Component<Props> {
 	headerRef = createRef();
@@ -99,11 +104,9 @@ class DataBrowser extends Component<Props> {
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading && !isDataLoading && mappings && (
-					<div css={{ position: 'relative' }}>
+					<div css={{ position: 'relative', padding: 20 }}>
 						<ReactiveBase {...baseProps}>
 							<div>
-								<Actions onReload={this.handleReload} />
-								<NestedColumnToggle />
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
@@ -113,45 +116,58 @@ class DataBrowser extends Component<Props> {
 									<PromotedResults />
 
 									<HiddenResults />
-									<QueryInfo />
-								</AppPlanWrapper>
 
-								<div
-									id="result-list"
-									css={{
-										marginTop: '20px',
-										border: `1px solid ${
-											colors.tableBorderColor
-										}`,
-										borderRadius: 3,
-										width: '100%',
-										position: 'relative',
-										height:
-											window.innerHeight -
-											(hideAppSwitcher ? 250 : 350),
-										overflow: 'visible',
-									}}
-								>
-									<AutoSizer
+									<div
 										css={{
-											height: '100% !important',
-											width: '100% !important',
+											boxShadow:
+												'0 1px 10px -2px rgba(0,0,0,0.2)',
+											borderLeft: '4px solid #d9d9d9',
 										}}
 									>
-										{({ height, width }) => (
-											<>
-												<DataTableHeader
-													ref={this.headerRef}
-												/>
-												<ResultList
-													height={height}
-													width={width}
-													headerRef={this.headerRef}
-												/>
-											</>
-										)}
-									</AutoSizer>
-								</div>
+										<QueryInfo />
+
+										<div
+											id="result-list"
+											css={{
+												marginTop: '20px',
+												border: `1px solid ${
+													colors.tableBorderColor
+												}`,
+												borderRadius: 3,
+												width: '100%',
+												position: 'relative',
+												height:
+													window.innerHeight -
+													(hideAppSwitcher
+														? 250
+														: 350),
+												overflow: 'visible',
+											}}
+										>
+											<AutoSizer
+												css={{
+													height: '100% !important',
+													width: '100% !important',
+												}}
+											>
+												{({ height, width }) => (
+													<>
+														<DataTableHeader
+															ref={this.headerRef}
+														/>
+														<ResultList
+															height={height}
+															width={width}
+															headerRef={
+																this.headerRef
+															}
+														/>
+													</>
+												)}
+											</AutoSizer>
+										</div>
+									</div>
+								</AppPlanWrapper>
 							</PromotedResultsContainer>
 						</ReactiveBase>
 					</div>

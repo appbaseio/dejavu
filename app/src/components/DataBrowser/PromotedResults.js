@@ -1,11 +1,12 @@
 import React from 'react';
-import { Table, Button, Icon, Tooltip } from 'antd';
+import { Table, Button, Icon, Tooltip, Alert } from 'antd';
 import { css } from 'emotion';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
 import PromotedJSONModal from './PromotedJSONModal';
 import DemoteButton from '../DataTable/DemoteButton';
 import EditPromotedResult from './EditPromotedResult';
+import Container from './Container';
 
 const tableStyles = css`
 	.ant-table td {
@@ -57,30 +58,33 @@ class PromotedResults extends React.Component {
 					item={{ _id: id }}
 					renderButton={({ demoteResult, isLoading }) => (
 						<Tooltip placement="top" title="Demote">
-							<Button
-								css={{ marginRight: 10 }}
-								shape="circle"
-								style={{ background: '#1890ff' }}
+							<Icon
 								onClick={demoteResult}
-							>
-								<Icon
-									type={isLoading ? 'loading' : 'star'}
-									theme={isLoading ? 'outlined' : 'filled'}
-									style={{ color: '#fff' }}
-								/>
-							</Button>
+								type={isLoading ? 'loading' : 'star'}
+								theme={isLoading ? 'outlined' : 'filled'}
+								style={{
+									color: '#1890ff',
+									marginRight: 10,
+									cursor: 'pointer',
+								}}
+							/>
 						</Tooltip>
 					)}
 				/>
 				<EditPromotedResult
 					item={item}
 					renderButton={({ callback }) => (
-						<Button
-							css={{ marginRight: 10 }}
-							shape="circle"
-							icon="edit"
-							onClick={callback}
-						/>
+						<Tooltip placement="top" title="Edit">
+							<Icon
+								onClick={callback}
+								type="edit"
+								style={{
+									color: 'rgba(0,0,0,.65)',
+									marginRight: 10,
+									cursor: 'pointer',
+								}}
+							/>
+						</Tooltip>
 					)}
 				/>
 			</React.Fragment>
@@ -97,37 +101,39 @@ class PromotedResults extends React.Component {
 
 		const allColumns = this.getAllColumns(filteredResults);
 		return (
-			<React.Fragment>
-				<div
-					css={{
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						margin: '20px auto 10px',
-					}}
-				>
-					<div>
-						<h3 css={{ margin: 0 }}>
-							<Icon type="star" theme="filled" /> Promoted Results
-						</h3>
-						<p css={{ paddingLeft: 20 }} className="ant-form-extra">
+			<div
+				css={{
+					boxShadow: '0 1px 10px -2px rgba(0,0,0,0.2)',
+					borderLeft: '4px solid #1890ff',
+					margin: '40px 0 20px',
+				}}
+			>
+				<Container
+					icon="star"
+					title="Promoted Results"
+					description={
+						<React.Fragment>
 							Promoted results are returned by the API along with
 							the organic hits. Read more on how to use them{' '}
-							<a href="https://docs.appbase.io/concepts/query-rules.html" target="_blank">
+							<a
+								href="https://docs.appbase.io/concepts/query-rules.html"
+								target="_blank"
+							>
 								here
 							</a>
 							.
-						</p>
-					</div>
-					<PromotedJSONModal
-						renderButton={({ clickHandler }) => (
-							<Button onClick={clickHandler} type="primary">
-								Add a manual promotion (JSON)
-							</Button>
-						)}
-					/>
-				</div>
-
+						</React.Fragment>
+					}
+					button={
+						<PromotedJSONModal
+							renderButton={({ clickHandler }) => (
+								<Button onClick={clickHandler} type="primary">
+									Add a manual promotion (JSON)
+								</Button>
+							)}
+						/>
+					}
+				/>
 				{filteredResults && filteredResults.length > 0 ? (
 					<Table
 						dataSource={filteredResults}
@@ -161,11 +167,16 @@ class PromotedResults extends React.Component {
 							: null}
 					</Table>
 				) : (
-					<div css={noResultStyles}>
-						<span css={{ fontSize: 14 }}>No Promoted Results</span>
-					</div>
+					<Alert
+						css={{
+							border: 0,
+							borderRadius: 0,
+						}}
+						type="info"
+						message="No Hidden Results"
+					/>
 				)}
-			</React.Fragment>
+			</div>
 		);
 	}
 }

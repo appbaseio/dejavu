@@ -2,22 +2,17 @@ import React from 'react';
 
 import { getUrlParams } from '../../utils';
 import UpdateQueryRule from './UpdateQueryRule';
+import Container from './Container';
 
 const QueryInfo = () => {
 	const { searchTerm } = getUrlParams(window.location.search);
 	return (
-		<div
-			css={{
-				display: 'flex',
-				justifyContent: 'space-between',
-				alignItems: 'center',
-			}}
-		>
-			<h3 css={{ margin: '25px 0 0' }}>
-				{`Showing results for "${searchTerm}"`}
-			</h3>
-			<UpdateQueryRule />
-		</div>
+		<Container
+			title={`Showing results for "${searchTerm}"`}
+			button={<UpdateQueryRule />}
+			icon="database"
+			description="Promote results by clicking the star, hide them by clicking the eye. Click Manage to change active query."
+		/>
 	);
 };
 
