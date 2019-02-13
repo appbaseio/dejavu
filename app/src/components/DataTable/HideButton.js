@@ -1,5 +1,6 @@
 import React from 'react';
 import { message } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import { getUrlParams } from '../../utils';
 import { PromotedResultsContext } from '../DataBrowser/PromotedResultsContainer';
@@ -70,11 +71,13 @@ class HideButton extends React.Component {
 			} else {
 				if (!rule) {
 					// Appending rule id to URL
-					const searchParams = new URLSearchParams(
-						window.location.search,
+					const {
+						history,
+						location: { pathname, search },
+					} = this.props;
+					history.push(
+						`${pathname}${search}&rule=${ruleResponse.id}`,
 					);
-					searchParams.set('rule', ruleResponse.id);
-					window.location.search = searchParams.toString();
 				}
 
 				message.success('Query Rule Updated!');
@@ -114,6 +117,5 @@ class HideButton extends React.Component {
 	}
 }
 
+export default withRouter(HideButton);
 HideButton.contextType = PromotedResultsContext;
-
-export default HideButton;

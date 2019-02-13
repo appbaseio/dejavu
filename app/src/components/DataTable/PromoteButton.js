@@ -1,5 +1,6 @@
 import React from 'react';
 import { message } from 'antd';
+import { withRouter } from 'react-router-dom';
 
 import { getUrlParams } from '../../utils';
 import { PromotedResultsContext } from '../DataBrowser/PromotedResultsContainer';
@@ -71,11 +72,14 @@ class PromoteButton extends React.Component {
 			} else {
 				if (!rule) {
 					// Appending rule id to URL
-					const searchParams = new URLSearchParams(
-						window.location.search,
+
+					const {
+						history,
+						location: { pathname, search },
+					} = this.props;
+					history.push(
+						`${pathname}${search}&rule=${ruleResponse.id}`,
 					);
-					searchParams.set('rule', ruleResponse.id);
-					window.location.search = searchParams.toString();
 				}
 
 				message.success('Query Rule Updated!');
@@ -117,6 +121,6 @@ class PromoteButton extends React.Component {
 	}
 }
 
-PromoteButton.contextType = PromotedResultsContext;
+export default withRouter(PromoteButton);
 
-export default PromoteButton;
+PromoteButton.contextType = PromotedResultsContext;

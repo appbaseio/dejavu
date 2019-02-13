@@ -30,6 +30,17 @@ const actionButtonStyles = (color = '#1890ff') => css`
 	}
 `;
 
+const tableContainer = css`
+	padding: 20px 50px;
+	@media (max-width: 768px) {
+		padding: 20px;
+	}
+`;
+
+const tableStyles = css`
+	width: 100%;
+`;
+
 class PromotedResultQueries extends React.Component {
 	state = {
 		isLoading: true,
@@ -371,17 +382,14 @@ class PromotedResultQueries extends React.Component {
 						/>
 					</Col>
 				</Row>
-				<div
-					css={{
-						padding: '20px 50px',
-					}}
-				>
+				<div className={tableContainer}>
 					<Table
 						bordered
 						dataSource={queries}
 						loading={isLoading}
 						pagination={false}
-						css={{ background: 'white' }}
+						scroll={{ x: 700 }}
+						className={tableStyles}
 						columns={tableStructure}
 					/>
 				</div>

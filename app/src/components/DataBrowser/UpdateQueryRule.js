@@ -88,6 +88,6 @@ class UpdateQueryRule extends React.Component {
 	}
 }
 
-UpdateQueryRule.contextType = PromotedResultsContext;
-
 export default withRouter(UpdateQueryRule);
+
+UpdateQueryRule.contextType = PromotedResultsContext;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import get from 'lodash/get';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Row, Col, Button, Icon } from 'antd';
+import { Row, Col, Button, Icon, Skeleton } from 'antd';
 
 import { getAppPlan } from '../../batteries/modules/actions';
 import { getAppPlanByName } from '../../batteries/modules/selectors';
@@ -34,7 +34,7 @@ class AppPlanWrapper extends Component {
 		}
 
 		if (isLoading) {
-			return null;
+			return <Skeleton />;
 		}
 
 		return isPaid ? (
