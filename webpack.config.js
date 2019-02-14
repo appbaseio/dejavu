@@ -5,6 +5,7 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const WriteWebPackPlugin = require('write-file-webpack-plugin');
 
 const { NODE_ENV } = process.env;
 
@@ -21,7 +22,12 @@ const plugins = [
 		prefix: 'favicon/',
 	}),
 	new HtmlWebpackHarddiskPlugin(),
-	new CopyWebpackPlugin(['./app/src/_redirects', 'chrome-specific']),
+	new CopyWebpackPlugin([
+		'./app/src/_redirects',
+		'chrome-specific',
+		'./packages',
+	]),
+	new WriteWebPackPlugin(),
 ];
 
 const isDevelopment = NODE_ENV === 'development';

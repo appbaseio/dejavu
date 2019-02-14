@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
 
 import Dejavu from './components/Dejavu';
-import Importer from './components/Importer';
 import SearchPreview from './components/SearchPreview';
 // import Mappings from './components/Mappings';
 import Navigation from './components/Navigation';
@@ -138,10 +137,6 @@ class App extends Component {
 											exact
 											path="/index.html"
 											component={Dejavu}
-										/>
-										<Route
-											path="/import"
-											component={Importer}
 										/>
 										<Route
 											path="/preview"
