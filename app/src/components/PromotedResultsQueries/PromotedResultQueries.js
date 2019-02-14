@@ -13,8 +13,8 @@ import { object } from 'prop-types';
 import { css } from 'emotion';
 
 import QueryRuleModal from './QueryRuleModal';
-import { getUrlParams } from '../../utils';
-import AppPlanWrapper from '../DataBrowser/AppPlanWrapper';
+import { getUrlParams, getHeaders } from '../../utils';
+import getPromotedURL from './utils';
 
 const { Option } = Select;
 
@@ -52,19 +52,22 @@ class PromotedResultQueries extends React.Component {
 	}
 
 	fetchQueries = async () => {
-		const { appname } = getUrlParams(window.location.search);
-
+		const { appname, url } = getUrlParams(window.location.search);
+		const requestURL = getPromotedURL(url);
+		const { Authorization } = getHeaders(url);
 		try {
 			const queryResponse = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rules`,
+				`${requestURL}/${appname}/_rules`,
 				{
-					credentials: 'include',
+					headers: {
+						Authorization,
+					},
 				},
 			);
 			const queryRules = await queryResponse.json();
 
 			if (queryResponse.status >= 400) {
-				message.error(queryRules.message);
+				message.error(queryRules.error.message);
 				this.setQueries([]);
 			} else {
 				const filteredQueries = queryRules.map(rule => ({
@@ -90,7 +93,7 @@ class PromotedResultQueries extends React.Component {
 				this.setQueries(tableQueriesData);
 			}
 		} catch (e) {
-			message.error('Something went Wrong!');
+			message.error('No Rules Found!');
 			this.setState({
 				isLoading: false,
 			});
@@ -125,14 +128,18 @@ class PromotedResultQueries extends React.Component {
 	};
 
 	deleteRule = async id => {
-		const { appname } = getUrlParams(window.location.search);
+		const { appname, url } = getUrlParams(window.location.search);
 
 		try {
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
 			const deleteResponse = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule/${id}`,
+				`${requestURL}/${appname}/_rule/${id}`,
 				{
 					method: 'DELETE',
-					credentials: 'include',
+					headers: {
+						Authorization,
+					},
 				},
 			);
 			const deleteObject = await deleteResponse.json();
@@ -170,7 +177,7 @@ class PromotedResultQueries extends React.Component {
 
 	updateQueryRule = async ruleData => {
 		const { id, hiddenItems, promotedItems, query, operator } = ruleData;
-		const { appname } = getUrlParams(window.location.search);
+		const { appname, url } = getUrlParams(window.location.search);
 
 		const requestBody = {
 			id,
@@ -193,11 +200,15 @@ class PromotedResultQueries extends React.Component {
 		}
 
 		try {
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
 			const updateRequest = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule`,
+				`${requestURL}/${appname}/_rule`,
 				{
 					method: 'POST',
-					credentials: 'include',
+					header: {
+						Authorization,
+					},
 					body: JSON.stringify(requestBody),
 				},
 			);
@@ -315,7 +326,7 @@ class PromotedResultQueries extends React.Component {
 		];
 
 		return (
-			<AppPlanWrapper appName={appname}>
+			<React.Fragment>
 				<Row
 					type="flex"
 					justify="space-between"
@@ -393,7 +404,7 @@ class PromotedResultQueries extends React.Component {
 						columns={tableStructure}
 					/>
 				</div>
-			</AppPlanWrapper>
+			</React.Fragment>
 		);
 	}
 }

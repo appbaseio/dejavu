@@ -32,7 +32,6 @@ import PromotedResults from './PromotedResults';
 import HiddenResults from './HiddenResults';
 import BackButton from './BackButton';
 import QueryInfo from './QueryInfo';
-import AppPlanWrapper from './AppPlanWrapper';
 
 type Props = {
 	url: string,
@@ -110,64 +109,60 @@ class DataBrowser extends Component<Props> {
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
-								<AppPlanWrapper appName={appname}>
-									<BackButton />
+								<BackButton />
 
-									<PromotedResults />
+								<PromotedResults />
 
-									<HiddenResults />
+								<HiddenResults />
+
+								<div
+									css={{
+										boxShadow:
+											'0 1px 10px -2px rgba(0,0,0,0.2)',
+										borderLeft: '4px solid #d9d9d9',
+									}}
+								>
+									<QueryInfo />
 
 									<div
+										id="result-list"
 										css={{
-											boxShadow:
-												'0 1px 10px -2px rgba(0,0,0,0.2)',
-											borderLeft: '4px solid #d9d9d9',
+											marginTop: '20px',
+											border: `1px solid ${
+												colors.tableBorderColor
+											}`,
+											borderRadius: 3,
+											width: '100%',
+											position: 'relative',
+											height:
+												window.innerHeight -
+												(hideAppSwitcher ? 250 : 350),
+											overflow: 'visible',
 										}}
 									>
-										<QueryInfo />
-
-										<div
-											id="result-list"
+										<AutoSizer
 											css={{
-												marginTop: '20px',
-												border: `1px solid ${
-													colors.tableBorderColor
-												}`,
-												borderRadius: 3,
-												width: '100%',
-												position: 'relative',
-												height:
-													window.innerHeight -
-													(hideAppSwitcher
-														? 250
-														: 350),
-												overflow: 'visible',
+												height: '100% !important',
+												width: '100% !important',
 											}}
 										>
-											<AutoSizer
-												css={{
-													height: '100% !important',
-													width: '100% !important',
-												}}
-											>
-												{({ height, width }) => (
-													<>
-														<DataTableHeader
-															ref={this.headerRef}
-														/>
-														<ResultList
-															height={height}
-															width={width}
-															headerRef={
-																this.headerRef
-															}
-														/>
-													</>
-												)}
-											</AutoSizer>
-										</div>
+											{({ height, width }) => (
+												<>
+													<DataTableHeader
+														ref={this.headerRef}
+													/>
+													<ResultList
+														height={height}
+														width={width}
+														headerRef={
+															this.headerRef
+														}
+													/>
+												</>
+											)}
+										</AutoSizer>
 									</div>
-								</AppPlanWrapper>
+								</div>
 							</PromotedResultsContainer>
 						</ReactiveBase>
 					</div>

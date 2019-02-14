@@ -2,8 +2,9 @@ import React from 'react';
 import { message } from 'antd';
 import { withRouter } from 'react-router-dom';
 
-import { getUrlParams } from '../../utils';
+import { getUrlParams, getHeaders } from '../../utils';
 import { PromotedResultsContext } from '../DataBrowser/PromotedResultsContainer';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 class PromoteButton extends React.Component {
 	state = {
@@ -13,7 +14,7 @@ class PromoteButton extends React.Component {
 	promoteId = async () => {
 		this.toggleLoading();
 		const { item } = this.props;
-		const { rule, queryOperator, searchTerm, appname } = getUrlParams(
+		const { rule, queryOperator, searchTerm, appname, url } = getUrlParams(
 			window.location.search,
 		);
 		const { appendResult } = this.context || undefined;
@@ -57,14 +58,15 @@ class PromoteButton extends React.Component {
 		}
 
 		try {
-			const ruleRequest = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule`,
-				{
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify(requestBody),
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
+			const ruleRequest = await fetch(`${requestURL}/${appname}/_rule`, {
+				method: 'POST',
+				headers: {
+					Authorization,
 				},
-			);
+				body: JSON.stringify(requestBody),
+			});
 
 			const ruleResponse = await ruleRequest.json();
 			if (ruleRequest.status >= 400) {

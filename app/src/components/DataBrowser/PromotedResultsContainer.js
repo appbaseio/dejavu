@@ -1,7 +1,8 @@
 import React from 'react';
 import { message } from 'antd';
 
-import { getUrlParams } from '../../utils';
+import { getUrlParams, getHeaders } from '../../utils';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 export const PromotedResultsContext = React.createContext({});
 
@@ -16,15 +17,19 @@ class PromotedResultsContainer extends React.Component {
 	}
 
 	fetchResults = async () => {
-		const { rule, appname } = getUrlParams(window.location.search);
+		const { rule, appname, url } = getUrlParams(window.location.search);
 
 		if (rule) {
 			try {
+				const requestURL = getPromotedURL(url);
+				const { Authorization } = getHeaders(url);
 				const rulesResponse = await fetch(
-					`https://accapi.appbase.io/app/${appname}/rule/${rule}`,
+					`${requestURL}/${appname}/_rule/${rule}`,
 					{
 						method: 'GET',
-						credentials: 'include',
+						headers: {
+							Authorization,
+						},
 					},
 				);
 

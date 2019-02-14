@@ -6,9 +6,10 @@ import { withRouter } from 'react-router-dom';
 import 'brace/mode/json';
 import 'brace/theme/github';
 
-import { getUrlParams, isVaildJSON } from '../../utils';
+import { getUrlParams, isVaildJSON, getHeaders } from '../../utils';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 class PromotedJSONModal extends React.Component {
 	state = {
@@ -25,7 +26,7 @@ class PromotedJSONModal extends React.Component {
 
 	handleAddJson = async () => {
 		const { jsonValue } = this.state;
-		const { rule, queryOperator, searchTerm, appname } = getUrlParams(
+		const { rule, queryOperator, searchTerm, appname, url } = getUrlParams(
 			window.location.search,
 		);
 		const jsonObject = JSON.parse(jsonValue);
@@ -71,14 +72,15 @@ class PromotedJSONModal extends React.Component {
 		this.toggleLoading();
 
 		try {
-			const ruleRequest = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule`,
-				{
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify(requestBody),
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
+			const ruleRequest = await fetch(`${requestURL}/${appname}/_rule`, {
+				method: 'POST',
+				headers: {
+					Authorization,
 				},
-			);
+				body: JSON.stringify(requestBody),
+			});
 
 			const ruleResponse = await ruleRequest.json();
 			if (ruleResponse.status >= 400) {

@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
 import QueryRuleModal from '../PromotedResultsQueries/QueryRuleModal';
-import { getUrlParams } from '../../utils';
+import { getUrlParams, getHeaders } from '../../utils';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 class UpdateQueryRule extends React.Component {
 	redirectURL = data => {
@@ -18,7 +19,7 @@ class UpdateQueryRule extends React.Component {
 	};
 
 	updateQueryRule = async data => {
-		const { appname, query, rule, operator } = data;
+		const { appname, query, rule, operator, url } = data;
 		if (rule) {
 			const { promotedResults, hiddenResults } = this.context;
 			const requestBody = {
@@ -42,11 +43,15 @@ class UpdateQueryRule extends React.Component {
 			}
 
 			try {
+				const requestURL = getPromotedURL(url);
+				const { Authorization } = getHeaders(url);
 				const ruleRequest = await fetch(
-					`https://accapi.appbase.io/app/${appname}/rule`,
+					`${requestURL}/${appname}/_rule`,
 					{
 						method: 'POST',
-						credentials: 'include',
+						headers: {
+							Authorization,
+						},
 						body: JSON.stringify(requestBody),
 					},
 				);

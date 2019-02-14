@@ -6,7 +6,8 @@ import 'brace/mode/json';
 import 'brace/theme/github';
 
 import { PromotedResultsContext } from './PromotedResultsContainer';
-import { getUrlParams } from '../../utils';
+import { getUrlParams, getHeaders } from '../../utils';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 class EditPromotedResult extends React.Component {
 	constructor(props) {
@@ -63,7 +64,7 @@ class EditPromotedResult extends React.Component {
 		} = this.context;
 		const { item: updatedItem } = this.state;
 		const { item } = this.props;
-		const { rule, queryOperator, searchTerm, appname } = getUrlParams(
+		const { rule, queryOperator, searchTerm, appname, url } = getUrlParams(
 			window.location.search,
 		);
 
@@ -100,14 +101,15 @@ class EditPromotedResult extends React.Component {
 		}
 
 		try {
-			const ruleRequest = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule`,
-				{
-					method: 'POST',
-					credentials: 'include',
-					body: JSON.stringify(requestBody),
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
+			const ruleRequest = await fetch(`${requestURL}/${appname}/_rule`, {
+				method: 'POST',
+				headers: {
+					Authorization,
 				},
-			);
+				body: JSON.stringify(requestBody),
+			});
 
 			const ruleResponse = await ruleRequest.json();
 			if (ruleRequest.status >= 400) {

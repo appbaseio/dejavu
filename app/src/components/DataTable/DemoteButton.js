@@ -1,8 +1,9 @@
 import React from 'react';
 import { message } from 'antd';
 
-import { getUrlParams } from '../../utils';
+import { getUrlParams, getHeaders } from '../../utils';
 import { PromotedResultsContext } from '../DataBrowser/PromotedResultsContainer';
+import getPromotedURL from '../PromotedResultsQueries/utils';
 
 class DemoteButton extends React.Component {
 	state = {
@@ -10,15 +11,19 @@ class DemoteButton extends React.Component {
 	};
 
 	deleteQuery = async rule => {
-		const { appname } = getUrlParams(window.location.search);
+		const { appname, url } = getUrlParams(window.location.search);
 		const { removeResult } = this.context;
 		const { item } = this.props;
 		try {
+			const requestURL = getPromotedURL(url);
+			const { Authorization } = getHeaders(url);
 			const deleteResponse = await fetch(
-				`https://accapi.appbase.io/app/${appname}/rule/${rule}`,
+				`${requestURL}/${appname}/_rule/${rule}`,
 				{
 					method: 'DELETE',
-					credentials: 'include',
+					headers: {
+						Authorization,
+					},
 				},
 			);
 			const deleteObject = await deleteResponse.json();
@@ -38,7 +43,7 @@ class DemoteButton extends React.Component {
 	demoteId = async () => {
 		this.toggleLoading();
 		const { item } = this.props;
-		const { rule, queryOperator, searchTerm, appname } = getUrlParams(
+		const { rule, queryOperator, searchTerm, appname, url } = getUrlParams(
 			window.location.search,
 		);
 		const { removeResult } = this.context || undefined;
@@ -90,11 +95,15 @@ class DemoteButton extends React.Component {
 			}
 
 			try {
+				const requestURL = getPromotedURL(url);
+				const { Authorization } = getHeaders(url);
 				const ruleRequest = await fetch(
-					`https://accapi.appbase.io/app/${appname}/rule`,
+					`${requestURL}/${appname}/_rule`,
 					{
 						method: 'POST',
-						credentials: 'include',
+						headers: {
+							Authorization,
+						},
 						body: JSON.stringify(requestBody),
 					},
 				);
