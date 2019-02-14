@@ -259,13 +259,13 @@ class ConnectApp extends Component<Props, State> {
 			this.props.disconnectApp();
 			this.props.setMode(MODES.VIEW);
 			this.props.setHeaders([]);
-			this.setState({
-				customHeaders: [{ key: '', value: '' }],
-				appname: '',
-				url: '',
-			});
+			// this.setState({
+			// 	customHeaders: [{ key: '', value: '' }],
+			// 	appname: '',
+			// 	url: '',
+			// });
 			this.props.history.push({ search: searchQuery });
-			window.location.reload(true);
+			// window.location.reload(true);
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
 				this.props.connectApp(appname, url);
