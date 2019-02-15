@@ -28,6 +28,7 @@ import {
 	getCustomHeaders,
 	isMultiIndexApp,
 	saveAppToLocalStorage,
+	normalizeSearchQuery,
 } from '../../utils';
 
 import { getMode } from '../../reducers/mode';
@@ -165,7 +166,7 @@ class ConnectApp extends Component<Props, State> {
 			}
 
 			if (footer) {
-				searchQuery += `&sidebar=${footer}`;
+				searchQuery += `&footer=${footer}`;
 			}
 
 			if (appswitcher) {
@@ -173,7 +174,9 @@ class ConnectApp extends Component<Props, State> {
 			}
 
 			this.props.setMode(currentMode);
-			this.props.history.push({ search: searchQuery });
+			this.props.history.push({
+				search: normalizeSearchQuery(searchQuery),
+			});
 		}
 
 		if (queryMode) {
@@ -264,7 +267,9 @@ class ConnectApp extends Component<Props, State> {
 			// 	appname: '',
 			// 	url: '',
 			// });
-			this.props.history.push({ search: searchQuery });
+			this.props.history.push({
+				search: normalizeSearchQuery(searchQuery),
+			});
 			// window.location.reload(true);
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
@@ -311,7 +316,9 @@ class ConnectApp extends Component<Props, State> {
 						pastApps: newApps,
 					}),
 				);
-				this.props.history.push({ search: searchQuery });
+				this.props.history.push({
+					search: normalizeSearchQuery(searchQuery),
+				});
 
 				if (this.props.isHidden) {
 					this.setAppSwitcher(false);

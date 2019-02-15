@@ -207,6 +207,15 @@ const convertToMax = (number, max) => {
 	return number;
 };
 
+const normalizeSearchQuery = query => {
+	let normalizedQuery = query;
+	if (normalizedQuery && normalizedQuery[1] === '&') {
+		normalizedQuery = normalizedQuery.replace('&', '');
+	}
+
+	return normalizedQuery;
+};
+
 export {
 	parseUrl,
 	getUrlParams,
@@ -228,4 +237,5 @@ export {
 	getCloneLink,
 	trimUrl,
 	convertToMax,
+	normalizeSearchQuery,
 };

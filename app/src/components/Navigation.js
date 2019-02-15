@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { getIndexes } from '../reducers/mappings';
 import { getIsConnected } from '../reducers/app';
+import { normalizeSearchQuery } from '../utils';
 
 type Props = {
 	indexes: string[],
@@ -19,10 +20,7 @@ const getImporterSearchParams = () => {
 	let params = window.location.search;
 
 	if (params) {
-		if (params[1] === '&') {
-			params = params.replace('&', '');
-		}
-
+		params = normalizeSearchQuery(params);
 		params += '&sidebar=true';
 	} else {
 		params = '?sidebar=true';
