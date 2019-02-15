@@ -25,7 +25,6 @@ const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 			<Button
 				icon="fork"
 				type="primary"
-				target="_blank"
 				href={getCloneLink(appname, rawUrl)}
 				css={{ marginRight: 10 }}
 			>

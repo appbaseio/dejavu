@@ -179,7 +179,16 @@ const isEqualArray = (array1 = [], array2 = []) => {
 };
 
 const getCloneLink = (appname, rawUrl) => {
-	let params = `https://importer.appbase.io/?`;
+	const { importUrl } = getUrlParams(window.location.search);
+
+	let params = importUrl || '/importer/';
+
+	if (importUrl) {
+		params += '?';
+	} else {
+		params += `${window.location.search}&sidebar=true&`;
+	}
+
 	if (rawUrl.indexOf('appbase.io') > 1) {
 		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"appbase"}`;
 	} else {
