@@ -11,7 +11,7 @@
 	"background": {
 		"scripts": ["background.js"]
 	},
-	"web_accessible_resources": ["index.html"],
+	"web_accessible_resources": ["index.html", "importer/index.html"],
 	"permissions": [
 		"storage",
 		"system.display",
