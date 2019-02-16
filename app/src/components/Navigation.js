@@ -3,15 +3,20 @@
 import React from 'react';
 import { Menu, Icon } from 'antd';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { getIndexes } from '../reducers/mappings';
 import { getIsConnected } from '../reducers/app';
-import { normalizeSearchQuery } from '../utils';
+import {
+	normalizeSearchQuery,
+	getImporterBaseUrl,
+	getUrlParams,
+} from '../utils';
 
 type Props = {
 	indexes: string[],
 	isConnected: boolean,
+	history: any,
 };
 
 const { Item } = Menu;
@@ -28,7 +33,22 @@ const getImporterSearchParams = () => {
 
 	return params;
 };
-const Navigation = ({ indexes, isConnected }: Props) => {
+
+const navHandler = (key, history) => {
+	switch (key) {
+		case 'import':
+			window.location.href = `${getImporterBaseUrl()}${getImporterSearchParams()}`;
+			break;
+		case 'browse':
+			history.push('/');
+			break;
+		default:
+			history.push(key);
+			break;
+	}
+};
+
+const Navigation = ({ indexes, isConnected, history }: Props) => {
 	const routeName = window.location.pathname.substring(1);
 	let defaultSelectedKey = routeName;
 
@@ -36,34 +56,38 @@ const Navigation = ({ indexes, isConnected }: Props) => {
 		defaultSelectedKey = 'browse';
 	}
 
+	// special case for chrome extension
+	const { route } = getUrlParams(window.location.search);
+	if (route) {
+		defaultSelectedKey = route;
+	} else {
+		defaultSelectedKey = 'browse';
+	}
+
 	return (
-		<Menu defaultSelectedKeys={[defaultSelectedKey]} mode="inline">
+		<Menu
+			defaultSelectedKeys={[defaultSelectedKey]}
+			mode="inline"
+			onSelect={({ key }) => navHandler(key, history)}
+		>
 			<Item key="browse">
-				<Link to="/">
-					<Icon type="table" />
-					Data Browser
-				</Link>
+				<Icon type="table" />
+				Data Browser
 			</Item>
 			<Item key="import">
-				<a href={`./importer/${getImporterSearchParams()}`}>
-					<Icon type="upload" />
-					Import Data
-				</a>
+				<Icon type="upload" />
+				Import Data
 			</Item>
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="query">
-					<Link to="/query">
-						<Icon type="search" />
-						Query Explorer
-					</Link>
+					<Icon type="search" />
+					Query Explorer
 				</Item>
 			)}
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="preview">
-					<Link to="/preview">
-						<Icon type="experiment" />
-						Search Preview
-					</Link>
+					<Icon type="experiment" />
+					Search Preview
 				</Item>
 			)}
 		</Menu>
@@ -75,4 +99,4 @@ const mapStateToProps = state => ({
 	isConnected: getIsConnected(state),
 });
 
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps)(withRouter(Navigation));

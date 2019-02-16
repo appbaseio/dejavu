@@ -178,10 +178,20 @@ const isEqualArray = (array1 = [], array2 = []) => {
 	return true;
 };
 
+const isExtension = () => window.location.href.indexOf('chrome-extension') > -1;
+
+const getImporterBaseUrl = () => {
+	if (isExtension()) {
+		return '/importer/index.html';
+	}
+
+	return '/importer/';
+};
+
 const getCloneLink = (appname, rawUrl) => {
 	const { importUrl } = getUrlParams(window.location.search);
 
-	let params = importUrl || '/importer/';
+	let params = importUrl || getImporterBaseUrl();
 
 	if (importUrl) {
 		params += '?';
@@ -247,4 +257,6 @@ export {
 	trimUrl,
 	convertToMax,
 	normalizeSearchQuery,
+	getImporterBaseUrl,
+	isExtension,
 };

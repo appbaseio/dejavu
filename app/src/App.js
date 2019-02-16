@@ -81,6 +81,24 @@ class App extends Component {
 		});
 	};
 
+	renderExtensionRoutes = () => {
+		const { route } = getUrlParams(window.location.search);
+
+		if (route) {
+			if (route === 'preview') {
+				return <SearchPreview />;
+			}
+
+			if (route === 'query') {
+				return <QueryExplorer />;
+			}
+
+			return <Dejavu />;
+		}
+
+		return <Dejavu />;
+	};
+
 	render() {
 		const {
 			isShowingSideBar,
@@ -132,23 +150,18 @@ class App extends Component {
 											path="/"
 											component={Dejavu}
 										/>
-										{/* Special case for chrom extension */}
-										<Route
-											exact
-											path="/index.html"
-											component={Dejavu}
-										/>
 										<Route
 											path="/preview"
 											component={SearchPreview}
 										/>
-										{/* <Route
-											path="/mappings"
-											component={Mappings}
-										/> */}
 										<Route
 											path="/query"
 											component={QueryExplorer}
+										/>
+										{/* Special cases for chrom extension */}
+										<Route
+											path="/index.html"
+											render={this.renderExtensionRoutes}
 										/>
 										<Route
 											path="/404"

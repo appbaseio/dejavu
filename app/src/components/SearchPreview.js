@@ -23,7 +23,7 @@ const SearchPreview = ({ isConnected, appName, rawUrl }: Props) => {
 	return (
 		<section>
 			<ErrorFlashMessage />
-			<ConnectApp isHidden />
+			<ConnectApp />
 			{isConnected && (
 				<BaseContainer
 					appName={appName}
