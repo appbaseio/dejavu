@@ -11,6 +11,7 @@ import {
 	normalizeSearchQuery,
 	getImporterBaseUrl,
 	getUrlParams,
+	isExtension,
 } from '../utils';
 
 type Props = {
@@ -57,11 +58,13 @@ const Navigation = ({ indexes, isConnected, history }: Props) => {
 	}
 
 	// special case for chrome extension
-	const { route } = getUrlParams(window.location.search);
-	if (route) {
-		defaultSelectedKey = route;
-	} else {
-		defaultSelectedKey = 'browse';
+	if (isExtension()) {
+		const { route } = getUrlParams(window.location.search);
+		if (route) {
+			defaultSelectedKey = route;
+		} else {
+			defaultSelectedKey = 'browse';
+		}
 	}
 
 	return (
