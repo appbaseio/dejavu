@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Layout, Modal } from 'antd';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
 
@@ -157,6 +157,19 @@ class App extends Component {
 										<Route
 											path="/query"
 											component={QueryExplorer}
+										/>
+										<Route
+											path="/browse"
+											render={() => (
+												<Redirect
+													to={{
+														pathname: '/',
+														search:
+															window.location
+																.search,
+													}}
+												/>
+											)}
 										/>
 										{/* Special cases for chrom extension */}
 										<Route

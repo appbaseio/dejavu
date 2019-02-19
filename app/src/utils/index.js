@@ -202,7 +202,7 @@ const getCloneLink = (appname, rawUrl) => {
 	if (rawUrl.indexOf('appbase.io') > 1) {
 		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"appbase"}`;
 	} else {
-		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"elasticsearch"}`;
+		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"es"}`;
 	}
 
 	return params;
