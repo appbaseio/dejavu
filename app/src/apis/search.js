@@ -13,14 +13,17 @@ const search = async (app, type, rawUrl, fetchData) => {
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(app);
 
-		const res = await fetch(`${url}/${app}/${type}/_search`, {
-			headers: {
-				...headers,
-				...convertArrayToHeaders(customHeaders),
+		const res = await fetch(
+			`${url}/${app}/${type ? `${type}` : ''}/_search`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify(fetchData),
 			},
-			method: 'POST',
-			body: JSON.stringify(fetchData),
-		}).then(response => response.json());
+		).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(

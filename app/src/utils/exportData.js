@@ -2,7 +2,7 @@ import { search } from '../apis';
 
 let jsonData = [];
 
-export const MAX_DATA = 100000;
+export const MAX_DATA = 50;
 
 const defaultQuery = {
 	query: {
@@ -60,7 +60,7 @@ export const searchAfter = async (
 		const sortKey = version > 5 ? '_id' : '_uid';
 		const data = await search(app, types, url, {
 			...query,
-			size: 1000,
+			size: 50,
 			sort: [
 				{
 					[sortKey]: 'desc',
@@ -117,7 +117,6 @@ const getSearchAfterData = async (
 ) => {
 	const { hits } = data;
 	let str = null;
-	console.log('called.....', chunkInfo);
 	/**
 	 * Checking if the current length is less than chunk total, recursive call searchAfter
 	 */
@@ -166,7 +165,7 @@ const exportData = async (
 		const finalQuery = query || defaultQuery;
 		const res = await searchAfter(
 			app,
-			types,
+			query ? null : types,
 			url,
 			version,
 			finalQuery,

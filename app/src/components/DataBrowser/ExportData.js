@@ -193,16 +193,20 @@ class ExportData extends Component<Props, State> {
 	};
 
 	onCSVClick = async () => {
-		const { selectedChunk, selectedIndex, selectedType } = this.state;
+		const {
+			selectedChunk,
+			selectedIndex,
+			selectedType,
+			applyCurrentQuery,
+		} = this.state;
 		const res = await this.fetchData();
 		const flattenData = res.map(item => flatten(item));
 		const newData = unparse(flattenData);
 		const file = new File(
 			[newData],
-			`data_${selectedIndex}_${selectedType}_${selectedChunk.replace(
-				/-/g,
-				'_',
-			)}.csv`,
+			`data_${selectedIndex}${
+				applyCurrentQuery ? '' : `_${selectedType}`
+			}_${selectedChunk.replace(/-/g, '_')}.csv`,
 			{
 				type: 'text/comma-separated-values;charset=utf-8',
 			},
@@ -211,14 +215,18 @@ class ExportData extends Component<Props, State> {
 	};
 
 	onJSONClick = async () => {
-		const { selectedChunk, selectedIndex, selectedType } = this.state;
+		const {
+			selectedChunk,
+			selectedIndex,
+			selectedType,
+			applyCurrentQuery,
+		} = this.state;
 		const res = await this.fetchData();
 		const file = new File(
 			[JSON.stringify(res, null, 4)],
-			`data_${selectedIndex}_${selectedType}_${selectedChunk.replace(
-				/-/g,
-				'_',
-			)}.json`,
+			`data_${selectedIndex}${
+				applyCurrentQuery ? '' : `_${selectedType}`
+			}_${selectedChunk.replace(/-/g, '_')}.json`,
 			{
 				type: 'application/json;charset=utf-8',
 			},
