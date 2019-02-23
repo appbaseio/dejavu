@@ -651,11 +651,42 @@ class ConnectApp extends Component<Props, State> {
 					!isConnected && (
 						<Alert
 							type="info"
-							showIcon
-							message="Connecting to ElasticSearch"
 							description={
 								<React.Fragment>
 									<div>
+										<h3
+											style={{
+												marginTop: '1rem',
+											}}
+										>
+											Connection Tips
+										</h3>
+										<ul>
+											<li>
+												You can connect to all indices
+												by passing an <code>*</code> in
+												the app name input field.
+											</li>
+											<li>
+												You can also connect to a single
+												index or multiple indices by
+												passing them as comma separated
+												values: e.g.
+												index1,index2,index3.
+											</li>
+											<li>
+												Avoid using a trailing slash{' '}
+												<code>/</code> after the cluster
+												address.
+											</li>
+											<li>
+												Your cluster needs to have CORS
+												enabled for the origin where
+												Dejavu is running. See below for
+												more on that.
+											</li>
+										</ul>
+										<h3>CORS Settings</h3>
 										<p>
 											To make sure you have enabled CORS
 											settings for your ElasticSearch
