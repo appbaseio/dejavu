@@ -2,7 +2,7 @@ import { search } from '../apis';
 
 let jsonData = [];
 
-export const MAX_DATA = 50;
+export const MAX_DATA = 100000;
 
 const defaultQuery = {
 	query: {
@@ -60,7 +60,7 @@ export const searchAfter = async (
 		const sortKey = version > 5 ? '_id' : '_uid';
 		const data = await search(app, types, url, {
 			...query,
-			size: 50,
+			size: 1000,
 			sort: [
 				{
 					[sortKey]: 'desc',
