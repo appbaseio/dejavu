@@ -206,7 +206,7 @@ class PromotedResultQueries extends React.Component {
 				`${requestURL}/${appname}/_rule`,
 				{
 					method: 'POST',
-					header: {
+					headers: {
 						Authorization,
 					},
 					body: JSON.stringify(requestBody),
