@@ -2,7 +2,7 @@ version: '3'
 services:
   # search engine
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.4
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.0
     container_name: elasticsearch
     entrypoint:
       - elasticsearch
@@ -16,7 +16,7 @@ services:
       - "9200:9200"
   # elasticsearch browser
   dejavu:
-    image: appbaseio/dejavu:3.0.0-alpha
+    image: appbaseio/dejavu:3.2.3
     container_name: dejavu
     ports:
      - "1358:1358"
