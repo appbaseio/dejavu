@@ -33,6 +33,7 @@ import HiddenResults from './HiddenResults';
 import BackButton from './BackButton';
 import QueryInfo from './QueryInfo';
 import AppPlanWrapper from './AppPlanWrapper';
+import NestedColumnToggle from './NestedColumnToggle';
 
 type Props = {
 	url: string,
@@ -103,75 +104,84 @@ class DataBrowser extends Component<Props> {
 		}
 		return (
 			<Skeleton loading={isLoading} active>
-				{!isLoading && !isDataLoading && mappings && (
-					<div css={{ position: 'relative', padding: 20 }}>
-						<ReactiveBase {...baseProps}>
-							<div>
-								<GlobalSearch searchTerm={searchTerm} />
-							</div>
-							<PromotedResultsContainer>
-								<AppPlanWrapper appName={appname}>
-									<BackButton />
+				{!isLoading &&
+					!isDataLoading &&
+					mappings && (
+						<div css={{ position: 'relative', padding: 20 }}>
+							<ReactiveBase {...baseProps}>
+								<div>
+									<NestedColumnToggle />
+									<GlobalSearch searchTerm={searchTerm} />
+								</div>
+								<PromotedResultsContainer>
+									<AppPlanWrapper appName={appname}>
+										<BackButton />
 
-									<PromotedResults />
+										<PromotedResults />
 
-									<HiddenResults />
-
-									<div
-										css={{
-											boxShadow:
-												'0 1px 10px -2px rgba(0,0,0,0.2)',
-											borderLeft: '4px solid #d9d9d9',
-										}}
-									>
-										<QueryInfo />
+										<HiddenResults />
 
 										<div
-											id="result-list"
 											css={{
-												marginTop: '20px',
-												border: `1px solid ${
-													colors.tableBorderColor
-												}`,
-												borderRadius: 3,
-												width: '100%',
-												position: 'relative',
-												height:
-													window.innerHeight -
-													(hideAppSwitcher
-														? 250
-														: 350),
-												overflow: 'visible',
+												boxShadow:
+													'0 1px 10px -2px rgba(0,0,0,0.2)',
+												borderLeft: '4px solid #d9d9d9',
 											}}
 										>
-											<AutoSizer
+											<QueryInfo />
+
+											<div
+												id="result-list"
 												css={{
-													height: '100% !important',
-													width: '100% !important',
+													marginTop: '20px',
+													border: `1px solid ${
+														colors.tableBorderColor
+													}`,
+													borderRadius: 3,
+													width: '100%',
+													position: 'relative',
+													height:
+														window.innerHeight -
+														(hideAppSwitcher
+															? 250
+															: 350),
+													overflow: 'visible',
 												}}
 											>
-												{({ height, width }) => (
-													<>
-														<DataTableHeader
-															ref={this.headerRef}
-														/>
-														<ResultList
-															height={height}
-															width={width}
-															headerRef={
-																this.headerRef
-															}
-														/>
-													</>
-												)}
-											</AutoSizer>
+												<AutoSizer
+													css={{
+														height:
+															'100% !important',
+														width:
+															'100% !important',
+													}}
+												>
+													{({ height, width }) => (
+														<>
+															<DataTableHeader
+																ref={
+																	this
+																		.headerRef
+																}
+															/>
+															<ResultList
+																height={height}
+																width={width}
+																headerRef={
+																	this
+																		.headerRef
+																}
+															/>
+														</>
+													)}
+												</AutoSizer>
+											</div>
 										</div>
-									</div>
-								</AppPlanWrapper>
-							</PromotedResultsContainer>
-						</ReactiveBase>
-					</div>
-				)}
+									</AppPlanWrapper>
+								</PromotedResultsContainer>
+							</ReactiveBase>
+						</div>
+					)}
 				{mappings && (
 					<Flex
 						css={{
