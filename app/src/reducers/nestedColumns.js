@@ -1,6 +1,6 @@
 import { NESTED_COLUMNS } from '../actions/constants';
 
-const nestedColumns = (state = false, action) => {
+const nestedColumns = (state = true, action) => {
 	const { isShowingNestedColumns } = action;
 	switch (action.type) {
 		case NESTED_COLUMNS.SET_IS_SHOWING_NESTED_COLUMNS:
