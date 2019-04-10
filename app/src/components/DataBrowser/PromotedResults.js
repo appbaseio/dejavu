@@ -161,6 +161,13 @@ class PromotedResults extends React.Component {
 											title={columnName}
 											key={columnName}
 											dataIndex={columnName}
+											render={columnValue =>
+												typeof columnValue === 'object'
+													? JSON.stringify(
+															columnValue,
+													  )
+													: columnValue
+											}
 										/>
 									),
 							  )
