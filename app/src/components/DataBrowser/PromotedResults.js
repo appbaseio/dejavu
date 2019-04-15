@@ -35,7 +35,8 @@ class PromotedResults extends React.Component {
 					if (
 						itemProperty !== 'key' &&
 						itemProperty !== '_index' &&
-						itemProperty !== '_type'
+						itemProperty !== '_type' &&
+						itemProperty !== 'highlight'
 					) {
 						if (!columnNames.includes(itemProperty)) {
 							columnNames = [...columnNames, itemProperty];
