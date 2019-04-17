@@ -35,14 +35,23 @@ const fetchMappings = async (appname, rawUrl) => {
 	}
 };
 
-const addMapping = async (indexName, typeName, rawUrl, field, mapping) => {
+const addMapping = async (
+	indexName,
+	typeName,
+	rawUrl,
+	field,
+	mapping,
+	version,
+) => {
 	const defaultError = 'Unable to add mapping';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-
-		const res = await fetch(`${url}/${indexName}/_mapping/${typeName}`, {
+		const apiUrl = `${url}/${indexName}/_mapping${
+			version === 7 ? '' : `/${typeName}`
+		}`;
+		const res = await fetch(apiUrl, {
 			headers: {
 				...headers,
 				...convertArrayToHeaders(customHeaders),

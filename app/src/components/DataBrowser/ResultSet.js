@@ -141,7 +141,14 @@ const ResultSet = ({
 				) : null
 			}
 			onResultStats={stats => {
-				onSetStats(stats);
+				const { totalResults, ...rest } = stats;
+				onSetStats({
+					totalResults:
+						typeof totalResults === 'object'
+							? totalResults.value
+							: totalResults,
+					...rest,
+				});
 			}}
 			renderResultStats={stats => (
 				<Flex
@@ -163,7 +170,14 @@ const ResultSet = ({
 					}}
 				>
 					Showing <b>{numberWithCommas(stats.displayedResults)}</b> of
-					total <b>{numberWithCommas(stats.totalResults)}</b>
+					total{' '}
+					<b>
+						{numberWithCommas(
+							typeof stats.totalResults === 'object'
+								? stats.totalResults.value
+								: stats.totalResults,
+						)}
+					</b>
 				</Flex>
 			)}
 			onQueryChange={(prevQuery, nextQuery) => {

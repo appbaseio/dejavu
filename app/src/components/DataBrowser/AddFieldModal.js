@@ -17,6 +17,7 @@ import { isVaildJSON } from '../../utils';
 import labelStyles from '../CommonStyles/label';
 import { getAnalyzersApi, closeApp, openApp, putSettings } from '../../apis';
 import { getAnalyzers } from '../../reducers/analyzers';
+import { getVersion } from '../../reducers/version';
 
 import Item from './Item.styles';
 
@@ -34,11 +35,12 @@ const customMappings = {
 type Props = {
 	appname: string,
 	mappings: object,
-	addMappingRequest: (string, string, string, object) => void,
+	addMappingRequest: (string, string, string, object, number) => void,
 	indexTypeMap: object,
 	setAnalyzers: (analyzers: any) => void,
 	analyzers: string[],
 	url: string,
+	version: number,
 };
 
 type State = {
@@ -151,9 +153,10 @@ class AddFieldModal extends Component<Props, State> {
 					analyzers,
 					url,
 					setAnalyzers: updateAnalyzer,
+					version,
 				} = this.props;
+
 				let currentAnalyzers = analyzers;
-				console.log(currentAnalyzers);
 				// check if search field is part of request.
 				// if true make sure search analyzers exists.
 				if (selectedPrimitiveType === 'SearchableText') {
@@ -161,11 +164,7 @@ class AddFieldModal extends Component<Props, State> {
 						url,
 						selectedIndex,
 					);
-					console.log(
-						'next set of analyzers',
-						currentAnalyzers,
-						currentAnalyzers.indexOf('ngram_analyzer') === -1,
-					);
+
 					if (currentAnalyzers.indexOf('ngram_analyzer') === -1) {
 						await closeApp(url, selectedIndex);
 						await putSettings(url, selectedIndex);
@@ -178,6 +177,7 @@ class AddFieldModal extends Component<Props, State> {
 					selectedType,
 					addColumnField,
 					mappingValue,
+					version,
 				);
 
 				if (analyzers.indexOf('ngram_analyzer') === -1) {
@@ -382,6 +382,7 @@ const mapStateToProps = state => ({
 	indexTypeMap: getIndexTypeMap(state),
 	analyzers: getAnalyzers(state),
 	url: getUrl(state),
+	version: getVersion(state),
 });
 
 const mapDispatchToProps = {

@@ -8,6 +8,7 @@ export const LOCAL_CONNECTIONS = 'localConnections';
 export const IMPORTER_LINK = 'https://importer.appbase.io/?app=';
 
 export const SETTINGS = {
+	'index.max_ngram_diff': 10,
 	analysis: {
 		analyzer: {
 			autosuggest_analyzer: {

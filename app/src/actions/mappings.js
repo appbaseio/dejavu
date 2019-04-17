@@ -45,12 +45,13 @@ const fetchMappingsFailure = () => ({
 	type: MAPPINGS.MAPPINGS_FETCH_FAILURE,
 });
 
-const addMappingRequest = (indexName, typeName, field, mapping) => ({
+const addMappingRequest = (indexName, typeName, field, mapping, version) => ({
 	type: MAPPINGS.ADD_MAPPING_REQUEST,
 	field,
 	mapping,
 	indexName,
 	typeName,
+	version,
 });
 
 const addMappingSuccess = () => ({

@@ -113,7 +113,7 @@ export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
 			...query,
 		};
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_delete_by_query`,
+			`${url}/${indexName}/${typeName}/_delete_by_query?wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,
@@ -192,7 +192,7 @@ export const bulkUpdate = async (
 		};
 
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed`,
+			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed&wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,

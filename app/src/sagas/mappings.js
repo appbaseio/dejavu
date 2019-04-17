@@ -48,12 +48,17 @@ function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
+				if (versionCode === 7) {
+					data[index].mappings = {
+						_doc: { ...data[index].mappings },
+					};
+				}
 				let typesList = Object.keys(data[index].mappings);
 				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
 					typesList.forEach(type => {
 						const typeProperties =
-							data[index].mappings[type].properties || {};
+							data[index].mappings[type].properties;
 						indexTypeMap[index] = [
 							...(indexTypeMap[index] || []),
 							type,
@@ -219,11 +224,19 @@ function* handleFetchMappings() {
 	}
 }
 
-function* handleAddMapping({ indexName, typeName, field, mapping }) {
+function* handleAddMapping({ indexName, typeName, field, mapping, version }) {
 	try {
 		yield put(clearError());
 		const url = yield select(getUrl);
-		yield call(addMapping, indexName, typeName, url, field, mapping);
+		yield call(
+			addMapping,
+			indexName,
+			typeName,
+			url,
+			field,
+			mapping,
+			version,
+		);
 		yield put(addMappingSuccess());
 		yield call(handleFetchMappings); // sagas FTW
 	} catch (error) {
