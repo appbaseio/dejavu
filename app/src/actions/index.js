@@ -40,6 +40,7 @@ import setQuery from './query';
 import setSelectAll from './selectAll';
 import setApplyQuery from './applyQuery';
 import setStats from './stats';
+import setAnalyzers from './analyzers';
 
 export {
 	// app
@@ -95,4 +96,6 @@ export {
 	setApplyQuery,
 	// stats
 	setStats,
+	// analyzers
+	setAnalyzers,
 };

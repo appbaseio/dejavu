@@ -5,6 +5,7 @@ import { putData, deleteData, addData } from './data';
 import getVersion from './version';
 import getCount from './count';
 import search from './search';
+import { getAnalyzersApi, closeApp, openApp, putSettings } from './analyzers';
 
 export {
 	testConnection,
@@ -17,4 +18,8 @@ export {
 	getVersion,
 	getCount,
 	search,
+	getAnalyzersApi,
+	closeApp,
+	openApp,
+	putSettings,
 };

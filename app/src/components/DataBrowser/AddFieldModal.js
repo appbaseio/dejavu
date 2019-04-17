@@ -2,19 +2,21 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Select, Radio, Row, Col, Button } from 'antd';
-import { string, func, object } from 'prop-types';
+import { object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/json';
 import 'brace/theme/github';
 
-import { getAppname } from '../../reducers/app';
+import { getAppname, getUrl } from '../../reducers/app';
 import { getMappings, getIndexTypeMap } from '../../reducers/mappings';
-import { addMappingRequest } from '../../actions';
+import { addMappingRequest, setAnalyzers } from '../../actions';
 import { es6mappings } from '../../utils/mappings';
 import { isVaildJSON } from '../../utils';
 import labelStyles from '../CommonStyles/label';
+import { getAnalyzersApi, closeApp, openApp, putSettings } from '../../apis';
+import { getAnalyzers } from '../../reducers/analyzers';
 
 import Item from './Item.styles';
 
@@ -34,6 +36,9 @@ type Props = {
 	mappings: object,
 	addMappingRequest: (string, string, string, object) => void,
 	indexTypeMap: object,
+	setAnalyzers: (analyzers: any) => void,
+	analyzers: string[],
+	url: string,
 };
 
 type State = {
@@ -47,6 +52,7 @@ type State = {
 	selectedType: string,
 	selectedShape: string,
 	selectedPrimitiveType: string,
+	isProcessing: boolean,
 };
 
 class AddFieldModal extends Component<Props, State> {
@@ -63,6 +69,7 @@ class AddFieldModal extends Component<Props, State> {
 		][0],
 		selectedShape: DATA_SHAPE[0],
 		selectedPrimitiveType: Object.keys(customMappings)[0],
+		isProcessing: false,
 	};
 
 	handleAfterClose = () => {
@@ -101,44 +108,87 @@ class AddFieldModal extends Component<Props, State> {
 		});
 	};
 
-	addColumn = () => {
-		const {
-			addColumnError,
-			addColumnField,
-			addColumnMapping,
-			selectedIndex,
-			selectedPrimitiveType,
-			selectedType,
-			selectedShape,
-		} = this.state;
-		if (
-			!addColumnError &&
-			addColumnField &&
-			addColumnMapping &&
-			selectedIndex &&
-			selectedType &&
-			selectedShape &&
-			selectedPrimitiveType
-		) {
-			let mappingValue = null;
+	setIsProcessing = value => {
+		this.setState({
+			isProcessing: value,
+		});
+	};
 
-			if (selectedShape === 'Object') {
-				mappingValue = {
-					type: 'object',
-				};
-			} else if (selectedPrimitiveType === CUSTOM_MAPPING) {
-				mappingValue = JSON.parse(addColumnMapping);
-			} else {
-				mappingValue = es6mappings[selectedPrimitiveType];
-			}
-
-			this.props.addMappingRequest(
-				selectedIndex,
-				selectedType,
+	addColumn = async () => {
+		try {
+			const {
+				addColumnError,
 				addColumnField,
-				mappingValue,
-			);
-			this.toggleModal();
+				addColumnMapping,
+				selectedIndex,
+				selectedPrimitiveType,
+				selectedType,
+				selectedShape,
+			} = this.state;
+			if (
+				!addColumnError &&
+				addColumnField &&
+				addColumnMapping &&
+				selectedIndex &&
+				selectedType &&
+				selectedShape &&
+				selectedPrimitiveType
+			) {
+				this.setIsProcessing(true);
+				let mappingValue = null;
+
+				if (selectedShape === 'Object') {
+					mappingValue = {
+						type: 'object',
+					};
+				} else if (selectedPrimitiveType === CUSTOM_MAPPING) {
+					mappingValue = JSON.parse(addColumnMapping);
+				} else {
+					mappingValue = es6mappings[selectedPrimitiveType];
+				}
+
+				const {
+					analyzers,
+					url,
+					setAnalyzers: updateAnalyzer,
+				} = this.props;
+				let currentAnalyzers = analyzers;
+				console.log(currentAnalyzers);
+				// check if search field is part of request.
+				// if true make sure search analyzers exists.
+				if (selectedPrimitiveType === 'SearchableText') {
+					currentAnalyzers = await getAnalyzersApi(
+						url,
+						selectedIndex,
+					);
+					console.log(
+						'next set of analyzers',
+						currentAnalyzers,
+						currentAnalyzers.indexOf('ngram_analyzer') === -1,
+					);
+					if (currentAnalyzers.indexOf('ngram_analyzer') === -1) {
+						await closeApp(url, selectedIndex);
+						await putSettings(url, selectedIndex);
+						await openApp(url, selectedIndex);
+					}
+				}
+
+				this.props.addMappingRequest(
+					selectedIndex,
+					selectedType,
+					addColumnField,
+					mappingValue,
+				);
+
+				if (analyzers.indexOf('ngram_analyzer') === -1) {
+					updateAnalyzer(['ngram_analyzer', 'autosuggest_analyzer']);
+				}
+				this.setIsProcessing(false);
+				this.toggleModal();
+			}
+		} catch (err) {
+			this.setIsProcessing(false);
+			console.error(err);
 		}
 	};
 
@@ -187,6 +237,7 @@ class AddFieldModal extends Component<Props, State> {
 			addColumnMapping,
 			types,
 			isShowingModal,
+			isProcessing,
 		} = this.state;
 
 		return (
@@ -211,7 +262,8 @@ class AddFieldModal extends Component<Props, State> {
 							!selectedIndex ||
 							!selectedType ||
 							!selectedShape ||
-							!selectedPrimitiveType,
+							!selectedPrimitiveType ||
+							isProcessing,
 					}}
 					css={{
 						top: '10px',
@@ -324,21 +376,17 @@ class AddFieldModal extends Component<Props, State> {
 	}
 }
 
-AddFieldModal.propTypes = {
-	appname: string.isRequired,
-	mappings: object,
-	addMappingRequest: func.isRequired,
-	indexTypeMap: object.isRequired,
-};
-
 const mapStateToProps = state => ({
 	appname: getAppname(state),
 	mappings: getMappings(state),
 	indexTypeMap: getIndexTypeMap(state),
+	analyzers: getAnalyzers(state),
+	url: getUrl(state),
 });
 
 const mapDispatchToProps = {
 	addMappingRequest,
+	setAnalyzers,
 };
 
 export default connect(

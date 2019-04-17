@@ -87,6 +87,10 @@ const STATS = {
 	SET_STATS: 'SET_STATS',
 };
 
+const ANALYZERS = {
+	SET_ANALYZERS: 'SET_ANALYZERS',
+};
+
 export {
 	APP,
 	CELL,
@@ -105,4 +109,5 @@ export {
 	SELECT_ALL,
 	APPLY_QUERY,
 	STATS,
+	ANALYZERS,
 };
