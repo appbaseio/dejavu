@@ -8,7 +8,7 @@ services:
       - elasticsearch
       - -Ehttp.port=9200
       - -Ehttp.cors.enabled=true
-      - -Ehttp.cors.allow-origin=http://localhost:1358
+      - -Ehttp.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
       - -Ehttp.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
       - -Ehttp.cors.allow-credentials=true
     user: elasticsearch
