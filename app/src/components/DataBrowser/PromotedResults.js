@@ -35,7 +35,8 @@ class PromotedResults extends React.Component {
 					if (
 						itemProperty !== 'key' &&
 						itemProperty !== '_index' &&
-						itemProperty !== '_type'
+						itemProperty !== '_type' &&
+						itemProperty !== 'highlight'
 					) {
 						if (!columnNames.includes(itemProperty)) {
 							columnNames = [...columnNames, itemProperty];
@@ -161,6 +162,13 @@ class PromotedResults extends React.Component {
 											title={columnName}
 											key={columnName}
 											dataIndex={columnName}
+											render={columnValue =>
+												typeof columnValue === 'object'
+													? JSON.stringify(
+															columnValue,
+													  )
+													: columnValue
+											}
 										/>
 									),
 							  )

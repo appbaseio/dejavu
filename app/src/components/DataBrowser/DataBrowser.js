@@ -32,6 +32,7 @@ import PromotedResults from './PromotedResults';
 import HiddenResults from './HiddenResults';
 import BackButton from './BackButton';
 import QueryInfo from './QueryInfo';
+import NestedColumnToggle from './NestedColumnToggle';
 
 type Props = {
 	url: string,
@@ -106,6 +107,7 @@ class DataBrowser extends Component<Props> {
 					<div css={{ position: 'relative', padding: 20 }}>
 						<ReactiveBase {...baseProps}>
 							<div>
+								<NestedColumnToggle />
 								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
