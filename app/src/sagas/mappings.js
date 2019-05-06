@@ -147,11 +147,13 @@ function* handleFetchMappings() {
 				...searchColumns.map(field => `${field}.raw`),
 				...searchColumns.map(field => `${field}.search`),
 				...searchColumns.map(field => `${field}.autosuggest`),
+				...searchColumns.map(field => `${field}.english`),
 				'_id',
 			];
 			const searchableColumnsWeights = [
 				...Array(searchColumns.length).fill(3),
 				...Array(searchColumns.length).fill(3),
+				...Array(searchColumns.length).fill(1),
 				...Array(searchColumns.length).fill(1),
 				...Array(searchColumns.length).fill(1),
 				1,
@@ -162,11 +164,13 @@ function* handleFetchMappings() {
 				...nestedSearchColumns.map(field => `${field}.raw`),
 				...nestedSearchColumns.map(field => `${field}.search`),
 				...nestedSearchColumns.map(field => `${field}.autosuggest`),
+				...nestedSearchColumns.map(field => `${field}.english`),
 				'_id',
 			];
 			const nestedSearchableColumnsWeights = [
 				...Array(nestedSearchColumns.length).fill(3),
 				...Array(nestedSearchColumns.length).fill(3),
+				...Array(nestedSearchColumns.length).fill(1),
 				...Array(nestedSearchColumns.length).fill(1),
 				...Array(nestedSearchColumns.length).fill(1),
 				1,

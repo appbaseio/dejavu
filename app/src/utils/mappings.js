@@ -47,6 +47,10 @@ const es6mappings = {
 				analyzer: 'autosuggest_analyzer',
 				search_analyzer: 'simple',
 			},
+			english: {
+				type: 'text',
+				analyzer: 'english',
+			},
 		},
 		analyzer: 'standard',
 		search_analyzer: 'standard',
