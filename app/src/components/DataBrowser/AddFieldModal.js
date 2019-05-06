@@ -159,7 +159,7 @@ class AddFieldModal extends Component<Props, State> {
 				let currentAnalyzers = analyzers;
 				// check if search field is part of request.
 				// if true make sure search analyzers exists.
-				if (selectedPrimitiveType === 'SearchableText') {
+				if (selectedPrimitiveType === 'Text: Search') {
 					currentAnalyzers = await getAnalyzersApi(
 						url,
 						selectedIndex,
