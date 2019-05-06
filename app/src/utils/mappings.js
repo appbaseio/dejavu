@@ -9,7 +9,7 @@ const extractColumns = (mappings, key) =>
 const META_FIELDS = ['_index', '_type'];
 
 const es6mappings = {
-	Text: {
+	'Text: Aggs': {
 		type: 'text',
 		fields: {
 			keyword: {
@@ -27,7 +27,7 @@ const es6mappings = {
 		analyzer: 'standard',
 		search_analyzer: 'standard',
 	},
-	SearchableText: {
+	'Text: Search': {
 		type: 'text',
 		fields: {
 			keyword: {
