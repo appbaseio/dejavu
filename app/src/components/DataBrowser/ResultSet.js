@@ -15,6 +15,7 @@ import { getSort } from '../../reducers/sort';
 import { getPageSize } from '../../reducers/pageSize';
 import { getAppname } from '../../reducers/app';
 import { getReactiveListKey } from '../../reducers/data';
+import { getVersion } from '../../reducers/version';
 import {
 	getTermsAggregationColumns,
 	getMappings,
@@ -46,6 +47,7 @@ type Props = {
 	onSetSelectAll: boolean => void,
 	onSetApplyQuery: boolean => void,
 	onSetStats: any => void,
+	version: number,
 };
 
 const ResultSet = ({
@@ -65,6 +67,7 @@ const ResultSet = ({
 	onSetSelectAll,
 	onSetApplyQuery,
 	onSetStats,
+	version,
 }: Props) => {
 	const { results } = getUrlParams(window.location.search);
 	const currentPage = parseInt(results || 1, 10);
@@ -79,6 +82,14 @@ const ResultSet = ({
 			showResultStats
 			URLParams
 			currentPage={currentPage}
+			defaultQuery={() => ({
+				sort: [
+					{
+						[sortField]: { order: sortOrder },
+						[version > 5 ? '_id' : '_uid']: { order: sortOrder },
+					},
+				],
+			})}
 			react={{
 				and: [
 					'GlobalSearch',
@@ -199,6 +210,7 @@ const mapStateToProps = state => {
 		pageSize: getPageSize(state),
 		reactiveListKey: getReactiveListKey(state),
 		mappings: getMappings(state),
+		version: getVersion(state),
 	};
 };
 

@@ -1,6 +1,7 @@
 [ignore]
 dist
 node_modules
+app/src/battiers
 
 [include]
 app
