@@ -18,6 +18,8 @@ import labelStyles from '../CommonStyles/label';
 import { getAnalyzersApi, closeApp, openApp, putSettings } from '../../apis';
 import { getAnalyzers } from '../../reducers/analyzers';
 import { getVersion } from '../../reducers/version';
+import setMode from '../../actions/mode';
+import { MODES } from '../../constants';
 
 import Item from './Item.styles';
 
@@ -41,6 +43,7 @@ type Props = {
 	analyzers: string[],
 	url: string,
 	version: number,
+	setMode: string => void,
 };
 
 type State = {
@@ -222,6 +225,7 @@ class AddFieldModal extends Component<Props, State> {
 		this.setState(prevState => ({
 			isShowingModal: !prevState.isShowingModal,
 		}));
+		this.props.setMode(MODES.EDIT);
 	};
 
 	render() {
@@ -388,6 +392,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
 	addMappingRequest,
 	setAnalyzers,
+	setMode,
 };
 
 export default connect(

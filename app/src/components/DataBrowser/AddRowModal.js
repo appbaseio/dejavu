@@ -18,6 +18,8 @@ import { addDataRequest } from '../../actions';
 import { isVaildJSON } from '../../utils';
 import getSampleData from '../../utils/sampleData';
 import labelStyles from '../CommonStyles/label';
+import setMode from '../../actions/mode';
+import { MODES } from '../../constants';
 
 import Item from './Item.styles';
 import Cell from '../Cell';
@@ -33,6 +35,7 @@ type Props = {
 	typePropertyMapping?: {
 		[key: string]: object,
 	},
+	setMode: string => void,
 };
 
 type State = {
@@ -174,6 +177,7 @@ class AddRowModal extends Component<Props, State> {
 		this.setState(prevState => ({
 			isShowingModal: !prevState.isShowingModal,
 		}));
+		this.props.setMode(MODES.EDIT);
 	};
 
 	handleTabChange = tab => {
@@ -373,6 +377,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
 	addDataRequest,
+	setMode,
 };
 
 export default connect(
