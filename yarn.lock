@@ -25,22 +25,22 @@
     react-emotion "^9.0.0"
     react-feather "^1.1.0"
 
-"@appbaseio/reactivecore@^7.4.0":
-  version "7.4.1"
-  resolved "https://registry.npmjs.org/@appbaseio/reactivecore/-/reactivecore-7.4.1.tgz#a9b6f799b42bca0cbcf138ba497b28ad21a3d71a"
-  integrity sha512-zqbUw2pTkwp9/vclkU8FaaRLWH6qWezZ9jrJTIxqDJ7OBzEUhSVGkJVNvkIoRChaa9+kkTrn9ksnquaYaPz1xg==
+"@appbaseio/reactivecore@^8.1.6":
+  version "8.1.6"
+  resolved "https://registry.npmjs.org/@appbaseio/reactivecore/-/reactivecore-8.1.6.tgz#11ae73f635ed8966f2ff26fe0aa7560e747a3ed7"
+  integrity sha512-qPdw72PHtnAybByhJcdlS+4NuxQhtumUMywpCXsBR0GS+JOpop9RXgTDIWrRcF17OgV6UyvF9nAdTAQmyNxtCQ==
   dependencies:
     prop-types "^15.6.0"
     redux "^4.0.0"
     redux-thunk "^2.3.0"
 
-"@appbaseio/reactivesearch@^3.0.0-alpha.11":
-  version "3.0.0-alpha.11"
-  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-3.0.0-alpha.11.tgz#8752515960a172eef72cd1b544014e0dbd3dcbec"
-  integrity sha512-g5Z6KoZL68sJOOBLgdavAvzL2MbZSk7dgrUOEmYYkBdKa2YTn3lpLtDz1rsf3A3RV4lsa+yLxUHctsrly5PXzA==
+"@appbaseio/reactivesearch@^3.0.0-rc.8":
+  version "3.0.0-rc.8"
+  resolved "https://registry.npmjs.org/@appbaseio/reactivesearch/-/reactivesearch-3.0.0-rc.8.tgz#3ee56d06da5035b6ed4b8d813e10e16d485da685"
+  integrity sha512-XrOg/fIGcNzNf7eMFbTWgbCc66jhXzhHuWwT6cE/E80KL/1xSgKjR2T+rOypN9CGyd9o7oCgo5gODlRV/5gAwA==
   dependencies:
-    "@appbaseio/reactivecore" "^7.4.0"
-    appbase-js "^4.0.2-beta.04"
+    "@appbaseio/reactivecore" "^8.1.6"
+    appbase-js "^4.0.2-beta.05"
     cross-env "^5.2.0"
     downshift "^1.31.2"
     emotion "^9.0.0"
@@ -1550,10 +1550,10 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-appbase-js@^4.0.2-beta.04:
-  version "4.0.2-beta.4"
-  resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.4.tgz#59bcba7265d3f7937f8d3b1cfecb1973f5d059c8"
-  integrity sha512-yfljZF2WA4qjAEd1tqOXL49bQSGcnC8DWuDJJU3/DBgS7WB+vFeYPlk7Q+JANFx9+XCT3RXja68gu1Ic0jJWlg==
+appbase-js@^4.0.2-beta.05:
+  version "4.0.2-beta.5"
+  resolved "https://registry.npmjs.org/appbase-js/-/appbase-js-4.0.2-beta.5.tgz#456eecb825f124b996bfd617aab47c1f2a95d087"
+  integrity sha512-SEvYFK4oCQ4WcQUiTj2e2E/hbFiZNihmd2562aXyXQp7i5vg2O2G/cxOmesUFfKBq0C1aOOxSfBz5m0yuklUqg==
   dependencies:
     cross-fetch "^2.2.2"
     json-stable-stringify "^1.0.1"
