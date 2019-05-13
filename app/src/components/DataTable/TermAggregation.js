@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Popover } from 'antd';
+import { Popover, Icon } from 'antd';
 import { MultiList } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
 
@@ -16,57 +16,99 @@ type Props = {
 	field: string,
 };
 
-const TermAggregation = ({ field }: Props) => {
-	let componentId = field;
-	if (field === '_type') {
-		componentId = 'typeField';
-	}
-
-	if (field === '_index') {
-		componentId = 'indexField';
-	}
-	return (
-		<Popover
-			content={
-				<MultiList
-					componentId={componentId}
-					dataField={field}
-					size={100}
-					css={termAggregationStyles}
-					innerClass={{
-						input: `ant-input ${css`
-							height: 32px;
-							background: ${colors.white} !important;
-						`}`,
-						checkbox: 'ant-checkbox-input',
-					}}
-					renderListItem={(label, count) => (
-						<Flex
-							alignItem="center"
-							wrap="nowrap"
-							justifyContent="space-between"
-							css={{
-								width: '100%',
-							}}
-						>
-							<span
-								css={{ maxWidth: 100 }}
-								className={overflowStyles}
-							>
-								{label}
-							</span>
-							<span>{count}</span>
-						</Flex>
-					)}
-				/>
-			}
-			title="Filter"
-			trigger="click"
-			placement="bottomRight"
-		>
-			<i className={`fa fa-filter ${filterIconStyles}`} />
-		</Popover>
-	);
+type State = {
+	hasMounted: boolean,
 };
+
+class TermAggregation extends React.Component<Props, State> {
+	state = {
+		hasMounted: true,
+	};
+
+	onUpdate = () => {
+		this.setState(
+			() => ({
+				hasMounted: false,
+			}),
+			() =>
+				setTimeout(() =>
+					this.setState({
+						hasMounted: true,
+					}),
+				),
+		);
+	};
+
+	render() {
+		const { field } = this.props;
+		const { hasMounted } = this.state;
+		let componentId = field;
+		if (field === '_type') {
+			componentId = 'typeField';
+		}
+
+		if (field === '_index') {
+			componentId = 'indexField';
+		}
+
+		return (
+			<Popover
+				content={
+					hasMounted && (
+						<MultiList
+							componentId={componentId}
+							dataField={field}
+							size={100}
+							css={termAggregationStyles}
+							innerClass={{
+								input: `ant-input ${css`
+									height: 32px;
+									background: ${colors.white} !important;
+								`}`,
+								checkbox: 'ant-checkbox-input',
+							}}
+							renderItem={(label, count) => (
+								<Flex
+									alignItem="center"
+									wrap="nowrap"
+									justifyContent="space-between"
+									css={{
+										width: '100%',
+									}}
+								>
+									<span
+										css={{ maxWidth: 100 }}
+										className={overflowStyles}
+									>
+										{label}
+									</span>
+									<span>{count}</span>
+								</Flex>
+							)}
+							loader="Loading..."
+							renderNoResults={() => <p>No Results Found!</p>}
+						/>
+					)
+				}
+				title={
+					<Flex justifyContent="space-between" alignItems="center">
+						<span>Filter</span>
+						<Icon
+							type="sync"
+							css={css`
+								cursor: pointer;
+							`}
+							onClick={this.onUpdate}
+						/>
+					</Flex>
+				}
+				trigger="click"
+				placement="bottomRight"
+			>
+				<i className={`fa fa-filter ${filterIconStyles}`} />
+			</Popover>
+		);
+	}
+}
 
 export default TermAggregation;

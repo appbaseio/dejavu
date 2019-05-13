@@ -50,7 +50,7 @@ const BooleanTermAggregation = ({ field }: Props) => {
 						`}`,
 						checkbox: 'ant-checkbox-input',
 					}}
-					renderListItem={label => (
+					renderItem={label => (
 						<Flex
 							alignItem="center"
 							wrap="nowrap"
