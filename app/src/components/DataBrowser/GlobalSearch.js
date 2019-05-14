@@ -14,7 +14,6 @@ import {
 } from '../../reducers/mappings';
 import { getIsShowingNestedColumns } from '../../reducers/nestedColumns';
 import { getMode } from '../../reducers/mode';
-import { updateReactiveList } from '../../actions';
 import { MODES } from '../../constants';
 
 type Props = {
@@ -22,27 +21,39 @@ type Props = {
 	nestedSearchableColumns: string[],
 	searchableColumns: string[],
 	mode: string,
-	updateReactiveList: () => void,
 	searchableColumnsWeights: number[],
 	nestedSearchableColumnsWeights: number[],
 };
 
 type State = {
 	searchValue: string,
+	hasMounted: boolean,
 };
 
 class GlobalSearch extends Component<Props, State> {
 	state = {
 		searchValue: '',
+		hasMounted: true,
 	};
 
-	componentDidUpdate(nextProps) {
+	shouldComponentUpdate(nextProps) {
 		const { searchValue } = this.state;
+		if (nextProps.mode !== this.props.mode && searchValue.trim()) {
+			this.setMountState(false);
+			setTimeout(() => {
+				this.setMountState(true);
+			});
 
-		if (this.props.mode !== nextProps.mode && searchValue.trim()) {
-			this.props.updateReactiveList();
+			return false;
 		}
+		return true;
 	}
+
+	setMountState = hasMounted => {
+		this.setState({
+			hasMounted,
+		});
+	};
 
 	handleSearchValueChange = searchValue => {
 		this.setState({
@@ -65,27 +76,31 @@ class GlobalSearch extends Component<Props, State> {
 		const weights = isShowingNestedColumns
 			? nestedSearchableColumnsWeights
 			: searchableColumnsWeights;
+		const { searchValue, hasMounted } = this.state;
 
 		return (
 			<div css={{ position: 'relative' }}>
-				<DataSearch
-					componentId="GlobalSearch"
-					autosuggest={false}
-					dataField={searchableColumns}
-					fieldWeights={weights}
-					innerClass={{
-						input: `ant-input ${css`
-							padding-left: 35px;
-							height: 32px;
-							background: #fff !important;
-						`}`,
-					}}
-					debounce={5}
-					showIcon={false}
-					highlight={mode === MODES.VIEW}
-					queryFormat="and"
-					onValueChange={this.handleSearchValueChange}
-				/>
+				{hasMounted && (
+					<DataSearch
+						componentId="GlobalSearch"
+						autosuggest={false}
+						dataField={searchableColumns}
+						fieldWeights={weights}
+						innerClass={{
+							input: `ant-input ${css`
+								padding-left: 35px;
+								height: 32px;
+								background: #fff !important;
+							`}`,
+						}}
+						debounce={5}
+						showIcon={false}
+						highlight={mode === MODES.VIEW}
+						queryFormat="and"
+						onChange={this.handleSearchValueChange}
+						value={searchValue}
+					/>
+				)}
 				<Icon
 					type="search"
 					css={{
@@ -109,11 +124,4 @@ const mapStateToProps = state => ({
 	mode: getMode(state),
 });
 
-const mapDispatchToProps = {
-	updateReactiveList,
-};
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(GlobalSearch);
+export default connect(mapStateToProps)(GlobalSearch);
