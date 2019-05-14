@@ -5,7 +5,6 @@ import { ReactiveList } from '@appbaseio/reactivesearch';
 import { connect } from 'react-redux';
 import styled, { css } from 'react-emotion';
 import { mediaMin } from '@divyanshu013/media';
-import { Icon } from 'antd';
 
 import DataTable from '../DataTable';
 import Flex from '../Flex';
@@ -213,7 +212,7 @@ class ResultSet extends React.Component<Props, State> {
 						onSetApplyQuery(false);
 					}}
 				>
-					{({ data, loading, error }) => (
+					{({ data, loading }) => (
 						<>
 							{loading && (
 								<InfoContainer
@@ -222,13 +221,6 @@ class ResultSet extends React.Component<Props, State> {
 									id="spinner"
 								>
 									<Loader />
-								</InfoContainer>
-							)}
-							{error && (
-								<InfoContainer flexDirection="column">
-									<Icon type="meh" />
-									<h3>Sorry something went wrong</h3>
-									<pre>{JSON.stringify(error)}</pre>
 								</InfoContainer>
 							)}
 							{data && data.length ? (

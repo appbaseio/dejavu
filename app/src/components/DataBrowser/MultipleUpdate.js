@@ -58,7 +58,7 @@ type State = {
 	isSavingData: boolean,
 };
 
-class MultipeUpdate extends Component<Props, State> {
+class MultipleUpdate extends Component<Props, State> {
 	state = {
 		isShowingModal: false,
 		data: [
@@ -406,4 +406,4 @@ const mapDispatchToProps = {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(MultipeUpdate);
+)(MultipleUpdate);
