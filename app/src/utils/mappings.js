@@ -17,11 +17,9 @@ const es6mappings = {
 				index: 'true',
 				ignore_above: 256,
 			},
-			autosuggest: {
+			english: {
 				type: 'text',
-				index: 'true',
-				analyzer: 'autosuggest_analyzer',
-				search_analyzer: 'simple',
+				analyzer: 'english',
 			},
 		},
 		analyzer: 'standard',
