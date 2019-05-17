@@ -24,7 +24,7 @@ import {
 } from '../utils/mappings';
 import CustomError from '../utils/CustomError';
 
-const INGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
+const IGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
 function* handleFetchMappings() {
 	const defaultError = 'Unable to get mappings';
@@ -54,7 +54,7 @@ function* handleFetchMappings() {
 					};
 				}
 				let typesList = Object.keys(data[index].mappings);
-				typesList = difference(typesList, INGNORE_META_TYPES);
+				typesList = difference(typesList, IGNORE_META_TYPES);
 				if (typesList.length) {
 					typesList.forEach(type => {
 						const typeProperties =
@@ -123,7 +123,7 @@ function* handleFetchMappings() {
 			}
 
 			const filteredTypes = types.filter(
-				type => !INGNORE_META_TYPES.includes(type),
+				type => !IGNORE_META_TYPES.includes(type),
 			);
 
 			const searchColumns = Object.keys(properties).filter(
