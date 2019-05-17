@@ -5,7 +5,7 @@ import React, { forwardRef } from 'react';
 import { connect } from 'react-redux';
 
 import IdHeaderField from './IdHeaderField';
-import ColumneHeader from './ColumnHeader';
+import ColumnHeader from './ColumnHeader';
 import Flex from '../Flex';
 
 import { setSelectedRows, setUpdatingRow } from '../../actions';
@@ -49,7 +49,7 @@ const DataTableHeader = ({
 						col === '_id' ? (
 							<IdHeaderField key={col} />
 						) : (
-							<ColumneHeader col={col} key={col} />
+							<ColumnHeader col={col} key={col} />
 						),
 				)}
 			</Flex>
