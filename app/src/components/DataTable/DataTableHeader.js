@@ -33,7 +33,7 @@ const DataTableHeader = ({
 		: visibleColumns;
 	const columns = ['_id', ...mappingCols];
 
-	if (columns.length > 1) {
+	if (columns.length >= 1) {
 		return (
 			<Flex
 				wrap="nowrap"
