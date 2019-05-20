@@ -445,17 +445,11 @@ class ConnectApp extends Component<Props, State> {
 						<Flex alignItems="center">
 							<Item
 								{...formItemProps}
-								css={{
-									[mediaMin.medium]: {
-										flex: 1,
-									},
-								}}
+								css={{ [mediaMin.medium]: { flex: 1 } }}
 							>
 								<Group
 									compact
-									css={{
-										display: 'flex !important',
-									}}
+									css={{ display: 'flex !important' }}
 								>
 									<Input
 										name="url"
@@ -505,11 +499,7 @@ class ConnectApp extends Component<Props, State> {
 							</Item>
 							<Item
 								{...formItemProps}
-								css={{
-									[mediaMin.medium]: {
-										flex: 0.35,
-									},
-								}}
+								css={{ [mediaMin.medium]: { flex: 0.35 } }}
 							>
 								<AutoComplete
 									dataSource={pastApps.map(
@@ -529,11 +519,7 @@ class ConnectApp extends Component<Props, State> {
 								/>
 							</Item>
 
-							<Item
-								css={{
-									marginRight: '0px !important',
-								}}
-							>
+							<Item css={{ marginRight: '0px !important' }}>
 								<Button
 									type={isConnected ? 'danger' : 'primary'}
 									htmlType="submit"
@@ -567,10 +553,20 @@ class ConnectApp extends Component<Props, State> {
 									}}
 								>
 									<Flex css={{ marginBottom: 10 }}>
-										<div css={{ flex: 1, marginLeft: 5 }}>
+										<div
+											css={{
+												flex: 1,
+												marginLeft: 5,
+											}}
+										>
 											Key
 										</div>
-										<div css={{ marginLeft: 10, flex: 1 }}>
+										<div
+											css={{
+												marginLeft: 10,
+												flex: 1,
+											}}
+										>
 											Value
 										</div>
 									</Flex>
@@ -581,7 +577,10 @@ class ConnectApp extends Component<Props, State> {
 											alignItems="center"
 										>
 											<div
-												css={{ flex: 1, marginLeft: 5 }}
+												css={{
+													flex: 1,
+													marginLeft: 5,
+												}}
 											>
 												<Input
 													value={item.key}
@@ -637,10 +636,7 @@ class ConnectApp extends Component<Props, State> {
 								<Button
 									icon="plus"
 									type="primary"
-									css={{
-										marginTop: 10,
-										marginLeft: 5,
-									}}
+									css={{ marginTop: 10, marginLeft: 5 }}
 									onClick={this.addMoreHeader}
 								/>
 							</Modal>
@@ -654,11 +650,7 @@ class ConnectApp extends Component<Props, State> {
 							description={
 								<React.Fragment>
 									<div>
-										<h3
-											style={{
-												marginTop: '1rem',
-											}}
-										>
+										<h3 style={{ marginTop: '1rem' }}>
 											Connection Tips
 										</h3>
 										<ul>
@@ -721,7 +713,31 @@ http.cors.allow-credentials: true`}
 												http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 												-e
 												http.cors.allow-credentials=true
-												docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.2
+												docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.2
+											</code>
+										</div>
+										<p style={{ marginTop: '14px' }}>
+											Or the following if you are using v7
+											ElasticSearch:
+										</p>
+										<div
+											style={{
+												background: '#fefefe',
+												padding: '8px',
+											}}
+										>
+											<code>
+												docker run -d --rm --name
+												elasticsearch -p 9200:9200 -p
+												9300:9300 -e
+												discovery.type=single-node -e
+												http.cors.enabled=true -e
+												http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
+												-e
+												http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+												-e
+												http.cors.allow-credentials=true
+												docker.elastic.co/elasticsearch/elasticsearch-oss:7.0.1
 											</code>
 										</div>
 									</div>
