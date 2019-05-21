@@ -217,7 +217,9 @@ class ResultSet extends React.Component<Props, State> {
 							{loading && (
 								<InfoContainer
 									justifyContent="center"
-									css={{}}
+									css={{
+										zIndex: 1000,
+									}}
 									id="spinner"
 								>
 									<Loader />

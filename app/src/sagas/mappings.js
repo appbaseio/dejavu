@@ -108,13 +108,17 @@ function* handleFetchMappings() {
 				...extractColumns(mappings[appname], 'nestedProperties'),
 			];
 
-			let visibleColumns = allColumns.filter(col => col !== '_type');
+			let visibleColumns = allColumns.filter(
+				col =>
+					col !== '_type' && col !== '_score' && col !== '_click_id',
+			);
 			if (indexes.length <= 1) {
 				visibleColumns = visibleColumns.filter(col => col !== '_index');
 			}
 
 			let nestedVisibleColumns = allNestedColumns.filter(
-				col => col !== '_type',
+				col =>
+					col !== '_type' && col !== '_score' && col !== '_click_id',
 			);
 			if (indexes.length <= 1) {
 				nestedVisibleColumns = nestedVisibleColumns.filter(

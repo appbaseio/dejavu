@@ -6,7 +6,7 @@ import { dateFormatMap } from './date';
 const extractColumns = (mappings, key) =>
 	Object.keys((mappings || {})[key] || []);
 
-const META_FIELDS = ['_index', '_type'];
+const META_FIELDS = ['_index', '_type', '_score', '_click_id'];
 
 const es6mappings = {
 	'Text: Aggs': {
