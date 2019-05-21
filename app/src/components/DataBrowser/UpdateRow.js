@@ -15,6 +15,7 @@ import {
 	updateReactiveList,
 	setUpdatingRow,
 	setSelectedRows,
+	fetchMappings,
 } from '../../actions';
 import { isVaildJSON, getOnlySource } from '../../utils';
 import { getUpdatingRow } from '../../reducers/updatingRow';
@@ -31,6 +32,7 @@ type Props = {
 	updateReactiveList: () => void,
 	setSelectedRows: any => void,
 	setUpdatingRow: any => void,
+	fetchMappings: () => void,
 };
 
 type State = {
@@ -81,6 +83,7 @@ class UpdateRowModal extends Component<Props, State> {
 				updateReactiveList: onUpdateReactiveList,
 				setSelectedRows: onSetSelectedRows,
 				setUpdatingRow: onSetUpdatingRow,
+				fetchMappings: onFetchMappings,
 			} = this.props;
 
 			try {
@@ -95,6 +98,7 @@ class UpdateRowModal extends Component<Props, State> {
 				onUpdateReactiveList();
 				onSetUpdatingRow(null);
 				onSetSelectedRows([]);
+				onFetchMappings();
 			} catch (error) {
 				onSetError(error);
 			}
@@ -183,6 +187,7 @@ const mapDispatchToProps = {
 	updateReactiveList,
 	setSelectedRows,
 	setUpdatingRow,
+	fetchMappings,
 };
 
 export default connect(

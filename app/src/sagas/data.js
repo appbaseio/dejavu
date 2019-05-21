@@ -9,13 +9,17 @@ import {
 	clearError,
 } from '../actions';
 import { getUrl } from '../reducers/app';
+import { handleFetchMappings } from './mappings';
 
-function* handleAddData({ indexName, typeName, docId, data }) {
+function* handleAddData({ indexName, typeName, docId, data, tab }) {
 	try {
 		yield put(clearError());
 		const url = yield select(getUrl);
 		yield call(addData, indexName, typeName, docId, url, data);
 		yield put(addDataSuccess());
+		if (tab === 'json') {
+			yield call(handleFetchMappings);
+		}
 	} catch (error) {
 		yield put(addDataFailure());
 		yield put(setError(error));

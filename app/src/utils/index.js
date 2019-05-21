@@ -88,7 +88,15 @@ const numberWithCommas = x =>
 	x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 const getOnlySource = data => {
-	const { _id, _index, _type, highlight, ...others } = data;
+	const {
+		_id,
+		_index,
+		_type,
+		_score,
+		_click_id, // eslint-disable-line
+		highlight,
+		...others
+	} = data;
 	return others;
 };
 

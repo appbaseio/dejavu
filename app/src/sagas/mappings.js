@@ -26,7 +26,7 @@ import CustomError from '../utils/CustomError';
 
 const IGNORE_META_TYPES = ['~logs', '.percolator', '~percolator', '_default_'];
 
-function* handleFetchMappings() {
+export function* handleFetchMappings() {
 	const defaultError = 'Unable to get mappings';
 	const defaultErrorDescription = 'Please add mappings';
 	try {

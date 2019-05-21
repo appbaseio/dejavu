@@ -30,7 +30,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 type Props = {
-	addDataRequest: (string, string, string, object) => void,
+	addDataRequest: (string, string, string, object, string) => void,
 	indexTypeMap: object,
 	typePropertyMapping?: {
 		[key: string]: object,
@@ -154,7 +154,9 @@ class AddRowModal extends Component<Props, State> {
 				selectedType,
 				documentId,
 				data,
+				tab,
 			);
+
 			this.toggleModal();
 		}
 	};
