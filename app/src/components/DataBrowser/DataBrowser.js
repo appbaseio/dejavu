@@ -50,8 +50,8 @@ class DataBrowser extends Component<Props> {
 	}
 
 	handleReload = () => {
-		this.props.updateReactiveList();
-		// this.props.fetchMappings();
+		// this.props.updateReactiveList();
+		this.props.fetchMappings();
 	};
 
 	render() {
