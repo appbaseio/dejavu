@@ -4,12 +4,12 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/appbaseio/dejavu.svg)](https://hub.docker.com/r/appbaseio/dejavu/)
 
 1. **[Dejavu: Intro](#1-dejavu-intro)**
-2. **[Features](#2-features)**
-   a. [Easily Connect to Indices](#easily-connect-and-remember-indices)
-   b. [Visual Filters](#visual-filters)
-   c. [Modern UI Elements](#modern-ui-elements)
-   d. [Import JSON or CSV Data](#import-json-or-csv-data)
-   e. [Build search UIs](#build-search-uis)
+2. **[Features](#2-features)**  
+   a. [Easily Connect to Indices](#easily-connect-and-remember-indices)  
+   b. [Visual Filters](#visual-filters)  
+   c. [Modern UI Elements](#modern-ui-elements)  
+   d. [Import JSON or CSV Data](#import-json-or-csv-data)  
+   e. [Build search UIs](#build-search-uis)  
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
