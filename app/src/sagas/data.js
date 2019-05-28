@@ -16,10 +16,10 @@ function* handleAddData({ indexName, typeName, docId, data, tab }) {
 		yield put(clearError());
 		const url = yield select(getUrl);
 		yield call(addData, indexName, typeName, docId, url, data);
-		yield put(addDataSuccess());
 		if (tab === 'json') {
 			yield call(handleFetchMappings);
 		}
+		yield put(addDataSuccess());
 	} catch (error) {
 		yield put(addDataFailure());
 		yield put(setError(error));

@@ -245,8 +245,8 @@ function* handleAddMapping({ indexName, typeName, field, mapping, version }) {
 			mapping,
 			version,
 		);
-		yield put(addMappingSuccess());
 		yield call(handleFetchMappings); // sagas FTW
+		yield put(addMappingSuccess());
 	} catch (error) {
 		yield put(addMappingFailure());
 		yield put(setError(error));

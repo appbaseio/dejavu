@@ -17,9 +17,13 @@ const data = (state = initialState, action) => {
 				isLoading: true,
 			};
 		case DATA.ADD_DATA_SUCCESS:
+			return {
+				...state,
+				isLoading: false,
+			};
 		case MAPPINGS.ADD_MAPPING_SUCCESS:
 			return {
-				reactiveListKey: reactiveListKey + 1,
+				...state,
 				isLoading: false,
 			};
 		case DATA.ADD_DATA_FAILURE:
@@ -27,13 +31,6 @@ const data = (state = initialState, action) => {
 			return {
 				...state,
 				isLoading: false,
-			};
-		case MAPPINGS.MAPPINGS_FETCH_SUCCESS:
-			// there might be a wasted render between add mapping success and fetch mapping success but
-			// this simplifies the flow a lot for now (time constraints)
-			return {
-				...state,
-				reactiveListKey: reactiveListKey + 1,
 			};
 		case DATA.UPDATE_REACTIVE_LIST:
 			return {
