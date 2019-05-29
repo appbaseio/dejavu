@@ -11,12 +11,24 @@ const dateFormatMap = {
 	date_time: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
 	basic_time: 'HHmmss.SSSZ',
 	basic_time_no_millis: 'HHmmssZ',
-	'strict_date_optional_time||epoch_millis': 'YYYYMMDD',
+	strict_date_optional_time: 'YYYYMMDD',
 };
 
 const getDateFormat = format => {
-	const momentFormat = dateFormatMap[format];
-	return momentFormat || format;
+	let momentFormat = format;
+	if (format.indexOf('||') > -1) {
+		const formats = format.split('||');
+		const availableFormat = formats.find(
+			dateFormat => dateFormatMap[dateFormat],
+		);
+		if (availableFormat) {
+			momentFormat = dateFormatMap[availableFormat];
+		}
+	} else {
+		momentFormat = dateFormatMap[format] || format;
+	}
+
+	return momentFormat;
 };
 
 export { dateFormatMap };

@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { DatePicker } from 'antd';
-import { func, string, any } from 'prop-types';
 import moment from 'moment';
 
 import CellStyled from './Cell.styles';
@@ -11,7 +10,7 @@ import { MODES } from '../../constants';
 
 type Props = {
 	children: any,
-	onChange: func,
+	onChange: string => void,
 	format?: string,
 	mode: string,
 };
@@ -43,12 +42,5 @@ const DateCell = ({ children, onChange, format, mode }: Props) => (
 		)}
 	</CellStyled>
 );
-
-DateCell.propTypes = {
-	onChange: func.isRequired,
-	children: any,
-	format: string,
-	mode: string,
-};
 
 export default DateCell;

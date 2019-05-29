@@ -13,5 +13,6 @@ test('should return correct format if it exists', () => {
 test('should return custom format if it does not exist', () => {
 	const format = 'YY/MM/DD';
 	const res = getDateFormat(format);
+	console.log('res', res);
 	expect(res).toBe(format);
 });
