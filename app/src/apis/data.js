@@ -12,7 +12,7 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}/${typeName}`;
+		let baseUrl = `${url}/${indexName}/${typeName}?refresh=wait_for`;
 		let finalData = JSON.stringify(data);
 
 		if (docId && !Array.isArray(data)) {
@@ -62,14 +62,17 @@ export const putData = async (indexName, typeName, docId, rawUrl, data) => {
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
 
-		const res = await fetch(`${url}/${indexName}/${typeName}/${docId}`, {
-			headers: {
-				...headers,
-				...convertArrayToHeaders(customHeaders),
+		const res = await fetch(
+			`${url}/${indexName}/${typeName}/${docId}?refresh=wait_for`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'PUT',
+				body: JSON.stringify(data),
 			},
-			method: 'PUT',
-			body: JSON.stringify(data),
-		}).then(response => response.json());
+		).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(
