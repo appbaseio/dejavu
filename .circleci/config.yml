@@ -1,0 +1,18 @@
+version: 2
+jobs:
+	release:
+		docker:
+			- image: circleci/node:8
+		steps:
+			- checkout
+			- run: npm install
+			# Run optional required steps before releasing
+			# - run: npm run build-script
+			- run: npx semantic-release --branch dev
+
+workflows:
+  version: 2
+  release:
+    # Run the test jobs first, then the release only when all the test jobs are successful
+    jobs:
+      - release
