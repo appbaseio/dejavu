@@ -5,7 +5,7 @@ jobs:
             - image: circleci/node:8
         steps:
             - checkout
-            - run: npm install
+            - run: yarn install
             # Run optional required steps before releasing
             # - run: npm run build-script
             - run: npx semantic-release --dry-run --branch test
