@@ -8,7 +8,7 @@ jobs:
             - run: yarn install
             # Run optional required steps before releasing
             # - run: npm run build-script
-            - run: npx semantic-release --dry-run --branch test
+            - run: npx semantic-release --branch test
 
 workflows:
     version: 2
