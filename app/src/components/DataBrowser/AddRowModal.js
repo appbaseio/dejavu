@@ -70,10 +70,11 @@ class AddRowModal extends Component<Props, State> {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		const { selectedIndex, selectedType } = this.state;
+		const { selectedIndex, selectedType, isShowingModal } = this.state;
 		if (
 			prevState.selectedIndex !== selectedIndex ||
-			prevState.selectedType !== selectedType
+			prevState.selectedType !== selectedType ||
+			prevState.isShowingModal !== isShowingModal
 		) {
 			this.setSampleData();
 		}

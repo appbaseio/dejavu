@@ -1,4 +1,6 @@
+import moment from 'moment';
 import { META_FIELDS } from './mappings';
+import getDateFormat from './date';
 
 export const extractSource = data => {
 	const source = { ...data };
@@ -24,7 +26,11 @@ const getSampleData = properties => {
 					data[item] = 0;
 					break;
 				case 'date':
-					data[item] = new Date();
+					data[item] = properties[item].format
+						? moment().format(
+								getDateFormat(properties[item].format),
+						  )
+						: moment().format('x');
 					break;
 				case 'object':
 				case 'geo_point':
