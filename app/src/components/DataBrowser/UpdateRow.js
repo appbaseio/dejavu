@@ -2,7 +2,6 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Row, Col, Button, Form } from 'antd';
-import { object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 
@@ -19,13 +18,14 @@ import {
 } from '../../actions';
 import { isVaildJSON, getOnlySource } from '../../utils';
 import { getUpdatingRow } from '../../reducers/updatingRow';
+import { getVersion } from '../../reducers/version';
 import { getUrl } from '../../reducers/app';
 import { putData } from '../../apis/data';
 
 const { Item } = Form;
 
 type Props = {
-	data: object,
+	data: any,
 	appUrl: string,
 	setError: any => void,
 	clearError: () => void,
@@ -33,6 +33,7 @@ type Props = {
 	setSelectedRows: any => void,
 	setUpdatingRow: any => void,
 	fetchMappings: () => void,
+	version: Number,
 };
 
 type State = {
@@ -84,6 +85,7 @@ class UpdateRowModal extends Component<Props, State> {
 				setSelectedRows: onSetSelectedRows,
 				setUpdatingRow: onSetUpdatingRow,
 				fetchMappings: onFetchMappings,
+				version,
 			} = this.props;
 
 			try {
@@ -94,6 +96,7 @@ class UpdateRowModal extends Component<Props, State> {
 					documentId,
 					appUrl,
 					JSON.parse(jsonValue),
+					version,
 				);
 				onUpdateReactiveList();
 				onSetUpdatingRow(null);
@@ -179,6 +182,7 @@ class UpdateRowModal extends Component<Props, State> {
 const mapStateToProps = state => ({
 	appUrl: getUrl(state),
 	data: getUpdatingRow(state),
+	version: getVersion(state),
 });
 
 const mapDispatchToProps = {

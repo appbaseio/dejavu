@@ -6,13 +6,20 @@ import {
 } from '../utils';
 import CustomError from '../utils/CustomError';
 
-export const addData = async (indexName, typeName, docId, rawUrl, data) => {
+export const addData = async (
+	indexName,
+	typeName,
+	docId,
+	rawUrl,
+	data,
+	version,
+) => {
 	const defaultError = 'Unable to put data';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}/${typeName}?refresh=wait_for`;
+		let baseUrl = `${url}/${indexName}/${typeName}`;
 		let finalData = JSON.stringify(data);
 
 		if (docId && !Array.isArray(data)) {
@@ -29,6 +36,10 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 				finalData += `\n${JSON.stringify(item)}`;
 				finalData += `\n`;
 			});
+		}
+
+		if (version > 5) {
+			baseUrl += `?refresh=wait_for`;
 		}
 		const res = await fetch(`${baseUrl}`, {
 			headers: {
@@ -55,24 +66,32 @@ export const addData = async (indexName, typeName, docId, rawUrl, data) => {
 	}
 };
 
-export const putData = async (indexName, typeName, docId, rawUrl, data) => {
+export const putData = async (
+	indexName,
+	typeName,
+	docId,
+	rawUrl,
+	data,
+	version,
+) => {
 	const defaultError = 'Unable to put data';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
+		let baseUrl = `${url}/${indexName}/${typeName}/${docId}`;
 
-		const res = await fetch(
-			`${url}/${indexName}/${typeName}/${docId}?refresh=wait_for`,
-			{
-				headers: {
-					...headers,
-					...convertArrayToHeaders(customHeaders),
-				},
-				method: 'PUT',
-				body: JSON.stringify(data),
+		if (version > 5) {
+			baseUrl += '?refresh=wait_for';
+		}
+		const res = await fetch(baseUrl, {
+			headers: {
+				...headers,
+				...convertArrayToHeaders(customHeaders),
 			},
-		).then(response => response.json());
+			method: 'PUT',
+			body: JSON.stringify(data),
+		}).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(

@@ -1,12 +1,13 @@
 import { DATA } from './constants';
 
-const addDataRequest = (indexName, typeName, docId, data, tab) => ({
+const addDataRequest = (indexName, typeName, docId, data, tab, version) => ({
 	type: DATA.ADD_DATA_REQUEST,
 	indexName,
 	typeName,
 	docId,
 	data,
 	tab,
+	version,
 });
 
 const addDataSuccess = () => ({
