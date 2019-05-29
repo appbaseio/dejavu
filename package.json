@@ -80,6 +80,8 @@
 		"@babel/preset-env": "^7.0.0",
 		"@babel/preset-flow": "^7.0.0",
 		"@babel/preset-react": "^7.0.0",
+		"@semantic-release/commit-analyzer": "^6.1.0",
+		"@semantic-release/release-notes-generator": "^7.1.4",
 		"babel-core": "^7.0.0-bridge.0",
 		"babel-eslint": "^9.0.0",
 		"babel-jest": "^23.6.0",
@@ -130,5 +132,13 @@
 			"<rootDir>/node_modules/"
 		]
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"release": {
+		"branch": "test",
+		"plugins": [
+			"@semantic-release/commit-analyzer",
+			"@semantic-release/release-notes-generator"
+		],
+		"preset": "angular"
+	}
 }
