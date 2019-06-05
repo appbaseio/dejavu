@@ -6,12 +6,10 @@ ADD package.json yarn.lock /dejavu/
 
 RUN apk --no-cache update && apk --no-cache add git && rm -rf /var/cache/apk/*
 
-RUN yarn global add http-server
-
 ADD . /dejavu
 
 RUN yarn && yarn cache clean && yarn build:app && rm -rf /dejavu/node_modules && rm -rf /tmp/*
 
 EXPOSE 1358
 
-CMD http-server -p 1358 --proxy http://localhost:1358? dist/app/
+CMD node server.js

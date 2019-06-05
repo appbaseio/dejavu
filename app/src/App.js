@@ -171,7 +171,7 @@ class App extends Component {
 												/>
 											)}
 										/>
-										{/* Special cases for chrom extension */}
+										{/* Special cases for chrome extension */}
 										<Route
 											path="/index.html"
 											render={this.renderExtensionRoutes}
