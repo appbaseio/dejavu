@@ -14,4 +14,4 @@ RUN yarn && yarn cache clean && yarn build:app && rm -rf /dejavu/node_modules &&
 
 EXPOSE 1358
 
-CMD ["http-server", "-p 1358", "dist/app/"]
+CMD http-server -p 1358 --proxy http://localhost:1358? dist/app/
