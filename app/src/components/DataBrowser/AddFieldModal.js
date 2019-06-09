@@ -66,7 +66,7 @@ class AddFieldModal extends Component<Props, State> {
 		addColumnError: false,
 		addColumnField: '',
 		isColumnFieldValid: true,
-		addColumnMapping: `{\n}`,
+		addColumnMapping: '',
 		selectedIndex: Object.keys(this.props.indexTypeMap)[0],
 		types: this.props.indexTypeMap[Object.keys(this.props.indexTypeMap)[0]],
 		selectedType: this.props.indexTypeMap[
@@ -83,7 +83,7 @@ class AddFieldModal extends Component<Props, State> {
 			addColumnError: false,
 			addColumnField: '',
 			isColumnFieldValid: true,
-			addColumnMapping: `{\n}`,
+			addColumnMapping: '',
 			selectedIndex: Object.keys(this.props.indexTypeMap)[0],
 			types: this.props.indexTypeMap[
 				Object.keys(this.props.indexTypeMap)[0]
@@ -371,6 +371,11 @@ class AddFieldModal extends Component<Props, State> {
 									minHeight: '100px',
 									maxHeight: '200px',
 								}}
+								placeholder={`
+								// Example format: 
+								{
+									"type": "date", ...
+								}`}
 							/>
 						</Fragment>
 					)}

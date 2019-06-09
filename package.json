@@ -51,7 +51,7 @@
 		"papaparse": "^4.6.1",
 		"prop-types": "^15.6.2",
 		"react": "^16.5.1",
-		"react-ace": "^6.2.0",
+		"react-ace": "^6.5.0",
 		"react-custom-scrollbars": "^4.2.1",
 		"react-dom": "^16.5.1",
 		"react-element-to-jsx-string": "^14.0.2",
