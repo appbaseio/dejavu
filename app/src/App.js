@@ -216,16 +216,19 @@ class App extends Component {
 										onCancel={this.hideVideoModal}
 										width={610}
 										footer={null}
+										destroyOnClose
 									>
 										<br />
-										<iframe
-											src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0"
-											allow="autoplay; encrypted-media"
-											width="560"
-											height="315"
-											frameBorder="0"
-											title="video"
-										/>
+										{isShowingVideo && (
+											<iframe
+												src="https://www.youtube.com/embed/qhDuRd2pJIY?rel=0&amp;showinfo=0"
+												allow="autoplay; encrypted-media"
+												width="560"
+												height="315"
+												frameBorder="0"
+												title="video"
+											/>
+										)}
 									</Modal>
 								</div>
 								<div>
