@@ -133,7 +133,6 @@ class AddFieldModal extends Component<Props, State> {
 			if (
 				!addColumnError &&
 				addColumnField &&
-				addColumnMapping &&
 				selectedIndex &&
 				selectedType &&
 				selectedShape &&
@@ -151,7 +150,6 @@ class AddFieldModal extends Component<Props, State> {
 				} else {
 					mappingValue = es6mappings[selectedPrimitiveType];
 				}
-
 				const {
 					analyzers,
 					url,
@@ -372,7 +370,7 @@ class AddFieldModal extends Component<Props, State> {
 									maxHeight: '200px',
 								}}
 								placeholder={`
-								// Example format: 
+								// Example format:
 								{
 									"type": "date", ...
 								}`}
