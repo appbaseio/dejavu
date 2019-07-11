@@ -134,8 +134,10 @@ export function* handleFetchMappings() {
 				property =>
 					properties[property].type === 'string' ||
 					properties[property].type === 'text' ||
+					// .keyword field prefix phrase is not allowed in v7
 					(properties[property] &&
-						properties[property].type === 'keyword'),
+						properties[property].type === 'keyword' &&
+						versionCode < 7),
 			);
 
 			const nestedSearchColumns = Object.keys(nestedProperties).filter(
@@ -143,7 +145,8 @@ export function* handleFetchMappings() {
 					nestedProperties[property].type === 'string' ||
 					nestedProperties[property].type === 'text' ||
 					(properties[property] &&
-						properties[property].type === 'keyword'),
+						properties[property].type === 'keyword' &&
+						versionCode < 7),
 			);
 
 			const searchableColumns = [
@@ -152,15 +155,14 @@ export function* handleFetchMappings() {
 				...searchColumns.map(field => `${field}.search`),
 				...searchColumns.map(field => `${field}.autosuggest`),
 				...searchColumns.map(field => `${field}.english`),
-				'_id',
 			];
+
 			const searchableColumnsWeights = [
 				...Array(searchColumns.length).fill(3),
 				...Array(searchColumns.length).fill(3),
 				...Array(searchColumns.length).fill(1),
 				...Array(searchColumns.length).fill(1),
 				...Array(searchColumns.length).fill(1),
-				1,
 			];
 
 			const nestedSearchableColumns = [
@@ -169,7 +171,6 @@ export function* handleFetchMappings() {
 				...nestedSearchColumns.map(field => `${field}.search`),
 				...nestedSearchColumns.map(field => `${field}.autosuggest`),
 				...nestedSearchColumns.map(field => `${field}.english`),
-				'_id',
 			];
 			const nestedSearchableColumnsWeights = [
 				...Array(nestedSearchColumns.length).fill(3),
@@ -177,8 +178,15 @@ export function* handleFetchMappings() {
 				...Array(nestedSearchColumns.length).fill(1),
 				...Array(nestedSearchColumns.length).fill(1),
 				...Array(nestedSearchColumns.length).fill(1),
-				1,
 			];
+
+			// _id is not searchable from v7
+			if (versionCode < 7) {
+				searchableColumns.push('_id');
+				searchableColumnsWeights.push(1);
+				nestedSearchableColumns.push('_id');
+				nestedSearchableColumnsWeights.push(1);
+			}
 
 			const termsAggregationColumns = [
 				...new Set([
