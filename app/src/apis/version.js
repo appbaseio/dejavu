@@ -40,7 +40,9 @@ export default async (rawUrl, indexName) => {
 		if (indexName) {
 			const defaultIndex = Object.keys(res)[0];
 			if (defaultIndex) {
-				version = res[defaultIndex].settings.index.version.created;
+				version =
+					res[defaultIndex].settings.index.version.upgraded ||
+					res[defaultIndex].settings.index.version.created;
 			} else {
 				version = '5';
 			}
