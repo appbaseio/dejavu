@@ -1,7 +1,7 @@
 {
 	"name": "@appbaseio/dejavu",
 	"description": "Dejavu - The missing Web UI for Elasticsearch",
-	"version": "3.3.1",
+	"version": "3.4.0",
 	"main": "index.js",
 	"repository": "https://github.com/appbaseio/dejavu.git",
 	"bugs": {
