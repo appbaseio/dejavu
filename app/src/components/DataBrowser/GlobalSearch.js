@@ -55,10 +55,13 @@ class GlobalSearch extends Component<Props, State> {
 		});
 	};
 
-	handleSearchValueChange = searchValue => {
-		this.setState({
-			searchValue,
-		});
+	handleSearchValueChange = (searchValue, triggerQuery) => {
+		this.setState(
+			{
+				searchValue,
+			},
+			() => triggerQuery(),
+		);
 	};
 
 	render() {
