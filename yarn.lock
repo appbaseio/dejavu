@@ -25,21 +25,21 @@
     react-emotion "^9.0.0"
     react-feather "^1.1.0"
 
-"@appbaseio/reactivecore@^8.2.7":
-  version "8.2.7"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-8.2.7.tgz#06bb5e6041debd89d1a4ece42e1e24e3093a0fc1"
-  integrity sha512-ywp+tPvimLJCDmJA1AxPflZxuxhRdMb4Bbw8LuDqsok0L7ltPUS0aIPISxKD35BahM2vw1R9ctMN3CncusteqQ==
+"@appbaseio/reactivecore@8.2.9":
+  version "8.2.9"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-8.2.9.tgz#53edddf6cfe3f654a2c6160be6a6db150e80fab4"
+  integrity sha512-6tKjoKj6Xj3PcG8vrEqoA5tU0v0h9XyhN41VqaxgSERkmvSU+EIxkOYIcXhH5E6ersA3DeWvYKZtsU7E7xVgcQ==
   dependencies:
     prop-types "^15.6.0"
     redux "^4.0.0"
     redux-thunk "^2.3.0"
 
-"@appbaseio/reactivesearch@^3.0.0-rc.10":
-  version "3.0.0-rc.10"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.0.0-rc.10.tgz#ed86d3b0980e5a2282053a9b169d19424ac7cfc1"
-  integrity sha512-LYMZDEVNj274qWjRwN5SxCzA/+0VL5aC5uf9ZprES/Hnp/caCxGri91YNQUuLb/FxQuyMO04kGJ3HcMuC76DNg==
+"@appbaseio/reactivesearch@^3.0.0-rc.21":
+  version "3.0.0-rc.21"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.0.0-rc.21.tgz#005fd75db07db540d298655eaeec730ad7d311a7"
+  integrity sha512-ddazSJj6QXRfRt7iASCpqColujQEj38tfBU0Rav+B3icQpPNG48B0uBbQxEcCJLt5MDDmlau87OdMcIGXnbzVA==
   dependencies:
-    "@appbaseio/reactivecore" "^8.2.7"
+    "@appbaseio/reactivecore" "8.2.9"
     appbase-js "^4.0.2-beta.06"
     cross-env "^5.2.0"
     downshift "^1.31.2"
@@ -51,9 +51,9 @@
     react-day-picker "^7.0.5"
     react-emotion "^9.0.0"
     react-highlight-words "^0.14.0"
-    react-redux "^5.0.7"
+    react-redux "^6.0.1"
     rheostat "^2.1.1"
-    url-search-params "^0.10.0"
+    url-search-params-polyfill "^7.0.0"
     xdate "^0.8.2"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.0.0-beta.35":
@@ -768,6 +768,13 @@
   integrity sha512-xKnPpXG/pvK1B90JkwwxSGii90rQGKtzcMt2gI5G6+M0REXaq6rOHsGC2ay6/d0Uje7zzvSzjEzfR3ENhFlrfA==
   dependencies:
     regenerator-runtime "^0.12.0"
+
+"@babel/runtime@^7.3.1":
+  version "7.5.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.5.tgz#74fba56d35efbeca444091c7850ccd494fd2f132"
+  integrity sha512-28QvEGyQyNkB0/m2B4FU7IEZGK2NUrcMtT6BZEFALTguLk+AUT6ofsHtPk5QyjAdUkpMJ+/Em+quwz4HOt30AQ==
+  dependencies:
+    regenerator-runtime "^0.13.2"
 
 "@babel/template@^7.0.0":
   version "7.0.0"
@@ -6822,7 +6829,7 @@ hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
 
-hoist-non-react-statics@^3.2.1:
+hoist-non-react-statics@^3.2.1, hoist-non-react-statics@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.0.tgz#b09178f0122184fb95acf525daaecb4d8f45958b"
   integrity sha512-0XsbTXxgiaCDYDIWFcwkmerZPSwywfUqYmwT4jzewKTQSWoE6FCMoUVOeBJWK3E/CrWbxRG3m5GzY4lnIwGRBA==
@@ -11489,7 +11496,7 @@ react-is@^16.7.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"
   integrity sha512-ioMCzVDWvCvKD8eeT+iukyWrBGrA3DiFYkXfBsVYIRdaREZuBjENG+KjrikavCLasozqRWTwFUagU/O4vPpRMA==
 
-react-is@^16.8.1:
+react-is@^16.8.1, react-is@^16.8.2:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
@@ -11559,6 +11566,18 @@ react-redux@^5.0.7:
     lodash-es "^4.17.5"
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
+
+react-redux@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-6.0.1.tgz#0d423e2c1cb10ada87293d47e7de7c329623ba4d"
+  integrity sha512-T52I52Kxhbqy/6TEfBv85rQSDz6+Y28V/pf52vDWs1YRXG19mcFOGfHnY2HsNFHyhP+ST34Aih98fvt6tqwVcQ==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+    hoist-non-react-statics "^3.3.0"
+    invariant "^2.2.4"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.8.2"
 
 react-resize-detector@~2.3.0:
   version "2.3.0"
@@ -13748,10 +13767,10 @@ url-regex@^3.0.0:
   dependencies:
     ip-regex "^1.0.1"
 
-url-search-params@^0.10.0:
-  version "0.10.2"
-  resolved "https://registry.npmjs.org/url-search-params/-/url-search-params-0.10.2.tgz#e9da69646e48c6140c6732e1f07fb669525f5a4e"
-  integrity sha512-d6GYsr992Bo9rzTZFc9BUw3UFAAg3prE9JGVBgW2TLTbI3rSvg4VDa0BFXHMzKkWbAuhrmaFWpucpRJl+3W7Jg==
+url-search-params-polyfill@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/url-search-params-polyfill/-/url-search-params-polyfill-7.0.0.tgz#98b56ed29e67710588fdc3c361083b0f78303d95"
+  integrity sha512-0SEH3s+wCNbxEE/rWUalN004ICNi23Q74Ksc0gS2kG8EXnbayxGOrV97JdwnIVPKZ75Xk0hvKXvtIC4xReLMgg==
 
 url@^0.11.0:
   version "0.11.0"
