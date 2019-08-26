@@ -125,6 +125,7 @@ class ResultSet extends React.Component<Props, State> {
 					URLParams
 					currentPage={currentPage}
 					defaultQuery={() => ({
+						track_total_hits: true,
 						sort: [
 							{
 								[sortField]: { order: sortOrder },
