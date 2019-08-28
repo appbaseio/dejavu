@@ -165,7 +165,7 @@ const exportData = async (
 		const finalQuery = query || defaultQuery;
 		const res = await searchAfter(
 			app,
-			query ? null : types,
+			types,
 			url,
 			version,
 			finalQuery,
