@@ -112,6 +112,21 @@ class ResultSet extends React.Component<Props, State> {
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 		const { hasMounted } = this.state;
+		const defaultQuery = {
+			sort: [
+				{
+					[sortField]: { order: sortOrder },
+					[version > 5 ? '_id' : '_uid']: {
+						order: sortOrder,
+					},
+				},
+			],
+		};
+
+		if (version >= 7) {
+			// $FlowFixMe
+			defaultQuery.track_total_hits = true;
+		}
 		return (
 			hasMounted && (
 				<ReactiveList
@@ -124,16 +139,7 @@ class ResultSet extends React.Component<Props, State> {
 					showResultStats
 					URLParams
 					currentPage={currentPage}
-					defaultQuery={() => ({
-						sort: [
-							{
-								[sortField]: { order: sortOrder },
-								[version > 5 ? '_id' : '_uid']: {
-									order: sortOrder,
-								},
-							},
-						],
-					})}
+					defaultQuery={() => defaultQuery}
 					react={{
 						and: [
 							'GlobalSearch',
