@@ -12,6 +12,8 @@ const dateFormatMap = {
 	basic_time: 'HHmmss.SSSZ',
 	basic_time_no_millis: 'HHmmssZ',
 	strict_date_optional_time: 'YYYYMMDD',
+	date_hour_minute_second: 'YYYY-MM-DDTHH:mm:ss',
+	strict_date_hour_minute_second: 'YYYY-MM-DDTHH:mm:ss',
 };
 
 const getDateFormat = format => {
