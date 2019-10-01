@@ -15,15 +15,19 @@ const setCellValue = async (app, type, rawUrl, id, property, value) => {
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(app);
 		const doc = unflatten({ [property]: value });
+		const formattedId = encodeURIComponent(id);
 
-		const res = await fetch(`${url}/${app}/${type}/${id}/_update`, {
-			headers: {
-				...headers,
-				...convertArrayToHeaders(customHeaders),
+		const res = await fetch(
+			`${url}/${app}/${type}/${formattedId}/_update`,
+			{
+				headers: {
+					...headers,
+					...convertArrayToHeaders(customHeaders),
+				},
+				method: 'POST',
+				body: JSON.stringify({ doc }),
 			},
-			method: 'POST',
-			body: JSON.stringify({ doc }),
-		}).then(response => response.json());
+		).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(
