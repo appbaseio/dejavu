@@ -20,13 +20,7 @@ export const flatten = data => {
 		if (Object(cur) !== cur) {
 			result[prop] = cur;
 		} else if (Array.isArray(cur)) {
-			const l = cur.length;
-			for (let i = 0; i < l; i += 1) {
-				recurse(cur[i], `${prop}[${i}]`);
-			}
-			if (l === 0) {
-				result[prop] = [];
-			}
+			result[prop] = JSON.stringify(cur);
 		} else {
 			let isEmpty = true;
 			Object.keys(cur).forEach(p => {
