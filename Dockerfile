@@ -16,6 +16,12 @@ RUN yarn \
     && rm -rf /dejavu/node_modules \
     && rm -rf /tmp/*
 
+RUN addgroup -S -g 201 dejavu && \
+    adduser -S -u 201 -G dejavu dejavu && \
+    chown -R dejavu:dejavu /dejavu
+
+USER dejavu
+
 EXPOSE 1358
 
 CMD node server.js
