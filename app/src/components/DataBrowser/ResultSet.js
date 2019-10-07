@@ -29,6 +29,7 @@ import {
 	setStats,
 } from '../../actions';
 import colors from '../theme/colors';
+import { getMode } from '../../reducers/mode';
 
 const InfoContainer = styled(Flex)`
 	min-height: 150px;
@@ -59,6 +60,7 @@ type Props = {
 	onSetApplyQuery: boolean => void,
 	onSetStats: any => void,
 	version: number,
+	mode: string,
 };
 
 type State = {
@@ -71,7 +73,10 @@ class ResultSet extends React.Component<Props, State> {
 	};
 
 	shouldComponentUpdate(nextProps) {
-		if (nextProps.reactiveListKey !== this.props.reactiveListKey) {
+		if (
+			nextProps.reactiveListKey !== this.props.reactiveListKey ||
+			nextProps.mode !== this.props.mode
+		) {
 			this.setMountState(false);
 			setTimeout(() => {
 				this.setMountState(true);
@@ -260,6 +265,7 @@ const mapStateToProps = state => {
 		reactiveListKey: getReactiveListKey(state),
 		mappings: getMappings(state),
 		version: getVersion(state),
+		mode: getMode(state),
 	};
 };
 

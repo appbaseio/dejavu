@@ -9,10 +9,12 @@ Object {
   "basic_time": "HHmmss.SSSZ",
   "basic_time_no_millis": "HHmmssZ",
   "date": "YYYY-MM-DD",
+  "date_hour_minute_second": "YYYY-MM-DDTHH:mm:ss",
   "date_time": "YYYY-MM-DDTHH:mm:ss.SSSZ",
   "date_time_no_millis": "YYYY-MM-DDTHH:mm:ss[Z]",
   "epoch_millis": "x",
   "epoch_second": "X",
+  "strict_date_hour_minute_second": "YYYY-MM-DDTHH:mm:ss",
   "strict_date_optional_time": "YYYYMMDD",
 }
 `;
