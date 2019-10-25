@@ -67,8 +67,9 @@ const TextCell = ({
 								lineHeight:
 									mode === MODES.EDIT ? '45px' : '30px',
 							}}
-							dangerouslySetInnerHTML={{ __html: children }}
-						/>
+						>
+							{children}
+						</div>
 					)}
 				</Popover>
 			</CellStyled>
