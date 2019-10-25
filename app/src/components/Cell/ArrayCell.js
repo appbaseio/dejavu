@@ -8,11 +8,13 @@ import { MODES } from '../../constants';
 import JsonView from '../JsonView';
 
 import popoverContent from '../CommonStyles/popoverContent';
+import { NUMBER_FIELDS } from '../../utils/mappings';
 
 type Props = {
 	children: [],
 	onChange: func,
 	mode: string,
+	mappingType: string,
 };
 
 type State = {
@@ -21,14 +23,20 @@ type State = {
 
 const { Option } = Select;
 
+const parseData = (value = [], dataType) => {
+	if (NUMBER_FIELDS.includes(dataType)) return value.map(val => Number(val));
+	return value;
+};
+
 class ArrayCell extends Component<Props, State> {
 	state = {
 		data: this.props.children || [],
 	};
 
 	handleChange = (value: any) => {
+		const { mappingType } = this.props;
 		this.setState({ data: value });
-		this.props.onChange(value);
+		this.props.onChange(parseData(value, mappingType));
 	};
 
 	render() {
@@ -90,6 +98,7 @@ ArrayCell.propTypes = {
 	onChange: func.isRequired,
 	children: any,
 	mode: string,
+	mappingType: string,
 };
 
 export default ArrayCell;
