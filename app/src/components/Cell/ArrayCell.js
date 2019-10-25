@@ -39,7 +39,7 @@ class ArrayCell extends Component<Props, State> {
 			<Fragment>
 				{mode === MODES.EDIT ? (
 					<Select
-						value={data}
+						value={data.map(item => item.toString())}
 						css={{
 							width: '100%',
 							height: '100%',
@@ -64,9 +64,7 @@ class ArrayCell extends Component<Props, State> {
 						notFoundContent=""
 					>
 						{data.map(child => (
-							<Option key={child} value={child}>
-								{child}
-							</Option>
+							<Option key={child.toString()}>{child}</Option>
 						))}
 					</Select>
 				) : (
