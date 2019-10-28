@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import difference from 'lodash/difference';
+import isEqual from 'lodash/isEqual';
 
 import DataGrid from './DataGrid';
 
@@ -65,8 +66,8 @@ class DataTable extends Component<Props, State> {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
-			!isEqualArray(this.state.data, nextState.data) ||
-			!isEqualArray(this.props.data, nextProps.data) ||
+			!isEqual(this.state.data, nextState.data) ||
+			!isEqual(this.props.data, nextProps.data) ||
 			this.props.visibleColumns.length !==
 				nextProps.visibleColumns.length ||
 			this.props.isShowingNestedColumns !==
