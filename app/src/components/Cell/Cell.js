@@ -31,7 +31,7 @@ const Cell = ({ mapping, ...props }: Props) => {
 			case 'long':
 			case 'double':
 				if (Array.isArray(props.children)) {
-					return <ArrayCell {...props} />;
+					return <ArrayCell {...props} mappingType={mapping.type} />;
 				}
 				return <NumberCell {...props} />;
 			case 'date':
@@ -49,7 +49,7 @@ const Cell = ({ mapping, ...props }: Props) => {
 			case 'text':
 			case 'keyword':
 				if (Array.isArray(props.children) && props) {
-					return <ArrayCell {...props} />;
+					return <ArrayCell {...props} mappingType={mapping.type} />;
 				}
 				if (isObject(mapping.properties)) {
 					return <ObjectCell {...props} />;
