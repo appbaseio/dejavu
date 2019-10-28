@@ -8,7 +8,16 @@ const extractColumns = (mappings, key) =>
 
 const META_FIELDS = ['_index', '_type', '_score', '_click_id'];
 
-const NUMBER_FIELDS = ['integer', 'float', 'long', 'double'];
+const NUMERIC_DATATYPES = [
+	'integer',
+	'float',
+	'long',
+	'double',
+	'short',
+	'byte',
+	'half_float',
+	'scaled_float',
+];
 
 const es6mappings = {
 	'Text: Aggs': {
@@ -334,5 +343,5 @@ export {
 	updateIndexTypeMapping,
 	getSortableColumns,
 	hasNestedColumns,
-	NUMBER_FIELDS,
+	NUMERIC_DATATYPES,
 };

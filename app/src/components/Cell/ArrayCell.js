@@ -8,7 +8,7 @@ import { MODES } from '../../constants';
 import JsonView from '../JsonView';
 
 import popoverContent from '../CommonStyles/popoverContent';
-import { NUMBER_FIELDS } from '../../utils/mappings';
+import { NUMERIC_DATATYPES } from '../../utils/mappings';
 
 type Props = {
 	children: [],
@@ -24,7 +24,8 @@ type State = {
 const { Option } = Select;
 
 const parseData = (value = [], dataType) => {
-	if (NUMBER_FIELDS.includes(dataType)) return value.map(val => Number(val));
+	if (NUMERIC_DATATYPES.includes(dataType))
+		return value.map(val => Number(val));
 	return value;
 };
 
