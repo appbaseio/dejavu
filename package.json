@@ -1,0 +1,21 @@
+{
+  "name": "dejavu-monorepo",
+  "description": "Dejavu monorepo",
+  "version": "0.0.1-alpha",
+  "author": "Anuj Shah <anujshah584@gmail.com>",
+  "dependencies": {
+    "lerna": "^3.19.0",
+    "react": "16.12.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "prettier": "^1.19.1"
+  },
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

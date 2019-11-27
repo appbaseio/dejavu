@@ -1,0 +1,10 @@
+# Project dependencies
+.cache
+.idea
+node_modules
+yarn-error.log
+
+# Build directory
+**/public
+**/.cache
+.DS_Store
