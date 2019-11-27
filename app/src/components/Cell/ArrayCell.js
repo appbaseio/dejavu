@@ -72,9 +72,14 @@ class ArrayCell extends Component<Props, State> {
 						onChange={value => this.handleChange(value)}
 						notFoundContent=""
 					>
-						{data.map(child => (
-							<Option key={child.toString()}>{child}</Option>
-						))}
+						{data.map(
+							child =>
+								child && (
+									<Option key={child.toString()}>
+										{child}
+									</Option>
+								),
+						)}
 					</Select>
 				) : (
 					Boolean(data.length) && (
