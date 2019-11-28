@@ -1,8 +1,8 @@
 {
-  "name": "@dejavu-monorepo/dejavu",
+  "name": "dejavu-demo",
   "version": "0.0.2-alpha.0",
   "dependencies": {
-    "@dejavu-monorepo/browser": "link:..",
+    "dejavu-data-browser": "link:..",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router": "^5.1.2",
@@ -29,5 +29,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "gitHead": "45aa4807a244133a8912c6dbd55014da838538c2"
 }

@@ -1,5 +1,5 @@
-const { NODE_ENV } = process.env
-const isProduction = NODE_ENV === 'production'
+const { NODE_ENV } = process.env;
+const isProduction = NODE_ENV === 'production';
 
 const presets = [
   '@babel/preset-react',
@@ -16,7 +16,7 @@ const presets = [
       useBuiltIns: 'usage',
     },
   ],
-]
+];
 
 const plugins = [
   [
@@ -28,6 +28,6 @@ const plugins = [
   '@babel/plugin-proposal-object-rest-spread',
   '@babel/plugin-syntax-dynamic-import',
   ['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
-]
+];
 
-module.exports = { presets, plugins }
+module.exports = { presets, plugins };
