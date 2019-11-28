@@ -1,5 +1,4 @@
 {
-  "lerna": "^3.19.0",
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "useWorkspaces": true,
