@@ -1,14 +1,24 @@
 import React from 'react';
-import ConnectApp from './components/ConnectApp/ConnectApp';
-import configureStore from './store';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+
+import ConnectApp from './components/ConnectApp/ConnectApp';
+import FlashMessage from './components/ErrorFlashMessage/FlashMessage';
+import DataBrowserContainer from './components/DataBrowserContainer/DataBrowserContainer';
+import configureStore from './store';
 
 const store = configureStore();
 
-const ConnectAppWithRedux = props => (
+const DataBrowserWrapper = () => (
   <Provider store={store}>
-    <ConnectApp {...props} />
+    <BrowserRouter>
+      <section>
+        <FlashMessage />
+        <ConnectApp />
+        <DataBrowserContainer />
+      </section>
+    </BrowserRouter>
   </Provider>
 );
 
-export default ConnectAppWithRedux;
+export default DataBrowserWrapper;

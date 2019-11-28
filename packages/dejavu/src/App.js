@@ -2,17 +2,10 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import ConnectApp from 'dejavu-data-browser';
+import DataBrowser from 'dejavu-data-browser';
 
-function App(props) {
-  console.log({ props });
-  return (
-    <Router>
-      <div>
-        <Route exact path="/" component={ConnectApp} />
-      </div>
-    </Router>
-  );
+function App() {
+  return <DataBrowser />;
 }
 
 export default App;

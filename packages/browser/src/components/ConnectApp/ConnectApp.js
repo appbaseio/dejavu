@@ -34,6 +34,7 @@ import { getMode } from '../../reducers/mode';
 import { LOCAL_CONNECTIONS, MODES } from '../../constants';
 
 import Flex from '../Flex';
+import { withRouter } from 'react-router-dom';
 
 type Props = {
   appname?: string,
@@ -707,7 +708,9 @@ const mapDispatchToProps = {
   setHeaders,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ConnectApp);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ConnectApp)
+);
