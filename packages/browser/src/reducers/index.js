@@ -19,37 +19,39 @@ import applyQuery from './applyQuery';
 import selectAll from './selectAll';
 import stats from './stats';
 import analyzers from './analyzers';
+import batteriesReducers from '../batteries/modules/reducers';
 
 const appReducer = combineReducers({
-	app,
-	mappings,
-	cell,
-	data,
-	mode,
-	error,
-	selectedRows,
-	updatingRow,
-	currentIds,
-	sort,
-	pageSize,
-	nestedColumns,
-	version,
-	query,
-	applyQuery,
-	selectAll,
-	stats,
-	analyzers,
+  app,
+  mappings,
+  cell,
+  data,
+  mode,
+  error,
+  selectedRows,
+  updatingRow,
+  currentIds,
+  sort,
+  pageSize,
+  nestedColumns,
+  version,
+  query,
+  applyQuery,
+  selectAll,
+  stats,
+  analyzers,
+  ...batteriesReducers,
 });
 
 const initialState = appReducer({}, {});
 
 const rootReducer = (state, action) => {
-	let newState = { ...state };
-	if (action.type === APP_CONSTANTS.DISCONNECT) {
-		newState = { ...initialState };
-	}
+  let newState = { ...state };
+  if (action.type === APP_CONSTANTS.DISCONNECT) {
+    newState = { ...initialState };
+  }
 
-	return appReducer(newState, action);
+  return appReducer(newState, action);
 };
 
 export default rootReducer;

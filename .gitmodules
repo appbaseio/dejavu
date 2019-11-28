@@ -1,0 +1,3 @@
+[submodule "packages/browser/src/batteries"]
+	path = packages/browser/src/batteries
+	url = https://github.com/appbaseio/batteries
