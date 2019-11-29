@@ -17,16 +17,16 @@ const plugins = [
     template: './app/index.html',
     alwaysWriteToDisk: true,
   }),
-  // new FaviconsWebpackPlugin({
-  //   logo: './app/src/favicon/favicon.png',
-  //   prefix: 'favicon/',
-  // }),
+  new FaviconsWebpackPlugin({
+    logo: './app/src/favicon/favicon.png',
+    prefix: 'favicon/',
+  }),
   new HtmlWebpackHarddiskPlugin(),
-  // new CopyWebpackPlugin([
-  //   './app/src/_redirects',
-  //   'chrome-specific',
-  //   './packages',
-  // ]),
+  new CopyWebpackPlugin([
+    './app/src/_redirects',
+    'chrome-specific',
+    './packages',
+  ]),
   new WriteWebPackPlugin(),
 ];
 
