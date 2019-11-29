@@ -1,0 +1,14 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"EditorConfig.EditorConfig",
+		"esbenp.prettier-vscode",
+		"Orta.vscode-jest",
+		"msjsdiag.debugger-for-chrome",
+		"jpoissonnier.vscode-styled-components",
+		"lXSPandora.vscode-styled-components-snippets",
+		"andys8.jest-snippets",
+		"burkeholland.simple-react-snippets",
+		"flowtype.flow-for-vscode"
+	]
+}
