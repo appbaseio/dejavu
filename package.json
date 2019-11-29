@@ -48,8 +48,10 @@
   "scripts": {
     "dev:browser": "cd packages/browser && yarn watch",
     "dev:dejavu": "cd packages/dejavu-main && yarn watch",
+    "dev:dejavu:site": "cd packages/dejavu-main && yarn watch:site",
     "build:browser": "cd packages/browser && yarn build",
-    "build:dejavu": "cd packages/dejavu-main && yarn build"
+    "build:dejavu": "cd packages/dejavu-main && yarn build",
+    "build:dejavu:site": "cd packages/dejavu-main && yarn build:site"
   },
   "private": true,
   "workspaces": [
