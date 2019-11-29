@@ -5,6 +5,7 @@ node_modules
 
 [include]
 packages/browser/src
+packages/dejavu-main/app
 
 [libs]
 
