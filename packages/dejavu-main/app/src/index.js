@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { CrossStorageHub } from 'cross-storage';
 
-const App = () => <div>hello world</div>;
+import App from './App';
 
 CrossStorageHub.init([
   { origin: /\.appbase.io$/, allow: ['get'] },

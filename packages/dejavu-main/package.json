@@ -10,6 +10,7 @@
     "react-dom": "^16.5.1"
   },
   "dependencies": {
+    "dejavu-data-browser": "link:..",
     "@appbaseio/designkit": "^0.9.1",
     "@appbaseio/reactivesearch": "^3.0.2",
     "@divyanshu013/media": "^1.0.0",
