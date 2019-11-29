@@ -1,0 +1,34 @@
+{
+	"name": "Dejavu: ElasticSearch Web UI",
+	"short_name": "Dejavu",
+	"version": "3.4.0",
+	"icons": {
+		"16": "favicon/favicon-16x16.png",
+		"32": "favicon/favicon-32x32.png",
+		"48": "favicon/firefox_app_60x60.png",
+		"128": "favicon/firefox_app_128x128.png"
+	},
+	"background": {
+		"scripts": ["background.js"]
+	},
+	"web_accessible_resources": ["index.html", "importer/index.html"],
+	"permissions": [
+		"storage",
+		"system.display",
+		"<all_urls>",
+		"webNavigation",
+		"webRequest",
+		"https://appbaseio.auth0.com/*",
+		"https://use.fontawesome.com/*",
+		"https://accapi.appbase.io/*"
+	],
+	"manifest_version": 2,
+	"offline_enabled": true,
+	"browser_action": {
+		"default_icon": "favicon/favicon-32x32.png",
+		"default_title": "Dejavu: ElasticSearch Web UI"
+	},
+	"description": "The Missing Data Browser and Web UI for Elasticsearch.",
+	"incognito": "split",
+	"author": "Lakhan Samani, appbase.io"
+}
