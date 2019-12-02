@@ -20,34 +20,34 @@ import * as utils from './utils';
 // shared constants
 import * as constants from './constants';
 
-// shared store
-const store = configureStore();
-
 // shared theme
 import colors from './components/theme/colors';
 
-const DataBrowserWrapper = () => (
-  <Provider store={store}>
-    <BrowserRouter>
-      <section>
-        <FlashMessage />
-        <ConnectApp />
-        <DataBrowserContainer />
-      </section>
-    </BrowserRouter>
-  </Provider>
+// shared store
+const store = configureStore();
+
+const DataBrowserWrapper = props => (
+	<Provider store={store}>
+		<BrowserRouter>
+			<section>
+				<FlashMessage />
+				<ConnectApp {...props} />
+				<DataBrowserContainer />
+			</section>
+		</BrowserRouter>
+	</Provider>
 );
 
 export {
-  Flex,
-  FlashMessage,
-  ConnectApp,
-  appReducers,
-  mappingsReducers,
-  utils,
-  store,
-  constants,
-  colors,
+	Flex,
+	FlashMessage,
+	ConnectApp,
+	appReducers,
+	mappingsReducers,
+	utils,
+	store,
+	constants,
+	colors,
 };
 
 // main data browser module
