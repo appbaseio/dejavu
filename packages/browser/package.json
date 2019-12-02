@@ -1,68 +1,73 @@
 {
-  "name": "dejavu-data-browser",
-  "description": "Dejavu monorepo data browser components",
-  "version": "0.1.0-alpha.0",
-  "author": "Anuj Shah <anujshah584@gmail.com>",
-  "main": "lib/index.js",
-  "module": "lib/index.es.js",
-  "peerDependencies": {
-    "react": "^16.5.1",
-    "react-dom": "^16.5.1"
-  },
-  "dependencies": {
-    "@appbaseio/designkit": "^0.9.1",
-    "@appbaseio/reactivesearch": "^3.0.2",
-    "@divyanshu013/media": "^1.0.0",
-    "antd": "^3.10.4",
-    "appbase-js": "^4.0.2-beta.2",
-    "brace": "^0.11.1",
-    "codesandbox": "^1.3.5",
-    "cross-storage": "^1.0.0",
-    "dom-helpers": "^3.4.0",
-    "emotion": "^9.2.12",
-    "file-saver": "^2.0.0-rc.4",
-    "flat": "^4.1.0",
-    "ismobilejs": "^0.5.1",
-    "lodash": "^4.17.11",
-    "lzma": "^2.3.2",
-    "moment": "^2.22.2",
-    "papaparse": "^4.6.1",
-    "prop-types": "^15.6.2",
-    "react-ace": "^6.5.0",
-    "react-custom-scrollbars": "^4.2.1",
-    "react-element-to-jsx-string": "^14.0.2",
-    "react-emotion": "^9.2.12",
-    "react-expand-collapse": "^0.2.0",
-    "react-feather": "^1.1.3",
-    "react-joyride": "^2.0.0-15",
-    "react-json-editor-ajrm": "^2.5.8",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.3.1",
-    "react-virtualized": "^9.21.0",
-    "recharts": "^1.3.6",
-    "redux": "^3.7.2",
-    "redux-saga": "^0.16.0",
-    "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0",
-    "url-parser-lite": "^0.1.0",
-    "urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git"
-  },
-  "devDependencies": {
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
-  },
-  "files": [
-    "lib/"
-  ],
-  "scripts": {
-    "watch": "yarn build:commonjs -w && yarn build:es -w",
-    "build": "yarn build:commonjs && yarn build:es",
-    "build:commonjs": "babel --ignore __tests__ src --out-dir lib --copy-files src/images",
-    "build:es": "babel src/index.js --out-file lib/index.es.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/appbaseio/dejavu-monorepo"
-  },
-  "gitHead": "45aa4807a244133a8912c6dbd55014da838538c2"
+	"name": "dejavu-data-browser",
+	"description": "Dejavu monorepo data browser components",
+	"version": "0.1.0-alpha.0",
+	"authors": [
+		"Anuj Shah <anujshah584@gmail.com>",
+		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
+		"Divyanshu Maithani <div.blackcat@gmail.com> (https://github.com/divyanshu013)",
+		"Deepak Grover <deepakgrover333@gmail.com> (https://github.com/metagrover)",
+		"Appbase.io <info@appbase.io> (https://github.com/appbaseio)"
+	],
+	"main": "lib/index.js",
+	"module": "lib/index.es.js",
+	"peerDependencies": {
+		"react": "^16.5.1",
+		"react-dom": "^16.5.1"
+	},
+	"dependencies": {
+		"@appbaseio/designkit": "^0.9.1",
+		"@appbaseio/reactivesearch": "^3.0.2",
+		"@divyanshu013/media": "^1.0.0",
+		"antd": "^3.10.4",
+		"appbase-js": "^4.0.2-beta.2",
+		"brace": "^0.11.1",
+		"codesandbox": "^1.3.5",
+		"cross-storage": "^1.0.0",
+		"dom-helpers": "^3.4.0",
+		"emotion": "^9.2.12",
+		"file-saver": "^2.0.0-rc.4",
+		"flat": "^4.1.0",
+		"ismobilejs": "^0.5.1",
+		"lodash": "^4.17.11",
+		"lzma": "^2.3.2",
+		"moment": "^2.22.2",
+		"papaparse": "^4.6.1",
+		"prop-types": "^15.6.2",
+		"react-ace": "^6.5.0",
+		"react-custom-scrollbars": "^4.2.1",
+		"react-element-to-jsx-string": "^14.0.2",
+		"react-emotion": "^9.2.12",
+		"react-expand-collapse": "^0.2.0",
+		"react-feather": "^1.1.3",
+		"react-joyride": "^2.0.0-15",
+		"react-json-editor-ajrm": "^2.5.8",
+		"react-redux": "^5.0.7",
+		"react-router-dom": "^4.3.1",
+		"react-virtualized": "^9.21.0",
+		"recharts": "^1.3.6",
+		"redux": "^3.7.2",
+		"redux-saga": "^0.16.0",
+		"redux-thunk": "^2.3.0",
+		"reselect": "^4.0.0",
+		"url-parser-lite": "^0.1.0",
+		"urlsafe-base64": "https://github.com/farhan687/urlsafe-base64.git"
+	},
+	"devDependencies": {
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0"
+	},
+	"files": [
+		"lib/"
+	],
+	"scripts": {
+		"watch": "yarn build:commonjs -w && yarn build:es -w",
+		"build": "yarn build:commonjs && yarn build:es",
+		"build:commonjs": "babel --ignore __tests__ src --out-dir lib --copy-files src/images",
+		"build:es": "babel src/index.js --out-file lib/index.es.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/appbaseio/dejavu"
+	}
 }
