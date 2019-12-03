@@ -747,10 +747,9 @@ http.cors.allow-credentials: true`}
 const mapStateToProps = (state, props) => ({
 	appname: getAppname(state) || props.app,
 	url:
-		getUrl(state) ||
-		(props.credentials
-			? `https://${props.credentials}@scalr.api.appbase.io`
-			: null),
+		getUrl(state) || (props.url && props.url.trim() !== '')
+			? props.url
+			: `https://${props.credentials}@scalr.api.appbase.io`,
 	isConnected: getIsConnected(state),
 	isLoading: getIsLoading(state),
 	mode: getMode(state),
