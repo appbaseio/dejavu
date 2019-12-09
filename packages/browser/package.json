@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-data-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "0.1.3-alpha.0",
+	"version": "0.1.4-alpha.0",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
