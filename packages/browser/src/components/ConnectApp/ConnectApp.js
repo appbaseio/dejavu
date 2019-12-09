@@ -53,6 +53,8 @@ type Props = {
 	setError: any => void,
 	headers: any[],
 	setHeaders: any => void,
+	URLParams: boolean,
+	showHeaders: boolean,
 };
 
 type State = {
@@ -119,6 +121,8 @@ class ConnectApp extends Component<Props, State> {
 			appswitcher,
 			route,
 		} = getUrlParams(window.location.search);
+		const URLParams =
+			this.props.URLParams !== undefined ? this.props.URLParams : true;
 
 		if (queryApp && queryUrl) {
 			appname = queryApp;
@@ -157,7 +161,7 @@ class ConnectApp extends Component<Props, State> {
 			this.setAppSwitcher(false);
 		}
 
-		if (!queryApp && !queryUrl) {
+		if (!queryApp && !queryUrl && URLParams) {
 			let searchQuery = `?appname=${appname}&url=${url}`;
 			const currentMode = queryMode || mode;
 			searchQuery += `&mode=${currentMode}`;
@@ -435,10 +439,14 @@ class ConnectApp extends Component<Props, State> {
 			customHeaders,
 		} = this.state;
 		const { isLoading, isConnected } = this.props;
+		const showHeaders =
+			this.props.showHeaders !== undefined
+				? this.props.showHeaders
+				: true;
 
 		return (
 			<div>
-				{isShowingAppSwitcher && (
+				{isShowingAppSwitcher && showHeaders && (
 					<Form layout="inline" onSubmit={this.handleSubmit}>
 						<Flex alignItems="center">
 							<Item
@@ -746,14 +754,13 @@ http.cors.allow-credentials: true`}
 
 const mapStateToProps = (state, props) => {
 	const getURL = () => {
-		if (getUrl(state)) return getUrl(state);
 		if (props.url && props.url.trim() !== '') return props.url;
 		if (props.credentials)
 			return `https://${props.credentials}@scalr.api.appbase.io`;
-		return null;
+		return getUrl(state);
 	};
 	return {
-		appname: getAppname(state) || props.app,
+		appname: props.app || getAppname(state),
 		url: getURL(),
 		isConnected: getIsConnected(state),
 		isLoading: getIsLoading(state),
