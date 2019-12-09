@@ -4916,12 +4916,12 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codesandbox-import-util-types@^1.3.7:
+codesandbox-import-util-types@^1.3.4, codesandbox-import-util-types@^1.3.7:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/codesandbox-import-util-types/-/codesandbox-import-util-types-1.3.7.tgz#7a6097e248a75424d13b06b74368cd76bd2b3e10"
   integrity sha512-8oP3emA0jyEuVOM2FBTpo/AF4C9vxHn14saVWZf2CQ/QhMtonBlNPE98ElrHkW+PFNXiO7Ad52Qr73b03n8qlA==
 
-codesandbox-import-utils@^1.3.8:
+codesandbox-import-utils@^1.3.5:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/codesandbox-import-utils/-/codesandbox-import-utils-1.3.8.tgz#5576786439c5f37ebd3fee5751e06027a1edef84"
   integrity sha512-S12zO49QEkldoYLGh5KbkHRLOacg5BCNTue2vlyZXSpuK3oQdArwC/G1hCLKryV460bW3Ecn5xdkpfkUcFeOwQ==
@@ -4930,15 +4930,15 @@ codesandbox-import-utils@^1.3.8:
     istextorbinary "2.2.1"
     lz-string "^1.4.4"
 
-codesandbox@^1.3.5:
-  version "1.3.8"
-  resolved "https://registry.yarnpkg.com/codesandbox/-/codesandbox-1.3.8.tgz#187bc4843cf9382ec2858b68707aceb118e986c2"
-  integrity sha512-O193p2hG6syyNQKu5QqCdIoFP9GTVJrJMtvCz+JiQt/YMvWdfuMHZQ+AsbDfHZbt+3npSZ/IPvX3Qkt7KVyyLg==
+codesandbox@1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/codesandbox/-/codesandbox-1.3.5.tgz#031ee0a15c3250a8c65536e98c66ef6ba269807c"
+  integrity sha512-D7snkflPqMJQP/d+WXitCtCaBYg775wBUcWxLxyv7HJRfZ6r2RgVP7Jch6bw2uC6jl1K0ICsAZKWUxwg/H1Oyw==
   dependencies:
     axios "^0.16.2"
     chalk "^2.4.1"
-    codesandbox-import-util-types "^1.3.7"
-    codesandbox-import-utils "^1.3.8"
+    codesandbox-import-util-types "^1.3.4"
+    codesandbox-import-utils "^1.3.5"
     commander "^2.9.0"
     datauri "^1.1.0"
     filesize "^3.6.1"

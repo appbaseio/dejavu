@@ -744,17 +744,23 @@ http.cors.allow-credentials: true`}
 	}
 }
 
-const mapStateToProps = (state, props) => ({
-	appname: getAppname(state) || props.app,
-	url:
-		getUrl(state) || (props.url && props.url.trim() !== '')
-			? props.url
-			: `https://${props.credentials}@scalr.api.appbase.io`,
-	isConnected: getIsConnected(state),
-	isLoading: getIsLoading(state),
-	mode: getMode(state),
-	headers: getHeaders(state),
-});
+const mapStateToProps = (state, props) => {
+	const getURL = () => {
+		if (getUrl(state)) return getUrl(state);
+		if (props.url && props.url.trim() !== '') return props.url;
+		if (props.credentials)
+			return `https://${props.credentials}@scalr.api.appbase.io`;
+		return null;
+	};
+	return {
+		appname: getAppname(state) || props.app,
+		url: getURL(),
+		isConnected: getIsConnected(state),
+		isLoading: getIsLoading(state),
+		mode: getMode(state),
+		headers: getHeaders(state),
+	};
+};
 
 const mapDispatchToProps = {
 	connectApp,
