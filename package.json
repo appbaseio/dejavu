@@ -56,7 +56,7 @@
 		"dev:dejavu": "cd packages/dejavu-main && yarn watch",
 		"dev:dejavu:site": "cd packages/dejavu-main && yarn watch:site",
 		"build:browser": "cd packages/browser && yarn build",
-		"build:dejavu": "cd packages/dejavu-main && yarn build",
+		"build:dejavu": "lerna run build --scope dejavu-main",
 		"build:dejavu:app": "yarn workspace dejavu-main build:app",
 		"build:dejavu:site": "cd packages/dejavu-main && yarn build:site"
 	},
