@@ -8,6 +8,7 @@ import configureStore from './store';
 // shared components
 import Flex from './components/Flex';
 import FlashMessage from './components/ErrorFlashMessage/FlashMessage';
+import ConnectApp from './components/ConnectApp/ConnectApp';
 
 // shared reducers
 import * as appReducers from './reducers/app';
@@ -30,6 +31,7 @@ const DataBrowserWrapper = props => (
 		<BrowserRouter>
 			<section>
 				<FlashMessage />
+				<ConnectApp {...props} />
 				<DataBrowserContainer />
 			</section>
 		</BrowserRouter>
@@ -39,6 +41,7 @@ const DataBrowserWrapper = props => (
 export {
 	Flex,
 	FlashMessage,
+	ConnectApp,
 	appReducers,
 	mappingsReducers,
 	utils,
