@@ -10,6 +10,7 @@ lerna-debug.log
 **/.cache
 .DS_Store
 lib
+dist
 
 # Logs
 logs
