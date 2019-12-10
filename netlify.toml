@@ -1,6 +1,0 @@
-[build]
-  publish = "public"
-  command = "yarn build:dejavu:app"
-[build.environment]
-  YARN_VERSION = "1.9.4"
-  YARN_FLAGS = "--no-ignore-optional"
