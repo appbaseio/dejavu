@@ -57,6 +57,7 @@
 		"dev:dejavu:site": "cd packages/dejavu-main && yarn watch:site",
 		"build:browser": "cd packages/browser && yarn build",
 		"build:dejavu": "cd packages/dejavu-main && yarn build",
+		"build:dejavu:app": "cd packages/dejavu-main && yarn build:app",
 		"build:dejavu:site": "cd packages/dejavu-main && yarn build:site"
 	},
 	"private": true,
