@@ -1,2 +1,0 @@
-[build]
-  command = "npm i yarn@1.19.1 && yarn && yarn build:dejavu:app"
