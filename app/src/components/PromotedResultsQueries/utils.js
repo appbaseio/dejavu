@@ -1,4 +1,5 @@
 export default function getPromotedURL(url) {
 	const parsedURL = url.split('@');
-	return `https://${parsedURL[1]}`;
+	const protocol = url.split('://');
+	return `${protocol}://${parsedURL[1]}`;
 }
