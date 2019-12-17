@@ -95,6 +95,7 @@ const getOnlySource = data => {
 		_score,
 		_click_id, // eslint-disable-line
 		highlight,
+		sort,
 		...others
 	} = data;
 	return others;
