@@ -123,29 +123,33 @@ const ResultSet = ({
 					/>
 				) : null
 			}
-			onResultStats={total => (
-				<Flex
-					justifyContent="center"
-					alignItems="center"
-					css={{
-						display: 'none',
-						[mediaMin.medium]: {
-							display: 'block',
-							position: 'absolute',
-							right: '390px',
-							height: '32px',
-							fontSize: '14px',
-							padding: '0 15px',
-							lineHeight: '1.5',
-							textAlign: 'center',
-							bottom: -45,
-						},
-					}}
-				>
-					<b>{numberWithCommas(total)}</b>
-					&nbsp;results
-				</Flex>
-			)}
+			onResultStats={total => {
+				const totalCount =
+					typeof total === 'object' ? total.value : total;
+				return (
+					<Flex
+						justifyContent="center"
+						alignItems="center"
+						css={{
+							display: 'none',
+							[mediaMin.medium]: {
+								display: 'block',
+								position: 'absolute',
+								right: '390px',
+								height: '32px',
+								fontSize: '14px',
+								padding: '0 15px',
+								lineHeight: '1.5',
+								textAlign: 'center',
+								bottom: -45,
+							},
+						}}
+					>
+						<b>{numberWithCommas(totalCount)}</b>
+						&nbsp;results
+					</Flex>
+				);
+			}}
 		/>
 	);
 };
