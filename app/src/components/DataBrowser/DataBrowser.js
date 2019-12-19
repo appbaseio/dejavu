@@ -54,6 +54,18 @@ class DataBrowser extends Component<Props> {
 		this.props.fetchMappings();
 	};
 
+	transformRequest = request => {
+		const newRequest = { ...request };
+		if (newRequest.headers) {
+			Object.keys(newRequest.headers).forEach(headerItem => {
+				newRequest.headers[headerItem] = decodeURIComponent(
+					newRequest.headers[headerItem],
+				);
+			});
+		}
+		return newRequest;
+	};
+
 	render() {
 		const {
 			url: rawUrl,
@@ -64,7 +76,11 @@ class DataBrowser extends Component<Props> {
 			headers,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
-		let baseProps = { url, app: indexes.join(',') };
+		let baseProps = {
+			url,
+			app: indexes.join(','),
+			transformRequest: this.transformRequest,
+		};
 
 		if (credentials) {
 			baseProps = { ...baseProps, credentials };
