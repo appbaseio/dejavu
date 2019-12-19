@@ -30,9 +30,9 @@ class PromotedJSONModal extends React.Component {
 			window.location.search,
 		);
 		const jsonObject = JSON.parse(jsonValue);
-		jsonObject._id = jsonObject._id || Date.now();
+		jsonObject._id = jsonObject._id || Date.now().toString();
 		const { _id, ...restProperties } = jsonObject;
-		const item = { _id, ...restProperties };
+		const item = { _id: _id.toString(), ...restProperties };
 		const { appendResult } = this.context || undefined;
 
 		const { promotedResults, hiddenResults } = this.context;
