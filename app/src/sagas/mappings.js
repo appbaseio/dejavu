@@ -48,6 +48,11 @@ function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
+				if (versionCode === 7) {
+					data[index].mappings = {
+						_doc: { ...data[index].mappings },
+					};
+				}
 				let typesList = Object.keys(data[index].mappings);
 				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
