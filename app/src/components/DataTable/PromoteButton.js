@@ -32,6 +32,7 @@ class PromoteButton extends React.Component {
 					...promotedResults,
 					{
 						...item,
+						_id: item._id.toString(),
 					},
 				],
 			},
