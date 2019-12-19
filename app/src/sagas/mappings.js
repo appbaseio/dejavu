@@ -48,6 +48,11 @@ function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
+				if (versionCode === 7) {
+					data[index].mappings = {
+						_doc: { ...data[index].mappings },
+					};
+				}
 				let typesList = Object.keys(data[index].mappings);
 				typesList = difference(typesList, INGNORE_META_TYPES);
 				if (typesList.length) {
@@ -123,7 +128,8 @@ function* handleFetchMappings() {
 					properties[property].type === 'string' ||
 					properties[property].type === 'text' ||
 					(properties[property] &&
-						properties[property].type === 'keyword'),
+						properties[property].type === 'keyword' &&
+						versionCode < 7),
 			);
 
 			const nestedSearchColumns = Object.keys(nestedProperties).filter(
@@ -131,7 +137,8 @@ function* handleFetchMappings() {
 					nestedProperties[property].type === 'string' ||
 					nestedProperties[property].type === 'text' ||
 					(properties[property] &&
-						properties[property].type === 'keyword'),
+						properties[property].type === 'keyword' &&
+						versionCode < 7),
 			);
 
 			const searchableColumns = [
@@ -139,14 +146,12 @@ function* handleFetchMappings() {
 				...searchColumns.map(field => `${field}.raw`),
 				...searchColumns.map(field => `${field}.search`),
 				...searchColumns.map(field => `${field}.autosuggest`),
-				'_id',
 			];
 			const searchableColumnsWeights = [
 				...Array(searchColumns.length).fill(3),
 				...Array(searchColumns.length).fill(3),
 				...Array(searchColumns.length).fill(1),
 				...Array(searchColumns.length).fill(1),
-				1,
 			];
 
 			const nestedSearchableColumns = [
@@ -154,15 +159,21 @@ function* handleFetchMappings() {
 				...nestedSearchColumns.map(field => `${field}.raw`),
 				...nestedSearchColumns.map(field => `${field}.search`),
 				...nestedSearchColumns.map(field => `${field}.autosuggest`),
-				'_id',
 			];
 			const nestedSearchableColumnsWeights = [
 				...Array(nestedSearchColumns.length).fill(3),
 				...Array(nestedSearchColumns.length).fill(3),
 				...Array(nestedSearchColumns.length).fill(1),
 				...Array(nestedSearchColumns.length).fill(1),
-				1,
 			];
+
+			// _id is not searchable from v7
+			if (versionCode < 7) {
+				searchableColumns.push('_id');
+				searchableColumnsWeights.push(1);
+				nestedSearchableColumns.push('_id');
+				nestedSearchableColumnsWeights.push(1);
+			}
 
 			const termsAggregationColumns = [
 				'_type',
