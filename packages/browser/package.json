@@ -1,5 +1,6 @@
 {
 	"name": "dejavu-data-browser",
+	"private": true,
 	"description": "Dejavu monorepo data browser components",
 	"version": "0.1.9-alpha.0",
 	"authors": [
