@@ -61,7 +61,9 @@
 		"build:dejavu:site": "cd packages/dejavu-main && yarn build:site"
 	},
 	"private": true,
-	"workspaces": [
-		"packages/*"
-	]
+	"workspaces": {
+		"packages": [
+			"packages/*"
+		]
+	}
 }
