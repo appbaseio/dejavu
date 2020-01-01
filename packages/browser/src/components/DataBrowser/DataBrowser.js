@@ -54,6 +54,18 @@ class DataBrowser extends Component<Props> {
 		this.props.fetchMappings();
 	};
 
+	transformRequest = request => {
+		const newRequest = { ...request };
+		if (newRequest.headers) {
+			Object.keys(newRequest.headers).forEach(headerItem => {
+				newRequest.headers[headerItem] = decodeURIComponent(
+					newRequest.headers[headerItem],
+				);
+			});
+		}
+		return newRequest;
+	};
+
 	render() {
 		const {
 			url: rawUrl,
@@ -64,7 +76,11 @@ class DataBrowser extends Component<Props> {
 			headers,
 		} = this.props;
 		const { credentials, url } = parseUrl(rawUrl);
-		let baseProps = { url, app: indexes.join(',') };
+		let baseProps = {
+			url,
+			app: indexes.join(','),
+			transformRequest: this.transformRequest(),
+		};
 
 		if (credentials) {
 			baseProps = { ...baseProps, credentials };
@@ -85,55 +101,51 @@ class DataBrowser extends Component<Props> {
 
 		return (
 			<Skeleton loading={isLoading} active>
-				{!isLoading &&
-					!isDataLoading &&
-					mappings && (
-						<div css={{ position: 'relative' }}>
-							<ReactiveBase {...baseProps}>
-								<div>
-									<Actions onReload={this.handleReload} />
-									<NestedColumnToggle />
-									<GlobalSearch />
-								</div>
-								<ApplyQueryBanner />
-								<div
-									id="result-list"
+				{!isLoading && !isDataLoading && mappings && (
+					<div css={{ position: 'relative' }}>
+						<ReactiveBase {...baseProps}>
+							<div>
+								<Actions onReload={this.handleReload} />
+								<NestedColumnToggle />
+								<GlobalSearch />
+							</div>
+							<ApplyQueryBanner />
+							<div
+								id="result-list"
+								css={{
+									marginTop: 15,
+									border: `1px solid ${colors.tableBorderColor}`,
+									borderRadius: 3,
+									width: '100%',
+									height:
+										window.innerHeight -
+										(hideAppSwitcher ? 250 : 350),
+									overflow: 'visible',
+								}}
+							>
+								<AutoSizer
 									css={{
-										marginTop: 15,
-										border: `1px solid ${
-											colors.tableBorderColor
-										}`,
-										borderRadius: 3,
-										width: '100%',
-										height:
-											window.innerHeight -
-											(hideAppSwitcher ? 250 : 350),
-										overflow: 'visible',
+										height: '100% !important',
+										width: '100% !important',
 									}}
 								>
-									<AutoSizer
-										css={{
-											height: '100% !important',
-											width: '100% !important',
-										}}
-									>
-										{({ height, width }) => (
-											<>
-												<DataTableHeader
-													ref={this.headerRef}
-												/>
-												<ResultList
-													height={height}
-													width={width}
-													headerRef={this.headerRef}
-												/>
-											</>
-										)}
-									</AutoSizer>
-								</div>
-							</ReactiveBase>
-						</div>
-					)}
+									{({ height, width }) => (
+										<>
+											<DataTableHeader
+												ref={this.headerRef}
+											/>
+											<ResultList
+												height={height}
+												width={width}
+												headerRef={this.headerRef}
+											/>
+										</>
+									)}
+								</AutoSizer>
+							</div>
+						</ReactiveBase>
+					</div>
+				)}
 				{mappings && (
 					<Flex
 						css={{
@@ -170,7 +182,4 @@ const mapDispatchToProps = {
 	updateReactiveList,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(DataBrowser);
+export default connect(mapStateToProps, mapDispatchToProps)(DataBrowser);
