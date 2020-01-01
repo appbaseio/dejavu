@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-main",
 	"description": "Dejavu main module",
-	"version": "0.1.9-alpha.0",
+	"version": "0.2.0-alpha.0",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
@@ -24,7 +24,7 @@
 		"brace": "^0.11.1",
 		"codesandbox": "1.3.5",
 		"cross-storage": "^1.0.0",
-		"dejavu-data-browser": "^0.1.9-alpha.0",
+		"dejavu-data-browser": "^0.2.0-alpha.0",
 		"dom-helpers": "^3.4.0",
 		"emotion": "^9.2.12",
 		"file-saver": "^2.0.0-rc.4",
