@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-data-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "0.2.0-alpha.0",
+	"version": "0.2.1-alpha.0",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
@@ -12,8 +12,6 @@
 	"main": "lib/index.js",
 	"module": "lib/index.es.js",
 	"peerDependencies": {
-		"react": "^16.5.1",
-		"react-dom": "^16.5.1",
 		"@appbaseio/designkit": "^0.9.1",
 		"@appbaseio/reactivesearch": "^3.0.2",
 		"antd": "^3.10.4",
@@ -25,7 +23,9 @@
 		"lzma": "^2.3.2",
 		"moment": "^2.22.2",
 		"prop-types": "^15.6.2",
+		"react": "^16.5.1",
 		"react-ace": "^6.5.0",
+		"react-dom": "^16.5.1",
 		"react-element-to-jsx-string": "^14.0.2",
 		"react-emotion": "^9.2.12",
 		"react-expand-collapse": "^0.2.0",
