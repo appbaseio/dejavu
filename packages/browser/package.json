@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-data-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "0.2.1-alpha.0",
+	"version": "0.2.2-alpha.0",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
@@ -44,14 +44,14 @@
 	"dependencies": {
 		"@divyanshu013/media": "^1.0.0",
 		"cross-storage": "^1.0.0",
-		"react-virtualized": "^9.21.0",
 		"dom-helpers": "^3.4.0",
 		"file-saver": "^2.0.0-rc.4",
 		"flat": "^4.1.0",
 		"ismobilejs": "^0.5.1",
 		"papaparse": "^4.6.1",
 		"react-custom-scrollbars": "^4.2.1",
-		"react-json-editor-ajrm": "^2.5.8"
+		"react-json-editor-ajrm": "^2.5.8",
+		"react-virtualized": "^9.21.0"
 	},
 	"devDependencies": {
 		"react": "^16.12.0",
