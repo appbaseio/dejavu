@@ -55,6 +55,7 @@ type Props = {
 	setHeaders: any => void,
 	URLParams: boolean,
 	showHeaders: boolean,
+	forceReconnect: boolean,
 };
 
 type State = {
@@ -111,7 +112,7 @@ class ConnectApp extends Component<Props, State> {
 		// sync state from url
 		let appname = '';
 		let url = '';
-		const { mode, isConnected, isHidden } = this.props;
+		const { mode, isConnected, isHidden, forceReconnect } = this.props;
 		const {
 			appname: queryApp,
 			url: queryUrl,
@@ -138,7 +139,7 @@ class ConnectApp extends Component<Props, State> {
 			url,
 		});
 
-		if (appname && url && !isConnected) {
+		if (appname && url && (forceReconnect || !isConnected)) {
 			const { pathname } = this.props.location;
 
 			if (shouldConnect(pathname, appname)) {
