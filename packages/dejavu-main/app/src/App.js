@@ -3,7 +3,7 @@ import { Layout, Modal, Skeleton } from 'antd';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
-import { Flex, utils, constants, store, colors } from 'dejavu-data-browser';
+import { Flex, utils, constants, store, colors } from '@appbaseio/dejavu-browser';
 
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
@@ -12,7 +12,7 @@ import OldDejavuBanner from './components/OldDejavuBanner';
 import logo from './images/dejavu-logo.svg';
 
 const SearchPreview = lazy(() => import('./components/SearchPreview'));
-const DataBrowser = lazy(() => import('dejavu-data-browser'));
+const DataBrowser = lazy(() => import('@appbaseio/dejavu-browser'));
 const QueryExplorer = lazy(() => import('./components/QueryExplorer'));
 
 const { getUrlParams, getLocalStorageItem, setLocalStorageData } = utils;

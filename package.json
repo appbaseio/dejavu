@@ -53,13 +53,14 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"dev:browser": "lerna run watch --scope dejavu-data-browser --stream",
+		"dev:browser": "lerna run watch --scope @appbaseio/dejavu-browser --stream",
 		"dev:dejavu": "lerna run watch --scope dejavu-main --stream",
 		"dev:dejavu:site": "lerna run watch:site --scope dejavu-main --stream",
-		"build:browser": "lerna run build --scope dejavu-data-browser --stream",
+		"build:browser": "lerna run build --scope @appbaseio/dejavu-browser --stream",
 		"build:dejavu": "yarn build:browser && lerna run build --scope dejavu-main --stream",
 		"build:dejavu:app": "yarn build:browser && lerna run build:app --scope dejavu-main --stream",
-		"build:dejavu:site": "yarn build:browser && lerna run build:site --scope dejavu-main --stream"
+		"build:dejavu:site": "yarn build:browser && lerna run build:site --scope dejavu-main --stream",
+		"build:chrome-extension": "yarn build:browser && lerna run build:chrome-extension --scope dejavu-main --stream"
 	},
 	"private": true,
 	"workspaces": {

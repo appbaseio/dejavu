@@ -6,7 +6,7 @@ import {
   FlashMessage as ErrorFlashMessage,
   ConnectApp,
   appReducers,
-} from 'dejavu-data-browser';
+} from '@appbaseio/dejavu-browser';
 
 const { getIsConnected, getAppname, getUrl } = appReducers;
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Alert, Icon } from 'antd';
-import { appReducers, utils } from 'dejavu-data-browser';
+import { appReducers, utils } from '@appbaseio/dejavu-browser';
 
 const { getIsConnected, getAppname, getUrl } = appReducers;
 const { getUrlParams, getLocalStorageItem, setLocalStorageData } = utils;

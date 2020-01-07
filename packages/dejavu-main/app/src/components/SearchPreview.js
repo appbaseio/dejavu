@@ -7,7 +7,7 @@ import {
   ConnectApp,
   appReducers,
   utils,
-} from 'dejavu-data-browser';
+} from '@appbaseio/dejavu-browser';
 
 import SearchSandbox from '../batteries/components/SearchSandbox';
 import BaseContainer from '../batteries/components/BaseContainer';

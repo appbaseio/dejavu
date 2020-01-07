@@ -4,7 +4,7 @@ import React from 'react';
 import { Menu, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { mappingsReducers, appReducers, utils } from 'dejavu-data-browser';
+import { mappingsReducers, appReducers, utils } from '@appbaseio/dejavu-browser';
 
 const { getIndexes } = mappingsReducers;
 const { getIsConnected } = appReducers;
