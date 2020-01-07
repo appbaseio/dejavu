@@ -3,7 +3,13 @@ import { Layout, Modal, Skeleton } from 'antd';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
-import { Flex, utils, constants, store, colors } from '@appbaseio/dejavu-browser';
+import {
+	Flex,
+	utils,
+	constants,
+	store,
+	colors,
+} from '@appbaseio/dejavu-browser';
 
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
@@ -131,7 +137,7 @@ class App extends Component {
 								<Navigation />
 							</Sider>
 						)}
-						<Layout>
+						<Layout css={{ overflowX: 'hidden !important' }}>
 							<OldDejavuBanner />
 							<Content
 								css={{

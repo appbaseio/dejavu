@@ -3,13 +3,13 @@ MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
 
-ADD package.json yarn.lock /dejavu/
+ADD packages/dejavu-main/package.json yarn.lock /dejavu/
 
 RUN apk --no-cache update \
     && apk --no-cache add git \
     && rm -rf /var/cache/apk/*
 
-ADD . /dejavu
+ADD packages/dejavu-main /dejavu
 
 RUN yarn \
     && yarn cache clean && yarn build:app \

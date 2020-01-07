@@ -16,7 +16,6 @@ type Props = {
 };
 
 const OldDejavuBanner = ({ appname, rawUrl, isConnected }: Props) => {
-	console.log('hello');
 	const { oldBanner } = getUrlParams(window.location.search);
 	const showOldBanner = getLocalStorageItem(LOCAL_STORAGE_ITEM);
 	let isVisible = true;
