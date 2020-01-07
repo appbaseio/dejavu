@@ -37,7 +37,4 @@ const mapDispatchToProps = {
 	onDismissError: clearError,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(FlashMessage);
+export default connect(mapStateToProps, mapDispatchToProps)(FlashMessage);

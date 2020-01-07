@@ -60,7 +60,8 @@
 		"build:dejavu": "yarn build:browser && lerna run build --scope dejavu-main --stream",
 		"build:dejavu:app": "yarn build:browser && lerna run build:app --scope dejavu-main --stream",
 		"build:dejavu:site": "yarn build:browser && lerna run build:site --scope dejavu-main --stream",
-		"build:chrome-extension": "yarn build:browser && lerna run build:chrome-extension --scope dejavu-main --stream"
+		"build:chrome-extension": "yarn build:browser && lerna run build:chrome-extension --scope dejavu-main --stream",
+		"format": "lerna run format --stream"
 	},
 	"private": true,
 	"workspaces": {

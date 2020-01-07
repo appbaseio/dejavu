@@ -391,14 +391,13 @@ class ExportData extends Component<Props, State> {
 						}
 					/>
 					<br />
-					{!isFetchingCount &&
-						selectedChunk && (
-							<p>
-								Now you can export <b>{selectedChunk}</b>{' '}
-								documents in CSV or JSON format by selecting
-								appropriate option.
-							</p>
-						)}
+					{!isFetchingCount && selectedChunk && (
+						<p>
+							Now you can export <b>{selectedChunk}</b> documents
+							in CSV or JSON format by selecting appropriate
+							option.
+						</p>
+					)}
 
 					{!isFetchingCount &&
 						searchAfterData &&
@@ -472,7 +471,4 @@ const mapDispatchToProps = {
 	addDataRequest,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ExportData);
+export default connect(mapStateToProps, mapDispatchToProps)(ExportData);

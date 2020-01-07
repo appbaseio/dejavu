@@ -130,7 +130,4 @@ const mapDispatchToProps = {
 	setUpdatingRow,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(IdField);
+export default connect(mapStateToProps, mapDispatchToProps)(IdField);

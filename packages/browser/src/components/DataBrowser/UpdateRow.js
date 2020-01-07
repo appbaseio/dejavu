@@ -194,7 +194,4 @@ const mapDispatchToProps = {
 	fetchMappings,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(UpdateRowModal);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateRowModal);

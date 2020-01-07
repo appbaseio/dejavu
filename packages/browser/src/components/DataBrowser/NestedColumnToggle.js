@@ -59,7 +59,4 @@ const mapDispatchToProps = {
 	setIsShwoingNestedColumn,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(NestedColumnToggle);
+export default connect(mapStateToProps, mapDispatchToProps)(NestedColumnToggle);

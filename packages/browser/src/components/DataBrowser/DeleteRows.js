@@ -108,7 +108,4 @@ const mapDispatchToProps = {
 	onSetApplyQuery: setApplyQuery,
 	onSetSelectAll: setSelectAll,
 };
-export default connect(
-	mpaStateToProps,
-	mapDispatchToProps,
-)(DeleteRows);
+export default connect(mpaStateToProps, mapDispatchToProps)(DeleteRows);

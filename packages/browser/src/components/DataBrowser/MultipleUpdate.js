@@ -307,9 +307,7 @@ class MultipleUpdate extends Component<Props, State> {
 									{item.field ? (
 										<div
 											css={{
-												border: `1px solid ${
-													colors.tableBorderColor
-												}`,
+												border: `1px solid ${colors.tableBorderColor}`,
 												borderRadius: 3,
 												padding: '5px 7px',
 											}}
@@ -403,7 +401,4 @@ const mapDispatchToProps = {
 	onSetSelectAll: setSelectAll,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(MultipleUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(MultipleUpdate);

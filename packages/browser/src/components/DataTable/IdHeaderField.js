@@ -165,7 +165,4 @@ const mapDispatchToProps = {
 	onSetApplyQuery: setApplyQuery,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(IdHeaderField);
+export default connect(mapStateToProps, mapDispatchToProps)(IdHeaderField);

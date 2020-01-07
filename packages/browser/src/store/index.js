@@ -11,10 +11,7 @@ const configureStore = () => {
 	const store = createStore(
 		rootReducer,
 		window.__REDUX_DEVTOOLS_EXTENSION__
-			? compose(
-					middlewares,
-					window.__REDUX_DEVTOOLS_EXTENSION__(),
-			  )
+			? compose(middlewares, window.__REDUX_DEVTOOLS_EXTENSION__())
 			: middlewares,
 	);
 	sagaMiddleware.run(rootSaga);

@@ -377,7 +377,4 @@ const mapDispatchToProps = {
 	setMode,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(AddRowModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddRowModal);

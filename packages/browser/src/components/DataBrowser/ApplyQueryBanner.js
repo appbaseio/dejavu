@@ -95,7 +95,4 @@ const mapDispatchToProps = {
 	onSetSelectAll: setSelectAll,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ApplyQueryBanner);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplyQueryBanner);

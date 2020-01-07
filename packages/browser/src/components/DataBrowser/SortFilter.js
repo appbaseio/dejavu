@@ -85,7 +85,4 @@ const mapDispatchToProps = {
 	onResetSort: resetSort,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(SortFiler);
+export default connect(mapStateToProps, mapDispatchToProps)(SortFiler);

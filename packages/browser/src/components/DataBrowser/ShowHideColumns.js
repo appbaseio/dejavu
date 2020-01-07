@@ -217,7 +217,4 @@ const mapDispatchToProps = {
 	setNestedVisibleColumns,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ShowHideColumns);
+export default connect(mapStateToProps, mapDispatchToProps)(ShowHideColumns);

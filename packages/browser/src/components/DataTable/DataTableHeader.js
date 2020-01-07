@@ -44,13 +44,12 @@ const DataTableHeader = ({
 				}}
 				innerRef={headerRef}
 			>
-				{columns.map(
-					col =>
-						col === '_id' ? (
-							<IdHeaderField key={col} />
-						) : (
-							<ColumnHeader col={col} key={col} />
-						),
+				{columns.map(col =>
+					col === '_id' ? (
+						<IdHeaderField key={col} />
+					) : (
+						<ColumnHeader col={col} key={col} />
+					),
 				)}
 			</Flex>
 		);

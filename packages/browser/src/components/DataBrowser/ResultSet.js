@@ -278,7 +278,4 @@ const mapDispatchToProps = {
 	onSetStats: setStats,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ResultSet);
+export default connect(mapStateToProps, mapDispatchToProps)(ResultSet);

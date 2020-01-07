@@ -48,7 +48,4 @@ const mapDispatchToProps = {
 	onUpdateReactiveList: updateReactiveList,
 };
 
-export default connect(
-	mpaStateToProps,
-	mapDispatchToProps,
-)(PageSize);
+export default connect(mpaStateToProps, mapDispatchToProps)(PageSize);

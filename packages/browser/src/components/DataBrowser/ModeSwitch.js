@@ -82,8 +82,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	)(ModeSwitch),
+	connect(mapStateToProps, mapDispatchToProps)(ModeSwitch),
 );

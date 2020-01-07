@@ -224,7 +224,4 @@ const mapDispatchToProps = {
 	onSetArrayFields: setArrayFields,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(DataTable);
+export default connect(mapStateToProps, mapDispatchToProps)(DataTable);

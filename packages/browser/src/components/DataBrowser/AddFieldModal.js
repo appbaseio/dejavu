@@ -398,7 +398,4 @@ const mapDispatchToProps = {
 	setMode,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(AddFieldModal);
+export default connect(mapStateToProps, mapDispatchToProps)(AddFieldModal);

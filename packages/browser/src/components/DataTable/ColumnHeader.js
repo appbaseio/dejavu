@@ -223,7 +223,4 @@ const mapDispatchToProps = {
 	onSetSort: setSort,
 };
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(DataColumnHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(DataColumnHeader);
