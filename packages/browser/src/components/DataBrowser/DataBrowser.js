@@ -79,7 +79,7 @@ class DataBrowser extends Component<Props> {
 		let baseProps = {
 			url,
 			app: indexes.join(','),
-			transformRequest: this.transformRequest(),
+			transformRequest: this.transformRequest,
 		};
 
 		if (credentials) {
