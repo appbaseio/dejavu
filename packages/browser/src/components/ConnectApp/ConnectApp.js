@@ -139,6 +139,8 @@ class ConnectApp extends Component<Props, State> {
 			url,
 		});
 
+		// when you want to explicitly trigger reconnect even when app is connect pass `forceReconnect=true`
+
 		if (appname && url && (forceReconnect || !isConnected)) {
 			const { pathname } = this.props.location;
 
