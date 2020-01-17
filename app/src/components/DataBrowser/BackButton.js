@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Icon } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { css } from 'emotion';
 
 const buttonStyles = css`
@@ -10,13 +10,15 @@ const buttonStyles = css`
 `;
 
 const BackButton = props => {
-	const { history, location } = props;
+	const { location } = props;
 	const listingPageURL = `promoted-results-queries/${location.search}`;
 	return (
-		<Button css={buttonStyles} onClick={() => history.push(listingPageURL)}>
-			<Icon type="arrow-left" />
-			Back to Query Rules
-		</Button>
+		<Link to={listingPageURL}>
+			<Button css={buttonStyles}>
+				<Icon type="arrow-left" />
+				Back to Query Rules
+			</Button>
+		</Link>
 	);
 };
 
