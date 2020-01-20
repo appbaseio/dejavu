@@ -11,7 +11,7 @@ const buttonStyles = css`
 
 const BackButton = props => {
 	const { location } = props;
-	const listingPageURL = `promoted-results-queries/${location.search}`;
+	const listingPageURL = `/promoted-results-queries/${location.search}`;
 	return (
 		<Link to={listingPageURL}>
 			<Button css={buttonStyles}>
