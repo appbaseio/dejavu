@@ -233,8 +233,13 @@ class PromotedResultQueries extends React.Component {
 				render: data => (
 					<Input
 						defaultValue={data.query}
+						disabled={data.operator === 'match_all'}
 						onBlur={e => this.handleInputChange(e, data.key)}
-						placeholder="Enter Query"
+						placeholder={
+							data.operator === 'match_all'
+								? `A query value isn't needed for match_all operator`
+								: 'Enter Query'
+						}
 					/>
 				),
 			},

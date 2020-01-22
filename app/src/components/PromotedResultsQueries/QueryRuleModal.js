@@ -32,7 +32,7 @@ class QueryRuleModal extends React.Component {
 		const { operator: propsOperator, query: propsQuery } = this.props;
 		const { operator: stateOperator, query: stateQuery } = this.state;
 
-		if (stateQuery === '') {
+		if (stateQuery === '' && stateOperator !== 'match_all') {
 			return true;
 		}
 
@@ -92,7 +92,12 @@ class QueryRuleModal extends React.Component {
 							</div>
 							<Input
 								value={query}
-								placeholder="Enter the Query"
+								disabled={operator === 'match_all'}
+								placeholder={
+									operator === 'match_all'
+										? `A query value isn't needed for match_all operator`
+										: 'Enter Query'
+								}
 								onChange={this.handleQuery}
 							/>
 						</Form.Item>
@@ -121,6 +126,7 @@ class QueryRuleModal extends React.Component {
 								<Option value="starts_with">starts_with</Option>
 								<Option value="ends_with">ends_with</Option>
 								<Option value="contains">contains</Option>
+								<Option value="match_all">match_all</Option>
 							</Select>
 						</Form.Item>
 					</Form>
