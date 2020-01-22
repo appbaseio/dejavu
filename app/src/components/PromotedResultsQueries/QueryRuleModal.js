@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func } from 'prop-types';
-import { Modal, Select, Input, Form } from 'antd';
+import { Modal, Select, Input, Form, Tooltip, Icon } from 'antd';
 import { css } from 'emotion';
 
 const { Option } = Select;
@@ -32,7 +32,7 @@ class QueryRuleModal extends React.Component {
 		const { operator: propsOperator, query: propsQuery } = this.props;
 		const { operator: stateOperator, query: stateQuery } = this.state;
 
-		if (stateQuery === '' && stateOperator !== 'match_all') {
+		if (stateQuery.trim() === '' && stateOperator !== 'match_all') {
 			return true;
 		}
 
@@ -60,7 +60,7 @@ class QueryRuleModal extends React.Component {
 	handleCuration = async () => {
 		const { operator, query } = this.state;
 		const { handleSuccess } = this.props;
-		handleSuccess({ operator, query });
+		handleSuccess({ operator, query: query.toLowerCase() });
 		this.handleModal();
 	};
 
@@ -82,7 +82,23 @@ class QueryRuleModal extends React.Component {
 					}}
 				>
 					<Form className={formWrapper}>
-						<Form.Item label="Query" colon={false}>
+						<Form.Item
+							label={
+								<div className="ant-form-item-label">
+									{/* eslint-disable-next-line */}
+									<label title="Query">
+										Query{' '}
+										<Tooltip title="A query match is not case sensitive.">
+											<Icon
+												style={{ fontSize: 14 }}
+												type="info-circle"
+											/>
+										</Tooltip>
+									</label>
+								</div>
+							}
+							colon={false}
+						>
 							<div
 								style={{ margin: '0 0 6px' }}
 								className="ant-form-extra"
