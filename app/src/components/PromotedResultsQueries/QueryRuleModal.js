@@ -43,9 +43,10 @@ class QueryRuleModal extends React.Component {
 	};
 
 	handleOperator = value => {
-		this.setState({
+		this.setState(prevState => ({
 			operator: value,
-		});
+			query: value === 'match_all' ? '' : prevState.query,
+		}));
 	};
 
 	handleQuery = e => {
