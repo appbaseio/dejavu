@@ -63,6 +63,11 @@
 		"build:chrome-extension": "yarn build:browser && lerna run build:chrome-extension --scope dejavu-main --stream",
 		"format": "lerna run format --stream"
 	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lerna run --concurrency 1 --stream precommit"
+		}
+	},
 	"private": true,
 	"workspaces": {
 		"packages": [

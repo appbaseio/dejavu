@@ -56,7 +56,14 @@
 		"build": "yarn build:commonjs && yarn build:es",
 		"build:commonjs": "babel --ignore __tests__ src --out-dir lib --copy-files src/images",
 		"build:es": "babel src/index.js --out-file lib/index.es.js",
-		"format": "prettier --write --use-tabs 'src/!(batteries*)**/**/*.js'"
+		"format": "prettier --write --use-tabs 'src/!(batteries*)**/**/*.js'",
+		"precommit": "lint-staged"
+	},
+	"lint-staged": {
+		"./src/!(batteries*)**/*.js": [
+			"prettier --write --use-tabs",
+			"git add"
+		]
 	},
 	"repository": {
 		"type": "git",
