@@ -1,10 +1,11 @@
 [ignore]
 dist
+lib
 node_modules
-app/src/battiers
 
 [include]
-app
+packages/browser/src
+packages/dejavu-main/app
 
 [libs]
 

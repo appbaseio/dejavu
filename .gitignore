@@ -1,3 +1,17 @@
+# Project dependencies
+.cache
+.idea
+node_modules
+yarn-error.log
+lerna-debug.log
+
+# Build directory
+**/public
+**/.cache
+.DS_Store
+lib
+dist
+
 # Logs
 logs
 *.log
