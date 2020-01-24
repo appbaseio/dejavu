@@ -33,7 +33,7 @@ const plugins = [
 const isDevelopment = NODE_ENV === 'development';
 
 module.exports = {
-	entry: ['./app/src/index.js'],
+	entry: [path.resolve(__dirname, 'app/src/index.js')],
 	output: {
 		path: path.resolve(__dirname, 'dist/app'),
 		publicPath: '/',

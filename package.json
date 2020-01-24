@@ -68,6 +68,7 @@
 			"pre-commit": "lerna run --concurrency 1 --stream precommit"
 		}
 	},
+	"private": true,
 	"workspaces": {
 		"packages": [
 			"packages/*"

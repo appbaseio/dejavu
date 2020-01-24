@@ -16,7 +16,7 @@
 		"react-dom": "^16.5.1"
 	},
 	"dependencies": {
-		"@appbaseio/dejavu-browser": "^0.0.2-alpha.0",
+		"@appbaseio/dejavu-browser": "^0.1.0",
 		"@appbaseio/designkit": "^0.9.1",
 		"@appbaseio/reactivesearch": "^3.0.2",
 		"@divyanshu013/media": "^1.0.0",

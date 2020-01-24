@@ -1,18 +1,18 @@
-FROM node:11.3.0-alpine
+FROM node:10.13.0-alpine
 MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu
 
-ADD packages/dejavu-main/package.json yarn.lock /dejavu/
+ADD package.json yarn.lock /dejavu/
 
 RUN apk --no-cache update \
     && apk --no-cache add git \
     && rm -rf /var/cache/apk/*
 
-ADD packages/dejavu-main /dejavu
+ADD . /dejavu
 
 RUN yarn \
-    && yarn cache clean && yarn build:app \
+    && yarn cache clean && yarn build:dejavu:app \
     && rm -rf /dejavu/node_modules \
     && rm -rf /tmp/*
 
@@ -24,4 +24,4 @@ USER dejavu
 
 EXPOSE 1358
 
-CMD node server.js
+CMD node packages/dejavu-main/server.js
