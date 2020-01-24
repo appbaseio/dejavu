@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func } from 'prop-types';
-import { Modal, Select, Input, Form } from 'antd';
+import { Modal, Select, Input, Form, Tooltip, Icon, Alert } from 'antd';
 import { css } from 'emotion';
 
 const { Option } = Select;
@@ -32,7 +32,7 @@ class QueryRuleModal extends React.Component {
 		const { operator: propsOperator, query: propsQuery } = this.props;
 		const { operator: stateOperator, query: stateQuery } = this.state;
 
-		if (stateQuery === '') {
+		if (stateQuery.trim() === '' && stateOperator !== 'match_all') {
 			return true;
 		}
 
@@ -43,9 +43,10 @@ class QueryRuleModal extends React.Component {
 	};
 
 	handleOperator = value => {
-		this.setState({
+		this.setState(prevState => ({
 			operator: value,
-		});
+			query: value === 'match_all' ? '' : prevState.query,
+		}));
 	};
 
 	handleQuery = e => {
@@ -60,7 +61,7 @@ class QueryRuleModal extends React.Component {
 	handleCuration = async () => {
 		const { operator, query } = this.state;
 		const { handleSuccess } = this.props;
-		handleSuccess({ operator, query });
+		handleSuccess({ operator, query: query.toLowerCase() });
 		this.handleModal();
 	};
 
@@ -82,7 +83,23 @@ class QueryRuleModal extends React.Component {
 					}}
 				>
 					<Form className={formWrapper}>
-						<Form.Item label="Query" colon={false}>
+						<Form.Item
+							label={
+								<div className="ant-form-item-label">
+									{/* eslint-disable-next-line */}
+									<label title="Query">
+										Query{' '}
+										<Tooltip title="A query match is not case sensitive.">
+											<Icon
+												style={{ fontSize: 14 }}
+												type="info-circle"
+											/>
+										</Tooltip>
+									</label>
+								</div>
+							}
+							colon={false}
+						>
 							<div
 								style={{ margin: '0 0 6px' }}
 								className="ant-form-extra"
@@ -92,7 +109,12 @@ class QueryRuleModal extends React.Component {
 							</div>
 							<Input
 								value={query}
-								placeholder="Enter the Query"
+								disabled={operator === 'match_all'}
+								placeholder={
+									operator === 'match_all'
+										? `A query value isn't needed for match_all operator`
+										: 'Enter Query'
+								}
 								onChange={this.handleQuery}
 							/>
 						</Form.Item>
@@ -104,13 +126,21 @@ class QueryRuleModal extends React.Component {
 								Operator specifies how the match should be
 								performed.
 							</div>
+							{operator === 'match_all' ? (
+								<Alert
+									style={{ margin: '10px 0' }}
+									message="A index can have only 1 match_all query. Creating a new match_all rule may result in overriding the previous results."
+									type="warning"
+									showIcon
+								/>
+							) : null}
 							<Select
 								showSearch
 								placeholder="Select a Operator"
 								optionFilterProp="children"
 								onChange={this.handleOperator}
 								style={{ width: '100%' }}
-								defaultValue={operator}
+								value={operator}
 								filterOption={(input, option) =>
 									option.props.children
 										.toLowerCase()
@@ -121,6 +151,7 @@ class QueryRuleModal extends React.Component {
 								<Option value="starts_with">starts_with</Option>
 								<Option value="ends_with">ends_with</Option>
 								<Option value="contains">contains</Option>
+								<Option value="match_all">match_all</Option>
 							</Select>
 						</Form.Item>
 					</Form>

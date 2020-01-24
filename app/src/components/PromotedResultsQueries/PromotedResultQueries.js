@@ -8,6 +8,7 @@ import {
 	Select,
 	Row,
 	Col,
+	Tooltip,
 } from 'antd';
 import { object } from 'prop-types';
 import { css } from 'emotion';
@@ -104,6 +105,7 @@ class PromotedResultQueries extends React.Component {
 		this.setState({
 			queries: tableQueriesData,
 			isLoading: false,
+			key: Date.now(),
 		});
 	};
 
@@ -157,6 +159,13 @@ class PromotedResultQueries extends React.Component {
 	handleInputChange = (e, id) => {
 		const { queries } = this.state;
 		const { value } = e.target;
+		if (!value) {
+			message.error('Empty query not allowed with operators');
+			this.setState({
+				key: Date.now(),
+			});
+			return;
+		}
 		const rule = queries.find(queryRule => queryRule.id === id);
 
 		if (rule.query !== value) {
@@ -168,10 +177,18 @@ class PromotedResultQueries extends React.Component {
 	handleOperatorChange = (value, id) => {
 		const { queries } = this.state;
 		const rule = queries.find(queryRule => queryRule.id === id);
-
+		const updatedQueries = queries.map(queryRule =>
+			queryRule.id === id
+				? {
+						...queryRule,
+						operator: value,
+				  }
+				: queryRule,
+		);
 		if (rule.operator !== value) {
 			rule.operator = value;
 			this.updateQueryRule(rule);
+			this.setQueries(updatedQueries);
 		}
 	};
 
@@ -214,17 +231,24 @@ class PromotedResultQueries extends React.Component {
 			);
 			const updateQueryResponse = await updateRequest.json();
 			if (updateRequest.status >= 400) {
-				message.error(updateQueryResponse.message);
+				this.fetchQueries();
+				message.error(
+					(updateQueryResponse.error &&
+						updateQueryResponse.error.message) ||
+						updateQueryResponse.message ||
+						'Something went Wrong!',
+				);
 			} else {
 				message.success('Query Rule Updated!');
 			}
 		} catch (e) {
+			this.fetchQueries();
 			message.error('Something went Wrong!');
 		}
 	};
 
 	render() {
-		const { queries, isLoading } = this.state;
+		const { queries, isLoading, key } = this.state;
 		const { appname, url } = getUrlParams(window.location.search);
 		const tableStructure = [
 			{
@@ -233,36 +257,52 @@ class PromotedResultQueries extends React.Component {
 				render: data => (
 					<Input
 						defaultValue={data.query}
+						disabled={data.operator === 'match_all'}
 						onBlur={e => this.handleInputChange(e, data.key)}
-						placeholder="Enter Query"
+						placeholder={
+							data.operator === 'match_all'
+								? `A query value isn't needed for match_all operator`
+								: 'Enter Query'
+						}
 					/>
 				),
 			},
 			{
 				title: 'Operator',
 				key: 'operator',
-				render: data => (
-					<Select
-						showSearch
-						placeholder="Select a Operator"
-						optionFilterProp="children"
-						onChange={value =>
-							this.handleOperatorChange(value, data.key)
-						}
-						style={{ width: '100%' }}
-						defaultValue={data.operator}
-						filterOption={(input, option) =>
-							option.props.children
-								.toLowerCase()
-								.indexOf(input.toLowerCase()) >= 0
-						}
-					>
-						<Option value="is">is</Option>
-						<Option value="starts_with">starts_with</Option>
-						<Option value="ends_with">ends_with</Option>
-						<Option value="contains">contains</Option>
-					</Select>
-				),
+				render: data =>
+					data.operator === 'match_all' ? (
+						<Tooltip title="Cannot change operators on an empty query">
+							<Select
+								value="match_all"
+								style={{ width: '100%' }}
+								disabled
+							>
+								<Option value="match_all">match_all</Option>
+							</Select>
+						</Tooltip>
+					) : (
+						<Select
+							showSearch
+							placeholder="Select a Operator"
+							optionFilterProp="children"
+							onChange={value =>
+								this.handleOperatorChange(value, data.key)
+							}
+							style={{ width: '100%' }}
+							defaultValue={data.operator}
+							filterOption={(input, option) =>
+								option.props.children
+									.toLowerCase()
+									.indexOf(input.toLowerCase()) >= 0
+							}
+						>
+							<Option value="is">is</Option>
+							<Option value="starts_with">starts_with</Option>
+							<Option value="ends_with">ends_with</Option>
+							<Option value="contains">contains</Option>
+						</Select>
+					),
 			},
 			{
 				title: 'Promoted Items',
@@ -396,6 +436,7 @@ class PromotedResultQueries extends React.Component {
 				<div className={tableContainer}>
 					<Table
 						bordered
+						key={key}
 						dataSource={queries}
 						loading={isLoading}
 						pagination={false}
