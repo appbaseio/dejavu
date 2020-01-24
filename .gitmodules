@@ -1,3 +1,6 @@
-[submodule "batteries"]
-	path = app/src/batteries
-	url = https://github.com/appbaseio/batteries.git
+[submodule "packages/browser/src/batteries"]
+	path = packages/browser/src/batteries
+	url = https://github.com/appbaseio/batteries
+[submodule "packages/dejavu-main/app/src/batteries"]
+	path = packages/dejavu-main/app/src/batteries
+	url = https://github.com/appbaseio/batteries
