@@ -8,6 +8,7 @@ import {
 	Select,
 	Row,
 	Col,
+	Tooltip,
 } from 'antd';
 import { object } from 'prop-types';
 import { css } from 'emotion';
@@ -160,7 +161,9 @@ class PromotedResultQueries extends React.Component {
 		const { value } = e.target;
 		if (!value) {
 			message.error('Empty query not allowed with operators');
-			this.fetchQueries();
+			this.setState({
+				key: Date.now(),
+			});
 			return;
 		}
 		const rule = queries.find(queryRule => queryRule.id === id);
@@ -267,29 +270,39 @@ class PromotedResultQueries extends React.Component {
 			{
 				title: 'Operator',
 				key: 'operator',
-				render: data => (
-					<Select
-						showSearch
-						placeholder="Select a Operator"
-						optionFilterProp="children"
-						onChange={value =>
-							this.handleOperatorChange(value, data.key)
-						}
-						style={{ width: '100%' }}
-						defaultValue={data.operator}
-						filterOption={(input, option) =>
-							option.props.children
-								.toLowerCase()
-								.indexOf(input.toLowerCase()) >= 0
-						}
-					>
-						<Option value="is">is</Option>
-						<Option value="starts_with">starts_with</Option>
-						<Option value="ends_with">ends_with</Option>
-						<Option value="contains">contains</Option>
-						<Option value="match_all">match_all</Option>
-					</Select>
-				),
+				render: data =>
+					data.operator === 'match_all' ? (
+						<Tooltip title="Cannot change operators on an empty query">
+							<Select
+								value="match_all"
+								style={{ width: '100%' }}
+								disabled
+							>
+								<Option value="match_all">match_all</Option>
+							</Select>
+						</Tooltip>
+					) : (
+						<Select
+							showSearch
+							placeholder="Select a Operator"
+							optionFilterProp="children"
+							onChange={value =>
+								this.handleOperatorChange(value, data.key)
+							}
+							style={{ width: '100%' }}
+							defaultValue={data.operator}
+							filterOption={(input, option) =>
+								option.props.children
+									.toLowerCase()
+									.indexOf(input.toLowerCase()) >= 0
+							}
+						>
+							<Option value="is">is</Option>
+							<Option value="starts_with">starts_with</Option>
+							<Option value="ends_with">ends_with</Option>
+							<Option value="contains">contains</Option>
+						</Select>
+					),
 			},
 			{
 				title: 'Promoted Items',

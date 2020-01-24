@@ -1,6 +1,6 @@
 import React from 'react';
 import { string, func } from 'prop-types';
-import { Modal, Select, Input, Form, Tooltip, Icon } from 'antd';
+import { Modal, Select, Input, Form, Tooltip, Icon, Alert } from 'antd';
 import { css } from 'emotion';
 
 const { Option } = Select;
@@ -126,13 +126,21 @@ class QueryRuleModal extends React.Component {
 								Operator specifies how the match should be
 								performed.
 							</div>
+							{operator === 'match_all' ? (
+								<Alert
+									style={{ margin: '10px 0' }}
+									message="A index can have only 1 match_all query. Creating a new match_all rule may result in overriding the previous results."
+									type="warning"
+									showIcon
+								/>
+							) : null}
 							<Select
 								showSearch
 								placeholder="Select a Operator"
 								optionFilterProp="children"
 								onChange={this.handleOperator}
 								style={{ width: '100%' }}
-								defaultValue={operator}
+								value={operator}
 								filterOption={(input, option) =>
 									option.props.children
 										.toLowerCase()
