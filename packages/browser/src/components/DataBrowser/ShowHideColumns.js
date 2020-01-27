@@ -168,8 +168,8 @@ class ShowHideColumns extends Component<Props, State> {
 								columns.length
 							}
 							css={{
-								marginBottom: 5,
-								fontWeight: 'bold',
+								marginBottom: '5px !important',
+								fontWeight: 'bold !important',
 							}}
 							onChange={this.handleSelectAll}
 						>
@@ -178,8 +178,8 @@ class ShowHideColumns extends Component<Props, State> {
 						<Group
 							options={allMappingColumns}
 							css={{
-								display: 'grid',
-								gridGap: 5,
+								display: 'grid !important',
+								gridGap: '5px !important',
 							}}
 							value={columns}
 							onChange={this.handleVisibleColumnsChange}
