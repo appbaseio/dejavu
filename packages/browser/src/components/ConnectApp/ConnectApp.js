@@ -531,6 +531,7 @@ class ConnectApp extends Component<Props, State> {
 							<Item css={{ marginRight: '0px !important' }}>
 								<Button
 									type={isConnected ? 'danger' : 'primary'}
+									ghost={isConnected}
 									htmlType="submit"
 									icon={
 										isConnected

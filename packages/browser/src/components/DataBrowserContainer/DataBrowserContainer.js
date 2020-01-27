@@ -12,11 +12,12 @@ import { getIsLoading, getIsConnected } from '../../reducers/app';
 type Props = {
 	isConnected: boolean,
 	isLoading: boolean,
+	hasCloneApp: boolean,
 };
 
-const DataBrowserContainer = ({ isConnected, isLoading }: Props) => (
+const DataBrowserContainer = ({ isConnected, isLoading, hasCloneApp }: Props) => (
 	<Skeleton loading={isLoading} active>
-		{isConnected && <DataBrowser />}
+		{isConnected && <DataBrowser hasCloneApp={hasCloneApp} />}
 	</Skeleton>
 );
 
