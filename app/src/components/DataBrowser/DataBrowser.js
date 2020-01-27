@@ -92,7 +92,7 @@ class DataBrowser extends Component<Props> {
 			};
 		}
 
-		const { appswitcher, showActions, appname } = getUrlParams(
+		const { appswitcher, showActions, queryOperator } = getUrlParams(
 			window.location.search,
 		);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
@@ -108,7 +108,6 @@ class DataBrowser extends Component<Props> {
 						<ReactiveBase {...baseProps}>
 							<div>
 								<NestedColumnToggle />
-								<GlobalSearch searchTerm={searchTerm} />
 							</div>
 							<PromotedResultsContainer>
 								<BackButton />
@@ -126,6 +125,9 @@ class DataBrowser extends Component<Props> {
 								>
 									<QueryInfo />
 
+									{queryOperator === 'empty_query' ? (
+										<GlobalSearch searchTerm={searchTerm} />
+									) : null}
 									<div
 										id="result-list"
 										css={{

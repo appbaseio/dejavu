@@ -32,7 +32,7 @@ class QueryRuleModal extends React.Component {
 		const { operator: propsOperator, query: propsQuery } = this.props;
 		const { operator: stateOperator, query: stateQuery } = this.state;
 
-		if (stateQuery.trim() === '' && stateOperator !== 'match_all') {
+		if (stateQuery.trim() === '' && stateOperator !== 'empty_query') {
 			return true;
 		}
 
@@ -45,7 +45,7 @@ class QueryRuleModal extends React.Component {
 	handleOperator = value => {
 		this.setState(prevState => ({
 			operator: value,
-			query: value === 'match_all' ? '' : prevState.query,
+			query: value === 'empty_query' ? '' : prevState.query,
 		}));
 	};
 
@@ -109,10 +109,10 @@ class QueryRuleModal extends React.Component {
 							</div>
 							<Input
 								value={query}
-								disabled={operator === 'match_all'}
+								disabled={operator === 'empty_query'}
 								placeholder={
-									operator === 'match_all'
-										? `A query value isn't needed for match_all operator`
+									operator === 'empty_query'
+										? `A query value isn't needed for empty_query operator`
 										: 'Enter Query'
 								}
 								onChange={this.handleQuery}
@@ -126,10 +126,10 @@ class QueryRuleModal extends React.Component {
 								Operator specifies how the match should be
 								performed.
 							</div>
-							{operator === 'match_all' ? (
+							{operator === 'empty_query' ? (
 								<Alert
 									style={{ margin: '10px 0' }}
-									message="A index can have only 1 match_all query. Creating a new match_all rule may result in overriding the previous results."
+									message="An index can only have one empty_query operator. This allows promoting and hiding results when no search query is set."
 									type="warning"
 									showIcon
 								/>
@@ -151,7 +151,7 @@ class QueryRuleModal extends React.Component {
 								<Option value="starts_with">starts_with</Option>
 								<Option value="ends_with">ends_with</Option>
 								<Option value="contains">contains</Option>
-								<Option value="match_all">match_all</Option>
+								<Option value="empty_query">empty_query</Option>
 							</Select>
 						</Form.Item>
 					</Form>
