@@ -33,7 +33,7 @@ const DataBrowserWrapper = props => (
 				<FlashMessage />
 				<ConnectApp {...props} />
 				{/* eslint-disable-next-line react/prop-types */}
-				<DataBrowserContainer showClone={props.showClone} />
+				<DataBrowserContainer hasCloneApp={props.hasCloneApp} />
 			</section>
 		</BrowserRouter>
 	</Provider>

@@ -40,7 +40,7 @@ type Props = {
 	types: string[],
 	headers: any[],
 	updateReactiveList: () => void,
-	showClone: boolean,
+	hasCloneApp: boolean,
 };
 
 class DataBrowser extends Component<Props> {
@@ -76,8 +76,8 @@ class DataBrowser extends Component<Props> {
 			indexes,
 			headers,
 		} = this.props;
-		let { showClone } = this.props;
-		showClone = showClone !== undefined ? showClone : true;
+		let { hasCloneApp } = this.props;
+		hasCloneApp = hasCloneApp !== undefined ? hasCloneApp : true;
 		const { credentials, url } = parseUrl(rawUrl);
 		let baseProps = {
 			url,
@@ -160,7 +160,7 @@ class DataBrowser extends Component<Props> {
 						wrap="no-wrap"
 						alignItems="center"
 					>
-						{indexes.length <= 1 && showClone && <CloneApp />}
+						{indexes.length <= 1 && hasCloneApp && <CloneApp />}
 						<AddRowModal />
 						<AddFieldModal />
 					</Flex>
