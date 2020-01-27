@@ -387,7 +387,7 @@ class PromotedResultQueries extends React.Component {
 								padding: 0,
 							}}
 						>
-							Promoted Results
+							Query Rules
 						</h2>
 						<Row>
 							<Col span={18}>
