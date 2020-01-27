@@ -1,9 +1,12 @@
 {
-	"packages": [
-		"packages/*"
-	],
+	"packages": ["packages/*"],
 	"npmClient": "yarn",
 	"useWorkspaces": true,
 	"version": "0.1.4",
-	"lerna": "2.11.0"
+	"lerna": "2.11.0",
+	"command": {
+		"version": {
+			"message": "chore(build): %v"
+		}
+	}
 }
