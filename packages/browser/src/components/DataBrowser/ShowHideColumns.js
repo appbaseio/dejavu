@@ -146,6 +146,7 @@ class ShowHideColumns extends Component<Props, State> {
 		return (
 			<Dropdown
 				ref={this.showHideDropdownNode}
+				placement="bottomRight"
 				overlay={
 					<div
 						css={{

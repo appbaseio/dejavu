@@ -27,7 +27,7 @@ const DateCell = ({ children, onChange, format, mode }: Props) => (
 				css={{
 					width: '100% !important',
 					input: {
-						paddingRight: '30px',
+						paddingRight: '30px !important',
 					},
 				}}
 				onChange={(momentObject, dateString) => {

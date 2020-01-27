@@ -62,8 +62,10 @@ class NumberCell extends Component<Props, State> {
 						onChange={this.handleChange}
 						css={{
 							height: '100% important',
-							width: '100%',
-							border: `${shouldAutoFocus ? 'none' : 'auto'}`,
+							width: '100% !important',
+							border: `${
+								shouldAutoFocus ? 'none' : 'auto'
+							} !important`,
 						}}
 						onBlur={this.saveChange}
 					/>
