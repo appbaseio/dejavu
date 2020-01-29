@@ -2,13 +2,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+import { ConfigProvider } from 'antd';
 import DataBrowserContainer from './components/DataBrowserContainer/DataBrowserContainer';
 import configureStore from './store';
 
 // shared components
-import Flex from './components/Flex';
-import FlashMessage from './components/ErrorFlashMessage/FlashMessage';
-import ConnectApp from './components/ConnectApp/ConnectApp';
+import DefaultFlex from './components/Flex';
+import DefaultFlashMessage from './components/ErrorFlashMessage/FlashMessage';
+import DefaultConnectApp from './components/ConnectApp/ConnectApp';
 
 // shared reducers
 import * as appReducers from './reducers/app';
@@ -23,20 +24,51 @@ import * as constants from './constants';
 // shared theme
 import colors from './components/theme/colors';
 
+import './antd.css';
+
 // shared store
 const store = configureStore();
 
+function WithConfigProvider(props) {
+	return (
+		<ConfigProvider prefixCls="dejavu-browser">
+			{/* eslint-disable-next-line react/prop-types */}
+			{props.children}
+		</ConfigProvider>
+	);
+}
+
+const Flex = props => (
+	<WithConfigProvider>
+		<DefaultFlex {...props} />
+	</WithConfigProvider>
+);
+
+const FlashMessage = props => (
+	<WithConfigProvider>
+		<DefaultFlashMessage {...props} />
+	</WithConfigProvider>
+);
+
+const ConnectApp = props => (
+	<WithConfigProvider>
+		<DefaultConnectApp {...props} />
+	</WithConfigProvider>
+);
+
 const DataBrowserWrapper = props => (
-	<Provider store={store}>
-		<BrowserRouter>
-			<section>
-				<FlashMessage />
-				<ConnectApp {...props} />
-				{/* eslint-disable-next-line react/prop-types */}
-				<DataBrowserContainer hasCloneApp={props.hasCloneApp} />
-			</section>
-		</BrowserRouter>
-	</Provider>
+	<WithConfigProvider>
+		<Provider store={store}>
+			<BrowserRouter>
+				<section>
+					<DefaultFlashMessage />
+					<DefaultConnectApp {...props} />
+					{/* eslint-disable-next-line react/prop-types */}
+					<DataBrowserContainer hasCloneApp={props.hasCloneApp} />
+				</section>
+			</BrowserRouter>
+		</Provider>
+	</WithConfigProvider>
 );
 
 export {
