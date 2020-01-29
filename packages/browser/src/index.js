@@ -38,21 +38,21 @@ function WithConfigProvider(props) {
 	);
 }
 
-const Flex = () => (
+const Flex = props => (
 	<WithConfigProvider>
-		<DefaultFlex />
+		<DefaultFlex {...props} />
 	</WithConfigProvider>
 );
 
-const FlashMessage = () => (
+const FlashMessage = props => (
 	<WithConfigProvider>
-		<DefaultFlashMessage />
+		<DefaultFlashMessage {...props} />
 	</WithConfigProvider>
 );
 
-const ConnectApp = () => (
+const ConnectApp = props => (
 	<WithConfigProvider>
-		<DefaultConnectApp />
+		<DefaultConnectApp {...props} />
 	</WithConfigProvider>
 );
 
@@ -61,8 +61,8 @@ const DataBrowserWrapper = props => (
 		<Provider store={store}>
 			<BrowserRouter>
 				<section>
-					<FlashMessage />
-					<ConnectApp {...props} />
+					<DefaultFlashMessage />
+					<DefaultConnectApp {...props} />
 					{/* eslint-disable-next-line react/prop-types */}
 					<DataBrowserContainer hasCloneApp={props.hasCloneApp} />
 				</section>
