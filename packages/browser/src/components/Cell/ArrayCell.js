@@ -55,15 +55,15 @@ class ArrayCell extends Component<Props, State> {
 							display: 'flex',
 							justifyContent: 'left',
 							alignItems: 'center',
-							'.ant-select-selection': {
+							'.dejavu-browser-select-selection': {
 								borderColor: 'transparent',
 								height: '100%',
 								width: '100%',
 							},
-							'.ant-select-selection__choice': {
+							'.dejavu-browser-select-selection__choice': {
 								height: '100%',
 							},
-							'.ant-select': {
+							'.dejavu-browser-select': {
 								width: '100%',
 							},
 						}}
