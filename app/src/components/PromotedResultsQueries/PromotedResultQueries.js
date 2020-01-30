@@ -257,11 +257,11 @@ class PromotedResultQueries extends React.Component {
 				render: data => (
 					<Input
 						defaultValue={data.query}
-						disabled={data.operator === 'match_all'}
+						disabled={data.operator === 'empty_query'}
 						onBlur={e => this.handleInputChange(e, data.key)}
 						placeholder={
-							data.operator === 'match_all'
-								? `A query value isn't needed for match_all operator`
+							data.operator === 'empty_query'
+								? `A query value isn't needed for empty_query operator`
 								: 'Enter Query'
 						}
 					/>
@@ -271,14 +271,14 @@ class PromotedResultQueries extends React.Component {
 				title: 'Operator',
 				key: 'operator',
 				render: data =>
-					data.operator === 'match_all' ? (
+					data.operator === 'empty_query' ? (
 						<Tooltip title="Cannot change operators on an empty query">
 							<Select
-								value="match_all"
+								value="empty_query"
 								style={{ width: '100%' }}
 								disabled
 							>
-								<Option value="match_all">match_all</Option>
+								<Option value="empty_query">empty_query</Option>
 							</Select>
 						</Tooltip>
 					) : (
@@ -387,7 +387,7 @@ class PromotedResultQueries extends React.Component {
 								padding: 0,
 							}}
 						>
-							Promoted Results
+							Query Rules
 						</h2>
 						<Row>
 							<Col span={18}>
