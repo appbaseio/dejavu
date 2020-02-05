@@ -13,8 +13,8 @@
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
-6. **[Get Dejavu](#6-get-dejavu)**
-   a. [Docker Installation](#docker-installation)
+6. **[Get Dejavu](#6-get-dejavu)**  
+   a. [Docker Installation](#docker-installation)  
    b. [Hosted Alternatives](#hosted-alternatives)
 
 ---
