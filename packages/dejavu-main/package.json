@@ -72,7 +72,7 @@
 		"lib/"
 	],
 	"scripts": {
-		"watch": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/app --history-api-fallback --hot --progress --colors --port 1358",
+		"watch": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/app --history-api-fallback --hot --colors --port 1358",
 		"watch:site": "NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/site --history-api-fallback --hot --progress --colors --port 1359 --config webpack.config.site.js",
 		"build": "yarn build:app && yarn build:site",
 		"build:app": "NODE_ENV=production webpack",

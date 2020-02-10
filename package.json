@@ -54,6 +54,7 @@
 	"license": "MIT",
 	"scripts": {
 		"dev:browser": "lerna run watch --scope @appbaseio/dejavu-browser --stream",
+		"start": "lerna run watch --scope dejavu-main --stream",
 		"dev:dejavu": "lerna run watch --scope dejavu-main --stream",
 		"dev:dejavu:site": "lerna run watch:site --scope dejavu-main --stream",
 		"build:browser": "lerna run build --scope @appbaseio/dejavu-browser --stream",
