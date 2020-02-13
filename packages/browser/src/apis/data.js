@@ -19,7 +19,7 @@ export const addData = async (
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}/${typeName}`;
+		let baseUrl = `${url}/${indexName}${version < 7 ? `/${typeName}` : ''}`;
 		let finalData = JSON.stringify(data);
 
 		if (docId && !Array.isArray(data)) {
@@ -79,7 +79,9 @@ export const putData = async (
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}/${typeName}/${docId}`;
+		let baseUrl = `${url}/${indexName}${
+			version < 7 ? `/${typeName}` : ''
+		}/${docId}`;
 
 		if (version > 5) {
 			baseUrl += '?refresh=wait_for';
@@ -109,7 +111,13 @@ export const putData = async (
 	}
 };
 
-export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
+export const deleteData = async (
+	rawUrl,
+	indexName,
+	typeName,
+	queryData,
+	version,
+) => {
 	const defaultError = 'Unable to delete data';
 	try {
 		const { url } = parseUrl(rawUrl);
@@ -135,7 +143,9 @@ export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
 			...query,
 		};
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_delete_by_query?wait_for_completion=true&scroll_size=5000`,
+			`${url}/${indexName}${
+				version < 7 ? `/${typeName}` : ''
+			}/_delete_by_query?wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,
@@ -168,6 +178,7 @@ export const bulkUpdate = async (
 	typeName,
 	queryData,
 	updateData,
+	version,
 ) => {
 	const defaultError = 'Unable to update data';
 	try {
@@ -214,7 +225,9 @@ export const bulkUpdate = async (
 		};
 
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed&wait_for_completion=true&scroll_size=5000`,
+			`${url}/${indexName}${
+				version < 7 ? `/${typeName}` : ''
+			}/_update_by_query?conflicts=proceed&wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,

@@ -15,6 +15,8 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getApplyQuery } from '../../reducers/applyQuery';
 import { getQuery } from '../../reducers/query';
 import { getStats } from '../../reducers/stats';
+import { getVersion } from '../../reducers/version';
+
 import { META_FIELDS } from '../../utils/mappings';
 import labelStyles from '../CommonStyles/label';
 import colors from '../theme/colors';
@@ -50,6 +52,7 @@ type Props = {
 	onSetApplyQuery: boolean => void,
 	onSetSelectAll: boolean => void,
 	stats: any,
+	version: number,
 };
 
 type State = {
@@ -108,6 +111,7 @@ class MultipleUpdate extends Component<Props, State> {
 			updateReactiveList: onUpdateReactiveList,
 			onSetApplyQuery,
 			onSetSelectAll,
+			version,
 		} = this.props;
 		const { data } = this.state;
 		const queryData = applyQuery ? query.query : selectedIds;
@@ -122,6 +126,7 @@ class MultipleUpdate extends Component<Props, State> {
 					types.join(','),
 					queryData,
 					data,
+					version,
 				);
 
 				this.handleSavingDataChange(false);
@@ -391,6 +396,7 @@ const mapStateToProps = state => ({
 	applyQuery: getApplyQuery(state),
 	query: getQuery(state),
 	stats: getStats(state),
+	version: getVersion(state),
 });
 
 const mapDispatchToProps = {
