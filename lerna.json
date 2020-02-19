@@ -1,14 +1,14 @@
 {
-	"packages": [
-		"packages/*"
-	],
-	"npmClient": "yarn",
-	"useWorkspaces": true,
-	"version": "0.1.7",
-	"lerna": "2.11.0",
-	"command": {
-		"version": {
-			"message": "chore(build): %v"
-		}
-	}
+  "packages": [
+    "packages/*"
+  ],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "version": "3.4.2",
+  "lerna": "2.11.0",
+  "command": {
+    "version": {
+      "message": "chore(build): %v"
+    }
+  }
 }
