@@ -15,7 +15,6 @@
 	"permissions": [
 		"storage",
 		"system.display",
-		"activeTab",
 		"webNavigation",
 		"webRequest",
 		"https://appbaseio.auth0.com/*",
