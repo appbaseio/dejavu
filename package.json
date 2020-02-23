@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-monorepo",
 	"description": "Dejavu monorepo",
-	"version": "0.0.1-alpha",
+	"version": "3.4.2",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",

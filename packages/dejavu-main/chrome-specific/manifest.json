@@ -1,7 +1,7 @@
 {
 	"name": "Dejavu: ElasticSearch Web UI",
 	"short_name": "Dejavu",
-	"version": "3.4.1",
+	"version": "3.4.2",
 	"icons": {
 		"16": "favicon/favicon-16x16.png",
 		"32": "favicon/favicon-32x32.png",
@@ -15,7 +15,7 @@
 	"permissions": [
 		"storage",
 		"system.display",
-		"<all_urls>",
+		"activeTab",
 		"webNavigation",
 		"webRequest",
 		"https://appbaseio.auth0.com/*",
