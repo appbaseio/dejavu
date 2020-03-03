@@ -41,7 +41,7 @@ import Flex from '../Flex';
 type Props = {
 	appname?: string,
 	url?: string,
-	connectApp: (string, string) => void,
+	connectApp: (string, string, any) => void,
 	disconnectApp: () => void,
 	isConnected: boolean,
 	isLoading: boolean,
@@ -291,7 +291,7 @@ class ConnectApp extends Component<Props, State> {
 			// window.location.reload(true);
 		} else if (appname && url) {
 			if (shouldConnect(pathname, appname)) {
-				this.props.connectApp(appname, url);
+				this.props.connectApp(appname, url, customHeaders);
 				this.props.setHeaders(customHeaders);
 				// update history with correct appname and url
 				searchQuery += `&appname=${appname}&url=${url}&mode=${this.props.mode}`;
@@ -379,9 +379,9 @@ class ConnectApp extends Component<Props, State> {
 		});
 	};
 
-	handleHeadersSubmit = () => {
+	handleHeadersSubmit = e => {
+		e.preventDefault();
 		const { customHeaders } = this.state;
-
 		const filteredHeaders = customHeaders.filter(
 			item => item.key.trim() && item.value.trim(),
 		);
@@ -397,7 +397,6 @@ class ConnectApp extends Component<Props, State> {
 				item => item.appname === this.props.appname,
 			);
 			pastApps[currentApp].headers = filteredHeaders;
-
 			setLocalStorageData(
 				LOCAL_CONNECTIONS,
 				JSON.stringify({ pastApps }),

@@ -28,10 +28,13 @@ export default async (rawUrl, indexName) => {
 			method: 'GET',
 		}).then(response => response.json());
 
-		if (res.status >= 400) {
+		if (res.status >= 400 || (res.error && res.error.code >= 400)) {
 			throw new CustomError(
 				JSON.stringify(res.error, null, 2),
-				`HTTP STATUS: ${res.status} - ${defaultError}`,
+				`HTTP STATUS: ${res.status >= 400 ||
+					(res.error && res.error.code
+						? res.error.code
+						: 400)} - ${defaultError}`,
 			);
 		}
 

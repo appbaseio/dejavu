@@ -1,9 +1,10 @@
 import { APP } from './constants';
 
-const connectApp = (appname, url) => ({
+const connectApp = (appname, url, headers) => ({
 	type: APP.CONNECT_REQUEST,
 	appname,
 	url,
+	headers,
 });
 
 const connectAppSuccess = (appname, url) => ({
