@@ -109,7 +109,13 @@ export const putData = async (
 	}
 };
 
-export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
+export const deleteData = async (
+	rawUrl,
+	indexName,
+	typeName,
+	queryData,
+	version,
+) => {
 	const defaultError = 'Unable to delete data';
 	try {
 		const { url } = parseUrl(rawUrl);
@@ -135,7 +141,9 @@ export const deleteData = async (rawUrl, indexName, typeName, queryData) => {
 			...query,
 		};
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_delete_by_query?wait_for_completion=true&scroll_size=5000`,
+			`${url}/${indexName}${
+				version < 7 ? `/${typeName}` : ''
+			}/_delete_by_query?wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,
@@ -168,6 +176,7 @@ export const bulkUpdate = async (
 	typeName,
 	queryData,
 	updateData,
+	version,
 ) => {
 	const defaultError = 'Unable to update data';
 	try {
@@ -214,7 +223,9 @@ export const bulkUpdate = async (
 		};
 
 		const res = await fetch(
-			`${url}/${indexName}/${typeName}/_update_by_query?conflicts=proceed&wait_for_completion=true&scroll_size=5000`,
+			`${url}/${indexName}${
+				version < 7 ? `/${typeName}` : ''
+			}/_update_by_query?conflicts=proceed&wait_for_completion=true&scroll_size=5000`,
 			{
 				headers: {
 					...headers,

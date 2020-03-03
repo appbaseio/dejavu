@@ -9,6 +9,7 @@ import { getSelectedRows } from '../../reducers/selectedRows';
 import { getIndexes, getTypes } from '../../reducers/mappings';
 import { getApplyQuery } from '../../reducers/applyQuery';
 import { getQuery } from '../../reducers/query';
+import { getVersion } from '../../reducers/version';
 import {
 	setError,
 	clearError,
@@ -32,6 +33,7 @@ type Props = {
 	query: any,
 	onSetApplyQuery: boolean => void,
 	onSetSelectAll: boolean => void,
+	version: number,
 };
 
 class DeleteRows extends Component<Props> {
@@ -49,6 +51,7 @@ class DeleteRows extends Component<Props> {
 			onSetSelectAll,
 			applyQuery,
 			query,
+			version,
 		} = this.props;
 		const queryData = applyQuery ? query.query : selectedRows;
 		try {
@@ -58,6 +61,7 @@ class DeleteRows extends Component<Props> {
 				indexes.join(','),
 				types.join(','),
 				queryData,
+				version,
 			);
 			setTimeout(() => {
 				onSetSelectedRows([]);
@@ -98,6 +102,7 @@ const mpaStateToProps = state => ({
 	types: getTypes(state),
 	applyQuery: getApplyQuery(state),
 	query: getQuery(state),
+	version: getVersion(state),
 });
 
 const mapDispatchToProps = {
