@@ -3,6 +3,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Popover } from 'antd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faSort,
+	faCaretUp,
+	faCaretDown,
+} from '@fortawesome/free-solid-svg-icons';
 
 import StyledCell from './StyledCell';
 import MappingsDropdown from '../MappingsDropdown';
@@ -175,26 +181,31 @@ class DataColumnHeader extends Component<Props> {
 									className={filterIconStyles}
 								>
 									{sortField.indexOf(col) === -1 && (
-										<i
-											className="fa fa-sort"
+										<FontAwesomeIcon
+											icon={faSort}
 											css={{
 												fontSize: 15,
 											}}
 										/>
 									)}
-									{sortField.indexOf(col) > -1 && (
-										<i
-											className={
-												sortOrder === 'asc'
-													? 'fa fa-caret-up'
-													: 'fa fa-caret-down'
-											}
-											css={{
-												fontSize: 15,
-												color: '#333 !important',
-											}}
-										/>
-									)}
+									{sortField.indexOf(col) > -1 &&
+										(sortOrder === 'asc' ? (
+											<FontAwesomeIcon
+												icon={faCaretUp}
+												css={{
+													fontSize: 15,
+													color: '#333 !important',
+												}}
+											/>
+										) : (
+											<FontAwesomeIcon
+												icon={faCaretDown}
+												css={{
+													fontSize: 15,
+													color: '#333 !important',
+												}}
+											/>
+										))}
 								</button>
 							</Flex>
 						)}

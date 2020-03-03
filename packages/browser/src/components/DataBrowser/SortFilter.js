@@ -2,6 +2,11 @@
 
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faSortAlphaDown,
+	faSortAlphaUp,
+} from '@fortawesome/free-solid-svg-icons';
 
 import Flex from '../Flex';
 
@@ -40,12 +45,8 @@ const SortFiler = ({ field, order, onResetSort }: Props) => (
 				}}
 				className={overflowStyles}
 			>
-				<i
-					className={
-						order === 'asc'
-							? 'fa fa-sort-alpha-asc'
-							: 'fa fa-sort-alpha-desc'
-					}
+				<FontAwesomeIcon
+					icon={order === 'asc' ? faSortAlphaUp : faSortAlphaDown}
 				/>
 				<span
 					css={{

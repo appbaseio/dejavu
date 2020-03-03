@@ -5,6 +5,8 @@ import { Form, Button, Alert, AutoComplete, Input, Modal, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import { withRouter } from 'react-router-dom';
 import {
@@ -484,12 +486,10 @@ class ConnectApp extends Component<Props, State> {
 										}}
 										onClick={this.handleUrlToggle}
 									>
-										<i
-											className={`fa ${
-												isUrlHidden
-													? 'fa-eye-slash'
-													: 'fa-eye'
-											}`}
+										<FontAwesomeIcon
+											icon={
+												isUrlHidden ? faEyeSlash : faEye
+											}
 										/>
 									</Button>
 									<Button

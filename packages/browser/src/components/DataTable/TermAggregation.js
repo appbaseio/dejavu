@@ -4,6 +4,8 @@ import React from 'react';
 import { Popover, Icon } from 'antd';
 import { MultiList } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import Flex from '../Flex';
 
@@ -105,7 +107,7 @@ class TermAggregation extends React.Component<Props, State> {
 				trigger="click"
 				placement="bottomRight"
 			>
-				<i className={`fa fa-filter ${filterIconStyles}`} />
+				<FontAwesomeIcon icon={faFilter} className={filterIconStyles} />
 			</Popover>
 		);
 	}

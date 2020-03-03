@@ -4,6 +4,8 @@ import React from 'react';
 import { Popover } from 'antd';
 import { MultiDataList } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 import Flex from '../Flex';
 
@@ -74,7 +76,7 @@ const BooleanTermAggregation = ({ field }: Props) => {
 			trigger="click"
 			placement="bottomRight"
 		>
-			<i className={`fa fa-filter ${filterIconStyles}`} />
+			<FontAwesomeIcon icon={faFilter} className={filterIconStyles} />
 		</Popover>
 	);
 };
