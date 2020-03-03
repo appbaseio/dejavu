@@ -7,22 +7,26 @@ import {
 } from '../utils';
 import CustomError from '../utils/CustomError';
 
-const testConnection = async (appname, rawUrl) => {
+const testConnection = async (appname, rawUrl, reqHeaders = []) => {
 	const defaultError = 'Unable to connect';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
-		const customHeaders = getCustomHeaders(appname);
+		const storageHeaders = getCustomHeaders(appname);
+		const customHeaders = reqHeaders.length ? reqHeaders : storageHeaders;
 
 		const res = await fetch(`${url}/${appname}`, {
 			'Content-Type': 'application/json',
 			headers: { ...headers, ...convertArrayToHeaders(customHeaders) },
 		}).then(response => response.json());
 
-		if (res.status >= 400) {
+		if (res.status >= 400 || (res.error && res.error.code >= 400)) {
 			throw new CustomError(
 				JSON.stringify(res.error, null, 2),
-				`HTTP STATUS: ${res.status} - ${defaultError}`,
+				`HTTP STATUS: ${res.status >= 400 ||
+					(res.error && res.error.code
+						? res.error.code
+						: 400)} - ${defaultError}`,
 			);
 		}
 

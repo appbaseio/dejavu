@@ -10,11 +10,11 @@ import {
 } from '../actions';
 import { trimUrl } from '../utils';
 
-function* handleConnectApp({ appname, url }) {
+function* handleConnectApp({ appname, url, headers }) {
 	const appUrl = trimUrl(url);
 	try {
 		yield put(clearError());
-		yield call(testConnection, appname, appUrl);
+		yield call(testConnection, appname, appUrl, headers);
 		yield put(connectAppSuccess(appname, appUrl));
 	} catch (error) {
 		yield put(connectAppFailure());
