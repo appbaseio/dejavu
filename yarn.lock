@@ -30,22 +30,6 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-2.1.1.tgz#7b9c08dffd4f5d41db667d9dbe5e0107d0bd9a4a"
   integrity sha512-jCH+k2Vjlno4YWl6g535nHR09PwCEmTBKAG6VqF+rhkrSPRLfgpU2maagwbZPLjaHuU5Jd1DFQ2KJpQuI6uG8w==
 
-"@appbaseio/dejavu-browser@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@appbaseio/dejavu-browser/-/dejavu-browser-0.1.7.tgz#52ea93cdb174f095758f10765cc99c1d13bffb4b"
-  integrity sha512-EK4F9S0C93k0k2YXXr4uzUOyFBhAdpnsq7T1R0osFsKntQS4Jqu5eE0lYQ9U/MepUJHIF2kfIrL7bSmb1L7HKA==
-  dependencies:
-    "@divyanshu013/media" "^1.0.0"
-    cross-storage "^1.0.0"
-    dom-helpers "^3.4.0"
-    file-saver "^2.0.0-rc.4"
-    flat "^4.1.0"
-    ismobilejs "^0.5.1"
-    papaparse "^4.6.1"
-    react-custom-scrollbars "^4.2.1"
-    react-json-editor-ajrm "^2.5.8"
-    react-virtualized "^9.21.0"
-
 "@appbaseio/designkit@^0.9.1":
   version "0.9.11"
   resolved "https://registry.yarnpkg.com/@appbaseio/designkit/-/designkit-0.9.11.tgz#4b9556b6f540fc0dc812b41c2ba9a59594caafa3"
