@@ -19,7 +19,7 @@ export const addData = async (
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}${version < 7 ? `/${typeName}` : ''}`;
+		let baseUrl = `${url}/${indexName}/${typeName}`;
 		let finalData = JSON.stringify(data);
 
 		if (docId && !Array.isArray(data)) {
@@ -79,9 +79,7 @@ export const putData = async (
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}${
-			version < 7 ? `/${typeName}` : ''
-		}/${docId}`;
+		let baseUrl = `${url}/${indexName}/${typeName}/${docId}`;
 
 		if (version > 5) {
 			baseUrl += '?refresh=wait_for';
