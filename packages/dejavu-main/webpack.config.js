@@ -34,15 +34,15 @@ const plugins = [
 		'./packages',
 	]),
 	new WriteWebPackPlugin(),
-	new MiniCssExtractPlugin({
-		filename: isDevelopment ? '[name].css' : '[name].[contenthash:8].css',
-		chunkFilename: isDevelopment
-			? '[name].bundle.css'
-			: '[name].[contenthash:8].css',
-	}),
 ];
 
 if (!isDevelopment) {
+	plugins.push(
+		new MiniCssExtractPlugin({
+			filename: '[name].[contenthash:8].css',
+			chunkFilename: '[name].[contenthash:8].css',
+		}),
+	);
 	plugins.push(
 		new CompressionPlugin({
 			filename: '[path].gz[query]',
@@ -81,7 +81,9 @@ module.exports = {
 		runtimeChunk: {
 			name: 'manifest',
 		},
-		minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
+		minimizer: isDevelopment
+			? []
+			: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
 		splitChunks: {
 			cacheGroups: {
 				// Splitting React into a different bundle
@@ -105,7 +107,12 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader'],
+				use: [
+					isDevelopment
+						? 'style-loader'
+						: MiniCssExtractPlugin.loader,
+					'css-loader',
+				],
 			},
 			{
 				test: /\.(gif|png|jpe?g|svg|woff|woff2|ttf|eot)$/i,
