@@ -3,8 +3,8 @@
 import React from 'react';
 import { object } from 'prop-types';
 import { Icon } from 'antd';
-import Hash from 'react-feather/dist/icons/hash';
-import Toggle from 'react-feather/dist/icons/toggle-right';
+import Hash from '../Icons/Hash';
+import Toggle from '../Icons/Toggle';
 
 type Props = {
 	mapping: object,

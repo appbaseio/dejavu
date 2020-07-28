@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-main",
 	"description": "Dejavu main module",
-	"version": "3.4.6",
+	"version": "3.4.7",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
@@ -12,18 +12,18 @@
 	"main": "lib/index.js",
 	"module": "lib/index.es.js",
 	"peerDependencies": {
-		"react": "^16.5.1",
-		"react-dom": "^16.5.1"
+		"react": "^16.13.1",
+		"react-dom": "^16.13.1"
 	},
 	"dependencies": {
-		"@appbaseio/dejavu-browser": "^3.4.6",
-		"@appbaseio/designkit": "^0.9.1",
-		"@appbaseio/reactivesearch": "^3.0.2",
+		"@appbaseio/dejavu-browser": "^3.4.7",
+		"@appbaseio/designkit": "^0.9.12",
+		"@appbaseio/reactivesearch": "^3.11.7",
 		"@divyanshu013/media": "^1.0.0",
 		"@fortawesome/fontawesome-svg-core": "^1.2.27",
 		"@fortawesome/free-solid-svg-icons": "^5.12.1",
 		"@fortawesome/react-fontawesome": "^0.1.8",
-		"antd": "^3.10.4",
+		"antd": "^3.18.2",
 		"appbase-js": "^4.0.2-beta.2",
 		"brace": "^0.11.1",
 		"codesandbox": "1.3.5",
@@ -44,7 +44,6 @@
 		"react-element-to-jsx-string": "^14.0.2",
 		"react-emotion": "^9.2.12",
 		"react-expand-collapse": "^0.2.0",
-		"react-feather": "^1.1.3",
 		"react-joyride": "^2.0.0-15",
 		"react-json-editor-ajrm": "^2.5.8",
 		"react-redux": "^5.0.7",
@@ -60,12 +59,16 @@
 	},
 	"devDependencies": {
 		"clean-webpack-plugin": "^1.0.0",
+		"compression-webpack-plugin": "^4.0.0",
 		"copy-webpack-plugin": "^4.0.0",
 		"favicons-webpack-plugin": "^0.0.9",
 		"html-webpack-harddisk-plugin": "^1.0.1",
 		"html-webpack-plugin": "^3.2.0",
+		"mini-css-extract-plugin": "^0.9.0",
+		"optimize-css-assets-webpack-plugin": "^5.0.3",
 		"react": "^16.12.0",
 		"react-dom": "^16.12.0",
+		"terser-webpack-plugin": "^3.0.8",
 		"webpack": "^4.19.0",
 		"webpack-bundle-analyzer": "^3.0.2",
 		"webpack-cli": "^3.1.0",

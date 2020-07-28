@@ -14,7 +14,10 @@ function* handleConnectApp({ appname, url, headers }) {
 	const appUrl = trimUrl(url);
 	try {
 		yield put(clearError());
-		yield call(testConnection, appname, appUrl, headers);
+		const newHeaders =
+			headers &&
+			headers.filter(item => item.key.trim() && item.value.trim());
+		yield call(testConnection, appname, appUrl, newHeaders);
 		yield put(connectAppSuccess(appname, appUrl));
 	} catch (error) {
 		yield put(connectAppFailure());

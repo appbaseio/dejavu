@@ -98,7 +98,6 @@ class DataBrowser extends Component<Props> {
 				headers: convertArrayToHeaders(headers),
 			};
 		}
-
 		const { appswitcher } = getUrlParams(window.location.search);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
 

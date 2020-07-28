@@ -162,7 +162,7 @@ const getCustomHeaders = appname => {
 		const currentApp = pastApps.find(item => item.appname === appname);
 
 		if (currentApp && currentApp.headers) {
-			return currentApp.headers;
+			return currentApp.headers.filter(item => item.key && item.value);
 		}
 	}
 
