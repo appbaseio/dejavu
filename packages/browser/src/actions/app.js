@@ -26,10 +26,15 @@ const setHeaders = headers => ({
 	headers,
 });
 
+const reloadApp = () => ({
+	type: APP.RELOAD_APP,
+});
+
 export {
 	connectApp,
 	disconnectApp,
 	connectAppSuccess,
 	connectAppFailure,
 	setHeaders,
+	reloadApp,
 };
