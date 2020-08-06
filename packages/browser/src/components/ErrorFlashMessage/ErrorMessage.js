@@ -1,8 +1,10 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import { string } from 'prop-types';
-import { Button } from 'antd';
+import { string, func } from 'prop-types';
+import { Button, Icon } from 'antd';
+import { connect } from 'react-redux';
+import { reloadApp } from '../../actions/app';
 
 type State = {
 	isShowingDetails: boolean,
@@ -10,6 +12,7 @@ type State = {
 
 type Props = {
 	description?: string,
+	handleReload: func,
 };
 
 class ErrorMessage extends Component<Props, State> {
@@ -25,9 +28,18 @@ class ErrorMessage extends Component<Props, State> {
 
 	render() {
 		const { isShowingDetails } = this.state;
-		const { description } = this.props;
+		const { description, handleReload } = this.props;
 		return (
 			<Fragment>
+				<Button
+					size="small"
+					type="primary"
+					style={{ marginRight: 8 }}
+					onClick={handleReload}
+				>
+					<Icon type="reload" />
+					Reload
+				</Button>
 				<Button size="small" onClick={this.toggleDetails}>
 					{isShowingDetails ? 'Hide' : 'Show'}
 					&nbsp; information
@@ -43,6 +55,11 @@ class ErrorMessage extends Component<Props, State> {
 
 ErrorMessage.propTypes = {
 	description: string,
+	handleReload: func.isRequired,
 };
 
-export default ErrorMessage;
+const mapDispatchToProps = dispatch => ({
+	handleReload: () => dispatch(reloadApp()),
+});
+
+export default connect(null, mapDispatchToProps)(ErrorMessage);

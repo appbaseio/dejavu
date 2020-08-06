@@ -6,6 +6,7 @@ const initialState = {
 	isConnected: false,
 	isLoading: false,
 	headers: [],
+	key: Date.now(),
 };
 
 const app = (state = initialState, action) => {
@@ -31,6 +32,8 @@ const app = (state = initialState, action) => {
 			};
 		case APP.SET_HEADERS:
 			return { ...state, headers };
+		case APP.RELOAD_APP:
+			return { ...state, key: Date.now() };
 		default:
 			return state;
 	}
@@ -42,7 +45,8 @@ const getUrl = state => state.app.url;
 const getIsConnected = state => state.app.isConnected;
 const getIsLoading = state => state.app.isLoading;
 const getHeaders = state => state.app.headers;
+const getKey = state => state.app.key;
 
-export { getAppname, getUrl, getIsLoading, getIsConnected, getHeaders };
+export { getAppname, getUrl, getIsLoading, getIsConnected, getHeaders, getKey };
 
 export default app;

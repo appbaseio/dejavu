@@ -3,32 +3,40 @@
 import React from 'react';
 import { Skeleton } from 'antd';
 import { connect } from 'react-redux';
-import { bool } from 'prop-types';
+import { bool, string } from 'prop-types';
 
 import DataBrowser from '../DataBrowser';
 
-import { getIsLoading, getIsConnected } from '../../reducers/app';
+import { getIsLoading, getIsConnected, getKey } from '../../reducers/app';
 
 type Props = {
 	isConnected: boolean,
 	isLoading: boolean,
 	hasCloneApp: boolean,
+	key: string,
 };
 
-const DataBrowserContainer = ({ isConnected, isLoading, hasCloneApp }: Props) => (
+const DataBrowserContainer = ({
+	isConnected,
+	isLoading,
+	hasCloneApp,
+	key,
+}: Props) => (
 	<Skeleton loading={isLoading} active>
-		{isConnected && <DataBrowser hasCloneApp={hasCloneApp} />}
+		{isConnected && <DataBrowser key={key} hasCloneApp={hasCloneApp} />}
 	</Skeleton>
 );
 
 const mapStateToProps = state => ({
 	isConnected: getIsConnected(state),
 	isLoading: getIsLoading(state),
+	key: getKey(state),
 });
 
 DataBrowserContainer.propTypes = {
 	isLoading: bool.isRequired,
 	isConnected: bool.isRequired,
+	key: string.isRequired,
 };
 
 export default connect(mapStateToProps)(DataBrowserContainer);
