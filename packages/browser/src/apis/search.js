@@ -6,24 +6,27 @@ import {
 } from '../utils';
 import CustomError from '../utils/CustomError';
 
-const search = async (app, type, rawUrl, fetchData) => {
+const search = async (app, type, rawUrl, version, fetchData) => {
 	const defaultError = 'Unable to get count';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(app);
 
-		const res = await fetch(
-			`${url}/${app}/${type ? `${type}` : ''}/_search`,
-			{
-				headers: {
-					...headers,
-					...convertArrayToHeaders(customHeaders),
-				},
-				method: 'POST',
-				body: JSON.stringify(fetchData),
+		let updatedUrl = `${url}/${app}/_search`;
+
+		if (version < 7) {
+			updatedUrl = `${url}/${app}/${type ? `${type}/` : ''}_search`;
+		}
+
+		const res = await fetch(updatedUrl, {
+			headers: {
+				...headers,
+				...convertArrayToHeaders(customHeaders),
 			},
-		).then(response => response.json());
+			method: 'POST',
+			body: JSON.stringify(fetchData),
+		}).then(response => response.json());
 
 		if (res.status >= 400) {
 			throw new CustomError(

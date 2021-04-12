@@ -52,7 +52,7 @@ export const searchAfter = async (
 			others.search_after = [searchAfterData];
 		}
 		const sortKey = version > 5 ? '_id' : '_uid';
-		const data = await search(app, types, url, {
+		const data = await search(app, types, url, version, {
 			...query,
 			size: 1000,
 			sort: [
