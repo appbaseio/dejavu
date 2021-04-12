@@ -24,7 +24,10 @@ const getImporterSearchParams = () => {
 };
 
 const cloneHandler = () => {
-	window.open(`http://localhost:1360/${getImporterSearchParams()}`, '_blank');
+	window.open(
+		`https://importer.appbase.io/${getImporterSearchParams()}`,
+		'_blank',
+	);
 };
 
 const CloneApp = ({ isConnected }: Props) => {

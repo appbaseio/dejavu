@@ -25,7 +25,7 @@ const { Item } = Menu;
 const navHandler = (key, history) => {
 	switch (key) {
 		case 'import':
-			window.open(`http://localhost:1360/`, '_blank');
+			window.open('https://importer.appbase.io/', '_blank');
 			break;
 		case 'browse':
 			history.push('/');
