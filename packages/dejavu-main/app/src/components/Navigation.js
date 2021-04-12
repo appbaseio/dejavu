@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -22,43 +22,44 @@ type Props = {
 
 const { Item } = Menu;
 
-const navHandler = (key, history) => {
-	switch (key) {
-		case 'import':
-			window.open('https://importer.appbase.io/', '_blank');
-			break;
-		case 'browse':
-			history.push('/');
-			break;
-		default:
-			history.push(key);
-			break;
-	}
-};
-
 const Navigation = ({ indexes, isConnected, history }: Props) => {
-	const routeName = window.location.pathname.substring(1);
-	let defaultSelectedKey = routeName;
+	const [selectedKey, setSelectedKey] = useState('browse');
 
-	if (!routeName) {
-		defaultSelectedKey = 'browse';
-	}
+	useEffect(() => {
+		const routeName = window.location.pathname.substring(1);
+		setSelectedKey(routeName);
+	}, []);
+
+	const navHandler = key => {
+		switch (key) {
+			case 'import':
+				window.open('https://importer.appbase.io/', '_blank');
+				break;
+			case 'browse':
+				setSelectedKey('browse');
+				history.push('/');
+				break;
+			default:
+				setSelectedKey(key);
+				history.push(key);
+				break;
+		}
+	};
 
 	// special case for chrome extension
 	if (isExtension()) {
 		const { route } = getUrlParams(window.location.search);
 		if (route) {
-			defaultSelectedKey = route;
+			setSelectedKey(route);
 		} else {
-			defaultSelectedKey = 'browse';
+			setSelectedKey('browse');
 		}
 	}
-
 	return (
 		<Menu
-			defaultSelectedKeys={[defaultSelectedKey]}
+			selectedKeys={[selectedKey]}
 			mode="inline"
-			onClick={({ key }) => navHandler(key, history)}
+			onClick={({ key }) => navHandler(key)}
 		>
 			<Item key="browse">
 				<Icon type="table" />
