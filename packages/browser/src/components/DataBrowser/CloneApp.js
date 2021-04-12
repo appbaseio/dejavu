@@ -3,16 +3,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 
-import { getIsConnected, getAppname, getUrl } from '../../reducers/app';
-import { getCloneLink, getUrlParams } from '../../utils';
+import { getIsConnected } from '../../reducers/app';
+import { getUrlParams, normalizeSearchQuery } from '../../utils';
 
 type Props = {
 	isConnected: boolean,
-	rawUrl?: string,
-	appname?: string,
 };
 
-const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
+const getImporterSearchParams = () => {
+	let params = window.location.search;
+
+	if (params) {
+		params = normalizeSearchQuery(params);
+		params += '&origin=dejavu';
+	} else {
+		params = '?origin=dejavu';
+	}
+
+	return params;
+};
+
+const cloneHandler = () => {
+	window.open(`http://localhost:1360/${getImporterSearchParams()}`, '_blank');
+};
+
+const CloneApp = ({ isConnected }: Props) => {
 	const { cloneApp } = getUrlParams(window.location.search);
 	let isVisible = true;
 
@@ -25,7 +40,7 @@ const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 			<Button
 				icon="fork"
 				type="primary"
-				href={getCloneLink(appname, rawUrl)}
+				onClick={cloneHandler}
 				css={{ marginRight: 10 }}
 			>
 				{' '}
@@ -36,8 +51,6 @@ const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 };
 const mapStateToProps = state => ({
 	isConnected: getIsConnected(state),
-	appname: getAppname(state),
-	rawUrl: getUrl(state),
 });
 
 export default connect(mapStateToProps)(CloneApp);

@@ -189,34 +189,6 @@ const isEqualArray = (array1 = [], array2 = []) => {
 
 const isExtension = () => window.location.href.indexOf('chrome-extension') > -1;
 
-const getImporterBaseUrl = () => {
-	if (isExtension()) {
-		return '/importer/index.html';
-	}
-
-	return '/importer/';
-};
-
-const getCloneLink = (appname, rawUrl) => {
-	const { importUrl } = getUrlParams(window.location.search);
-
-	let params = importUrl || getImporterBaseUrl();
-
-	if (importUrl) {
-		params += '?';
-	} else {
-		params += `${window.location.search}&sidebar=true&`;
-	}
-
-	if (rawUrl.indexOf('appbase.io') > 1) {
-		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"appbase"}`;
-	} else {
-		params += `app={"importFrom":{"appname":"${appname}","hosturl":"${rawUrl}"},"platform":"es"}`;
-	}
-
-	return params;
-};
-
 const trimUrl = url => {
 	if (url.lastIndexOf('/') === url.length - 1) {
 		return url.slice(0, -1);
@@ -262,10 +234,8 @@ export {
 	isMultiIndexApp,
 	isEqualArray,
 	saveAppToLocalStorage,
-	getCloneLink,
 	trimUrl,
 	convertToMax,
 	normalizeSearchQuery,
-	getImporterBaseUrl,
 	isExtension,
 };

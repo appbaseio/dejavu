@@ -12,12 +12,7 @@ import {
 
 const { getIndexes } = mappingsReducers;
 const { getIsConnected } = appReducers;
-const {
-	normalizeSearchQuery,
-	getImporterBaseUrl,
-	getUrlParams,
-	isExtension,
-} = utils;
+const { getUrlParams, isExtension } = utils;
 
 type Props = {
 	indexes: string[],
@@ -27,23 +22,10 @@ type Props = {
 
 const { Item } = Menu;
 
-const getImporterSearchParams = () => {
-	let params = window.location.search;
-
-	if (params) {
-		params = normalizeSearchQuery(params);
-		params += '&sidebar=true';
-	} else {
-		params = '?sidebar=true';
-	}
-
-	return params;
-};
-
 const navHandler = (key, history) => {
 	switch (key) {
 		case 'import':
-			window.location.href = `${getImporterBaseUrl()}${getImporterSearchParams()}`;
+			window.open(`http://localhost:1360/`, '_blank');
 			break;
 		case 'browse':
 			history.push('/');
@@ -76,7 +58,7 @@ const Navigation = ({ indexes, isConnected, history }: Props) => {
 		<Menu
 			defaultSelectedKeys={[defaultSelectedKey]}
 			mode="inline"
-			onSelect={({ key }) => navHandler(key, history)}
+			onClick={({ key }) => navHandler(key, history)}
 		>
 			<Item key="browse">
 				<Icon type="table" />
