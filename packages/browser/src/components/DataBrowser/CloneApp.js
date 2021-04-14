@@ -3,47 +3,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 
-import { getIsConnected } from '../../reducers/app';
-import { getUrlParams, normalizeSearchQuery } from '../../utils';
+import { getIsConnected, getAppname, getUrl } from '../../reducers/app';
 
 type Props = {
 	isConnected: boolean,
+	rawUrl?: string,
+	appname?: string,
 };
 
-const getImporterSearchParams = () => {
-	let params = window.location.search;
-
-	if (params) {
-		params = normalizeSearchQuery(params);
-		params += '&origin=dejavu';
-	} else {
-		params = '?origin=dejavu';
-	}
-
-	return params;
-};
-
-const cloneHandler = () => {
+const cloneHandler = (appname, rawUrl) => {
 	window.open(
-		`https://importer.appbase.io/${getImporterSearchParams()}`,
+		`https://importer.appbase.io/?appname=${appname}&url=${rawUrl}&origin=dejavu`,
 		'_blank',
 	);
 };
 
-const CloneApp = ({ isConnected }: Props) => {
-	const { cloneApp } = getUrlParams(window.location.search);
-	let isVisible = true;
-
-	if (cloneApp && cloneApp === 'false') {
-		isVisible = false;
-	}
+const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 	return (
-		isConnected &&
-		isVisible && (
+		isConnected && (
 			<Button
 				icon="fork"
 				type="primary"
-				onClick={cloneHandler}
+				onClick={() => cloneHandler(appname, rawUrl)}
 				css={{ marginRight: 10 }}
 			>
 				{' '}
@@ -53,6 +34,8 @@ const CloneApp = ({ isConnected }: Props) => {
 	);
 };
 const mapStateToProps = state => ({
+	appname: getAppname(state),
+	rawUrl: getUrl(state),
 	isConnected: getIsConnected(state),
 });
 
