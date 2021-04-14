@@ -28,11 +28,7 @@ const plugins = [
 		prefix: 'favicon/',
 	}),
 	new HtmlWebpackHarddiskPlugin(),
-	new CopyWebpackPlugin([
-		'./app/src/_redirects',
-		'chrome-specific',
-		'./packages',
-	]),
+	new CopyWebpackPlugin(['./app/src/_redirects', 'chrome-specific']),
 	new WriteWebPackPlugin(),
 ];
 

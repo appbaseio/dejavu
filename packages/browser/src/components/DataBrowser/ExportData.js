@@ -157,11 +157,16 @@ class ExportData extends Component<Props, State> {
 			isFetchingCount: true,
 		});
 
-		const { url } = this.props;
+		const { url, version } = this.props;
 		const { selectedIndex, selectedType } = this.state;
 
 		try {
-			const data = await getCount(selectedIndex, selectedType, url);
+			const data = await getCount(
+				selectedIndex,
+				selectedType,
+				url,
+				version,
+			);
 			const count = data.count || 0;
 			const chunks = getChunks(count);
 			this.setState({

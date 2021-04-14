@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Button } from 'antd';
 
 import { getIsConnected, getAppname, getUrl } from '../../reducers/app';
-import { getCloneLink, getUrlParams } from '../../utils';
 
 type Props = {
 	isConnected: boolean,
@@ -12,20 +11,20 @@ type Props = {
 	appname?: string,
 };
 
-const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
-	const { cloneApp } = getUrlParams(window.location.search);
-	let isVisible = true;
+const cloneHandler = (appname, rawUrl) => {
+	window.open(
+		`https://importer.appbase.io/?appname=${appname}&url=${rawUrl}&origin=dejavu`,
+		'_blank',
+	);
+};
 
-	if (cloneApp && cloneApp === 'false') {
-		isVisible = false;
-	}
+const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 	return (
-		isConnected &&
-		isVisible && (
+		isConnected && (
 			<Button
 				icon="fork"
 				type="primary"
-				href={getCloneLink(appname, rawUrl)}
+				onClick={() => cloneHandler(appname, rawUrl)}
 				css={{ marginRight: 10 }}
 			>
 				{' '}
@@ -35,9 +34,9 @@ const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
 	);
 };
 const mapStateToProps = state => ({
-	isConnected: getIsConnected(state),
 	appname: getAppname(state),
 	rawUrl: getUrl(state),
+	isConnected: getIsConnected(state),
 });
 
 export default connect(mapStateToProps)(CloneApp);

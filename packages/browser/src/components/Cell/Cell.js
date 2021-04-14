@@ -19,19 +19,27 @@ type Props = {
 	active?: boolean,
 	onChange: func,
 	mode: string,
+	column: string,
+	row: string,
 };
 
-const Cell = ({ mapping, ...props }: Props) => {
+const Cell = ({ mapping, column, row, ...props }: Props) => {
 	if (mapping && (mapping.type || mapping.properties)) {
 		switch (mapping.type) {
 			case 'boolean':
-				return <BooleanCell {...props} />;
+				return <BooleanCell {...props} key={`${column}-${row}`} />;
 			case 'integer':
 			case 'float':
 			case 'long':
 			case 'double':
 				if (Array.isArray(props.children)) {
-					return <ArrayCell {...props} mappingType={mapping.type} />;
+					return (
+						<ArrayCell
+							{...props}
+							mappingType={mapping.type}
+							key={`${column}-${row}`}
+						/>
+					);
 				}
 				return <NumberCell {...props} />;
 			case 'date':
@@ -44,19 +52,25 @@ const Cell = ({ mapping, ...props }: Props) => {
 			case 'object':
 			case 'geo_point':
 			case 'geo_shape':
-				return <ObjectCell {...props} />;
+				return <ObjectCell {...props} key={`${column}-${row}`} />;
 			case 'string':
 			case 'text':
 			case 'keyword':
 				if (Array.isArray(props.children) && props) {
-					return <ArrayCell {...props} mappingType={mapping.type} />;
+					return (
+						<ArrayCell
+							{...props}
+							mappingType={mapping.type}
+							key={`${column}-${row}`}
+						/>
+					);
 				}
 				if (isObject(mapping.properties)) {
-					return <ObjectCell {...props} />;
+					return <ObjectCell {...props} key={`${column}-${row}`} />;
 				}
-				return <TextCell {...props} />;
+				return <TextCell {...props} key={`${column}-${row}`} />;
 			default:
-				return <ObjectCell {...props} />;
+				return <ObjectCell {...props} key={`${column}-${row}`} />;
 		}
 	} else {
 		return null;

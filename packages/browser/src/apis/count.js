@@ -6,14 +6,20 @@ import {
 } from '../utils';
 import CustomError from '../utils/CustomError';
 
-const getCount = async (app, type, rawUrl) => {
+const getCount = async (app, type, rawUrl, version) => {
 	const defaultError = 'Unable to get count';
 	try {
 		const { url } = parseUrl(rawUrl);
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(app);
 
-		const res = await fetch(`${url}/${app}/${type}/_count`, {
+		let updatedUrl = `${url}/${app}/_count`;
+
+		if (version < 7) {
+			updatedUrl = `${url}/${app}/${type}/_count`;
+		}
+
+		const res = await fetch(updatedUrl, {
 			headers: {
 				...headers,
 				...convertArrayToHeaders(customHeaders),
