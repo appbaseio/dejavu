@@ -1,4 +1,4 @@
-FROM node:10.13.0-alpine
+FROM node:lts-alpine3.13
 MAINTAINER appbase.io <info@appbase.io>
 
 WORKDIR /dejavu

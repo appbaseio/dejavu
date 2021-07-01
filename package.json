@@ -51,6 +51,9 @@
 		"prettier": "^1.14.2",
 		"style-loader": "^0.23.0"
 	},
+	"engines": {
+		"node": ">=14.17.1"
+	},
 	"license": "MIT",
 	"scripts": {
 		"dev:browser": "lerna run watch --scope @appbaseio/dejavu-browser --stream",
