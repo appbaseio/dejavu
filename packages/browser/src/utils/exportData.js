@@ -80,6 +80,7 @@ export const searchAfter = async (
 			const lastObject = exportData[exportData.length - 1];
 			exportData = exportData.map(value => {
 				const item = Object.assign(value._source);
+				item['_id'] = value._id;
 				return item;
 			});
 
