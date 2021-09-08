@@ -1,7 +1,7 @@
 {
 	"name": "@appbaseio/dejavu-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "3.5.0",
+	"version": "3.5.1",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",

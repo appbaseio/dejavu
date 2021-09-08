@@ -1,7 +1,7 @@
 {
 	"name": "dejavu-main",
 	"description": "Dejavu main module",
-	"version": "3.5.0",
+	"version": "3.5.1",
 	"authors": [
 		"Anuj Shah <anujshah584@gmail.com>",
 		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
@@ -16,7 +16,7 @@
 		"react-dom": "^16.13.1"
 	},
 	"dependencies": {
-		"@appbaseio/dejavu-browser": "^3.5.0",
+		"@appbaseio/dejavu-browser": "^3.5.1",
 		"@appbaseio/designkit": "^0.9.12",
 		"@appbaseio/reactivesearch": "^3.11.7",
 		"@divyanshu013/media": "^1.0.0",
