@@ -47,10 +47,15 @@ export default async (rawUrl, indexName) => {
 					res[defaultIndex].settings.index.version.upgraded ||
 					res[defaultIndex].settings.index.version.created;
 			} else {
-				version = '5';
+				version = '7';
 			}
 		} else {
 			version = res.version.number;
+		}
+
+		// Handle opensearch version
+		if (!version || Number(version[0]) < 5) {
+			version = '7';
 		}
 
 		return version.replace(/\./g, '');

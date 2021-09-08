@@ -123,6 +123,7 @@ class ResultSet extends React.Component<Props, State> {
 					[sortField]: { order: sortOrder },
 					[version > 5 ? '_id' : '_uid']: {
 						order: sortOrder,
+						unmapped_type: 'long',
 					},
 				},
 			],
