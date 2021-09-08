@@ -56,7 +56,10 @@ class DataBrowser extends Component<Props> {
 	};
 
 	transformRequest = request => {
-		const newRequest = { ...request };
+		const newRequest = {
+			...request,
+			url: request.url.replace('_msearch?', '_msearch'),
+		};
 		if (newRequest.headers) {
 			Object.keys(newRequest.headers).forEach(headerItem => {
 				newRequest.headers[headerItem] = decodeURIComponent(
