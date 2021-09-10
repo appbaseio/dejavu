@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { unparse } from 'papaparse';
 import { saveAs } from 'file-saver';
 
-import { getIndexTypeMap } from '../../reducers/mappings';
+import { getIndexTypeMap, getVisibleColumns } from '../../reducers/mappings';
 import { getUrl } from '../../reducers/app';
 import { getVersion } from '../../reducers/version';
 import { addDataRequest } from '../../actions';
@@ -54,6 +54,7 @@ type Props = {
 	indexTypeMap: any,
 	stats: any,
 	query: any,
+	visibleColumns: any,
 };
 
 type State = {
@@ -204,9 +205,14 @@ class ExportData extends Component<Props, State> {
 			selectedType,
 			applyCurrentQuery,
 		} = this.state;
+		let visibleColumns = this.props.visibleColumns;
+		visibleColumns.push("_id");
 		const res = await this.fetchData();
 		const flattenData = res.map(item => flatten(item));
-		const newData = unparse(flattenData);
+		const newData = unparse({
+			fields: visibleColumns,
+			data: flattenData
+		});
 		const file = new File(
 			[newData],
 			`data_${selectedIndex}${
@@ -470,6 +476,7 @@ const mapStateToProps = state => ({
 	indexTypeMap: getIndexTypeMap(state),
 	stats: getStats(state),
 	query: getQuery(state),
+	visibleColumns: getVisibleColumns(state),
 });
 
 const mapDispatchToProps = {
