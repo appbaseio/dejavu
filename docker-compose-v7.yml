@@ -1,11 +1,10 @@
 version: '3'
 services:
     # search engine
-    opensearch:
-        image: opensearchproject/opensearch:1.2.4
-        container_name: opensearch
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+        container_name: elasticsearch
         environment:
-            - plugins.security.disabled=true
             - discovery.type=single-node
             - http.port=9200
             - http.cors.enabled=true
@@ -22,7 +21,7 @@ services:
                 soft: -1
                 hard: -1
         volumes:
-            - ./data:/usr/share/opensearch/data
+            - ./data:/usr/share/elasticsearch/data
     # elasticsearch browser
     dejavu:
         image: appbaseio/dejavu:3.6.0
@@ -30,4 +29,4 @@ services:
         ports:
             - '1358:1358'
         links:
-            - opensearch
+            - elasticsearch
