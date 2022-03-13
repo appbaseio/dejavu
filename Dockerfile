@@ -1,5 +1,5 @@
-FROM node:lts-alpine3.13
-MAINTAINER appbase.io <info@appbase.io>
+FROM node:lts-alpine3.15
+LABEL maintainer="appbase.io" email="info@appbase.io"
 
 WORKDIR /dejavu
 

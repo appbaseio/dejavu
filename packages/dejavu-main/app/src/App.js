@@ -254,7 +254,7 @@ class App extends Component {
 									Create your <b>Elasticsearch</b> in cloud
 									with{' '}
 									<a
-										href="https://appbase.io"
+										href="https://appbase.io?utm_source=dejavu&utm_medium=footer&utm_campaign=appbaseio"
 										target="_blank"
 										rel="noopener noreferrer"
 									>

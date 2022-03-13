@@ -688,7 +688,7 @@ class ConnectApp extends Component<Props, State> {
 									<h3>CORS Settings</h3>
 									<p>
 										To make sure you have enabled CORS
-										settings for your ElasticSearch
+										settings for your Elasticsearch
 										instance, add the following lines in the
 										ES configuration file:
 									</p>
@@ -702,7 +702,7 @@ http.cors.allow-credentials: true`}
 								</div>
 								<div style={{ marginTop: '2rem' }}>
 									<p>
-										If you are running ElasticSearch via
+										If you are running Elasticsearch via
 										Docker, use the following command:
 									</p>
 									<div
@@ -712,19 +712,23 @@ http.cors.allow-credentials: true`}
 										}}
 									>
 										<code>
-											docker run --name es -d -p 9200:9200
+											docker run -d --rm --name
+											elasticsearch -p 127.0.0.1:9200:9200
 											-e http.port=9200 -e
+											discovery.type=single-node -e
+											http.max_content_length=10MB -e
 											http.cors.enabled=true -e
-											http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
-											-e
+											http.cors.allow-origin=\* -e
 											http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 											-e http.cors.allow-credentials=true
-											docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.2
+											-e network.publish_host=localhost -e
+											xpack.security.enabled=false
+											docker.elastic.co/elasticsearch/elasticsearch:8.1.0
 										</code>
 									</div>
 									<p style={{ marginTop: '14px' }}>
-										Or the following if you are using v7
-										ElasticSearch:
+										Or the following if you are using
+										OpenSearch:
 									</p>
 									<div
 										style={{
@@ -733,16 +737,15 @@ http.cors.allow-credentials: true`}
 										}}
 									>
 										<code>
-											docker run -d --rm --name
-											elasticsearch -p 9200:9200 -p
-											9300:9300 -e
+											docker run --name opensearch --rm -d
+											-p 9200:9200 -e http.port=9200 -e
 											discovery.type=single-node -e
+											http.max_content_length=10MB -e
 											http.cors.enabled=true -e
-											http.cors.allow-origin=http://localhost:1358,http://127.0.0.1:1358
-											-e
+											http.cors.allow-origin=\* -e
 											http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
 											-e http.cors.allow-credentials=true
-											docker.elastic.co/elasticsearch/elasticsearch-oss:7.0.1
+											opensearchproject/opensearch:1.2.4
 										</code>
 									</div>
 								</div>

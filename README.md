@@ -161,9 +161,9 @@ If you are running your Elasticsearch with docker, you can use the following fla
 docker run --name opensearch --rm -d -p 9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true opensearchproject/opensearch:1.2.4
 ```
 
-**Note:** OpenSearch comes with TLS and Basic Auth enabled. Connecting to OpenSearch will require skipping verification and also passing the root credentials as shown below.
+You can run both Opensearch and Dejavu together with:
 
-`curl -XGET https://localhost:9200 -u 'admin:admin' --insecure`
+`docker-compose up -d`
 
 ###### Elasticsearch 8.x
 
@@ -171,11 +171,19 @@ docker run --name opensearch --rm -d -p 9200:9200 -e http.port=9200 -e discovery
 docker run -d --rm --name elasticsearch -p 127.0.0.1:9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true -e network.publish_host=localhost -e xpack.security.enabled=false docker.elastic.co/elasticsearch/elasticsearch:8.1.0
 ```
 
+You can run both Elasticsearch 8.1.0 and Dejavu together with:
+
+`docker-compose -f docker-compose-v8.yml up -d`
+
 ###### Elasticsearch 7.x
 
 ```sh
 docker run -d --rm --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "http.cors.enabled=true" -e "http.cors.allow-origin=*" -e "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization" -e "http.cors.allow-credentials=true" docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
 ```
+
+You can run both Elasticsearch 7.10.2 and Dejavu together with:
+
+`docker-compose -f docker-compose-v7.yml up -d`
 
 #### Hosted Alternatives
 
