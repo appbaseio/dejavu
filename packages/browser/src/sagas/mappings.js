@@ -48,7 +48,7 @@ export function* handleFetchMappings() {
 			const typePropertyMapping = {};
 
 			indexes.forEach(index => {
-				if (versionCode === 7) {
+				if (versionCode >= 7) {
 					data[index].mappings = {
 						_doc: { ...data[index].mappings },
 					};

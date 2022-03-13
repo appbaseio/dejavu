@@ -117,16 +117,19 @@ class ResultSet extends React.Component<Props, State> {
 		const { results } = getUrlParams(window.location.search);
 		const currentPage = parseInt(results || 1, 10);
 		const { hasMounted } = this.state;
+		const defaultSort = [
+			{
+				[sortField]: { order: sortOrder },
+			},
+		];
+		if (version < 8) {
+			defaultSort[0]._id = {
+				order: sortOrder,
+				unmapped_type: 'long',
+			};
+		}
 		const defaultQuery = {
-			sort: [
-				{
-					[sortField]: { order: sortOrder },
-					[version > 5 ? '_id' : '_uid']: {
-						order: sortOrder,
-						unmapped_type: 'long',
-					},
-				},
-			],
+			sort: defaultSort,
 		};
 
 		if (version >= 7) {

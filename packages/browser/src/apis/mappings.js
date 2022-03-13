@@ -52,7 +52,7 @@ const addMapping = async (
 		const headers = getHeaders(rawUrl);
 		const customHeaders = getCustomHeaders(indexName);
 		const apiUrl = `${url}/${indexName}/_mapping${
-			version === 7 ? '' : `/${typeName}`
+			version >= 7 ? '' : `/${typeName}`
 		}`;
 		const res = await fetch(apiUrl, {
 			headers: {
