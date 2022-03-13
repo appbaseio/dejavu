@@ -9,7 +9,7 @@
    b. [Visual Filters](#visual-filters)  
    c. [Modern UI Elements](#modern-ui-elements)  
    d. [Import JSON or CSV Data](#import-json-or-csv-data)  
-   e. [Build search UIs](#build-search-uis)  
+   e. [Build search UIs](#build-search-uis)
 3. **[Comparison](#3-comparison-with-other-data-browsers)**
 4. **[Roadmap](#4-roadmap)**
 5. **[Build Locally / Contributing](#5-build-locally)**
@@ -21,9 +21,9 @@
 
 ### 1. Dejavu Intro
 
-**dejavu** is the missing web UI for Elasticsearch. Existing web UIs leave much to be desired or are built with server-side page rendering techniques that make it less responsive and bulkier to run (I am looking at you, Kibana).
+**dejavu** is the missing web UI for Elasticsearch and OpenSearch. Existing web UIs leave much to be desired or are built with server-side page rendering techniques that make it less responsive and bulkier to run (I am looking at you, Kibana).
 
-We started building dejavu with the goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates, search UI builder) for Elasticsearch with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://dejavu.appbase.io), [as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/lcanobbdndljimodckphgdmllahfcadd?hl=en) or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
+We started building dejavu with the goal of creating a modern Web UI (no page reloads, infinite scroll, filtered views, realtime updates, search UI builder) for Elasticsearch with 100% client-side rendering so one can easily run it as a [hosted app on github pages](https://dejavu.appbase.io), or [as a docker image](https://hub.docker.com/r/appbaseio/dejavu/).
 
 Starting `v1.0`, dejavu is the only Elasticsearch web UI that supports importing data via JSON and CSV files, as well as defining field mappings from the GUI.
 
@@ -155,42 +155,30 @@ If you are running your Elasticsearch with docker-compose, you can refer to the 
 
 If you are running your Elasticsearch with docker, you can use the following flags to pass the custom CORS configuration:
 
-###### Elasticsearch 2.x
+###### Opensearch 1.x
 
 ```sh
-docker run --name elasticsearch -p 9200:9200 -d elasticsearch:2 -Des.http.port=9200 -Des.http.cors.allow-origin="http://localhost:1358" -Des.http.cors.enabled=true -Des.http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Des.http.cors.allow-credentials=true
+docker run --name opensearch --rm -d -p 9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true opensearchproject/opensearch:1.2.4
 ```
 
-###### Elasticsearch 5.x
+**Note:** OpenSearch comes with TLS and Basic Auth enabled. Connecting to OpenSearch will require skipping verification and also passing the root credentials as shown below.
+
+`curl -XGET https://localhost:9200 -u 'admin:admin' --insecure`
+
+###### Elasticsearch 8.x
 
 ```sh
-docker run --name elasticsearch -p 9200:9200 -d elasticsearch:5 -E http.port=9200 -E http.cors.allow-origin="http://localhost:1358" -E http.cors.enabled=true -E http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -E http.cors.allow-credentials=true
-```
-
-###### Elasticsearch 6.x
-
-```sh
-docker run -p 9200:9200 -d elasticsearch docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.4 -Ehttp.port=9200 -Ehttp.cors.enabled=true -Ehttp.cors.allow-origin=http://localhost:1358 -Ehttp.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -Ehttp.cors.allow-credentials=true
+docker run -d --rm --name elasticsearch -p 127.0.0.1:9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true -e network.publish_host=localhost -e xpack.security.enabled=false docker.elastic.co/elasticsearch/elasticsearch:8.1.0
 ```
 
 ###### Elasticsearch 7.x
 
 ```sh
-docker run -d --rm --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "http.cors.enabled=true" -e "http.cors.allow-origin=*" -e "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization" -e "http.cors.allow-credentials=true" docker.elastic.co/elasticsearch/elasticsearch-oss:7.0.1
+docker run -d --rm --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "http.cors.enabled=true" -e "http.cors.allow-origin=*" -e "http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization" -e "http.cors.allow-credentials=true" docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
 ```
 
 #### Hosted Alternatives
 
-**dejavu** can also be run via hosted app at https://dejavu.appbase.io or [installed as a chrome extension](https://chrome.google.com/webstore/detail/dejavu/jopjeaiilkcibeohjdmejhoifenbnmlh).
-
-For example: If you are using the chrome-extension instead of docker image, the `http.cors.allow-origin` in Elasticsearch.yml file would change accordingly:
-
-```yaml
-http.port: 9200
-http.cors.allow-origin: 'chrome-extension://jopjeaiilkcibeohjdmejhoifenbnmlh'
-http.cors.enabled: true
-http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
-http.cors.allow-credentials: true
-```
+**dejavu** can also be run as a hosted app at https://dejavu.appbase.io.
 
 ---
