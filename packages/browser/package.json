@@ -37,6 +37,7 @@
 		"@fortawesome/react-fontawesome": "^0.1.8",
 		"cross-storage": "^1.0.0",
 		"dom-helpers": "^3.4.0",
+		"dompurify": "^2.3.6",
 		"file-saver": "^2.0.0-rc.4",
 		"flat": "^4.1.0",
 		"ismobilejs": "^0.5.1",

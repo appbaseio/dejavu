@@ -4,10 +4,13 @@ import React, { Fragment } from 'react';
 import { Input, Popover } from 'antd';
 import { func, any, bool, string } from 'prop-types';
 
+import createDOMPurify from 'dompurify';
 import CellStyled from './Cell.styles';
 import overflowText from '../DataTable/overflow.style';
 import { MODES } from '../../constants';
 import popoverContent from '../CommonStyles/popoverContent';
+
+const DOMPurify = createDOMPurify(window);
 
 type Props = {
 	children: [],
@@ -53,7 +56,10 @@ const TextCell = ({
 						<div css={popoverContent}>
 							<div
 								css={{ cursor: 'pointer' }}
-								dangerouslySetInnerHTML={{ __html: children }}
+								// eslint-disable-next-line react/no-danger
+								dangerouslySetInnerHTML={{
+									__html: DOMPurify.sanitize(children),
+								}}
 							/>
 						</div>
 					}
@@ -67,7 +73,10 @@ const TextCell = ({
 								lineHeight:
 									mode === MODES.EDIT ? '45px' : '30px',
 							}}
-							dangerouslySetInnerHTML={{ __html: children }}
+							// eslint-disable-next-line react/no-danger
+							dangerouslySetInnerHTML={{
+								__html: DOMPurify.sanitize(children),
+							}}
 						/>
 					)}
 				</Popover>

@@ -21,6 +21,7 @@ import { Input, Form, Icon, Modal, Select, Tag, Alert } from 'antd';
 import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
 import { CrossStorageClient } from 'cross-storage';
+import createDOMPurify from 'dompurify';
 
 import Footer from './components/Footer';
 import logo from './images/dejavu-logo.svg';

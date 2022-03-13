@@ -4,7 +4,10 @@ import React, { Component, Fragment } from 'react';
 import { string, func } from 'prop-types';
 import { Button, Icon } from 'antd';
 import { connect } from 'react-redux';
+import createDOMPurify from 'dompurify';
 import { reloadApp } from '../../actions/app';
+
+const DOMPurify = createDOMPurify(window);
 
 type State = {
 	isShowingDetails: boolean,
@@ -46,7 +49,12 @@ class ErrorMessage extends Component<Props, State> {
 				</Button>
 				<br />
 				{isShowingDetails && (
-					<div dangerouslySetInnerHTML={{ __html: description }} />
+					<div
+						// eslint-disable-next-line react/no-danger
+						dangerouslySetInnerHTML={{
+							__html: DOMPurify.sanitize(description),
+						}}
+					/>
 				)}
 			</Fragment>
 		);
