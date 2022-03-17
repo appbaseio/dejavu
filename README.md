@@ -137,7 +137,7 @@ docker run -p 1358:1358 -d appbaseio/dejavu
 open http://localhost:1358/
 ```
 
-You can also run a specific version of **dejavu** by specifying a tag. For example, version `3.3.0` can be used by specifying the `docker run -p 1358:1358 appbaseio/dejavu:3.3.0` command.
+You can also run a specific version of **dejavu** by specifying a tag. For example, version `3.6.0` can be used by specifying the `docker run -p 1358:1358 appbaseio/dejavu:3.6.0` command.
 
 ##### Cross-origin resource sharing (CORS)
 
@@ -158,7 +158,7 @@ If you are running your Elasticsearch with docker, you can use the following fla
 ###### OpenSearch 1.x
 
 ```sh
-docker run --name opensearch --rm -d -p 9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true opensearchproject/opensearch:1.2.4
+docker run --name opensearch --rm -d -p 9200:9200 -e http.port=9200 -e discovery.type=single-node -e http.max_content_length=10MB -e http.cors.enabled=true -e http.cors.allow-origin=\* -e http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization -e http.cors.allow-credentials=true -e plugins.security.disabled=true opensearchproject/opensearch:1.2.4
 ```
 
 You can run both Opensearch and Dejavu together with:
