@@ -20,7 +20,7 @@ import { isVaildJSON, getOnlySource } from '../../utils';
 import { getUpdatingRow } from '../../reducers/updatingRow';
 import { getVersion } from '../../reducers/version';
 import { getUrl } from '../../reducers/app';
-import { putData } from '../../apis/data';
+import { updateDocument } from '../../apis/data';
 
 const { Item } = Form;
 
@@ -74,7 +74,7 @@ class UpdateRowModal extends Component<Props, State> {
 
 	handleSubmit = async () => {
 		const { dataError, jsonValue } = this.state;
-		const { _id: documentId, _index: index, _type: type } = this.props.data;
+		const { _id: documentId, _index: index } = this.props.data;
 
 		if (!dataError) {
 			const {
@@ -85,19 +85,16 @@ class UpdateRowModal extends Component<Props, State> {
 				setSelectedRows: onSetSelectedRows,
 				setUpdatingRow: onSetUpdatingRow,
 				fetchMappings: onFetchMappings,
-				version,
 			} = this.props;
 
 			try {
 				onClearError();
-				await putData(
+				await updateDocument({
 					index,
-					type,
-					documentId,
-					appUrl,
-					JSON.parse(jsonValue),
-					version,
-				);
+					id: documentId,
+					url: appUrl,
+					document: JSON.parse(jsonValue),
+				});
 				onUpdateReactiveList();
 				onSetUpdatingRow(null);
 				onSetSelectedRows([]);

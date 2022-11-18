@@ -1,7 +1,7 @@
 import testConnection from './app';
 import { fetchMappings, addMapping } from './mappings';
 import setCellValue from './cell';
-import { putData, deleteData, addData } from './data';
+import { updateDocument, deleteData, addData } from './data';
 import getVersion from './version';
 import getCount from './count';
 import search from './search';
@@ -12,7 +12,7 @@ export {
 	fetchMappings,
 	addMapping,
 	setCellValue,
-	putData,
+	updateDocument,
 	deleteData,
 	addData,
 	getVersion,

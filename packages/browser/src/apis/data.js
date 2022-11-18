@@ -66,31 +66,21 @@ export const addData = async (
 	}
 };
 
-export const putData = async (
-	indexName,
-	typeName,
-	docId,
-	rawUrl,
-	data,
-	version,
-) => {
+export const updateDocument = async ({ index, id, url, document }) => {
 	const defaultError = 'Unable to put data';
 	try {
-		const { url } = parseUrl(rawUrl);
-		const headers = getHeaders(rawUrl);
-		const customHeaders = getCustomHeaders(indexName);
-		let baseUrl = `${url}/${indexName}/${typeName}/${docId}`;
+		const { url: base } = parseUrl(url);
+		const headers = getHeaders(url);
+		const customHeaders = getCustomHeaders(index);
+		const baseUrl = `${base}/${index}/_update/${id}`;
 
-		if (version > 5) {
-			baseUrl += '?refresh=wait_for';
-		}
 		const res = await fetch(baseUrl, {
 			headers: {
 				...headers,
 				...convertArrayToHeaders(customHeaders),
 			},
-			method: 'PUT',
-			body: JSON.stringify(data),
+			method: 'POST',
+			body: JSON.stringify({ doc: document }),
 		}).then(response => response.json());
 
 		if (res.status >= 400) {
