@@ -1,13 +1,9 @@
 {
 	"name": "@appbaseio/dejavu-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "3.6.0",
+	"version": "3.6.1",
 	"authors": [
-		"Anuj Shah <anujshah584@gmail.com>",
-		"Lakhan Samani <lakhan.m.samani@gmail.com> (https://github.com/lakhansamani)",
-		"Divyanshu Maithani <div.blackcat@gmail.com> (https://github.com/divyanshu013)",
-		"Deepak Grover <deepakgrover333@gmail.com> (https://github.com/metagrover)",
-		"Appbase.io <info@appbase.io> (https://github.com/appbaseio)"
+		"reactivesearch.io <info@reactivesearch.io> (https://github.com/appbaseio)"
 	],
 	"main": "lib/index.js",
 	"module": "lib/index.es.js",
