@@ -17,11 +17,11 @@ import {
 	Section,
 	media,
 } from '@appbaseio/designkit';
-import { Input, Form, Icon, Modal, Select, Tag, Alert } from 'antd';
+import { PlayCircleOutlined, DownOutlined } from '@ant-design/icons';
+import { Input, Form, Modal, Select, Tag, Alert } from 'antd';
 import { css, cx, injectGlobal } from 'react-emotion';
 import UrlParser from 'url-parser-lite';
 import { CrossStorageClient } from 'cross-storage';
-import createDOMPurify from 'dompurify';
 
 import Footer from './components/Footer';
 import logo from './images/dejavu-logo.svg';
@@ -419,8 +419,7 @@ class App extends Component<null, State> {
 												cursor: 'pointer',
 											}}
 										>
-											<Icon
-												type="play-circle-o"
+											<PlayCircleOutlined
 												css={{ marginRight: 7 }}
 											/>
 											Watch Video
@@ -442,8 +441,7 @@ class App extends Component<null, State> {
 						}}
 						href="#landing-sections"
 					>
-						<Icon
-							type="down"
+						<DownOutlined
 							css={{ marginTop: 25, fontSize: '2rem' }}
 						/>
 					</a>

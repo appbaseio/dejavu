@@ -1,5 +1,6 @@
 import React from 'react';
-import { Icon, Button } from 'antd';
+import { FrownOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 
 const NoMatch = () => (
@@ -11,11 +12,7 @@ const NoMatch = () => (
 			alignItems: 'center',
 		}}
 	>
-		<Icon
-			type="frown"
-			theme="outlined"
-			style={{ fontSize: 44, marginBottom: 20 }}
-		/>
+		<FrownOutlined style={{ fontSize: 44, marginBottom: 20 }} />
 		<h2>Page not found</h2>
 		<p>
 			Sorry, we couldn
