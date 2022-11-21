@@ -1,7 +1,9 @@
 // @flow
 
 import React, { Component } from 'react';
-import { Form, Button, Alert, AutoComplete, Input, Modal, Icon } from 'antd';
+import { connect } from 'react-redux';
+import { Form, Button, Alert, AutoComplete, Input, Modal } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
@@ -626,8 +628,7 @@ class ConnectApp extends Component<Props, State> {
 												}}
 											>
 												{customHeaders.length > 0 && (
-													<Icon
-														type="close"
+													<CloseOutlined
 														onClick={() =>
 															this.handleRemoveHeader(
 																i,

@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react';
 import { func, string, object } from 'prop-types';
-import { Select, Icon } from 'antd';
+import { Select } from 'antd';
+import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -56,10 +57,10 @@ class ModeSwitch extends Component<Props> {
 				}}
 			>
 				<Option value="view">
-					<Icon type="eye" /> &nbsp; Viewing
+					<EyeOutlined /> &nbsp; Viewing
 				</Option>
 				<Option value="edit">
-					<Icon type="edit" /> &nbsp; Editing
+					<EditOutlined type="edit" /> &nbsp; Editing
 				</Option>
 			</Select>
 		);

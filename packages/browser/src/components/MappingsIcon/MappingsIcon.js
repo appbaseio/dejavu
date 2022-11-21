@@ -2,7 +2,11 @@
 
 import React from 'react';
 import { object } from 'prop-types';
-import { Icon } from 'antd';
+import {
+	MessageOutlined,
+	EnvironmentOutlined,
+	CalendarOutlined,
+} from '@ant-design/icons';
 import Hash from '../Icons/Hash';
 import Toggle from '../Icons/Toggle';
 
@@ -16,17 +20,17 @@ const MappingsIcon = ({ mapping, ...props }: Props) => {
 		case 'text':
 		case 'keyword':
 		case 'string':
-			return <Icon type="message" {...props} />;
+			return <MessageOutlined {...props} />;
 		case 'integer':
 		case 'long':
 			return <Hash size={14} {...props} />;
 		case 'geo_point':
 		case 'geo_shape':
-			return <Icon type="environment" {...props} />;
+			return <EnvironmentOutlined {...props} />;
 		case 'boolean':
 			return <Toggle size={14} {...props} />;
 		case 'date':
-			return <Icon type="calendar" {...props} />;
+			return <CalendarOutlined {...props} />;
 		case 'float':
 		case 'double':
 			return (
