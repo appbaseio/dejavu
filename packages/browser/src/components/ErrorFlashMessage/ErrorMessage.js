@@ -2,7 +2,8 @@
 
 import React, { Component, Fragment } from 'react';
 import { string, func } from 'prop-types';
-import { Button, Icon } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 import { connect } from 'react-redux';
 import createDOMPurify from 'dompurify';
 import { reloadApp } from '../../actions/app';
@@ -33,14 +34,14 @@ class ErrorMessage extends Component<Props, State> {
 		const { isShowingDetails } = this.state;
 		const { description, handleReload } = this.props;
 		return (
-			<Fragment>
+            <Fragment>
 				<Button
 					size="small"
 					type="primary"
 					style={{ marginRight: 8 }}
 					onClick={handleReload}
 				>
-					<Icon type="reload" />
+					<ReloadOutlined />
 					Reload
 				</Button>
 				<Button size="small" onClick={this.toggleDetails}>
@@ -57,7 +58,7 @@ class ErrorMessage extends Component<Props, State> {
 					/>
 				)}
 			</Fragment>
-		);
+        );
 	}
 }
 

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { DataSearch } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
-import { Icon } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 import {
@@ -82,7 +82,7 @@ class GlobalSearch extends Component<Props, State> {
 		const { searchValue, hasMounted } = this.state;
 
 		return (
-			<div css={{ position: 'relative' }}>
+            <div css={{ position: 'relative' }}>
 				{hasMounted && (
 					<DataSearch
 						componentId="GlobalSearch"
@@ -104,17 +104,15 @@ class GlobalSearch extends Component<Props, State> {
 						value={searchValue}
 					/>
 				)}
-				<Icon
-					type="search"
-					css={{
+				<SearchOutlined
+                    css={{
 						position: 'absolute',
 						top: '50%',
 						transform: 'translateY(-50%)',
 						left: '10px',
-					}}
-				/>
+					}} />
 			</div>
-		);
+        );
 	}
 }
 

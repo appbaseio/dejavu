@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { ForkOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
 import { getIsConnected, getAppname, getUrl } from '../../reducers/app';
@@ -19,19 +20,17 @@ const cloneHandler = (appname, rawUrl) => {
 };
 
 const CloneApp = ({ appname, rawUrl, isConnected }: Props) => {
-	return (
-		isConnected && (
-			<Button
-				icon="fork"
-				type="primary"
-				onClick={() => cloneHandler(appname, rawUrl)}
-				css={{ marginRight: 10 }}
-			>
-				{' '}
-				Clone This App
-			</Button>
-		)
-	);
+	return isConnected && (
+        <Button
+            icon={<ForkOutlined />}
+            type="primary"
+            onClick={() => cloneHandler(appname, rawUrl)}
+            css={{ marginRight: 10 }}
+        >
+            {' '}
+            Clone This App
+        </Button>
+    );
 };
 const mapStateToProps = state => ({
 	appname: getAppname(state),
