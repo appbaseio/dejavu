@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Button, Alert, AutoComplete, Input, Modal } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
@@ -644,7 +644,7 @@ class ConnectApp extends Component<Props, State> {
 									))}
 								</div>
 								<Button
-									icon="plus"
+									icon={<PlusOutlined />}
 									type="primary"
 									css={{ marginTop: 10, marginLeft: 5 }}
 									onClick={this.addMoreHeader}

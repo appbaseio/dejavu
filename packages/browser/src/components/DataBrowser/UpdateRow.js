@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Row, Col, Button, Form } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 
@@ -113,7 +114,7 @@ class UpdateRowModal extends Component<Props, State> {
 		return (
 			<Fragment>
 				<Button
-					icon="edit"
+					icon={<EditOutlined />}
 					type="primary"
 					css={{
 						margin: '0 3px',

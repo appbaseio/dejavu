@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Select, Row, Col, Button, Tabs } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 import { unflatten } from 'flat';
@@ -215,7 +216,11 @@ class AddRowModal extends Component<Props, State> {
 
 		return (
 			<Fragment>
-				<Button icon="plus" type="primary" onClick={this.toggleModal}>
+				<Button
+					icon={<PlusOutlined />}
+					type="primary"
+					onClick={this.toggleModal}
+				>
 					Add New Data
 				</Button>
 
