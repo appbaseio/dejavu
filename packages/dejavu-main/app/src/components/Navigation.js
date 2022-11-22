@@ -69,22 +69,22 @@ const Navigation = ({ indexes, isConnected, history }: Props) => {
 		>
 			<Item key="browse">
 				<TableOutlined />
-				Data Browser
+				<span>Data Browser</span>
 			</Item>
 			<Item key="import">
 				<UploadOutlined />
-				Import Data
+				<span>Import Data</span>
 			</Item>
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="query">
 					<SearchOutlined />
-					Query Explorer
+					<span>Query Explorer</span>
 				</Item>
 			)}
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="preview">
 					<ExperimentOutlined />
-					Search Preview
+					<span>Search Preview</span>
 				</Item>
 			)}
 		</Menu>
