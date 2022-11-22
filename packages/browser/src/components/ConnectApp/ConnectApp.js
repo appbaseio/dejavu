@@ -3,8 +3,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Button, Alert, AutoComplete, Input, Modal } from 'antd';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { connect } from 'react-redux';
+import {
+	CloseOutlined,
+	PauseCircleOutlined,
+	PlayCircleOutlined,
+	PlusOutlined,
+} from '@ant-design/icons';
 import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -252,8 +256,7 @@ class ConnectApp extends Component<Props, State> {
 		});
 	};
 
-	handleSubmit = e => {
-		e.preventDefault();
+	handleSubmit = () => {
 		const { appname, url, customHeaders } = this.state;
 		const { sidebar, appswitcher, footer, route } = getUrlParams(
 			window.location.search,
@@ -453,7 +456,7 @@ class ConnectApp extends Component<Props, State> {
 		return (
 			<div>
 				{isShowingAppSwitcher && showHeaders && (
-					<Form layout="inline" onSubmit={this.handleSubmit}>
+					<Form layout="inline" onFinish={this.handleSubmit}>
 						<Flex alignItems="center">
 							<Item
 								{...formItemProps}
@@ -507,24 +510,18 @@ class ConnectApp extends Component<Props, State> {
 									</Button>
 								</Group>
 							</Item>
-							<Item
-								{...formItemProps}
-								css={{ [mediaMin.medium]: { flex: 0.35 } }}
-							>
+							<Item>
 								<AutoComplete
-									dataSource={pastApps.map(
-										app => app.appname,
-									)}
+									options={pastApps.map(app => ({
+										value: app.appname,
+									}))}
 									value={appname}
-									placeholder="Appname (aka index) goes here"
 									filterOption={(inputValue, option) =>
-										option.props.children
-											.toUpperCase()
-											.indexOf(
-												inputValue.toUpperCase(),
-											) !== -1
+										option.value.includes(inputValue)
 									}
+									style={{ width: 200 }}
 									onChange={this.handleAppNameChange}
+									onSelect={this.handleAppNameChange}
 									disabled={isConnected}
 								/>
 							</Item>
@@ -535,9 +532,11 @@ class ConnectApp extends Component<Props, State> {
 									ghost={isConnected}
 									htmlType="submit"
 									icon={
-										isConnected
-											? 'pause-circle'
-											: 'play-circle'
+										isConnected ? (
+											<PauseCircleOutlined />
+										) : (
+											<PlayCircleOutlined />
+										)
 									}
 									disabled={!(appname && url)}
 									loading={isLoading}
