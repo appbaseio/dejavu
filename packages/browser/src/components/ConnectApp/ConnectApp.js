@@ -456,7 +456,11 @@ class ConnectApp extends Component<Props, State> {
 		return (
 			<div>
 				{isShowingAppSwitcher && showHeaders && (
-					<Form layout="inline" onFinish={this.handleSubmit}>
+					<Form
+						style={{ marginBottom: 10 }}
+						layout="inline"
+						onFinish={this.handleSubmit}
+					>
 						<Flex alignItems="center">
 							<Item
 								{...formItemProps}
