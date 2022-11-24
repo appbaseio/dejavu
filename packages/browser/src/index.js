@@ -24,8 +24,6 @@ import * as constants from './constants';
 // shared theme
 import colors from './components/theme/colors';
 
-import '../../../node_modules/antd/dist/antd.css';
-
 // shared store
 const store = configureStore();
 
