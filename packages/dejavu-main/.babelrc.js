@@ -24,7 +24,6 @@ const plugins = [
 		isProduction ? { hoist: true } : { sourceMap: true, autoLabel: true },
 	],
 	'@babel/plugin-proposal-class-properties',
-	'@babel/plugin-transform-classes',
 	'@babel/plugin-transform-spread',
 	'@babel/plugin-proposal-object-rest-spread',
 	'@babel/plugin-syntax-dynamic-import',
