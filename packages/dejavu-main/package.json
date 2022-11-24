@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"@ant-design/icons": "^4.8.0",
-		"@appbaseio/dejavu-browser": "^3.6.1",
+		"@appbaseio/dejavu-browser": "^3.7.0",
 		"@appbaseio/designkit": "^0.9.12",
 		"@appbaseio/reactivesearch": "^3.23.1",
 		"@divyanshu013/media": "^1.0.0",
@@ -84,7 +84,7 @@
 		"watch:site": "cross-env NODE_ENV=development webpack-dev-server --open --mode development --content-base dist/site --history-api-fallback --hot --progress --colors --port 1359 --config webpack.config.site.js",
 		"build": "yarn build:app && yarn build:site",
 		"build:app": "NODE_ENV=production webpack",
-		"build:site": "NODE_ENV=product webpack --config webpack.config.site.js",
+		"build:site": "NODE_ENV=production webpack --config webpack.config.site.js",
 		"build:chrome-extension": "yarn build:app && cd dist/app && rm favicon/manifest.json _redirects && zip -r ../dejavu.zip .",
 		"format": "prettier --write --use-tabs 'app/src/!(batteries*)**/**/*.js'",
 		"precommit": "lint-staged"
