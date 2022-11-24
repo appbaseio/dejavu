@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"@ant-design/icons": "^4.8.0",
-		"@appbaseio/dejavu-browser": "^3.6.1",
+		"@appbaseio/dejavu-browser": "^3.7.0",
 		"@appbaseio/designkit": "^0.9.12",
 		"@appbaseio/reactivesearch": "^3.23.1",
 		"@divyanshu013/media": "^1.0.0",
