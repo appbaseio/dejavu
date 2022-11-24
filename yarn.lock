@@ -36,24 +36,6 @@
     lodash "^4.17.21"
     resize-observer-polyfill "^1.5.1"
 
-"@appbaseio/dejavu-browser@^3.6.1":
-  version "3.7.0-alpha.1"
-  dependencies:
-    "@divyanshu013/media" "^1.0.0"
-    "@fortawesome/fontawesome-svg-core" "^1.2.27"
-    "@fortawesome/free-solid-svg-icons" "^5.12.1"
-    "@fortawesome/react-fontawesome" "^0.1.8"
-    cross-storage "^1.0.0"
-    dom-helpers "^3.4.0"
-    dompurify "^2.3.6"
-    file-saver "^2.0.0-rc.4"
-    flat "^4.1.0"
-    ismobilejs "^0.5.1"
-    papaparse "^4.6.1"
-    react-custom-scrollbars "^4.2.1"
-    react-json-editor-ajrm "^2.5.8"
-    react-virtualized "^9.21.0"
-
 "@appbaseio/designkit@^0.9.12":
   version "0.9.12"
   resolved "https://registry.yarnpkg.com/@appbaseio/designkit/-/designkit-0.9.12.tgz#805cac433e3e278d8c694a606055380be2b4efd7"
