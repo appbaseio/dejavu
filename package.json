@@ -48,7 +48,7 @@
 		"style-loader": "^0.23.0"
 	},
 	"engines": {
-		"node": ">=14.17.1"
+		"node": ">=14.17.1 <17"
 	},
 	"license": "MIT",
 	"scripts": {
