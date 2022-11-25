@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { Popconfirm, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 import { getUrl } from '../../reducers/app';
@@ -86,7 +87,7 @@ class DeleteRows extends Component<Props> {
 				<Button
 					css={{ marginRight: '5px' }}
 					type="danger"
-					icon="delete"
+					icon={<DeleteOutlined />}
 				>
 					Delete
 				</Button>

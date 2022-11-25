@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Fragment } from 'react';
+import { ReloadOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import { mediaMin } from '@divyanshu013/media';
@@ -46,7 +47,7 @@ const Actions = ({ onReload, selectedRows, updatingRow }: Props) => (
 					<Fragment>
 						<ExportData />
 						<Button
-							icon="reload"
+							icon={<ReloadOutlined />}
 							onClick={onReload}
 							css={{ marginRight: '5px' }}
 						>

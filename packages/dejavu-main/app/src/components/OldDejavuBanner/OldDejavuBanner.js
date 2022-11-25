@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import { Alert, Icon } from 'antd';
+import { LinkOutlined } from '@ant-design/icons';
+import { Alert } from 'antd';
 import { appReducers, utils } from '@appbaseio/dejavu-browser';
 
 const { getIsConnected, getAppname, getUrl } = appReducers;
@@ -40,7 +41,7 @@ const OldDejavuBanner = ({ appname, rawUrl, isConnected }: Props) => {
 						<a
 							href={`https://opensource.appbase.io/dejavu/live/#?app={"appname":"${appname}","url":"${rawUrl}","selectedType":[]}`}
 						>
-							<Icon type="link" css={{ marginLeft: 3 }} />
+							<LinkOutlined css={{ marginLeft: 3 }} />
 						</a>
 					</div>
 				}

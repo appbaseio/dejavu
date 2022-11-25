@@ -1,7 +1,13 @@
 // @flow
 
 import React, { useState, useEffect } from 'react';
-import { Menu, Icon } from 'antd';
+import {
+	ExperimentOutlined,
+	SearchOutlined,
+	TableOutlined,
+	UploadOutlined,
+} from '@ant-design/icons';
+import { Menu } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -62,23 +68,23 @@ const Navigation = ({ indexes, isConnected, history }: Props) => {
 			onClick={({ key }) => navHandler(key)}
 		>
 			<Item key="browse">
-				<Icon type="table" />
-				Data Browser
+				<TableOutlined />
+				<span>Data Browser</span>
 			</Item>
 			<Item key="import">
-				<Icon type="upload" />
-				Import Data
+				<UploadOutlined />
+				<span>Import Data</span>
 			</Item>
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="query">
-					<Icon type="search" />
-					Query Explorer
+					<SearchOutlined />
+					<span>Query Explorer</span>
 				</Item>
 			)}
 			{(indexes.length <= 1 || !isConnected) && (
 				<Item key="preview">
-					<Icon type="experiment" />
-					Search Preview
+					<ExperimentOutlined />
+					<span>Search Preview</span>
 				</Item>
 			)}
 		</Menu>

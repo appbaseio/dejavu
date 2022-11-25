@@ -3,6 +3,7 @@
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { Button, Checkbox, Dropdown } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 
 import {
 	getColumns,
@@ -198,7 +199,7 @@ class ShowHideColumns extends Component<Props, State> {
 						},
 					}}
 					id="show-hide-button"
-					icon="setting"
+					icon={<SettingOutlined />}
 				/>
 			</Dropdown>
 		);

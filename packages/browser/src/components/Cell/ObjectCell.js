@@ -2,7 +2,8 @@
 
 import React, { Component, Fragment } from 'react';
 import { func, any, string } from 'prop-types';
-import { Popover, Icon, Modal } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { Popover, Modal } from 'antd';
 import AceEditor from 'react-ace';
 
 import 'brace/mode/json';
@@ -87,8 +88,7 @@ class ObjectCell extends Component<Props, State> {
 						<span css={{ cursor: 'pointer' }}>{` {...} `}</span>
 					</Popover>
 					{mode === MODES.EDIT && (
-						<Icon
-							type="edit"
+						<EditOutlined
 							onClick={this.toggleModal}
 							css={{ cursor: 'pointer' }}
 						/>

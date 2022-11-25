@@ -1,15 +1,16 @@
 {
 	"name": "@appbaseio/dejavu-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "3.6.1",
+	"version": "3.7.0",
 	"authors": [
 		"reactivesearch.io <info@reactivesearch.io> (https://github.com/appbaseio)"
 	],
 	"main": "lib/index.js",
 	"module": "lib/index.es.js",
 	"peerDependencies": {
+		"@ant-design/icons": "^4.0.0",
 		"@appbaseio/reactivesearch": "^3.23.1",
-		"antd": "^3.18.2",
+		"antd": "^4.0.0",
 		"brace": "^0.11.1",
 		"lodash": "^4.17.10",
 		"moment": "^2.22.2",

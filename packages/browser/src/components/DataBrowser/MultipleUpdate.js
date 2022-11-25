@@ -1,7 +1,8 @@
 // @flow
 
 import React, { Component, Fragment } from 'react';
-import { Modal, Select, Icon, Button } from 'antd';
+import { Modal, Select, Button } from 'antd';
+import { CloseOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 import {
@@ -221,7 +222,7 @@ class MultipleUpdate extends Component<Props, State> {
 		return (
 			<Fragment>
 				<Button
-					icon="edit"
+					icon={<EditOutlined />}
 					type="primary"
 					css={{
 						margin: '0 3px',
@@ -343,7 +344,7 @@ class MultipleUpdate extends Component<Props, State> {
 									}}
 								>
 									{data.length > 0 && (
-										<Icon
+										<CloseOutlined
 											type="close"
 											onClick={() =>
 												this.handleRemoveData(i)
@@ -365,7 +366,7 @@ class MultipleUpdate extends Component<Props, State> {
 						}}
 					>
 						<Button
-							icon="plus"
+							icon={<PlusOutlined />}
 							type="primary"
 							css={{
 								marginLeft: 5,

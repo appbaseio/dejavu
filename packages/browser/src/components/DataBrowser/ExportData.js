@@ -1,5 +1,6 @@
 // @flow
 import React, { Component, Fragment } from 'react';
+import { DownloadOutlined } from '@ant-design/icons';
 import { Modal, Button, Spin, Alert, Row, Col, Select, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import { unparse } from 'papaparse';
@@ -319,9 +320,9 @@ class ExportData extends Component<Props, State> {
 		const { indexTypeMap, stats } = this.props;
 		const chunkList = Object.keys(countChunks);
 		return (
-			<Fragment>
+            <Fragment>
 				<Button
-					icon="download"
+					icon={<DownloadOutlined />}
 					css={{ marginRight: '5px' }}
 					onClick={this.toggleModal}
 				>
@@ -466,7 +467,7 @@ class ExportData extends Component<Props, State> {
 					</Flex>
 				</Modal>
 			</Fragment>
-		);
+        );
 	}
 }
 

@@ -2,6 +2,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { Modal, Input, Select, Radio, Row, Col, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { object } from 'prop-types';
 import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
@@ -245,7 +246,7 @@ class AddFieldModal extends Component<Props, State> {
 		return (
 			<Fragment>
 				<Button
-					icon="plus"
+					icon={<PlusOutlined />}
 					type="primary"
 					onClick={this.toggleModal}
 					css={{ marginLeft: 10 }}

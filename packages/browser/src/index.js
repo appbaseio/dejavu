@@ -24,14 +24,12 @@ import * as constants from './constants';
 // shared theme
 import colors from './components/theme/colors';
 
-import './antd.css';
-
 // shared store
 const store = configureStore();
 
 function WithConfigProvider(props) {
 	return (
-		<ConfigProvider prefixCls="dejavu-browser">
+		<ConfigProvider>
 			{/* eslint-disable-next-line react/prop-types */}
 			{props.children}
 		</ConfigProvider>
