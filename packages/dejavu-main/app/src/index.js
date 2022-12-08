@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { CrossStorageHub } from 'cross-storage';
 
 import App from './App';
-import 'antd/dist/antd.css';
 
 CrossStorageHub.init([
 	{ origin: /\.appbase.io$/, allow: ['get'] },

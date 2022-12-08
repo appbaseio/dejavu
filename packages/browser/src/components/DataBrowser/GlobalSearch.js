@@ -82,7 +82,7 @@ class GlobalSearch extends Component<Props, State> {
 		const { searchValue, hasMounted } = this.state;
 
 		return (
-            <div css={{ position: 'relative' }}>
+			<div css={{ position: 'relative' }}>
 				{hasMounted && (
 					<DataSearch
 						componentId="GlobalSearch"
@@ -97,22 +97,14 @@ class GlobalSearch extends Component<Props, State> {
 							`}`,
 						}}
 						debounce={5}
-						showIcon={false}
 						highlight={mode === MODES.VIEW}
 						queryFormat="and"
 						onChange={this.handleSearchValueChange}
 						value={searchValue}
 					/>
 				)}
-				<SearchOutlined
-                    css={{
-						position: 'absolute',
-						top: '50%',
-						transform: 'translateY(-50%)',
-						left: '10px',
-					}} />
 			</div>
-        );
+		);
 	}
 }
 
