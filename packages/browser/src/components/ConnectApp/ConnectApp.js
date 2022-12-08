@@ -533,6 +533,7 @@ class ConnectApp extends Component<Props, State> {
 									onChange={this.handleAppNameChange}
 									onSelect={this.handleAppNameChange}
 									disabled={isConnected}
+									placeholder="Enter index"
 								/>
 							</Item>
 
