@@ -67,6 +67,17 @@ type State = {
 	hasMounted: boolean,
 };
 
+const StyledInfoContainer = styled(InfoContainer)`
+	z-index: 1000;
+	height: 100%;
+	width: 100%;
+`;
+const StyledLoader = styled(Loader)`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
 class ResultSet extends React.Component<Props, State> {
 	state = {
 		hasMounted: true,
@@ -230,15 +241,12 @@ class ResultSet extends React.Component<Props, State> {
 					{({ data, loading }) => (
 						<>
 							{loading && (
-								<InfoContainer
+								<StyledInfoContainer
 									justifyContent="center"
-									css={{
-										zIndex: 1000,
-									}}
 									id="spinner"
 								>
-									<Loader />
-								</InfoContainer>
+									<StyledLoader />
+								</StyledInfoContainer>
 							)}
 							{data && data.length ? (
 								<DataTable
