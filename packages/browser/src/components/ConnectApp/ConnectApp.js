@@ -13,6 +13,7 @@ import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import styled from 'react-emotion';
 
 import { withRouter } from 'react-router-dom';
 import {
@@ -86,6 +87,13 @@ const formItemProps = {
 		},
 	},
 };
+
+const ConfigurationContainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	width: 100%;
+`;
 
 const ROUTES_WITHOUT_MULTIPLE_INDEX = ['/mappings', '/preview', '/query'];
 
@@ -461,11 +469,8 @@ class ConnectApp extends Component<Props, State> {
 						layout="inline"
 						onFinish={this.handleSubmit}
 					>
-						<Flex alignItems="center">
-							<Item
-								{...formItemProps}
-								css={{ [mediaMin.medium]: { flex: 1 } }}
-							>
+						<ConfigurationContainer>
+							<Item {...formItemProps} style={{ flex: 1 }}>
 								<Group
 									compact
 									css={{ display: 'flex !important' }}
@@ -482,6 +487,7 @@ class ConnectApp extends Component<Props, State> {
 												isUrlHidden &&
 												isConnected &&
 												'transparent !important',
+											width: '100%',
 										}}
 									/>
 									<Button
@@ -653,7 +659,7 @@ class ConnectApp extends Component<Props, State> {
 									onClick={this.addMoreHeader}
 								/>
 							</Modal>
-						</Flex>
+						</ConfigurationContainer>
 					</Form>
 				)}
 				{!isLoading && !isConnected && (
