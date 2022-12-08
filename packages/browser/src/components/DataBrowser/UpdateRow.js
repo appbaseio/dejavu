@@ -138,12 +138,12 @@ class UpdateRowModal extends Component<Props, State> {
 				>
 					<Row>
 						<Col span={12}>
-							<Item label="Index" css={{ marginRight: '10px' }}>
+							<Item label="Index" css={{ marginRight: '15px' }}>
 								<Input name="index" value={index} disabled />
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="Type">
+							<Item label="Type" css={{ marginRight: '15px' }}>
 								<Input name="type" value={type} disabled />
 							</Item>
 						</Col>
