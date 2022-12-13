@@ -28,7 +28,6 @@ const plugins = [
 	'@babel/plugin-proposal-object-rest-spread',
 	'@babel/plugin-syntax-dynamic-import',
 	'@babel/plugin-proposal-export-default-from',
-	['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
 ];
 
 module.exports = { presets, plugins };
