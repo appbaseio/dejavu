@@ -95,7 +95,7 @@ class ObjectCell extends Component<Props, State> {
 					)}
 				</CellStyled>
 				<Modal
-					visible={showModal}
+					open={showModal}
 					onCancel={this.toggleModal}
 					onOk={this.saveValue}
 					okButtonProps={{ disabled: error }}

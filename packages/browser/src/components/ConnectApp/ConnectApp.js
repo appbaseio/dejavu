@@ -556,7 +556,7 @@ class ConnectApp extends Component<Props, State> {
 								</Button>
 							</Item>
 							<Modal
-								visible={isShowingHeadersModal}
+								open={isShowingHeadersModal}
 								onCancel={this.toggleHeadersModal}
 								onOk={this.handleHeadersSubmit}
 								maskClosable={false}

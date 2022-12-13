@@ -254,7 +254,7 @@ class AddFieldModal extends Component<Props, State> {
 					Add Mapping
 				</Button>
 				<Modal
-					visible={isShowingModal}
+					open={isShowingModal}
 					onCancel={this.toggleModal}
 					onOk={this.addColumn}
 					okButtonProps={{

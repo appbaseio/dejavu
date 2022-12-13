@@ -207,12 +207,12 @@ class ExportData extends Component<Props, State> {
 			applyCurrentQuery,
 		} = this.state;
 		let visibleColumns = this.props.visibleColumns;
-		visibleColumns.push("_id");
+		visibleColumns.push('_id');
 		const res = await this.fetchData();
 		const flattenData = res.map(item => flatten(item));
 		const newData = unparse({
 			fields: visibleColumns,
-			data: flattenData
+			data: flattenData,
 		});
 		const file = new File(
 			[newData],
@@ -320,7 +320,7 @@ class ExportData extends Component<Props, State> {
 		const { indexTypeMap, stats } = this.props;
 		const chunkList = Object.keys(countChunks);
 		return (
-            <Fragment>
+			<Fragment>
 				<Button
 					icon={<DownloadOutlined />}
 					css={{ marginRight: '5px' }}
@@ -330,7 +330,7 @@ class ExportData extends Component<Props, State> {
 				</Button>
 
 				<Modal
-					visible={isShowingModal}
+					open={isShowingModal}
 					afterClose={this.handleAfterClose}
 					onCancel={this.toggleModal}
 					destroyOnClose
@@ -467,7 +467,7 @@ class ExportData extends Component<Props, State> {
 					</Flex>
 				</Modal>
 			</Fragment>
-        );
+		);
 	}
 }
 

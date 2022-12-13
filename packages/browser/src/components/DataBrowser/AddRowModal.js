@@ -225,7 +225,7 @@ class AddRowModal extends Component<Props, State> {
 				</Button>
 
 				<Modal
-					visible={isShowingModal}
+					open={isShowingModal}
 					onCancel={this.toggleModal}
 					onOk={this.addValue}
 					okButtonProps={{ disabled: addDataError }}
