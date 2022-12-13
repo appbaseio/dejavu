@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'dayjs';
 import { META_FIELDS } from './mappings';
 import getDateFormat from './date';
 

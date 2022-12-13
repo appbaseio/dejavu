@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DatePicker } from 'antd';
-import moment from 'moment';
+import moment from 'dayjs';
 
 import CellStyled from './Cell.styles';
 import { getDateFormat } from '../../utils';
