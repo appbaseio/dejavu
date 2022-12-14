@@ -11,8 +11,6 @@ import {
 } from '@ant-design/icons';
 import { object } from 'prop-types';
 import { mediaMin } from '@divyanshu013/media';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import styled from 'react-emotion';
 
 import { withRouter } from 'react-router-dom';
@@ -475,13 +473,18 @@ class ConnectApp extends Component<Props, State> {
 									compact
 									css={{ display: 'flex !important' }}
 								>
-									<Input
+									<Input.Password
 										name="url"
 										value={url}
 										placeholder="URL for cluster goes here. e.g.  https://username:password@scalr.api.appbase.io"
 										onChange={this.handleChange}
 										disabled={isConnected}
 										required
+										visibilityToggle={{
+											visible: !isUrlHidden,
+											onVisibleChange: this
+												.handleUrlToggle,
+										}}
 										css={{
 											color:
 												isUrlHidden &&
@@ -490,22 +493,6 @@ class ConnectApp extends Component<Props, State> {
 											width: '100%',
 										}}
 									/>
-									<Button
-										css={{
-											cursor: 'pointer',
-											'&:hover': {
-												borderColor:
-													'#d9d9d9 !important',
-											},
-										}}
-										onClick={this.handleUrlToggle}
-									>
-										<FontAwesomeIcon
-											icon={
-												isUrlHidden ? faEyeSlash : faEye
-											}
-										/>
-									</Button>
 									<Button
 										type="button"
 										css={{
