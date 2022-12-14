@@ -187,7 +187,7 @@ class ShowHideColumns extends Component<Props, State> {
 						/>
 					</div>
 				}
-				visible={showDropdown}
+				open={showDropdown}
 				trigger={['click']}
 				onClick={this.toggleDropDown}
 			>

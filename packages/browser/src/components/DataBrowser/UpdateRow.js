@@ -125,7 +125,7 @@ class UpdateRowModal extends Component<Props, State> {
 				</Button>
 
 				<Modal
-					visible={isShowingModal}
+					open={isShowingModal}
 					onCancel={this.toggleModal}
 					afterClose={this.handleAfterClose}
 					onOk={this.handleSubmit}

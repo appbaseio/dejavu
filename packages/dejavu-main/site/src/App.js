@@ -235,7 +235,7 @@ class App extends Component<null, State> {
 				</Navbar>
 				<Modal
 					destroyOnClose
-					visible={showModal}
+					open={showModal}
 					onCancel={this.toggleModal}
 					footer={null}
 					width={610}

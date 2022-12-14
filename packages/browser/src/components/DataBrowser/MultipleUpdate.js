@@ -233,7 +233,7 @@ class MultipleUpdate extends Component<Props, State> {
 				</Button>
 
 				<Modal
-					visible={isShowingModal}
+					open={isShowingModal}
 					onCancel={this.toggleModal}
 					footer={null}
 					title={`Update Multiple Rows (${

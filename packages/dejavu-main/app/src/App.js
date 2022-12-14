@@ -231,7 +231,7 @@ class App extends Component {
 										Watch Video
 									</a>
 									<Modal
-										visible={isShowingVideo}
+										open={isShowingVideo}
 										onCancel={this.hideVideoModal}
 										width={610}
 										footer={null}
