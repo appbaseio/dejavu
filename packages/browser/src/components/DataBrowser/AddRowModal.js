@@ -239,7 +239,7 @@ class AddRowModal extends Component<Props, State> {
 				>
 					<Row>
 						<Col span={12}>
-							<Item label="Index">
+							<Item style={{ marginRight: '15px' }} label="Index">
 								<Select
 									defaultValue={selectedIndex}
 									onChange={this.handleIndexChange}
@@ -256,7 +256,10 @@ class AddRowModal extends Component<Props, State> {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="Document Type">
+							<Item
+								style={{ marginRight: '15px' }}
+								label="Document Type"
+							>
 								<Select
 									value={selectedType}
 									onChange={this.handleTypeChange}

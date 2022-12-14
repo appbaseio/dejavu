@@ -278,7 +278,7 @@ class AddFieldModal extends Component<Props, State> {
 				>
 					<Row>
 						<Col span={12}>
-							<Item label="Index">
+							<Item style={{ marginRight: '15px' }} label="Index">
 								<Select
 									defaultValue={selectedIndex}
 									onChange={this.handleIndexChange}
@@ -295,7 +295,10 @@ class AddFieldModal extends Component<Props, State> {
 							</Item>
 						</Col>
 						<Col span={12}>
-							<Item label="Document Type">
+							<Item
+								style={{ marginRight: '15px' }}
+								label="Document Type"
+							>
 								<Select
 									value={selectedType}
 									onChange={this.handleTypeChange}
@@ -313,6 +316,7 @@ class AddFieldModal extends Component<Props, State> {
 						</Col>
 					</Row>
 					<Item
+						style={{ margin: '5px 0px' }}
 						label="Field Name"
 						hasFeedback
 						validateStatus={isColumnFieldValid ? '' : 'error'}
@@ -325,7 +329,10 @@ class AddFieldModal extends Component<Props, State> {
 							placeholder="Enter Field Name"
 						/>
 					</Item>
-					<Item label="Select Data Shape">
+					<Item
+						style={{ margin: '5px 0px' }}
+						label="Select Data Shape"
+					>
 						<RadioGroup
 							onChange={this.handleShapeChange}
 							value={selectedShape}
@@ -338,7 +345,7 @@ class AddFieldModal extends Component<Props, State> {
 						</RadioGroup>
 					</Item>
 					{selectedShape !== 'Object' && (
-						<Item label="Data type">
+						<Item style={{ margin: '5px 0px' }} label="Data type">
 							<Select
 								defaultValue={selectedPrimitiveType}
 								onChange={this.handlePrimitiveTypeChange}
@@ -356,7 +363,10 @@ class AddFieldModal extends Component<Props, State> {
 					)}
 					{selectedPrimitiveType === CUSTOM_MAPPING && (
 						<Fragment>
-							<Item label="Custom Mapping Object" />
+							<Item
+								style={{ margin: '5px 0px' }}
+								label="Custom Mapping Object"
+							/>
 							<AceEditor
 								tabSize={2}
 								mode="json"
