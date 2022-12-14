@@ -2,6 +2,9 @@ import colors from '../theme/colors';
 
 export default {
 	maxWidth: 200,
+	'.ant-input': {
+		boxSizing: 'border-box !important',
+	},
 	'.dejavu-browser-checkbox-input:checked + label::before': {
 		borderColor: `${colors.primary} !important`,
 	},
