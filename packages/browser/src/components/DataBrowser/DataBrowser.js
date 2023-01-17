@@ -101,14 +101,19 @@ class DataBrowser extends Component<Props> {
 				headers: convertArrayToHeaders(headers),
 			};
 		}
-		const { appswitcher } = getUrlParams(window.location.search);
+		const { appswitcher, enablereactivesearch } = getUrlParams(
+			window.location.search,
+		);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
 
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading && !isDataLoading && mappings && (
 					<div css={{ position: 'relative' }}>
-						<ReactiveBase {...baseProps}>
+						<ReactiveBase
+							enableAppbase={!!enablereactivesearch}
+							{...baseProps}
+						>
 							<div>
 								<Actions onReload={this.handleReload} />
 								<NestedColumnToggle />
