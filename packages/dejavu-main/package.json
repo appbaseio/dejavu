@@ -39,7 +39,7 @@
 		"lodash": "^4.17.11",
 		"lzma": "^2.3.2",
 		"moment": "^2.29.4",
-		"papaparse": "^4.6.1",
+		"papaparse": "^5.2.0",
 		"prop-types": "^15.6.2",
 		"react-ace": "^6.5.0",
 		"react-custom-scrollbars": "^4.2.1",

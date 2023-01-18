@@ -40,7 +40,7 @@
 		"flat": "^4.1.0",
 		"ismobilejs": "^0.5.1",
 		"moment": "^2.29.4",
-		"papaparse": "^4.6.1",
+		"papaparse": "^5.2.0",
 		"react-custom-scrollbars": "^4.2.1",
 		"react-joyride": "2.0.0-15",
 		"react-json-editor-ajrm": "^2.5.8",
