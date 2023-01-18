@@ -14,6 +14,7 @@ type Props = {
 	isLoading: boolean,
 	hasCloneApp: boolean,
 	key: string,
+	enableReactivesearch: boolean,
 };
 
 const DataBrowserContainer = ({
@@ -21,9 +22,16 @@ const DataBrowserContainer = ({
 	isLoading,
 	hasCloneApp,
 	key,
+	enableReactivesearch,
 }: Props) => (
 	<Skeleton loading={isLoading} active>
-		{isConnected && <DataBrowser key={key} hasCloneApp={hasCloneApp} />}
+		{isConnected && (
+			<DataBrowser
+				key={key}
+				enableReactivesearch={enableReactivesearch}
+				hasCloneApp={hasCloneApp}
+			/>
+		)}
 	</Skeleton>
 );
 

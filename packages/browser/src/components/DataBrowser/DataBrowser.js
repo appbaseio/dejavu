@@ -41,6 +41,7 @@ type Props = {
 	headers: any[],
 	updateReactiveList: () => void,
 	hasCloneApp: boolean,
+	enableReactivesearch: boolean,
 };
 
 class DataBrowser extends Component<Props> {
@@ -78,6 +79,7 @@ class DataBrowser extends Component<Props> {
 			isDataLoading,
 			indexes,
 			headers,
+			enableReactivesearch,
 		} = this.props;
 		let { hasCloneApp } = this.props;
 		hasCloneApp = hasCloneApp !== undefined ? hasCloneApp : true;
@@ -111,7 +113,10 @@ class DataBrowser extends Component<Props> {
 				{!isLoading && !isDataLoading && mappings && (
 					<div css={{ position: 'relative' }}>
 						<ReactiveBase
-							enableAppbase={!!enablereactivesearch}
+							enableAppbase={
+								enableReactivesearch ||
+								enablereactivesearch === true
+							}
 							{...baseProps}
 						>
 							<div>
