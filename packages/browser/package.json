@@ -37,7 +37,7 @@
 		"dompurify": "^2.3.6",
 		"emotion": "9.2.6",
 		"file-saver": "^2.0.0-rc.4",
-		"flat": "^4.1.0",
+		"flat": "^5.0.1",
 		"ismobilejs": "^0.5.1",
 		"moment": "^2.29.4",
 		"papaparse": "^4.6.1",
