@@ -107,17 +107,15 @@ class DataBrowser extends Component<Props> {
 			window.location.search,
 		);
 		const hideAppSwitcher = appswitcher && appswitcher === 'false';
-
 		return (
 			<Skeleton loading={isLoading} active>
 				{!isLoading && !isDataLoading && mappings && (
 					<div css={{ position: 'relative' }}>
 						<ReactiveBase
-							enableAppbase={
-								enableReactivesearch ||
-								enablereactivesearch === true
-							}
 							{...baseProps}
+							enableAppbase={
+								enableReactivesearch || enablereactivesearch
+							}
 						>
 							<div>
 								<Actions onReload={this.handleReload} />
