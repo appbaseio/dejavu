@@ -521,9 +521,9 @@ class ConnectApp extends Component<Props, State> {
 									onSelect={this.handleAppNameChange}
 									disabled={isConnected}
 									placeholder="Enter index"
-									spellcheck="false"
-									autocorrect="off"
-									autocapitalize="off"
+									spellCheck="false"
+									autoCorrect="off"
+									autoCapitalize="off"
 								/>
 							</Item>
 

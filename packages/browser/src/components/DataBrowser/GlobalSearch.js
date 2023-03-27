@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { DataSearch } from '@appbaseio/reactivesearch';
+import { SearchBox } from '@appbaseio/reactivesearch';
 import { css } from 'react-emotion';
 import { SearchOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
@@ -81,14 +81,18 @@ class GlobalSearch extends Component<Props, State> {
 			: searchableColumnsWeights;
 		const { searchValue, hasMounted } = this.state;
 
+		const fieldWithWeights = searchableColumns.map((field, i) => ({
+			field,
+			weight: weights[i],
+		}));
+
 		return (
 			<div css={{ position: 'relative' }}>
 				{hasMounted && (
-					<DataSearch
+					<SearchBox
 						componentId="GlobalSearch"
 						autosuggest={false}
-						dataField={searchableColumns}
-						fieldWeights={weights}
+						dataField={fieldWithWeights}
 						innerClass={{
 							input: `ant-input ${css`
 								padding-left: 35px !important;
