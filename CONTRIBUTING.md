@@ -7,7 +7,7 @@
    `cd dejavu`
    `git submodule init`
    `git submodule sync`
-   `git submodule update --recursive --remote` (We use the `master` branch for batteries.)
+   `git submodule update --recursive --remote` (We use the `arc` branch for batteries.)
 3. Run `yarn` after cloning the repo to install dependencies
 4. Run `yarn dev:browser` which starts the `watcher` under `packages/browser` package i.e. `@appbaseio/dejavu-browser`.
 5. Run `yarn dev:dejavu` which starts the `webpack-dev-server` on port `1358`
