@@ -12,6 +12,10 @@
 4. Run `yarn dev:browser` which starts the `watcher` under `packages/browser` package i.e. `@appbaseio/dejavu-browser`.
 5. Run `yarn dev:dejavu` which starts the `webpack-dev-server` on port `1358`
 
+# Antd version
+
+Since this is used in `arc-dashboard` it has to remain compatible with the version. `arc-dashboard` locks the version of antd by only allowing patch level upgrades `~5.0.0` and hence this repo should always have `~5.0.0` as the version.
+
 ## Code Formatting
 
 Run `yarn format` to run prettier on `*.js` files.
