@@ -78,6 +78,10 @@ const StyledLoader = styled(Loader)`
 	align-items: center;
 `;
 
+const selectAllQuery = {
+	match_all: {},
+};
+
 class ResultSet extends React.Component<Props, State> {
 	state = {
 		hasMounted: true,
@@ -233,7 +237,10 @@ class ResultSet extends React.Component<Props, State> {
 						</Flex>
 					)}
 					onQueryChange={(prevQuery, nextQuery) => {
-						onSetQuery(nextQuery);
+						onSetQuery({
+							...nextQuery,
+							query: nextQuery.query || selectAllQuery,
+						});
 						onSetSelectAll(false);
 						onSetApplyQuery(false);
 					}}
