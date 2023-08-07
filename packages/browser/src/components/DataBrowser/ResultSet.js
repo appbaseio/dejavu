@@ -138,10 +138,12 @@ class ResultSet extends React.Component<Props, State> {
 			},
 		];
 		if (version < 8) {
-			defaultSort[0]._id = {
-				order: sortOrder,
-				unmapped_type: 'long',
-			};
+			defaultSort.push({
+				_id: {
+					order: sortOrder,
+					unmapped_type: 'long',
+				},
+			});
 		}
 		const defaultQuery = {
 			sort: defaultSort,
