@@ -20,7 +20,7 @@
 		"@ant-design/icons": "^4.8.0",
 		"@appbaseio/dejavu-browser": "^4.0.0",
 		"@appbaseio/designkit": "^0.9.12",
-		"@appbaseio/reactivesearch": "^4.0.0-rc",
+		"@appbaseio/reactivesearch": "^4.0.0",
 		"@divyanshu013/media": "^1.0.0",
 		"@fortawesome/fontawesome-svg-core": "^1.2.27",
 		"@fortawesome/free-solid-svg-icons": "^5.12.1",

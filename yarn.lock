@@ -49,10 +49,10 @@
     lodash "^4.17.21"
     resize-observer-polyfill "^1.5.1"
 
-"@appbaseio/analytics@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@appbaseio/analytics/-/analytics-1.1.1.tgz#398ff80ad3d7d20bc0e66efc1c0b2c50bb2a959e"
-  integrity sha512-8ydvIbn9otjldUHKuYg48nqUvpdC4jMUl6BZNxTWniBnFi5ihxWI94cKabu2+L65uNJR3Aioa1FV0t6d4am2oQ==
+"@appbaseio/analytics@^1.2.0-alpha.1":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@appbaseio/analytics/-/analytics-1.2.0.tgz#e48da3fcd4ca78029aa9981d7e4c9689fe9aa078"
+  integrity sha512-uW5sfj8KjrlFtKKkkIMZJgqjNNOgfPUXgdl3lqEDWrdg7J/tMgkYNM3/s2c4LHsD96aHbrfA+DRHk5M45wgqpA==
   dependencies:
     cross-fetch "^3.0.4"
 
@@ -69,10 +69,10 @@
     react-slick "^0.24.0"
     slick-carousel "^1.8.1"
 
-"@appbaseio/reactivecore@10.0.0-alpha.4":
-  version "10.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-10.0.0-alpha.4.tgz#6c01e07847a4177e2e9284c96f1eac4c9892ff4c"
-  integrity sha512-Dq2zCjYab+eOaR1fDv+8YzhhB19M/eZYFOh2sDzwENd5CZ7ivePOXIxSaIym9Hl7FzcWjbyXfNm0smJETB1QIA==
+"@appbaseio/reactivecore@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-10.0.0.tgz#c1d510b33345907498347fadd3854dc20843c2e8"
+  integrity sha512-j22qeXlcjzp2hgJ5ProVv39tvMHbXfFmFLEqKJGuel2xRnLg+LzaNrLYDo6Bhfcf1TYOy3Rf0b8A3g+tjMGvPg==
   dependencies:
     cross-fetch "^3.0.4"
     dayjs "^1.11.7"
@@ -80,17 +80,17 @@
     redux "^4.0.0"
     redux-thunk "^2.3.0"
 
-"@appbaseio/reactivesearch@^4.0.0-rc":
-  version "4.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-4.0.0-rc.3.tgz#a3fe6ddc26991976e0f6a0d3f636916138f6de74"
-  integrity sha512-f36N1cD4TRTVUUab02oj+uZgXBw1XhK595+Ap/kYj/CNc7d7WkGzJNPuxUVWi3SdxK938JCoJDXBIelWmle7Og==
+"@appbaseio/reactivesearch@^4.0.0":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-4.0.2.tgz#dccdeae11f73dab146b6e42a88506bc21aa434f2"
+  integrity sha512-JoMWW0QLDN8S2FQEUgFNVxVbaj0guB+H6iTG8sG6kO6WXVk2ew2q9zkPL/QTWGnJHfXhwdETKpxT6Y9k99n+wA==
   dependencies:
-    "@appbaseio/analytics" "^1.1.1"
-    "@appbaseio/reactivecore" "10.0.0-alpha.4"
+    "@appbaseio/analytics" "^1.2.0-alpha.1"
+    "@appbaseio/reactivecore" "10.0.0"
     "@appbaseio/rheostat" "^1.0.0-alpha.15"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
-    appbase-js "^5.2.0"
+    appbase-js "^5.3.3"
     cross-env "^5.2.0"
     dayjs "^1.11.7"
     downshift "^1.31.2"
@@ -103,6 +103,7 @@
     prop-types "^15.6.0"
     react-day-picker "^7.0.5"
     react-redux "^6.0.1"
+    remarkable "^2.0.1"
     url-search-params-polyfill "^7.0.0"
     xss "^1.0.11"
 
@@ -2583,10 +2584,10 @@ appbase-js@^4.0.2-beta.2:
     url-parser-lite "^0.1.0"
     ws "^6.1.2"
 
-appbase-js@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.2.0.tgz#990da7227ae89cd0a002fdfc85428a001306ac27"
-  integrity sha512-4B/xXivn7i6CATxcRZauDplCL3m9imOmbLH7j+cW4xwkqSN3aHDtj/OuvJDQqaMG0Awon8HUiiuwdh0+yY9DAw==
+appbase-js@^5.3.3:
+  version "5.3.4"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.3.4.tgz#c30add29133fcfd7cc938a710a347cb89377670e"
+  integrity sha512-rbjCC7jmcPh1cjnW3W7TjTugQpLOB8SrPIdnkKwrNDdsl8d0nzPTJH4/082UTnkvlMkjm4WYY2HYCRl2vpDlpw==
   dependencies:
     cross-fetch "^3.1.5"
     querystring "^0.2.0"
@@ -2605,7 +2606,7 @@ are-we-there-yet@~1.1.2:
     delegates "^1.0.0"
     readable-stream "^2.0.6"
 
-argparse@^1.0.7:
+argparse@^1.0.10, argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
@@ -2842,6 +2843,13 @@ author-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/author-regex/-/author-regex-1.0.0.tgz#d08885be6b9bbf9439fe087c76287245f0a81450"
   integrity sha1-0IiFvmubv5Q5/gh8dihyRfCoFFA=
+
+autolinker@^3.11.0:
+  version "3.16.2"
+  resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-3.16.2.tgz#6bb4f32432fc111b65659336863e653973bfbcc9"
+  integrity sha512-JiYl7j2Z19F9NdTmirENSUUIIL/9MytEWtmzhfmsKPCp9E+G35Y0UNCMoM9tFigxT59qSc8Ml2dlZXOCVTYwuA==
+  dependencies:
+    tslib "^2.3.0"
 
 autoprefixer@^6.3.1:
   version "6.7.7"
@@ -14732,6 +14740,14 @@ relateurl@0.2.x, relateurl@^0.2.7:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
+remarkable@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/remarkable/-/remarkable-2.0.1.tgz#280ae6627384dfb13d98ee3995627ca550a12f31"
+  integrity sha512-YJyMcOH5lrR+kZdmB0aJJ4+93bEojRZ1HGDn9Eagu6ibg7aVZhc3OWbbShRid+Q5eAfsEqWxpe+g5W5nYNfNiA==
+  dependencies:
+    argparse "^1.0.10"
+    autolinker "^3.11.0"
+
 remote-origin-url@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/remote-origin-url/-/remote-origin-url-0.4.0.tgz#4d3e2902f34e2d37d1c263d87710b77eb4086a30"
@@ -16672,6 +16688,11 @@ tslib@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
+
+tslib@^2.3.0:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.1.tgz#fd8c9a0ff42590b25703c0acb3de3d3f4ede0410"
+  integrity sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==
 
 tty-browserify@0.0.0:
   version "0.0.0"

@@ -1,7 +1,7 @@
 {
 	"name": "@appbaseio/dejavu-browser",
 	"description": "Dejavu monorepo data browser components",
-	"version": "4.0.1",
+	"version": "4.0.3",
 	"authors": [
 		"reactivesearch.io <info@reactivesearch.io> (https://github.com/appbaseio)"
 	],
