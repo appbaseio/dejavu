@@ -94,7 +94,7 @@ const AppFooter = () => (
 						<Title>Companion Tools</Title>
 						<li>
 							<a
-								href="https://appbase.io"
+								href="https://reactivesearch.io"
 								target="_blank"
 								rel="noopener noreferrer"
 							>

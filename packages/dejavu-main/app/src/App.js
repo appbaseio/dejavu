@@ -13,7 +13,6 @@ import {
 
 import Navigation from './components/Navigation';
 import NoMatch from './components/NoMatch';
-import OldDejavuBanner from './components/OldDejavuBanner';
 
 import logo from './images/dejavu-logo.svg';
 
@@ -138,7 +137,6 @@ class App extends Component {
 							</Sider>
 						)}
 						<Layout css={{ overflowX: 'hidden !important' }}>
-							<OldDejavuBanner />
 							<Content
 								css={{
 									margin: isShowingSideBar ? '15px 25px' : 0,
@@ -254,11 +252,11 @@ class App extends Component {
 									Create your <b>Elasticsearch</b> in cloud
 									with{' '}
 									<a
-										href="https://appbase.io?utm_source=dejavu&utm_medium=footer&utm_campaign=appbaseio"
+										href="https://reactivesearch.io?utm_source=dejavu&utm_medium=footer&utm_campaign=reactivesearchio"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										appbase.io
+										reactivesearch.io
 									</a>
 								</div>
 							</Flex>
