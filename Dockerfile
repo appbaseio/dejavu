@@ -24,4 +24,4 @@ USER dejavu
 
 EXPOSE 1358
 
-CMD node packages/dejavu-main/server.js
+CMD ["node", "packages/dejavu-main/server.js"]
