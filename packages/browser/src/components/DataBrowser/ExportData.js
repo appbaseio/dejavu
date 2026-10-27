@@ -11,6 +11,7 @@ import { getUrl } from '../../reducers/app';
 import { getVersion } from '../../reducers/version';
 import { addDataRequest } from '../../actions';
 import exportData, { flatten, MAX_DATA } from '../../utils/exportData';
+import getCsvFields from '../../utils/getCsvFields';
 import { numberWithCommas } from '../../utils';
 import { getCount } from '../../apis';
 import { getStats } from '../../reducers/stats';
@@ -206,12 +207,11 @@ class ExportData extends Component<Props, State> {
 			selectedType,
 			applyCurrentQuery,
 		} = this.state;
-		const { visibleColumns } = this.props;
-		visibleColumns.push('_id');
+		const csvFields = getCsvFields(this.props.visibleColumns);
 		const res = await this.fetchData();
 		const flattenData = res.map(item => flatten(item));
 		const newData = unparse({
-			fields: visibleColumns,
+			fields: csvFields,
 			data: flattenData,
 		});
 		const file = new File(
